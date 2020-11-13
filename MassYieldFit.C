@@ -106,12 +106,11 @@ void MassYieldFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const Dou
 
   RooWorkspace* works1 = new RooWorkspace(Form("workspace"));
   works1->import(*dataset);
-  works1->data("dataset")->Print();
 
-  RooDataSet* initialDS = (RooDataSet*) dataset->reduce(RooArgSet(*(works1->var("mass")), *(works1->var("pt")), *(works1->var("y")), *(works1->var("cBin"))));
+  RooDataSet* initialDS = (RooDataSet*) dataset->reduce(RooArgSet(*(works1->var("mass")), *(works1->var("pt")), *(works1->var("y")), *(works1->var("cBin")), *(works1->var("pt1")), *(works1->var("pt2"))));
   initialDS->SetName("initialDS");
   
-  RooDataSet* reducedDS = (RooDataSet*) initialDS->reduce(RooArgSet(*(works1->var("mass"))), Form("( pt >=%f && pt <=%f) && (y >= %f && y <=%f) && (cBin>=%d && cBin<=%d)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh));
+  RooDataSet* reducedDS = (RooDataSet*) initialDS->reduce(RooArgSet(*(works1->var("mass"))), Form("( pt >=%f && pt <=%f) && (y >= %f && y <=%f) && (cBin>=%d && cBin<=%d) &&(pt1 >= %f) && (pt2 >= %f)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, MupTCut, MupTCut));
   reducedDS->SetName("reducedDS");
   works1->import(*reducedDS);
   works1->var("mass")->setRange(RangeLow, RangeHigh);
@@ -314,7 +313,7 @@ void MassYieldFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const Dou
   }
   
 
-  c1->SaveAs(Form("MassDist/MassDistribution_pt_%d-%d_rap_%d-%d_%dbin_noWeight_MupT%s.pdf",(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, MupT.Data()));
+  c1->SaveAs(Form("MassDist/MassDistribution_pt_%d-%d_rap_%d-%d_%dbin_noWeight_MupT%s_Trig_%d.pdf",(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, MupT.Data(), Trig));
   TH1D* hmass = new TH1D("hmass", ";M (GeV/c^2);Counts", Nmassbins, RangeLow, RangeHigh);
   reducedDS->fillHistogram(hmass, (*works1->var("mass")));
   FormTH1Marker(hmass, 0, 0, 1.4);
@@ -326,7 +325,7 @@ void MassYieldFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const Dou
   lt1->DrawLatex(0.6, 0.80, Form("p_{T}^{#mu} #geq %.1f GeV/c", MupTCut));
   lt1->DrawLatex(0.6, 0.75, Form("%d #leq p_{T}^{#mu#mu} < %d GeV/c", (int) ptMin, (int) ptMax));
 
-  c2->SaveAs(Form("MassDist/WithoutFit_pt_%d-%d_rap_%d-%d_%dbin_noWeight_MupT%s.pdf",(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10),  Nmassbins, MupT.Data()));
+  c2->SaveAs(Form("MassDist/WithoutFit_pt_%d-%d_rap_%d-%d_%dbin_noWeight_MupT%s_Trig_%d.pdf",(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10),  Nmassbins, MupT.Data(), Trig));
 
   fout->cd();
   massPlot->Write();
