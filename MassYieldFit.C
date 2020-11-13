@@ -33,10 +33,10 @@
 using namespace std;
 using namespace RooFit;
 
-void MassYieldFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "4", int Trig = 1, int cBinHigh = 90){
+void MassYieldFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "4", int Trig = 1, int cBinHigh = 180){
   int cBinLow = 0;
-  if (Trig==1) cBinLow =40;
-  else if (Trig==2) cBinLow= 50;
+  if (Trig==1) cBinLow =80;
+  else if (Trig==2) cBinLow= 100;
   
   TString mainDIR = gSystem->ExpandPathName(gSystem->pwd());
   TString massDIR = mainDIR + "/MassDist";
@@ -101,7 +101,9 @@ void MassYieldFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const Dou
   TFile* fin;
   fin = new TFile(Form("skimmedFiles/OniaRooDataSet_OniaSkim_TrigS%d_forFit.root",Trig),"READ");
   RooDataSet* dataset;
-  if (Trig== 2) dataset = (RooDataSet*) fin->Get("sdataset");
+  if (Trig == 2){ dataset = (RooDataSet*) fin->Get("sdataset");
+                  dataset->SetName("dataset");
+  }
   else  dataset = (RooDataSet*) fin->Get("dataset");
 
   RooWorkspace* works1 = new RooWorkspace(Form("workspace"));
