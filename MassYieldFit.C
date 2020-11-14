@@ -78,7 +78,7 @@ void MassYieldFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const Dou
   Double_t erfm, erfsig, erfp0;
 
   ifstream in;
-  in.open(Form("Parameter/Parameters_pt_%d-%d_rap_%d-%d_Data_noWeight_MupT%s.txt", (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), MupT.Data()));
+  in.open(Form("Parameter/Parameters_pt_%d-%d_rap_%d-%d_Data_Trig_%d_noWeight_MupT%s.txt", (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Trig,  MupT.Data()));
   if(in.is_open())
   {
      while(!in.eof())
@@ -152,7 +152,7 @@ void MassYieldFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const Dou
   RooFormulaVar sigma2S_2("sigma1S_2", "@0*@1", RooArgList(sigma1S_2, mratio2));
   RooFormulaVar sigma3S_2("sigma1S_2", "@0*@1", RooArgList(sigma1S_2, mratio3));
 
-  RooRealVar alpha("alpha", "alpha of Crystal ball", 2.0, 0.5, 20.0);
+  RooRealVar alpha("alpha", "alpha of Crystal ball", 2.0, 4, 20.0);
   RooRealVar n("n", "n of Crystal ball", 2.0, 0.5, 20.0);
   RooRealVar* frac = new RooRealVar("frac", "CB fraction", 0.5, 0, 1);
 
