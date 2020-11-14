@@ -37,6 +37,9 @@ void MassYieldFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const Dou
   int cBinLow = 0;
   if (Trig==1) cBinLow =80;
   else if (Trig==2) cBinLow= 100;
+  Double_t etaMax= 2.4;
+  Double_t etaMin = -2.4;
+
   
   TString mainDIR = gSystem->ExpandPathName(gSystem->pwd());
   TString massDIR = mainDIR + "/MassDist";
@@ -109,10 +112,10 @@ void MassYieldFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const Dou
   RooWorkspace* works1 = new RooWorkspace(Form("workspace"));
   works1->import(*dataset);
 
-  RooDataSet* initialDS = (RooDataSet*) dataset->reduce(RooArgSet(*(works1->var("mass")), *(works1->var("pt")), *(works1->var("y")), *(works1->var("cBin")), *(works1->var("pt1")), *(works1->var("pt2"))));
+  RooDataSet* initialDS = (RooDataSet*) dataset->reduce(RooArgSet(*(works1->var("mass")), *(works1->var("pt")), *(works1->var("y")), *(works1->var("cBin")), *(works1->var("pt1")), *(works1->var("pt2")), *(works1->var("eta1")), *(works1->var("eta2"))));
   initialDS->SetName("initialDS");
   
-  RooDataSet* reducedDS = (RooDataSet*) initialDS->reduce(RooArgSet(*(works1->var("mass"))), Form("( pt >=%f && pt <=%f) && (y >= %f && y <=%f) && (cBin>=%d && cBin<=%d) &&(pt1 >= %f) && (pt2 >= %f)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, MupTCut, MupTCut));
+  RooDataSet* reducedDS = (RooDataSet*) initialDS->reduce(RooArgSet(*(works1->var("mass"))), Form("( pt >=%f && pt <=%f) && (y >= %f && y <=%f) && (cBin>=%d && cBin<=%d) &&(pt1 >= %f) && (pt2 >= %f) && (eta1 >= %f && eta1 <= %f) && ( eta2 >= %f && eta2 <= %f)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, MupTCut, MupTCut, etaMin, etaMax, etaMin, etaMax));
   reducedDS->SetName("reducedDS");
   works1->import(*reducedDS);
   works1->var("mass")->setRange(RangeLow, RangeHigh);
