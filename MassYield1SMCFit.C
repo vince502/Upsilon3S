@@ -53,9 +53,9 @@ void MassYield1SMCFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const
 
   SetStyle();
 
-  const Double_t RangeLow = 8;
-  const Double_t RangeHigh = 14;
-  const Int_t Nmassbins = 120;
+  const Double_t RangeLow = 8.5;
+  const Double_t RangeHigh = 10.5;
+  const Int_t Nmassbins = (RangeHigh - RangeLow)*10;
 
   TFile* fout;
   fout = new TFile(Form("Yield/Yield_pt_%d-%d_rap_%d-%d_Data_noWeight_MupT%s_MC.root", (int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), MupT.Data()), "RECREATE");
@@ -76,31 +76,31 @@ void MassYield1SMCFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const
           return;
   }
 
-  Double_t sig11;
-  Double_t Frac, alp, N;
-//  Double_t erfm, erfsig, erfp0;
-  Double_t k1, k2;
-
-  ifstream in;
-  in.open(Form("Parameter/Parameters_pt_%d-%d_rap_%d-%d_Data_Trig_%d_noWeight_MupT%s_MC.txt", (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Trig,  MupT.Data()));
-  if(in.is_open())
-  {
-     while(!in.eof())
-     {
-       if(!in.good())
-       {
-         cout << "Parameter File is wrong!!! Please Check!!!" << endl;
-         return;
-       }
-       else
-       {
-         //if(SigSys) in >> sig11 >> Frac >> alp >> N >> erfm >> erfsig >> erfp0;
-         //else if(BkgSys) in >> sig11 >> Frac >> alp >> N >> chebyp0 >> chebyp1 >> chebyp2 >> ch    ebyp3;
-          in >> sig11 >> Frac >> alp >> N >> k1 >> k2;
-       }
-     }
-  }
-  in.close();
+//  Double_t sig11;
+//  Double_t Frac, alp, N;
+////  Double_t erfm, erfsig, erfp0;
+//  Double_t k1, k2;
+//
+//  ifstream in;
+//  in.open(Form("Parameter/Parameters_pt_%d-%d_rap_%d-%d_Data_Trig_%d_noWeight_MupT%s_MC.txt", (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Trig,  MupT.Data()));
+//  if(in.is_open())
+//  {
+//     while(!in.eof())
+//     {
+//       if(!in.good())
+//       {
+//         cout << "Parameter File is wrong!!! Please Check!!!" << endl;
+//         return;
+//       }
+//       else
+//       {
+//         //if(SigSys) in >> sig11 >> Frac >> alp >> N >> erfm >> erfsig >> erfp0;
+//         //else if(BkgSys) in >> sig11 >> Frac >> alp >> N >> chebyp0 >> chebyp1 >> chebyp2 >> ch    ebyp3;
+//          in >> sig11 >> Frac >> alp >> Ni >> k1 >> k2;
+//       }
+//     }
+//  }
+//  in.close();
 
   TFile* fin;
   fin = new TFile(Form("skimmedFiles/OniaRooDataSet_OniaSkim_TrigS%d_MC.root",Trig),"READ");
@@ -153,8 +153,8 @@ void MassYield1SMCFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const
 //  RooFormulaVar sigma2S_2("sigma1S_2", "@0*@1", RooArgList(sigma1S_2, mratio2));
 //  RooFormulaVar sigma3S_2("sigma1S_2", "@0*@1", RooArgList(sigma1S_2, mratio3));
 
-  RooRealVar alpha("alpha", "alpha of Crystal ball", 2.0, 4, 20.0);
-  RooRealVar n("n", "n of Crystal ball", 2.0, 0.5, 20.0);
+  RooRealVar alpha("alpha", "alpha of Crystal ball", 2.0, 0.8, 10.0);
+  RooRealVar n("n", "n of Crystal ball", 2.0, 0.8, 10.0);
   RooRealVar* frac = new RooRealVar("frac", "CB fraction", 0.5, 0, 1);
 
   RooCBShape* CB1S_1 = new RooCBShape("CB1S_1", "1S Crystal ball function1", *(works1->var("mass")), mean1S, sigma1S_1, alpha, n);
@@ -176,8 +176,8 @@ void MassYield1SMCFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const
 //  RooRealVar Erfmean("Erfmean", "Mean of Errfunction", 5, 0, 10.0);//for 0~40, 4~7 GeV
 //  RooRealVar Erfsigma("Erfsigma", "Sigma of Errfunction", 1, 0, 100);//for 0~40, 4~7 GeV
 //  RooRealVar Erfp0("Erfp0", "1st parameter of Errfunction", 1, 0, 100);
-  RooRealVar ch4_k1("ch4_k1", "ch4_k1", 0.2, -2000, 2000);
-  RooRealVar ch4_k2("ch4_k2", "ch4_k2", 0.2, -1000, 1000);
+  RooRealVar ch4_k1("ch4_k1", "ch4_k1", 0.2, -2, 2);
+  RooRealVar ch4_k2("ch4_k2", "ch4_k2", 0.2, -2, 2);
 //  RooGenericPdf* bkgErf = new RooGenericPdf("bkgErf", "Error background", "TMath::Exp(-@0/@1)*(TMath::Erf((@0-@2)/(TMath::Sqrt(2)*@3))+1)*0.5", RooArgList(*(works1->var("mass")), Erfp0, Erfmean, Erfsigma));
   RooChebychev *bkg = new RooChebychev("cPol1Bkg", "Background", *(works1->var("mass")), RooArgSet(ch4_k1, ch4_k2));
 
@@ -193,13 +193,13 @@ void MassYield1SMCFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const
 //  RooGenericPdf* Background;dd
 //  Background = (RooGenericPdf*) bkgErf;
 
-  sigma1S_1.setVal(sig11);
+/*  sigma1S_1.setVal(sig11);
   alpha.setVal(alp);
   n.setVal(N);
   frac->setVal(Frac);
   
   ch4_k1.setVal(k1);
-  ch4_k2.setVal(k2);
+  ch4_k2.setVal(k2);*/
  
 
 //  Erfmean.setVal(erfm);
@@ -210,7 +210,7 @@ void MassYield1SMCFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const
 //  RooRealVar* nSig2S = new RooRealVar("nSig2S", "# of 2S signal", 100, -1000, 300000);
 //  RooRealVar* nSig3S = new RooRealVar("nSig3S", "# of 3S signal", 30, -1000, 90000);
 //  RooRealVar* nBkg = new RooRealVar("nBkg", "# of background signal", 300, -1000, 10000000); //Erf* mean
-  RooRealVar* nBkg = new RooRealVar("nBkg", "# of background signal", -1000, 1000000);
+  RooRealVar* nBkg = new RooRealVar("nBkg", "# of background signal", -100, 100000);
   RooAddPdf* model = new RooAddPdf("model", "1S+Bkg", RooArgList(*Signal1S,*bkg), RooArgList(*nSig1S, *nBkg));
 
   works1->import(*model);
