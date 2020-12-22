@@ -25,7 +25,7 @@ double getAccWeight(TH1D* h = 0, double pt = 0);
 double getEffWeight(TH1D* h = 0, double pt = 0);
 void GetHistSqrt(TH1D* h1 =0, TH1D* h2=0);
 
-void makeRooDataSet(bool isMC = true, bool fAccW = false, bool fEffW = false, int state=2)
+void makeRooDataSet(bool isMC = true, bool fAccW = false, bool fEffW = false, int state=1)
 {
   //Basic Setting
   gStyle->SetOptStat(0);
@@ -38,7 +38,7 @@ void makeRooDataSet(bool isMC = true, bool fAccW = false, bool fEffW = false, in
   //READ Input Skimmed File
   TFile *rf;
   if(isMC){
-    if(state==1) rf = new TFile("/home/deathold/work/CMS/analysis/Upsilon_v2/UpsilonPbPb2018_v2/skimmedFiles/OniaFlowSkim_UpsTrig_DB_isMC1_HFNom_Y1S_190801.root","read");
+    if(state==1) rf = new TFile("OniaFlowSkim_L1DoubleMuOpenOS40100Trig_DBPD_isMC1_HFNom_190813.root","read");
     else if(state==2) rf = new TFile("/home/deathold/work/CMS/analysis/Upsilon_v2/UpsilonPbPb2018_v2/skimmedFiles/OniaFlowSkim_UpsTrig_DB_isMC1_HFNom_Y2S_190801.root","read");
   }
   else if(!isMC) rf = new TFile("/home/deathold/work/CMS/analysis/Upsilon_v2/UpsilonPbPb2018_v2/skimmedFiles/OniaFlowSkim_UpsTrig_DBPD_isMC0_190710.root","read");
@@ -46,7 +46,7 @@ void makeRooDataSet(bool isMC = true, bool fAccW = false, bool fEffW = false, in
 
   
   //Get Correction histograms
-  bool isTnP = true;
+  bool isTnP = false;
   TFile *fEff = new TFile(Form("/home/deathold/work/CMS/analysis/Upsilon_v2/UpsilonPbPb2018_v2/Efficiency/mc_eff_vs_pt_TnP%d_PtW1_OfficialMC_Y%dS_muPtCut3.5.root",isTnP,state),"read");
   TH1D* hEffPt[3];
   hEffPt[0] = (TH1D*) fEff -> Get(Form("mc_eff_vs_pt_TnP%d_Cent010",isTnP)); 
