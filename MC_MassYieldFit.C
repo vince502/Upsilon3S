@@ -102,7 +102,7 @@ void MC_MassYieldFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const 
   in.close();
 
   TFile* fin;
-  fin = new TFile(Form("skimmedFiles/OniaRooDataSet_OniaSkim_TrigS%d_MC.root",Trig),"READ");
+  fin = new TFile(Form("skimmedFiles/OniaRooDataSet_isMC1_Y1SW.root"),"READ");
   RooDataSet* dataset = (RooDataSet*) fin->Get("dataset");
 
   RooWorkspace* works1 = new RooWorkspace(Form("workspace"));
@@ -196,11 +196,11 @@ void MC_MassYieldFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const 
   Erfsigma.setVal(erfsig);
   Erfp0.setVal(erfp0);
 
-  RooRealVar* nSig1S = new RooRealVar("nSig1S", "# of 1S signal", 400, -1000, 1000000);
-  RooRealVar* nSig2S = new RooRealVar("nSig2S", "# of 2S signal", 100, -1000, 300000);
+//  RooRealVar* nSig1S = new RooRealVar("nSig1S", "# of 1S signal", 400, -1000, 1000000);
+//  RooRealVar* nSig2S = new RooRealVar("nSig2S", "# of 2S signal", 100, -1000, 300000);
   RooRealVar* nSig3S = new RooRealVar("nSig3S", "# of 3S signal", 30, -1000, 90000);
   RooRealVar* nBkg = new RooRealVar("nBkg", "# of background signal", 300, -1000, 10000000);
-  RooAddPdf* model = new RooAddPdf("model", "1S+2S+3S+Bkg", RooArgList(*Signal1S, *Signal2S, *Signal3S, *Background), RooArgList(*nSig1S, *nSig2S, *nSig3S, *nBkg));
+  RooAddPdf* model = new RooAddPdf("model", "3S+Bkg", RooArgList(*Signal3S, *Background), RooArgList(*nSig3S, *nBkg));
 
   works1->import(*model);
 
