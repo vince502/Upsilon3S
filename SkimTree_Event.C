@@ -16,7 +16,8 @@ void SkimTree_Event(int nevt=-1, bool isMC = true, int kTrigSel = kTrigUps, int 
 
   using namespace std;
   using namespace hi;
-
+  
+  if( isMC ) kTrigUps = 10;
   // Example of using event plane namespace 
   cout << " Index of "<< EPNames[HFm2] << " = " << HFm2 << endl;
   cout << " Index of "<< EPNames[HFp2] << " = " << HFp2 << endl;

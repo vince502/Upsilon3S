@@ -54,8 +54,15 @@ void MassYieldSingleStateMCFit(const string fname = "", const Double_t ptMin = 0
 
   SetStyle();
 
-  const Double_t RangeLow = 8.5;
-  const Double_t RangeHigh = 10.5;
+   Double_t RangeLow, RangeHigh;
+  if( state == 1){
+    RangeLow = 8.5;
+    RangeHigh = 10.5;
+  }
+  if( state == 3){
+    RangeLow = 9.5;
+    RangeHigh = 11.5;
+  }
   const Int_t Nmassbins = (RangeHigh - RangeLow)*10;
 
   TFile* fout;
@@ -76,32 +83,6 @@ void MassYieldSingleStateMCFit(const string fname = "", const Double_t ptMin = 0
           cout << "There is no such muon pT cut value" << endl;
           return;
   }
-
-//  Double_t sig11;
-//  Double_t Frac, alp, N;
-////  Double_t erfm, erfsig, erfp0;
-//  Double_t k1, k2;
-//
-//  ifstream in;
-//  in.open(Form("Parameter/Parameters_pt_%d-%d_rap_%d-%d_Data_Trig_%d_noWeight_MupT%s_MC.txt", (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Trig,  MupT.Data()));
-//  if(in.is_open())
-//  {
-//     while(!in.eof())
-//     {
-//       if(!in.good())
-//       {
-//         cout << "Parameter File is wrong!!! Please Check!!!" << endl;
-//         return;
-//       }
-//       else
-//       {
-//         //if(SigSys) in >> sig11 >> Frac >> alp >> N >> erfm >> erfsig >> erfp0;
-//         //else if(BkgSys) in >> sig11 >> Frac >> alp >> N >> chebyp0 >> chebyp1 >> chebyp2 >> ch    ebyp3;
-//          in >> sig11 >> Frac >> alp >> Ni >> k1 >> k2;
-//       }
-//     }
-//  }
-//  in.close();
 
   TFile* fin;
   fin = new TFile(Form("./skimmedFiles/%s", fname.c_str()),"READ");
@@ -139,7 +120,7 @@ void MassYieldSingleStateMCFit(const string fname = "", const Double_t ptMin = 0
   works1->data("reducedDS")->plotOn(massPlot, Name("massPlot"));
 
   RooRealVar mean1S("mean1S", "mean of Upsilon 1S", U1S_mass, U1S_mass-0.01, U1S_mass+0.01);
-  RooRealVar mean3S("mean3S", "mean of Upsilon 3S", U3S_mass, U3S_mass-0.02, U1S_mass+0.02);
+  RooRealVar mean3S("mean3S", "mean of Upsilon 3S", U3S_mass, U3S_mass-0.02, U3S_mass+0.02);
 //  RooRealVar mratio2("mratio2", "mratio2", U2S_mass/U1S_mass);
 //  RooRealVar mratio3("mratio3", "mratio3", U3S_mass/U1S_mass);
 //  RooFormulaVar mean2S("mean2S", "mean1S*mratio2", RooArgSet(mean1S, mratio2));
@@ -344,10 +325,12 @@ void MassYieldSingleStateMCFit(const string fname = "", const Double_t ptMin = 0
     hfrac->SetBinContent(2, Bkgfc->Eval(U3S_mass));
     hfrac->SetBinContent(3, SgnfcNS->Integral(10.3, 10.4));
     hfrac->SetBinContent(4, Bkgfc->Integral(10.3, 10.4));
-    hfrac->SetBinContent(5, SgnfcNS->Integral(10.2, 10.5));
-    hfrac->SetBinContent(6, Bkgfc->Integral(10.2, 10.5));
+    hfrac->SetBinContent(5, SgnfcNS->Integral(10.1, 10.6));
+    hfrac->SetBinContent(6, Bkgfc->Integral(10.1, 10.6));
   }
-  TH1D* hfracdist = new TH1D("hfracdist","",20, 9, 10);
+  TH1D* hfracdist;
+  if( state == 1) hfracdist = new TH1D("hfracdist","",20, 9, 10);
+  if( state == 3) hfracdist = new TH1D("hfracdist","",20, 9.9, 10.9);
   for(Int_t i =0; i <20; i++){
     hfracdist->SetBinContent(i+1, SgnfcNS->Eval(9+0.05*i)/(SgnfcNS->Eval(9+0.05*i)+Bkgfc->Eval(9+0.05*i)));
   }
@@ -379,8 +362,6 @@ void MassYieldSingleStateMCFit(const string fname = "", const Double_t ptMin = 0
   hYield->Write();
   hmass->Write();
   SgnfcNS->Write();
-//  Sgnfc2S->Write();
-//  Sgnfc3S->Write();
   hfrac->Write();
   hfracdist->Write();
  
