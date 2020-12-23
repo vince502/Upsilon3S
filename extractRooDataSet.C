@@ -25,7 +25,7 @@ double getAccWeight(TH1D* h = 0, double pt = 0);
 double getEffWeight(TH1D* h = 0, double pt = 0);
 void GetHistSqrt(TH1D* h1 =0, TH1D* h2=0);
 
-void makeRooDataSet(bool isMC = false, bool fAccW = false, bool fEffW = false, int state=2, string Str = "OniaSkim_TirgS0")
+void extractRooDataSet(bool isMC = false, bool fAccW = false, bool fEffW = false, int state=2, const TString rfile = "OniaFlowSkim_L1DoubleMuOpen50100Trig_DBPD_isMC0_HFNom_190813.root")
 {
   //Basic Setting
   gStyle->SetOptStat(0);
@@ -36,14 +36,13 @@ void makeRooDataSet(bool isMC = false, bool fAccW = false, bool fEffW = false, i
   TString dimusignString;
 
   //READ Input Skimmed File
-  TFile *rf1;
+  TFile *rf;
   if(isMC){
-//    if(state==1) rf1 = new TFile("/home/deathold/work/CMS/analysis/Upsilon_v2/UpsilonPbPb2018_v2/skimmedFiles/OniaFlowSkim_UpsTrig_DB_isMC1_HFNom_Y1S_190801.root","read");
-//    else if(state==2) rf1 = new TFile("/home/deathold/work/CMS/analysis/Upsilon_v2/UpsilonPbPb2018_v2/skimmedFiles/OniaFlowSkim_UpsTrig_DB_isMC1_HFNom_Y2S_190801.root","read");
-    rf1 = new TFile(Form("./%s_MC.root",Str.c_str()),"read");
+    if(state==1) rf = new TFile("/home/deathold/work/CMS/analysis/Upsilon_v2/UpsilonPbPb2018_v2/skimmedFiles/OniaFlowSkim_UpsTrig_DB_isMC1_HFNom_Y1S_190801.root","read");
+    else if(state==2) rf = new TFile("/home/deathold/work/CMS/analysis/Upsilon_v2/UpsilonPbPb2018_v2/skimmedFiles/OniaFlowSkim_UpsTrig_DB_isMC1_HFNom_Y2S_190801.root","read");
   }
-  else if(!isMC){ rf1 = new TFile(Form("./%s.root",Str.c_str()),"read");}
-  TTree *tree = (TTree*) rf1 -> Get("mmepevt");
+  else if(!isMC) rf = new TFile(Form("/eos/user/s/soohwan/CMSSW_11_2_0_pre8/src/_MTUpsilonPbPb2018_v2/%s",rfile.Data()),"read");
+  TTree *tree = (TTree*) rf -> Get("mmepevt");
 
   
   //Get Correction histograms
@@ -60,14 +59,14 @@ void makeRooDataSet(bool isMC = false, bool fAccW = false, bool fEffW = false, i
   //SetBranchAddress
   const int nMaxDimu = 1000;
   float mass[nMaxDimu];
-//  float qxa[nMaxDimu];
-//  float qya[nMaxDimu];
-//  float qxb[nMaxDimu]; 
-//  float qyb[nMaxDimu];
-//  float qxc[nMaxDimu];
-//  float qyc[nMaxDimu];
-//  float qxdimu[nMaxDimu];
-//  float qydimu[nMaxDimu];
+  float qxa[nMaxDimu];
+  float qya[nMaxDimu];
+  float qxb[nMaxDimu]; 
+  float qyb[nMaxDimu];
+  float qxc[nMaxDimu];
+  float qyc[nMaxDimu];
+  float qxdimu[nMaxDimu];
+  float qydimu[nMaxDimu];
   float pt[nMaxDimu];
   float y[nMaxDimu]; 
   float pt1[nMaxDimu];
@@ -77,14 +76,12 @@ void makeRooDataSet(bool isMC = false, bool fAccW = false, bool fEffW = false, i
   float eta2[nMaxDimu];
   Int_t cBin;
   Int_t event; 
-  Int_t runN;
   Int_t nDimu; 
   float vz;
   int recoQQsign[nMaxDimu];
   double weight;
 
   TBranch *b_event;
-  TBranch *b_runN;
   TBranch *b_cBin;
   TBranch *b_nDimu;
   TBranch *b_vz;
@@ -97,17 +94,17 @@ void makeRooDataSet(bool isMC = false, bool fAccW = false, bool fEffW = false, i
   TBranch *b_eta2;
   TBranch *b_pt1;
   TBranch *b_pt2;
-//  TBranch *b_qxa;
-//  TBranch *b_qxb;
-//  TBranch *b_qxc;
-//  TBranch *b_qxdimu;
-//  TBranch *b_qya;
-//  TBranch *b_qyb;
-//  TBranch *b_qyc;
-//  TBranch *b_qydimu;
+  TBranch *b_qxa;
+  TBranch *b_qxb;
+  TBranch *b_qxc;
+  TBranch *b_qxdimu;
+  TBranch *b_qya;
+  TBranch *b_qyb;
+  TBranch *b_qyc;
+  TBranch *b_qydimu;
   TBranch *b_weight;
   
-  tree -> SetBranchAddress("runN", &runN, &b_runN);
+
   tree -> SetBranchAddress("event", &event, &b_event);
   tree -> SetBranchAddress("cBin", &cBin, &b_cBin);
   tree -> SetBranchAddress("nDimu", &nDimu, &b_nDimu);
@@ -121,14 +118,14 @@ void makeRooDataSet(bool isMC = false, bool fAccW = false, bool fEffW = false, i
   tree -> SetBranchAddress("eta", eta, &b_eta);
   tree -> SetBranchAddress("eta1", eta1, &b_eta1);
   tree -> SetBranchAddress("eta2", eta2, &b_eta2);
-//  tree -> SetBranchAddress("qxa", qxa, &b_qxa);
-//  tree -> SetBranchAddress("qxb", qxb, &b_qxb);
-//  tree -> SetBranchAddress("qxc", qxc, &b_qxc);
-//  tree -> SetBranchAddress("qxdimu", qxdimu, &b_qxdimu);
-//  tree -> SetBranchAddress("qya", qya, &b_qya);
-//  tree -> SetBranchAddress("qyb", qyb, &b_qyb);
-//  tree -> SetBranchAddress("qyc", qyc, &b_qyc);
-//  tree -> SetBranchAddress("qydimu", qydimu, &b_qydimu);
+  tree -> SetBranchAddress("qxa", qxa, &b_qxa);
+  tree -> SetBranchAddress("qxb", qxb, &b_qxb);
+  tree -> SetBranchAddress("qxc", qxc, &b_qxc);
+  tree -> SetBranchAddress("qxdimu", qxdimu, &b_qxdimu);
+  tree -> SetBranchAddress("qya", qya, &b_qya);
+  tree -> SetBranchAddress("qyb", qyb, &b_qyb);
+  tree -> SetBranchAddress("qyc", qyc, &b_qyc);
+  tree -> SetBranchAddress("qydimu", qydimu, &b_qydimu);
   tree -> SetBranchAddress("weight", &weight, &b_weight);
   
   ////////////////////////////////////////////////////////////////////////
@@ -168,6 +165,7 @@ void makeRooDataSet(bool isMC = false, bool fAccW = false, bool fEffW = false, i
   double SiMuPtCut = 3.5;
   //Begin Loop
   for(int i=0; i<nEvt; i++){
+    if((i%100000)==0)std::cout << "Processing Event index: " << i << std::endl;
     tree->GetEntry(i);
     nDimuPass=0;
     
@@ -214,10 +212,7 @@ void makeRooDataSet(bool isMC = false, bool fAccW = false, bool fEffW = false, i
   cout << "more than one dimuon : " << nDimu_more << endl;
   cout << "one dimuon : " << nDimu_one << endl;
   
-  TFile *wf;
-
-  if(isMC)  wf  = new TFile(Form("skimmedFiles/OniaRooDataSet_%s_MC.root",Str.c_str()),"recreate");
-  else if(!isMC)  wf  = new TFile(Form("skimmedFiles/OniaRooDataSet_%s.root",Str.c_str()),"recreate");
+  TFile *wf = new TFile(Form("OniaRooDataSet_%s",rfile.Data()),"recreate");
   wf->cd();
  dataSet->Write();
 }

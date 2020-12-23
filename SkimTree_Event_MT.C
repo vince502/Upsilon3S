@@ -5,19 +5,26 @@
 #include "HiEvtPlaneList.h"
 #include "cutsAndBinUpsilonV2.h"
 #include "tnp_weight_lowptPbPb.h"
+#include <ROOT/TProcessExecutor.hxx>
+#include <ROOT/TSeq.hxx>
+#include <TStopwatch.h>
 
 static const long MAXTREESIZE = 1000000000000;
 double getAccWeight(TH1D* h = 0, double pt = 0);
 double getEffWeight(TH1D* h = 0, double pt = 0);
 
 
-void SkimTree_Event(int nevt=-1, bool isMC = false, int kTrigSel = kTrigUps, int hiHFBinEdge = 0, int PDtype = 1) 
+void SkimTree_Event_MT(int nevt=-1, bool isMC = false, int kTrigSel = kTrigL1DBOS40100, int hiHFBinEdge = 0, int PDtype = 1) 
 {
 
   using namespace std;
   using namespace hi;
-
-  ROOT::EnableImplicitMT(8);
+  
+  TStopwatch watch;
+  watch.Start();
+  const int nCores = 16;
+  ROOT::EnableImplicitMT(4);
+  ROOT::TProcessExecutor mpe(nCores);
 
   // Example of using event plane namespace 
   cout << " Index of "<< EPNames[HFm2] << " = " << HFm2 << endl;
@@ -31,10 +38,15 @@ void SkimTree_Event(int nevt=-1, bool isMC = false, int kTrigSel = kTrigUps, int
   TString fnameDataReRecoPeri = "/eos/cms/store/group/phys_heavyions/dileptons/Data2018/PbPb502TeV/TTrees/ReReco/AOD/DoubleMuonPsiPeri/ReReco_Oniatree_addvn_part*.root";
   TString fnameMC = "/eos/cms/store/group/phys_heavyions/dileptons/MC2018/PbPb502TeV/TTrees/Upsi1S_TuneCP5_HydjetDrumMB_officialPythia8MC*_v20190801.root";
 
+  TString _fPD, _fCentSelHF;
+  int _trigIndx;
+  TH1::AddDirectory(kFALSE); 
+  auto fillSkim = [&](int idx){
+
   TString fPD;
   if(PDtype==1) fPD = "DB";
   else if(PDtype==2) fPD = "DBPeri";
-
+  _fPD=fPD;
   TChain *mytree = new TChain("myTree");
   if(!isMC){
     if(PDtype==1) mytree->Add(fnameDataReReco.Data());
@@ -195,7 +207,7 @@ void SkimTree_Event(int nevt=-1, bool isMC = false, int kTrigSel = kTrigUps, int
   else if(kTrigSel == kTrigUps) trigIndx=1;
   else if(kTrigSel == kTrigL1DBOS40100) trigIndx=2;
   else if(kTrigSel == kTrigL1DB50100) trigIndx=3;
-  
+  _trigIndx=trigIndx; 
   double tnp_weight = 1;
   double tnp_trig_weight_mupl = -1;
   double tnp_trig_weight_mumi = -1;
@@ -209,8 +221,7 @@ void SkimTree_Event(int nevt=-1, bool isMC = false, int kTrigSel = kTrigUps, int
   TString fCentSelHF = "HFNom";
   if(hiHFBinEdge==1) fCentSelHF = "HFUp";
   else if(hiHFBinEdge==-1) fCentSelHF = "HFDown";
-  TFile* newfile;
-  newfile = new TFile(Form("OniaFlowSkim_%sTrig_%sPD_isMC%d_%s_190813.root",fTrigName[trigIndx].Data(),fPD.Data(),isMC,fCentSelHF.Data()),"recreate");
+  _fCentSelHF = fCentSelHF;
 
   const static int nMaxDimu = 1000;
   int evt;
@@ -266,18 +277,18 @@ void SkimTree_Event(int nevt=-1, bool isMC = false, int kTrigSel = kTrigUps, int
   mmevttree->Branch("eta",eta,"eta[nDimu]/F");
   mmevttree->Branch("eta1",eta1,"eta1[nDimu]/F");
   mmevttree->Branch("eta2",eta2,"eta2[nDimu]/F");
-  mmevttree->Branch("qxa",qxa,"qxa[nDimu]/F");
-  mmevttree->Branch("qxb",qxb,"qxb[nDimu]/F");
-  mmevttree->Branch("qxc",qxc,"qxc[nDimu]/F");
-  mmevttree->Branch("qya",qya,"qya[nDimu]/F");
-  mmevttree->Branch("qyb",qyb,"qyb[nDimu]/F");
-  mmevttree->Branch("qyc",qyc,"qyc[nDimu]/F");
-  mmevttree->Branch("qxdimu",qxdimu,"qxdimu[nDimu]/F");
-  mmevttree->Branch("qydimu",qydimu,"qydimu[nDimu]/F");
-  mmevttree->Branch("qxmupl",qxmupl,"qxmupl[nDimu]/F");
-  mmevttree->Branch("qxmumi",qxmumi,"qxmumi[nDimu]/F");
-  mmevttree->Branch("qymupl",qymupl,"qymupl[nDimu]/F");
-  mmevttree->Branch("qymumi",qymumi,"qymumi[nDimu]/F");
+  //mmevttree->Branch("qxa",qxa,"qxa[nDimu]/F");
+  //mmevttree->Branch("qxb",qxb,"qxb[nDimu]/F");
+  //mmevttree->Branch("qxc",qxc,"qxc[nDimu]/F");
+  //mmevttree->Branch("qya",qya,"qya[nDimu]/F");
+  //mmevttree->Branch("qyb",qyb,"qyb[nDimu]/F");
+  //mmevttree->Branch("qyc",qyc,"qyc[nDimu]/F");
+  //mmevttree->Branch("qxdimu",qxdimu,"qxdimu[nDimu]/F");
+  //mmevttree->Branch("qydimu",qydimu,"qydimu[nDimu]/F");
+  //mmevttree->Branch("qxmupl",qxmupl,"qxmupl[nDimu]/F");
+  //mmevttree->Branch("qxmumi",qxmumi,"qxmumi[nDimu]/F");
+  //mmevttree->Branch("qymupl",qymupl,"qymupl[nDimu]/F");
+  //mmevttree->Branch("qymumi",qymumi,"qymumi[nDimu]/F");
   mmevttree->Branch("recoQQsign",recoQQsign,"recoQQsign[nDimu]/I");
   mmevttree->Branch("ctau3D",ctau3D,"ctau3D[nDimu]/F");
   mmevttree->Branch("ctau3DErr",ctau3DErr,"ctau3DErr[nDimu]/F");
@@ -297,16 +308,20 @@ void SkimTree_Event(int nevt=-1, bool isMC = false, int kTrigSel = kTrigUps, int
 
   // event loop start
   if(nevt == -1) nevt = mytree->GetEntries();
-
+  std::cout<< nevt << " : number of total events for CORE[" << idx << "]"<<std::endl;
+  int loops = (int)  nevt/nCores;  
   cout << "Total events = " << nevt << ", : " << eptree->GetEntries() << endl;
+  std::cout << "loop size: " << loops << std::endl;
 
-  for(int iev=0; iev<nevt ; ++iev)
+  for(int iev=loops*idx; iev<loops*(idx+1) && iev<nevt ; ++iev)
   {
-    if(iev%100000==0) cout << ">>>>> EVENT " << iev << " / " << mytree->GetEntries() <<  " ("<<(int)(100.*iev/mytree->GetEntries()) << "%)" << endl;
+    if(iev%100000==0) cout << ">>>>> EVENT " << iev << " / " << mytree->GetEntries() <<  " ( CORE["<<idx<<"]:" <<(int)(100.*((double)(iev-loops*idx)/loops)) << "%)" << endl;
 
     mytree->GetEntry(iev);
     eptree->GetEntry(iev);
-  
+    
+    if(PDtype==1){if(runNb >=327123) continue;}  
+
     nDimu = 0;
     
     if(!( (HLTriggers&((ULong64_t)pow(2, kTrigSel))) == ((ULong64_t)pow(2, kTrigSel)) ) ) continue;
@@ -317,10 +332,13 @@ void SkimTree_Event(int nevt=-1, bool isMC = false, int kTrigSel = kTrigUps, int
       evt = eventNb;
       lumi = LS;
       cBin = -999;
+      if(isMC){ cBin = Centrality;}
+      else if (!isMC){
       if(hiHFBinEdge ==0) cBin = getHiBinFromhiHF(SumET_HF);
       else if(hiHFBinEdge == 1) cBin = getHiBinFromhiHF_Up(SumET_HF);
       else if(hiHFBinEdge == -1) cBin = getHiBinFromhiHF_Down(SumET_HF);
-      if(cBin==-999){ cout << "ERROR!!! No HF Centrality Matching!!" << endl; return;}
+      }
+      if(cBin==-999){ cout << "ERROR!!! No HF Centrality Matching!!" << endl; break;}
       vz = zVtx;
 
 
@@ -421,7 +439,7 @@ void SkimTree_Event(int nevt=-1, bool isMC = false, int kTrigSel = kTrigUps, int
          else {cout << "ERROR :: No random selection done !!!!" << endl; continue;}
          SelDone = true;
        }    
-       if(SelDone == false || (tnp_trig_weight_mupl == -1 || tnp_trig_weight_mumi == -1)){cout << "ERROR :: No muon filter combination selected !!!!" << endl; continue;}
+       if(SelDone == false || (tnp_trig_weight_mupl == -1 || tnp_trig_weight_mumi == -1)){/*cout << "ERROR :: No muon filter combination selected !!!!" << endl;*/ continue;}
        tnp_weight = tnp_weight * tnp_trig_weight_mupl * tnp_trig_weight_mumi;
        counttnp++;
       }
@@ -473,10 +491,29 @@ void SkimTree_Event(int nevt=-1, bool isMC = false, int kTrigSel = kTrigUps, int
     
   } //end of event loop
 //  mmtree->Write();  // Don't need to call Write() for trees
-  cout << "count " << count << endl;
-  cout << "counttnp " << counttnp << endl;
+  return mmevttree;
+  };
+  const auto& res = mpe.Map(fillSkim, ROOT::TSeqI(nCores));
+  std::cout << " DONE skim, now Filling" << std::endl;
+  TList *list = new TList;
+  for ( auto& r : res ){
+    list->Add(r);
+  }
+  std::cout << "Added to the list" << std::endl;
+  TFile* newfile;
+  if(isMC) newfile = new TFile(Form("OniaSkim_TrigS%d_MC.root",kTrigSel), "recreate");
+  else if(!isMC) newfile = new TFile(Form("OniaSkim_TrigS%d_PDty%d.root",kTrigSel,PDtype),"recreate");
+//  newfile = new TFile(Form("OniaFlowSkim_%sTrig_%sPD_isMC%d_%s_190813.root",fTrigName[_trigIndx].Data(),_fPD.Data(),isMC,_fCentSelHF.Data()),"recreate");
+
+  TTree* mmevttree = TTree::MergeTrees(list);
+  std::cout<< "Merge Complete" << std::endl;
+ // cout << "count " << count << endl;
+//  cout << "counttnp " << counttnp << endl;
   newfile->cd();
   mmevttree->Write();
+  std::cout << " Done Writting, time consumed shown below" << std::endl;
+  watch.Stop();
+  watch.Print();
   newfile->Close();
   
 } 
