@@ -14,7 +14,7 @@ double getAccWeight(TH1D* h = 0, double pt = 0);
 double getEffWeight(TH1D* h = 0, double pt = 0);
 
 
-void SkimTree_Event_MT(int nevt=-1, bool isMC = false, int kTrigSel = kTrigL1DBOS40100, int hiHFBinEdge = 0, int PDtype = 1) 
+void SkimTree_Event_MT(int nevt=-1, bool isMC = false, int kTrigSel = kTrigL1DBOS40100, int hiHFBinEdge = 0, int PDtype = 1, bool TrigSwitch = false) 
 {
 
   using namespace std;
@@ -319,26 +319,49 @@ void SkimTree_Event_MT(int nevt=-1, bool isMC = false, int kTrigSel = kTrigL1DBO
 
     mytree->GetEntry(iev);
     eptree->GetEntry(iev);
-    
-    if(PDtype==1){if(runNb >=327123) continue;}  
 
     nDimu = 0;
-    
+/////////module tirgger switch///////////
+    if (TrigSwitch == true){
+      int _cbin = getHiBinFromhiHF(SumET_HF);
+      if (PDtype==1){
+        if (runNb >= 327123){ 
+          kTrigSel = kTrigUps;
+          if (kTrigSel == kTrigL1DBOS40100){if (_cbin >=87) continue;} 
+          if (kTrigSel == kTrigL1DBOS40100){if (_cbin >=87) continue;}
+        }
+        else{
+          if (kTrigSel == kTrigL1DBOS40100){ if (_cbin <87) kTrigSel = kTrigUps;}
+          if (kTrigSel == kTrigL1DB50100){ if (_cbin <107) kTrigSel = kTrigUps;}
+        }
+      }
+      if (PDtype==2){
+        if (kTrigSel == kTrigL1DBOS40100){ if (_cbin <87) continue;}
+        if (kTrigSel == kTrigL1DB50100){ if (_cbin <107) continue;}
+      }
+    }
+    else if(TrigSwitch == false){
+      if(PDtype==1){if(runNb >=327123) continue;}
+    }  
+/////////module tirgger switch///////////
     if(!( (HLTriggers&((ULong64_t)pow(2, kTrigSel))) == ((ULong64_t)pow(2, kTrigSel)) ) ) continue;
+
+    runN = runNb;
+    evt = eventNb;
+    lumi = LS;
+    cBin = -999;
+    if(isMC){ cBin = Centrality;}
+    else if (!isMC){
+    if(hiHFBinEdge ==0) cBin = getHiBinFromhiHF(SumET_HF);
+    else if(hiHFBinEdge == 1) cBin = getHiBinFromhiHF_Up(SumET_HF);
+    else if(hiHFBinEdge == -1) cBin = getHiBinFromhiHF_Down(SumET_HF);
+    }
+    if(cBin==-999){ cout << "ERROR!!! No HF Centrality Matching!!" << endl; break;}
+    
 
     for (Int_t irqq=0; irqq<Reco_QQ_size; ++irqq) 
     {
-      runN = runNb;
-      evt = eventNb;
-      lumi = LS;
-      cBin = -999;
-      if(isMC){ cBin = Centrality;}
-      else if (!isMC){
-      if(hiHFBinEdge ==0) cBin = getHiBinFromhiHF(SumET_HF);
-      else if(hiHFBinEdge == 1) cBin = getHiBinFromhiHF_Up(SumET_HF);
-      else if(hiHFBinEdge == -1) cBin = getHiBinFromhiHF_Down(SumET_HF);
-      }
-      if(cBin==-999){ cout << "ERROR!!! No HF Centrality Matching!!" << endl; break;}
+
       vz = zVtx;
 
 
@@ -501,8 +524,8 @@ void SkimTree_Event_MT(int nevt=-1, bool isMC = false, int kTrigSel = kTrigL1DBO
   }
   std::cout << "Added to the list" << std::endl;
   TFile* newfile;
-  if(isMC) newfile = new TFile(Form("OniaSkim_TrigS%d_MC.root",kTrigSel), "recreate");
-  else if(!isMC) newfile = new TFile(Form("OniaSkim_TrigS%d_PDty%d.root",kTrigSel,PDtype),"recreate");
+  if(isMC) newfile = new TFile(Form("OniaiSkim_TrigS%d_MC_Switch%d.root",kTrigSel, (int) TrigSwitch ), "recreate");
+  else if(!isMC) newfile = new TFile(Form("OniaSkim_TrigS%d_PDty%d_Switch%d.root",kTrigSel,PDtype, (int) TrigSwitch),"recreate");
 //  newfile = new TFile(Form("OniaFlowSkim_%sTrig_%sPD_isMC%d_%s_190813.root",fTrigName[_trigIndx].Data(),_fPD.Data(),isMC,_fCentSelHF.Data()),"recreate");
 
   TTree* mmevttree = TTree::MergeTrees(list);
