@@ -11,7 +11,7 @@ double getAccWeight(TH1D* h = 0, double pt = 0);
 double getEffWeight(TH1D* h = 0, double pt = 0);
 
 
-void SkimTree_DiMu_TurnOnRatio(int nevt=-1, bool isMC = false, int kTrigSel = 0, int hiHFBinEdge = 0, int PDtype = 1) 
+void DiMu_Oniatree_TurnOnRatio(int nevt=-1, bool isMC = false, int kTrigSel = 0, int hiHFBinEdge = 0, int PDtype = 1) 
 {
 
   using namespace std;

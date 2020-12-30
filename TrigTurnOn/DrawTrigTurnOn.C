@@ -49,6 +49,6 @@ void DrawTrigTurnOn(){
 
  h2c->Draw("ep");
  h3c->Draw("ep same");
- c1->SaveAs("./TrigCentDist_DiMu_2p9m_fullCut.pdf");
- c2->SaveAs("./TrigCentTurnOn_DiMu_2p9m_fullCut.pdf");
+ c1->SaveAs(".TrigTurnOnplots/TrigCentDist_DiMu_2p9m_fullCut.pdf");
+ c2->SaveAs(".TrigTurnOnplots/TrigCentTurnOn_DiMu_2p9m_fullCut.pdf");
 }
