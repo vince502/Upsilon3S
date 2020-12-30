@@ -25,7 +25,7 @@ double getAccWeight(TH1D* h = 0, double pt = 0);
 double getEffWeight(TH1D* h = 0, double pt = 0);
 void GetHistSqrt(TH1D* h1 =0, TH1D* h2=0);
 
-void makeRooDataSet(bool isMC = true, bool fAccW = false, bool fEffW = false, int state=1)
+void makeRooDataSet(bool isMC = true, bool fAccW = false, bool fEffW = false, int state=1, const string trig = "")
 {
   //Basic Setting
   gStyle->SetOptStat(0);
@@ -38,7 +38,7 @@ void makeRooDataSet(bool isMC = true, bool fAccW = false, bool fEffW = false, in
   //READ Input Skimmed File
   TFile *rf;
   if(isMC){
-    if(state==1) rf = new TFile("OniaFlowSkim_L1DoubleMuOpenOS40100Trig_DBPD_isMC1_HFNom_190813.root","read");
+    if(state==1) rf = new TFile(Form("OniaFlowSkim_%sTrig_DBPD_isMC%d_HFNom_190813.root",trig.c_str(), (int) isMC),"read");
     else if(state==2) rf = new TFile("/home/deathold/work/CMS/analysis/Upsilon_v2/UpsilonPbPb2018_v2/skimmedFiles/OniaFlowSkim_UpsTrig_DB_isMC1_HFNom_Y2S_190801.root","read");
   }
   else if(!isMC) rf = new TFile("/home/deathold/work/CMS/analysis/Upsilon_v2/UpsilonPbPb2018_v2/skimmedFiles/OniaFlowSkim_UpsTrig_DBPD_isMC0_190710.root","read");
@@ -211,7 +211,7 @@ void makeRooDataSet(bool isMC = true, bool fAccW = false, bool fEffW = false, in
   cout << "more than one dimuon : " << nDimu_more << endl;
   cout << "one dimuon : " << nDimu_one << endl;
   
-  TFile *wf = new TFile(Form("skimmedFiles/OniaRooDataSet_isMC%d_Y%dSW.root",isMC,state),"recreate");
+  TFile *wf = new TFile(Form("skimmedFiles/OniaRooDataSet_%sTrig_isMC%d_HFNom_201222.root",trig.c_str(),isMC),"recreate");
   wf->cd();
  dataSet->Write();
 }
