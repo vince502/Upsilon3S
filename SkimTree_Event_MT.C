@@ -312,39 +312,43 @@ void SkimTree_Event_MT(int nevt=-1, bool isMC = false, int kTrigSel = kTrigL1DBO
   int loops = (int)  nevt/nCores;  
   cout << "Total events = " << nevt << ", : " << eptree->GetEntries() << endl;
   std::cout << "loop size: " << loops << std::endl;
-
+  
   for(int iev=loops*idx; iev<loops*(idx+1) && iev<nevt ; ++iev)
   {
     if(iev%100000==0) cout << ">>>>> EVENT " << iev << " / " << mytree->GetEntries() <<  " ( CORE["<<idx<<"]:" <<(int)(100.*((double)(iev-loops*idx)/loops)) << "%)" << endl;
 
     mytree->GetEntry(iev);
     eptree->GetEntry(iev);
-
+    int _kTrigSel = -1;
     nDimu = 0;
 /////////module tirgger switch///////////
     if (TrigSwitch == true){
       int _cbin = getHiBinFromhiHF(SumET_HF);
       if (PDtype==1){
+        _kTrigSel = kTrigSel;
         if (runNb >= 327123){ 
-          kTrigSel = kTrigUps;
           if (kTrigSel == kTrigL1DBOS40100){if (_cbin >=87) continue;} 
-          if (kTrigSel == kTrigL1DBOS40100){if (_cbin >=87) continue;}
+          if (kTrigSel == kTrigL1DB50100){if (_cbin >=107) continue;}
+          _kTrigSel = kTrigUps;
         }
         else{
-          if (kTrigSel == kTrigL1DBOS40100){ if (_cbin <87) kTrigSel = kTrigUps;}
-          if (kTrigSel == kTrigL1DB50100){ if (_cbin <107) kTrigSel = kTrigUps;}
+          if (kTrigSel == kTrigL1DBOS40100){ if (_cbin <87) _kTrigSel = kTrigUps;}
+          if (kTrigSel == kTrigL1DB50100){ if (_cbin <107) _kTrigSel = kTrigUps;}
         }
       }
       if (PDtype==2){
+        _kTrigSel = kTrigSel;
         if (kTrigSel == kTrigL1DBOS40100){ if (_cbin <87) continue;}
         if (kTrigSel == kTrigL1DB50100){ if (_cbin <107) continue;}
       }
     }
     else if(TrigSwitch == false){
-      if(PDtype==1){if(runNb >=327123) continue;}
+      _kTrigSel = kTrigSel;
+      if(kTrigSel!= 13) {if(PDtype==1){if(runNb >=327123) continue;}}
     }  
 /////////module tirgger switch///////////
-    if(!( (HLTriggers&((ULong64_t)pow(2, kTrigSel))) == ((ULong64_t)pow(2, kTrigSel)) ) ) continue;
+    if( _kTrigSel == -1 ) {std::cout << "NO Trigger Selected" << std::endl; break;}
+    if(!( (HLTriggers&((ULong64_t)pow(2, _kTrigSel))) == ((ULong64_t)pow(2, _kTrigSel)) ) ) continue;
 
     runN = runNb;
     evt = eventNb;
@@ -372,7 +376,7 @@ void SkimTree_Event_MT(int nevt=-1, bool isMC = false, int kTrigSel = kTrigL1DBO
       weight = 1.;
       if(isMC) weight = findNcoll(Centrality) * Gen_weight;
 
-      if(!( (Reco_QQ_trig[irqq]&((ULong64_t)pow(2, kTrigSel))) == ((ULong64_t)pow(2, kTrigSel)) ) ) continue;
+      if(!( (Reco_QQ_trig[irqq]&((ULong64_t)pow(2, _kTrigSel))) == ((ULong64_t)pow(2, _kTrigSel)) ) ) continue;
      
       if(isMC){
         if(Reco_mu_whichGen[Reco_QQ_mupl_idx[irqq]] == -1) continue;
