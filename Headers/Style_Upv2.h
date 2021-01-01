@@ -272,7 +272,7 @@ void lumiText(Double_t x, Double_t y)
 	latex->SetTextFont(42);
 	latex->SetTextAlign(11);
 	latex->SetTextSize(0.04);
-	latex->DrawLatex(x, y, "pPb 186 nb^{-1} (8.16 TeV)");
+	latex->DrawLatex(x, y, "PbPb (5.02 TeV)");
 //}}}
 }
 #endif

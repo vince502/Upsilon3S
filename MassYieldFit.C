@@ -33,10 +33,7 @@
 using namespace std;
 using namespace RooFit;
 
-void MassYieldFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "4", int Trig = 1, int cBinHigh = 180){
-  int cBinLow = 0;
-  if (Trig==1) cBinLow =80;
-  else if (Trig==2) cBinLow= 100;
+void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "4", const string Trig = "", int cBinLow =0, int cBinHigh = 180){
   Double_t etaMax= 2.4;
   Double_t etaMin = -2.4;
 
@@ -80,8 +77,8 @@ void MassYieldFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const Dou
   Double_t Frac, alp, N;
   Double_t erfm, erfsig, erfp0;
 
-  ifstream in;
-  in.open(Form("Parameter/Parameters_pt_%d-%d_rap_%d-%d_Data_Trig_%d_noWeight_MupT%s.txt", (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Trig,  MupT.Data()));
+/*  ifstream in;
+  in.open(Form("Parameter/Parameters_pt_%d-%d_rap_%d-%d_Data_Trig_%s_noWeight_MupT%s.txt", (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Trig.c_str(),  MupT.Data()));
   if(in.is_open())
   {
      while(!in.eof())
@@ -99,23 +96,20 @@ void MassYieldFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const Dou
        }
      }
   }
-  in.close();
+  in.close(); */
 
   TFile* fin;
-  fin = new TFile(Form("skimmedFiles/OniaRooDataSet_OniaSkim_TrigS%d_forFit.root",Trig),"READ");
+  fin = new TFile(Form("roodatasetFiles/%s",fname.c_str()),"READ");
   RooDataSet* dataset;
-  if (Trig == 2){ dataset = (RooDataSet*) fin->Get("sdataset");
-                  dataset->SetName("dataset");
-  }
-  else  dataset = (RooDataSet*) fin->Get("dataset");
+  dataset = (RooDataSet*) fin->Get("dataset");
 
   RooWorkspace* works1 = new RooWorkspace(Form("workspace"));
   works1->import(*dataset);
 
-  RooDataSet* initialDS = (RooDataSet*) dataset->reduce(RooArgSet(*(works1->var("mass")), *(works1->var("pt")), *(works1->var("y")), *(works1->var("cBin")), *(works1->var("pt1")), *(works1->var("pt2")), *(works1->var("eta1")), *(works1->var("eta2"))));
+  RooDataSet* initialDS = (RooDataSet*) dataset->reduce(RooArgSet(*(works1->var("mass")), *(works1->var("pt")), *(works1->var("y")), *(works1->var("cBin")), *(works1->var("pt1")), *(works1->var("pt2")), *(works1->var("eta1")), *(works1->var("eta2")), *(works1->var("recoQQsign"))));
   initialDS->SetName("initialDS");
   
-  RooDataSet* reducedDS = (RooDataSet*) initialDS->reduce(RooArgSet(*(works1->var("mass"))), Form("( pt >=%f && pt <=%f) && (y >= %f && y <=%f) && (cBin>=%d && cBin<=%d) &&(pt1 >= %f) && (pt2 >= %f) && (eta1 >= %f && eta1 <= %f) && ( eta2 >= %f && eta2 <= %f)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, MupTCut, MupTCut, etaMin, etaMax, etaMin, etaMax));
+  RooDataSet* reducedDS = (RooDataSet*) initialDS->reduce(RooArgSet(*(works1->var("mass"))), Form("( pt >=%f && pt <=%f) && (y >= %f && y <=%f) && (cBin>=%d && cBin<=%d) &&(pt1 >= %f) && (pt2 >= %f) && (eta1 >= %f && eta1 <= %f) && ( eta2 >= %f && eta2 <= %f) && (recoQQsign == 0)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, MupTCut, MupTCut, etaMin, etaMax, etaMin, etaMax));
   reducedDS->SetName("reducedDS");
   works1->import(*reducedDS);
   works1->var("mass")->setRange(RangeLow, RangeHigh);
@@ -129,7 +123,7 @@ void MassYieldFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const Dou
   TPad* pad_pull = new TPad("pad_pull", "pad_pull", 0, 0.05, 0.98, 0.25);
   pad_pull->SetBottomMargin(0);
   pad_pull->Draw();
-  TPad* pad_leg = new TPad("pad_leg", "pad_leg", 0.65, 0.35, 0.85, 0.92);
+  TPad* pad_leg = new TPad("pad_leg", "pad_leg", 0.65, 0.35, 0.94, 0.92);
   pad_leg->SetBottomMargin(0);
   pad_leg->Draw();
 
@@ -191,14 +185,14 @@ void MassYieldFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const Dou
   RooGenericPdf* Background;
   Background = (RooGenericPdf*) bkgErf;
 
-  sigma1S_1.setVal(sig11);
-  alpha.setVal(alp);
-  n.setVal(N);
-  frac->setVal(Frac);
-
-  Erfmean.setVal(erfm);
-  Erfsigma.setVal(erfsig);
-  Erfp0.setVal(erfp0);
+//  sigma1S_1.setVal(sig11);
+//  alpha.setVal(alp);
+//  n.setVal(N);
+//  frac->setVal(Frac);
+//
+//  Erfmean.setVal(erfm);
+//  Erfsigma.setVal(erfsig);
+//  Erfp0.setVal(erfp0);
 
   RooRealVar* nSig1S = new RooRealVar("nSig1S", "# of 1S signal", 400, -1000, 1000000);
   RooRealVar* nSig2S = new RooRealVar("nSig2S", "# of 2S signal", 100, -1000, 300000);
@@ -222,10 +216,16 @@ void MassYieldFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const Dou
   WriteMessage("Fitting is dOnE ! ! !");
 
   pad_pull->cd();
+  pad_pull->SetGrid(0,1);
+  TLine* line_pull = new TLine(RangeLow,0.,RangeHigh, 0.);
+  line_pull->SetLineColorAlpha(kRed, 0.5);
+  line_pull->SetLineWidth(3);
   RooHist* hpull = massPlot->pullHist("massPlot", "modelPlot");
   RooPlot* pullPlot = works1->var("mass")->frame(Title("Pull Distribution"));
   pullPlot->addPlotable(hpull, "P");
+  pullPlot->GetYaxis()->SetLabelSize(0.13);
   pullPlot->Draw();
+  line_pull->Draw("same");
 
   Double_t chi2 = 0.;
   Double_t *ypull = hpull->GetY();
@@ -249,7 +249,7 @@ void MassYieldFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const Dou
   parList.Print("v");
   works1->pdf("model")->paramOn(legPlot, Layout(0, 0.93, 0.97), Parameters(parList));
   legPlot->getAttText()->SetTextAlign(11);
-  legPlot->getAttText()->SetTextSize(0.09);
+  legPlot->getAttText()->SetTextSize(0.05);
 
   TPaveText* Ptext = (TPaveText*) legPlot->findObject(Form("%s_paramBox", works1->pdf("model")->GetName()));
   Ptext->SetY1(0.01);
@@ -318,7 +318,7 @@ void MassYieldFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const Dou
   }
   
 
-  c1->SaveAs(Form("MassDist/MassDistribution_pt_%d-%d_rap_%d-%d_%dbin_noWeight_MupT%s_Trig_%d.pdf",(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, MupT.Data(), Trig));
+  c1->SaveAs(Form("MassDist/MassDistribution_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s.pdf",(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str()));
   TH1D* hmass = new TH1D("hmass", ";M (GeV/c^2);Counts", Nmassbins, RangeLow, RangeHigh);
   reducedDS->fillHistogram(hmass, (*works1->var("mass")));
   FormTH1Marker(hmass, 0, 0, 1.4);
@@ -330,7 +330,7 @@ void MassYieldFit(const Double_t ptMin = 0, const Double_t ptMax = 30, const Dou
   lt1->DrawLatex(0.6, 0.80, Form("p_{T}^{#mu} #geq %.1f GeV/c", MupTCut));
   lt1->DrawLatex(0.6, 0.75, Form("%d #leq p_{T}^{#mu#mu} < %d GeV/c", (int) ptMin, (int) ptMax));
 
-  c2->SaveAs(Form("MassDist/WithoutFit_pt_%d-%d_rap_%d-%d_%dbin_noWeight_MupT%s_Trig_%d.pdf",(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10),  Nmassbins, MupT.Data(), Trig));
+  c2->SaveAs(Form("MassDist/WithoutFit_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s.pdf",(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10),  Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str()));
 
   fout->cd();
   massPlot->Write();
