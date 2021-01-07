@@ -98,8 +98,8 @@ void SkimTree_Event_forCent_DataMC(int nevt=-1, bool isMC = true, int kTrigSel =
   mytree->SetBranchAddress("Reco_QQ_VtxProb", Reco_QQ_VtxProb, &b_Reco_QQ_VtxProb);
 
   //  muon id 
-  Short_t           Reco_QQ_mupl_idx[maxBranchSize];
-  Short_t           Reco_QQ_mumi_idx[maxBranchSize];
+  Int_t           Reco_QQ_mupl_idx[maxBranchSize];
+  Int_t           Reco_QQ_mumi_idx[maxBranchSize];
   TBranch        *b_Reco_QQ_mupl_idx;
   TBranch        *b_Reco_QQ_mumi_idx;
   mytree->SetBranchAddress("Reco_QQ_mupl_idx",Reco_QQ_mupl_idx,&b_Reco_QQ_mupl_idx);
@@ -142,9 +142,9 @@ Int_t           Reco_mu_nPixWMea[maxBranchSize];   //[Reco_mu_size]
   Int_t           Reco_QQ_sign[maxBranchSize];   //[Reco_QQ_size]
   TBranch        *b_Reco_QQ_sign;   //!
   mytree->SetBranchAddress("Reco_QQ_sign", Reco_QQ_sign, &b_Reco_QQ_sign);
-  Float_t         rpAng[29];   //[nEP]
-  TBranch        *b_rpAng;   //!
-  mytree->SetBranchAddress("rpAng", rpAng, &b_rpAng);
+//  Float_t         rpAng[29];   //[nEP]
+//  TBranch        *b_rpAng;   //!
+//  mytree->SetBranchAddress("rpAng", rpAng, &b_rpAng);
 
   Int_t           Reco_mu_nPixValHits[maxBranchSize];   //[Reco_QQ_size]
   TBranch        *b_Reco_mu_nPixValHits;   //!
