@@ -54,8 +54,8 @@ void SkimTree_Event_forCent_DataMC(int nevt=-1, bool isMC = true, int kTrigSel =
   Int_t           Centrality;
   ULong64_t       HLTriggers;
   Float_t         SumET_HF;
-  Short_t           Reco_QQ_size;
-  Short_t           Reco_mu_size;
+  Int_t           Reco_QQ_size;
+  Int_t           Reco_mu_size;
   TClonesArray    *Reco_QQ_4mom;
   TClonesArray    *Reco_mu_4mom;
   ULong64_t       Reco_QQ_trig[maxBranchSize];   //[Reco_QQ_size]
@@ -139,7 +139,7 @@ void SkimTree_Event_forCent_DataMC(int nevt=-1, bool isMC = true, int kTrigSel =
 Int_t           Reco_mu_nPixWMea[maxBranchSize];   //[Reco_mu_size]
   TBranch        *b_Reco_mu_nPixWMea;   //!
   mytree->SetBranchAddress("Reco_mu_nPixWMea", Reco_mu_nPixWMea, &b_Reco_mu_nPixWMea);
-  Short_t           Reco_QQ_sign[maxBranchSize];   //[Reco_QQ_size]
+  Int_t           Reco_QQ_sign[maxBranchSize];   //[Reco_QQ_size]
   TBranch        *b_Reco_QQ_sign;   //!
   mytree->SetBranchAddress("Reco_QQ_sign", Reco_QQ_sign, &b_Reco_QQ_sign);
   Float_t         rpAng[29];   //[nEP]
