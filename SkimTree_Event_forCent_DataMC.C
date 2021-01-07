@@ -34,12 +34,15 @@ void SkimTree_Event_forCent_DataMC(int nevt=-1, bool isMC = true, int kTrigSel =
   if(PDtype==1) fPD = "DB";
   else if(PDtype==2) fPD = "DBPeri";
 
-  TChain *mytree = new TChain("hionia/myTree");
+  TChain *mytree;
+
   if(!isMC){
+    mytree = new TChain("myTree");
     if(PDtype==1) mytree->Add(fnameDataReReco.Data());
     else if(PDtype==2) mytree->Add(fnameDataReRecoPeri.Data());
   }
   else if(isMC){
+    mytree = new TChain("hionia/myTree");
     mytree->Add(fnameMC.Data());
   }
 
