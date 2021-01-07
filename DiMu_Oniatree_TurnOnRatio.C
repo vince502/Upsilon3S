@@ -25,7 +25,7 @@ void DiMu_Oniatree_TurnOnRatio(int nevt=-1, bool isMC = false, int kTrigSel = 0,
   //TString fname1 = "/eos/cms/store/group/phys_heavyions/dileptons/Data2018/PbPb502TeV/TTrees/PromptAOD/DoubleMuonPD/MinBias/HIMinimumBias_Run2018_Upsilon_PromptReco_v1.root";
   TString fnameData1 ="../Oniatree_skim_AODSkim_v2_1_part_20201214.root"; //"/u/user/vince402/root_tmpONIATREE_HIMB_20201228.root"; 
   TString fnameData2 = "/eos/cms/store/group/phys_heavyions/dileptons/Data2018/PbPb502TeV/TTrees/PromptAOD/DoubleMuonPD/PromptAOD_v2_Oniatree_addvn_part*.root";
-  TString fnameDataReReco = "/u/user/vince402/root_tmp/ONIATREE_HIMB_20201228.root";// "./Oniatree_part_20201217/Oniatree_skim_AODSkim_v2_1*.root";
+  TString fnameDataReReco = "/u/user/vince402/root_tmp/SkimTree_Upsilon3S_Data.root";//"/u/user/vince402/root_tmp/ONIATREE_HIMB_20201228.root";// "./Oniatree_part_20201217/Oniatree_skim_AODSkim_v2_1*.root";
   TString fnameDataReRecoPeri = "/eos/cms/store/group/phys_heavyions/dileptons/Data2018/PbPb502TeV/TTrees/ReReco/AOD/DoubleMuonPsiPeri/ReReco_Oniatree_addvn_part*.root";
   TString fnameMC = "/eos/cms/store/group/phys_heavyions/dileptons/MC2018/PbPb502TeV/TTrees/Upsi1S_TuneCP5_HydjetDrumMB_officialPythia8MC*_v20190801.root";
 
@@ -209,7 +209,7 @@ void DiMu_Oniatree_TurnOnRatio(int nevt=-1, bool isMC = false, int kTrigSel = 0,
   if(hiHFBinEdge==1) fCentSelHF = "HFUp";
   else if(hiHFBinEdge==-1) fCentSelHF = "HFDown";
   TFile* newfile;
-  newfile = new TFile("MBTrigCentPlots_DiMu_2p9m_fullCut.root","recreate");
+  newfile = new TFile("MBTrigCentPlots_DiMu_4p5m_fullCut.root","recreate");
 
   const static int nMaxDimu = 1000;
   int evt;
@@ -291,6 +291,7 @@ void DiMu_Oniatree_TurnOnRatio(int nevt=-1, bool isMC = false, int kTrigSel = 0,
   TLorentzVector* JP_Reco = new TLorentzVector;
   TLorentzVector* mupl_Reco = new TLorentzVector;
   TLorentzVector* mumi_Reco = new TLorentzVector;
+  
 
 
 
@@ -343,12 +344,15 @@ void DiMu_Oniatree_TurnOnRatio(int nevt=-1, bool isMC = false, int kTrigSel = 0,
       if (!(Reco_QQ_sign[irqq]==0)) continue; 
       mupl_Reco = (TLorentzVector*) Reco_mu_4mom->At(Reco_QQ_mupl_idx[irqq]);
       mumi_Reco = (TLorentzVector*) Reco_mu_4mom->At(Reco_QQ_mumi_idx[irqq]);
+      JP_Reco = (TLorentzVector*) Reco_QQ_4mom->At(irqq);
       float mupt1 = mupl_Reco->Pt();
       float mupt2 = mumi_Reco->Pt();
       float mueta1 = mupl_Reco->Eta();
       float mueta2 = mumi_Reco->Eta();
+      float mass_dimu = JP_Reco->M();
       if( !( ((mueta1 > -2.4) && (mueta1 <2.4)) &&((mueta2 > -2.4) && (mueta2 <2.4)) )) continue; 
-      if( !(mupt1 > 3.0 && mupt2 > 3.0)) continue;
+      if( !(mupt1 > 3.5 && mupt2 > 3.5)) continue;
+      if( !( mass_dimu >=8 && mass_dimu <=14 )) continue;
       if( !((Reco_QQ_trig[irqq]&((ULong64_t)pow(2,0)) )==((ULong64_t)pow(2,0))) ) continue;
       h1->Fill(cBin);
 

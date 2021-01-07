@@ -41,16 +41,17 @@ void DrawYieldHist(const double ptMin = 0., const double ptMax = 50., const doub
   FormLatex(lt1, 12, 0.035);
   lt1->DrawLatex(0.55,0.75, Form("p_{T}^{#mu} #geq %.1f GeV/c", ptCut));
   lt1->DrawLatex(0.55,0.70, Form("%d #leq p_{T}^{#mu#mu} < %d GeV/c", (int) ptMin, (int) ptMax));
+  lt1->DrawLatex(0.55,0.65, Form("Centrality %d-%d %%",(int) cBinLow/2, (int) cBinHigh/2));
   TLatex* lt2 = new TLatex();
   FormLatex(lt2, 12, 0.04);
-  lt2->DrawLatex(0.1, 0.93, Form("Centrality %d-%d %%",(int) cBinLow/2, (int) cBinHigh/2));
   string sw = "Sw0";
-  if (trigSwitch) sw = "Sw1";
+  string sw2 = "Only";
+  if (trigSwitch) {sw = "Sw1"; sw2 = "With Ups Trigger";}
   string NTrig = "";
-  if (Trig == "S1") NTrig = "DBMuOS40100";
-  else if (Trig == "S2") NTrig = "DBMu50100";
+  if (Trig == "S1") NTrig = Form("DBMuOS40100");
+  else if (Trig == "S2") NTrig = Form("DBMu50100");
   else if (Trig == "S13") NTrig = "Ups";
-  lt1->DrawLatex(0.55,0.80, Form("Trigger : %s", NTrig.c_str()));
+  lt1->DrawLatex(0.55,0.80, Form("Trigger : %s %s", NTrig.c_str(), sw2.c_str()));
   c1->SaveAs(Form("MassHisto/MassDist_%.0f-%.0f_cut%dp%dGeV_%s_%d-%d_%s.pdf",ptMin, ptMax, (int) ptCut, (int) (10*(ptCut-(int)ptCut)), NTrig.c_str(),(int) cBinLow/2, (int)  cBinHigh/2, sw.c_str()));
   c1->Close();
   fTrigS1->Close();

@@ -250,6 +250,8 @@ std::cout << "///////////////////////////////////////////////////////// test cod
     Npullbin++;
   }
   Int_t Nfitpar = Result->floatParsFinal().getSize();
+  Double_t NLL = Result->minNll();
+  std::cout << "NLL : " << NLL << std::endl;
   Int_t ndf = Npullbin - Nfitpar;
 
   TLatex* NormChi2tex = new TLatex();

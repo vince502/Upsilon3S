@@ -33,7 +33,7 @@
 using namespace std;
 using namespace RooFit;
 
-void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "4", const string Trig = "", int cBinLow =0, int cBinHigh = 180){
+void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "4", const string Trig = "", int cBinLow =0, int cBinHigh = 180, Double_t params[/*sigma1S_1, alpha, n , frac, Erfmean, Erfsigma, Erfp0*/]= {}){
   Double_t etaMax= 2.4;
   Double_t etaMin = -2.4;
 
@@ -55,7 +55,7 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
   const Int_t Nmassbins = 120;
 
   TFile* fout;
-  fout = new TFile(Form("Yield/Yield_pt_%d-%d_rap_%d-%d_Data_noWeight_MupT%s.root", (int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), MupT.Data()), "RECREATE");
+  fout = new TFile(Form("Yield/Yield_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s.root", (int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str()), "RECREATE");
 
   Double_t MupTCut;
   if(MupT == "0") MupTCut = 0;
@@ -72,10 +72,9 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
           cout << "There is no such muon pT cut value" << endl;
           return;
   }
-
-  Double_t sig11;
-  Double_t Frac, alp, N;
-  Double_t erfm, erfsig, erfp0;
+//  Double_t sig11;
+//  Double_t Frac, alp, N;
+//  Double_t erfm, erfsig, erfp0;
 
 /*  ifstream in;
   in.open(Form("Parameter/Parameters_pt_%d-%d_rap_%d-%d_Data_Trig_%s_noWeight_MupT%s.txt", (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Trig.c_str(),  MupT.Data()));
@@ -133,7 +132,7 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
   RooPlot* massPlot = works1->var("mass")->frame(Nmassbins);
   works1->data("reducedDS")->plotOn(massPlot, Name("massPlot"));
 
-  RooRealVar mean1S("mean1S", "mean of Upsilon 1S", U1S_mass, U1S_mass-0.01, U1S_mass+0.01);
+  RooRealVar mean1S("mean1S", "mean of Upsilon 1S", U1S_mass, U1S_mass-0.015, U1S_mass+0.015);
   RooRealVar mratio2("mratio2", "mratio2", U2S_mass/U1S_mass);
   RooRealVar mratio3("mratio3", "mratio3", U3S_mass/U1S_mass);
   RooFormulaVar mean2S("mean2S", "mean1S*mratio2", RooArgSet(mean1S, mratio2));
@@ -170,8 +169,8 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
 //  RooAddPdf* CBG2S = new RooAddPdf("CBG2S", "Sum of 2S Crystal ball Gauss", RooArgList(*CB2S_1, *G2S), RooArgList(*frac));
 //  RooAddPdf* CBG3S = new RooAddPdf("CBG3S", "Sum of 3S Crystal ball Gauss", RooArgList(*CB3S_1, *G3S), RooArgList(*frac));
   RooRealVar Erfmean("Erfmean", "Mean of Errfunction", 5, 0, 10.0);//for 0~40, 4~7 GeV
-  RooRealVar Erfsigma("Erfsigma", "Sigma of Errfunction", 1, 0, 100);//for 0~40, 4~7 GeV
-  RooRealVar Erfp0("Erfp0", "1st parameter of Errfunction", 1, 0, 100);
+  RooRealVar Erfsigma("Erfsigma", "Sigma of Errfunction", 1, 0, 30);//for 0~40, 4~7 GeV
+  RooRealVar Erfp0("Erfp0", "1st parameter of Errfunction", 1, 0, 30);
   RooGenericPdf* bkgErf = new RooGenericPdf("bkgErf", "Error background", "TMath::Exp(-@0/@1)*(TMath::Erf((@0-@2)/(TMath::Sqrt(2)*@3))+1)*0.5", RooArgList(*(works1->var("mass")), Erfp0, Erfmean, Erfsigma));
 
   RooGenericPdf* Signal1S;
@@ -185,18 +184,18 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
   RooGenericPdf* Background;
   Background = (RooGenericPdf*) bkgErf;
 
-//  sigma1S_1.setVal(sig11);
-//  alpha.setVal(alp);
-//  n.setVal(N);
-//  frac->setVal(Frac);
-//
-//  Erfmean.setVal(erfm);
-//  Erfsigma.setVal(erfsig);
-//  Erfp0.setVal(erfp0);
+  sigma1S_1.setVal(params[0]);
+  alpha.setVal(params[1]);
+  n.setVal(params[2]);
+  frac->setVal(params[3]);
+
+  Erfmean.setVal(params[4]);
+  Erfsigma.setVal(params[5]);
+  Erfp0.setVal(params[6]);
 
   RooRealVar* nSig1S = new RooRealVar("nSig1S", "# of 1S signal", 400, -1000, 1000000);
   RooRealVar* nSig2S = new RooRealVar("nSig2S", "# of 2S signal", 100, -1000, 300000);
-  RooRealVar* nSig3S = new RooRealVar("nSig3S", "# of 3S signal", 30, -1000, 90000);
+  RooRealVar* nSig3S = new RooRealVar("nSig3S", "# of 3S signal", 30, -10, 90000);
   RooRealVar* nBkg = new RooRealVar("nBkg", "# of background signal", 300, -1000, 10000000);
   RooAddPdf* model = new RooAddPdf("model", "1S+2S+3S+Bkg", RooArgList(*Signal1S, *Signal2S, *Signal3S, *Background), RooArgList(*nSig1S, *nSig2S, *nSig3S, *nBkg));
 
@@ -212,6 +211,12 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
   massPlot->SetXTitle("M (GeV/c^2)");
   massPlot->SetYTitle("Counts");
   massPlot->Draw();
+  TLatex* lt0 = new TLatex();
+  FormLatex(lt0, 12, 0.035);
+  lt0->DrawLatex(0.43,0.80, Form("p_{T}^{#mu} #geq %.1f GeV/c",MupTCut));
+  lt0->DrawLatex(0.43,0.75, Form("%d #leq p_{T}^{#mu#mu} < %d GeV/c", (int) ptMin, (int) ptMax));
+  lt0->DrawLatex(0.43,0.70, Form("Centrality %d-%d %%",(int) cBinLow/2, (int) cBinHigh/2));
+  lt0->DrawLatex(0.43,0.65, Form("Trigger# : %s", Trig.c_str()));
   Result->Print("v");
   WriteMessage("Fitting is dOnE ! ! !");
 
@@ -255,6 +260,8 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
   Ptext->SetY1(0.01);
   Ptext->SetY2(0.95);
   Ptext->Draw();
+
+  
   WriteMessage("Writting result is dOnE !!!");
 
   Double_t Yield1S = works1->var("nSig1S")->getVal();
