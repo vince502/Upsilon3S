@@ -28,10 +28,26 @@ void Draw_CentRatio(){
  tdata->SetBranchAddress("cBin", &cBind, &b_cBind);
  tdata->SetBranchAddress("nDimu", &nDimuD, &b_nDimuD);
  tdata->SetBranchAddress("mass", &massD, &b_massD);
+ Float_t pt1d; TBranch* b_pt1d;
+ tdata->SetBranchAddress("pt1", &pt1d, &b_pt1d); 
+ Float_t pt2d; TBranch* b_pt2d;
+ tdata->SetBranchAddress("pt2", &pt2d, &b_pt2d); 
+ Float_t eta1d; TBranch* b_eta1d;
+ tdata->SetBranchAddress("eta1", &eta1d, &b_eta1d); 
+ Float_t eta2d; TBranch* b_eta2d;
+ tdata->SetBranchAddress("eta2", &eta2d, &b_eta2d); 
  tmc->SetBranchAddress("cBin", &cBinm, &b_cBinm);
  tmc->SetBranchAddress("weight", &weight, &b_weight);
  tmc->SetBranchAddress("nDimu", &nDimuM, &b_nDimuM);
  tmc->SetBranchAddress("mass", &massM, &b_massM);
+ Float_t pt1m; TBranch* b_pt1m;
+ tmc->SetBranchAddress("pt1", &pt1m, &b_pt1m); 
+ Float_t pt2m; TBranch* b_pt2m;
+ tmc->SetBranchAddress("pt2", &pt2m, &b_pt2m); 
+ Float_t eta1m; TBranch* b_eta1m;
+ tdata->SetBranchAddress("eta1", &eta1m, &b_eta1m); 
+ Float_t eta2m; TBranch* b_eta2m;
+ tdata->SetBranchAddress("eta2", &eta2m, &b_eta2m); 
 
  nevtd = tdata->GetEntries();
  nevtm = tmc->GetEntries();
@@ -40,14 +56,14 @@ void Draw_CentRatio(){
  for(int iev = 0; iev < nevtd; ++iev){
   tdata->GetEntry(iev);
   for(int idi = 0; idi < nDimuD; ++idi){
-    if(cBind <= 180 && (massD[idi] >=9.2 && massD[idi]<=9.8)) hd->Fill(cBind);
+    if(cBind <= 180 && (massD[idi] >=9.2 && massD[idi]<=9.8) && (pt1d >3.5 && pt2d >3.5)&& ( eta1d > -2,4 && eta1d <2.4 ) && (eta2d > -2.4 && eta2d <2.4) ) hd->Fill(cBind);
   }
  }
 
  for(int iev = 0; iev < nevtm; ++iev){
   tmc->GetEntry(iev);
     for(int idi = 0; idi < nDimuM; ++idi){
-      if(cBinm <=180 && (massM[idi] >= 9.2 && massM[idi]<= 9.8)) hm->Fill(cBinm,weight);
+      if(cBinm <=180 && (massM[idi] >= 9.2 && massM[idi]<= 9.8)&& (pt1m >3.5 && pt2m >3.5)&& ( eta1m > -2,4 && eta1m <2.4 ) && (eta2m > -2.4 && eta2m <2.4)) hm->Fill(cBinm,weight);
     }
  }
  TH1D* hn = (TH1D*) hd->Clone("hn"); 

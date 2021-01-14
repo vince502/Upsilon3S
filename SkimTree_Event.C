@@ -45,14 +45,14 @@ void SkimTree_Event(int nevt=-1, bool isMC = true, int kTrigSel = kTrigUps, int 
 
   const int maxBranchSize = 1000;
 
-  UInt_t          runNb, LS;
+  //UInt_t          runNb, LS;
   UInt_t          eventNb;
   float           zVtx;
   Int_t           Centrality;
   ULong64_t       HLTriggers;
   Float_t         SumET_HF;
-  Int_t           Reco_QQ_size;
-  Int_t           Reco_mu_size;
+  Short_t           Reco_QQ_size;
+  Short_t           Reco_mu_size;
   TClonesArray    *Reco_QQ_4mom;
   TClonesArray    *Reco_mu_4mom;
   ULong64_t       Reco_QQ_trig[maxBranchSize];   //[Reco_QQ_size]
@@ -79,8 +79,8 @@ void SkimTree_Event(int nevt=-1, bool isMC = true, int kTrigSel = kTrigUps, int 
 
   Reco_QQ_4mom = 0;
   Reco_mu_4mom = 0;
-  mytree->SetBranchAddress("runNb", &runNb, &b_runNb);
-  mytree->SetBranchAddress("LS", &LS, &b_LS);
+//  mytree->SetBranchAddress("runNb", &runNb, &b_runNb);
+//  mytree->SetBranchAddress("LS", &LS, &b_LS);
   mytree->SetBranchAddress("eventNb", &eventNb, &b_eventNb);
   mytree->SetBranchAddress("zVtx", &zVtx, &b_zVtx);
   mytree->SetBranchAddress("Centrality", &Centrality, &b_Centrality);
@@ -95,8 +95,8 @@ void SkimTree_Event(int nevt=-1, bool isMC = true, int kTrigSel = kTrigUps, int 
   mytree->SetBranchAddress("Reco_QQ_VtxProb", Reco_QQ_VtxProb, &b_Reco_QQ_VtxProb);
 
   //  muon id 
-  Int_t           Reco_QQ_mupl_idx[maxBranchSize];
-  Int_t           Reco_QQ_mumi_idx[maxBranchSize];
+  Short_t           Reco_QQ_mupl_idx[maxBranchSize];
+  Short_t           Reco_QQ_mumi_idx[maxBranchSize];
   TBranch        *b_Reco_QQ_mupl_idx;
   TBranch        *b_Reco_QQ_mumi_idx;
   mytree->SetBranchAddress("Reco_QQ_mupl_idx",Reco_QQ_mupl_idx,&b_Reco_QQ_mupl_idx);
@@ -129,26 +129,26 @@ void SkimTree_Event(int nevt=-1, bool isMC = true, int kTrigSel = kTrigUps, int 
   Int_t           Reco_mu_nTrkWMea[maxBranchSize];   //[Reco_mu_size]
   TBranch        *b_Reco_mu_nTrkWMea;   //!
   mytree->SetBranchAddress("Reco_mu_nTrkWMea", Reco_mu_nTrkWMea, &b_Reco_mu_nTrkWMea);
-  Bool_t          Reco_mu_TMOneStaTight[maxBranchSize];   //[Reco_mu_size]
-  TBranch        *b_Reco_mu_TMOneStaTight;   //!
-
-  mytree->SetBranchAddress("Reco_mu_TMOneStaTight", Reco_mu_TMOneStaTight, &b_Reco_mu_TMOneStaTight);
+//  Bool_t          Reco_mu_TMOneStaTight[maxBranchSize];   //[Reco_mu_size]
+//  TBranch        *b_Reco_mu_TMOneStaTight;   //!
+//
+//  mytree->SetBranchAddress("Reco_mu_TMOneStaTight", Reco_mu_TMOneStaTight, &b_Reco_mu_TMOneStaTight);
 Int_t           Reco_mu_nPixWMea[maxBranchSize];   //[Reco_mu_size]
   TBranch        *b_Reco_mu_nPixWMea;   //!
   mytree->SetBranchAddress("Reco_mu_nPixWMea", Reco_mu_nPixWMea, &b_Reco_mu_nPixWMea);
-  Int_t           Reco_QQ_sign[maxBranchSize];   //[Reco_QQ_size]
+  Short_t           Reco_QQ_sign[maxBranchSize];   //[Reco_QQ_size]
   TBranch        *b_Reco_QQ_sign;   //!
   mytree->SetBranchAddress("Reco_QQ_sign", Reco_QQ_sign, &b_Reco_QQ_sign);
-  Float_t         rpAng[29];   //[nEP]
-  TBranch        *b_rpAng;   //!
-  mytree->SetBranchAddress("rpAng", rpAng, &b_rpAng);
+//  Float_t         rpAng[29];   //[nEP]
+//  TBranch        *b_rpAng;   //!
+//  mytree->SetBranchAddress("rpAng", rpAng, &b_rpAng);
 
   Int_t           Reco_mu_nPixValHits[maxBranchSize];   //[Reco_QQ_size]
   TBranch        *b_Reco_mu_nPixValHits;   //!
   mytree->SetBranchAddress("Reco_mu_nPixValHits", Reco_mu_nPixValHits, &b_Reco_mu_nPixValHits);
-  Float_t         Reco_mu_ptErr_global[maxBranchSize];   //[Reco_QQ_size]
-  TBranch        *b_Reco_mu_ptErr_global;   //!
-  mytree->SetBranchAddress("Reco_mu_ptErr_global", Reco_mu_ptErr_global, &b_Reco_mu_ptErr_global);
+//  Float_t         Reco_mu_ptErr_global[maxBranchSize];   //[Reco_QQ_size]
+//  TBranch        *b_Reco_mu_ptErr_global;   //!
+//  mytree->SetBranchAddress("Reco_mu_ptErr_global", Reco_mu_ptErr_global, &b_Reco_mu_ptErr_global);
 
   Int_t           Reco_mu_SelectionType[maxBranchSize];
   TBranch        *b_Reco_mu_SelectionType;
@@ -312,13 +312,16 @@ Int_t           Reco_mu_nPixWMea[maxBranchSize];   //[Reco_mu_size]
 
     for (Int_t irqq=0; irqq<Reco_QQ_size; ++irqq) 
     {
-      runN = runNb;
+    //  runN = runNb;
       evt = eventNb;
-      lumi = LS;
+    //  lumi = LS;
       cBin = -999;
-      if(hiHFBinEdge ==0) cBin = getHiBinFromhiHF(SumET_HF);
-      else if(hiHFBinEdge == 1) cBin = getHiBinFromhiHF_Up(SumET_HF);
-      else if(hiHFBinEdge == -1) cBin = getHiBinFromhiHF_Down(SumET_HF);
+      if(isMC){ cBin = Centrality;}
+      else{ 
+	if(hiHFBinEdge ==0) cBin = getHiBinFromhiHF(SumET_HF);
+        else if(hiHFBinEdge == 1) cBin = getHiBinFromhiHF_Up(SumET_HF);
+        else if(hiHFBinEdge == -1) cBin = getHiBinFromhiHF_Down(SumET_HF);
+      }
       if(cBin==-999){ cout << "ERROR!!! No HF Centrality Matching!!" << endl; return;}
       vz = zVtx;
 
