@@ -48,7 +48,7 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,const string fname = "", 
 
   
   TString mainDIR = gSystem->ExpandPathName(gSystem->pwd());
-  TString massDIR = mainDIR + Form("/MassDist/%dS",state);
+  TString massDIR = mainDIR + Form("/MassDist/CBGaus_%dS",state);
   void * dirpM = gSystem->OpenDirectory(massDIR.Data());
   if(dirpM) gSystem->FreeDirectory(dirpM);
   else gSystem->mkdir(massDIR.Data(), kTRUE);
@@ -160,7 +160,7 @@ std::cout << "///////////////////////////////////////////////////////// test cod
   RooRealVar *alpha, *n, *frac;
   if ( state == 1 || fixvar == false ){
      alpha = new RooRealVar("alpha", "alpha of Crystal ball", 2.0, 0.8, 10.0);
-     n = new RooRealVar("n", "n of Crystal ball", 3.0, 0.8,50.0);
+     n = new RooRealVar("n", "n of Crystal ball", 2.0, 0.8, 10.0);
      frac = new RooRealVar("frac", "CB fraction", 0.5, 0, 1);
    }
    if ( fixvar == true && state == 3 ){
@@ -172,16 +172,20 @@ std::cout << "///////////////////////////////////////////////////////// test cod
   RooCBShape* CB3S_1 = new RooCBShape("CB3S_1", "3S Crystal ball function1", *(works1->var("mass")), mean3S, *sigma3S_1, *alpha, *n);
 //  RooCBShape* CB2S_1 = new RooCBShape("CB2S_1", "2S Crystal ball function1", *(works1->var("mass")), mean2S, sigma2S_1, alpha, n);
 //  RooCBShape* CB3S_1 = new RooCBShape("CB3S_1", "3S Crystal ball function1", *(works1->var("mass")), mean3S, sigma3S_1, alpha, n);
-  RooCBShape* CB1S_2 = new RooCBShape("CB1S_2", "1S Crystal ball function2", *(works1->var("mass")), mean1S, sigma1S_2, *alpha, *n);
-  RooCBShape* CB3S_2 = new RooCBShape("CB3S_2", "3S Crystal ball function2", *(works1->var("mass")), mean3S, *sigma3S_2, *alpha, *n);
+//  RooCBShape* CB1S_2 = new RooCBShape("CB1S_2", "1S Crystal ball function2", *(works1->var("mass")), mean1S, sigma1S_2, *alpha, *n);
+//  RooCBShape* CB3S_2 = new RooCBShape("CB3S_2", "3S Crystal ball function2", *(works1->var("mass")), mean3S, *sigma3S_2, *alpha, *n);
+  RooGaussian* G1S_2 = new RooGaussian("Gaussian for 1S_", "Gaussian1S", *(works1->var("mass")), mean1S, sigma1S_2);
+  RooGaussian* G3S_2 = new RooGaussian("Gaussian for 3S_", "Gaussian3S", *(works1->var("mass")), mean3S, *sigma3S_2);
 //  RooCBShape* CB2S_2 = new RooCBShape("CB2S_2", "2S Crystal ball function2", *(works1->var("mass")), mean2S, sigma2S_2, alpha, n);
 //  RooCBShape* CB3S_2 = new RooCBShape("CB3S_2", "3S Crystal ball function2", *(works1->var("mass")), mean3S, sigma3S_2, alpha, n);
 //  RooGaussian* G1S = new RooGaussian("G1S", "1S Gaussian", *(works1->var("mass")), mean1S, sigma1S_2);
 //  RooGaussian* G2S = new RooGaussian("G2S", "2S Gaussian", *(works1->var("mass")), mean2S, sigma2S_2);
 //  RooGaussian* G3S = new RooGaussian("G3S", "3S Gaussian", *(works1->var("mass")), mean3S, sigma3S_2);
 
-  RooAddPdf* twoCB1S = new RooAddPdf("twoCB1S", "Sum of 1S Crystal ball", RooArgList(*CB1S_1, *CB1S_2), RooArgList(*frac));
-  RooAddPdf* twoCB3S = new RooAddPdf("twoCB3S", "Sum of 3S Crystal ball", RooArgList(*CB3S_1, *CB3S_2), RooArgList(*frac));
+//  RooAddPdf* twoCB1S = new RooAddPdf("twoCB1S", "Sum of 1S Crystal ball", RooArgList(*CB1S_1, *CB1S_2), RooArgList(*frac));
+//  RooAddPdf* twoCB3S = new RooAddPdf("twoCB3S", "Sum of 3S Crystal ball", RooArgList(*CB3S_1, *CB3S_2), RooArgList(*frac));
+  RooAddPdf* twoCB1S = new RooAddPdf("twoCB1S", "Sum of 1S Crystal ball + Gaussian", RooArgList(*CB1S_1, *G1S_2), RooArgList(*frac));
+  RooAddPdf* twoCB3S = new RooAddPdf("twoCB3S", "Sum of 3S Crystal ball + Gaussian", RooArgList(*CB3S_1, *G3S_2), RooArgList(*frac));
 //  RooAddPdf* twoCB2S = new RooAddPdf("twoCB2S", "Sum of 2S Crystal ball", RooArgList(*CB2S_1, *CB2S_2), RooArgList(*frac));
 //  RooAddPdf* twoCB3S = new RooAddPdf("twoCB3S", "Sum of 3S Crystal ball", RooArgList(*CB3S_1, *CB3S_2), RooArgList(*frac));
 //  RooAddPdf* CBG1S = new RooAddPdf("CBG1S", "Sum of 1S Crystal ball Gauss", RooArgList(*CB1S_1, *G1S), RooArgList(*frac));
@@ -219,8 +223,8 @@ std::cout << "///////////////////////////////////////////////////////// test cod
   RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), Hesse(kTRUE), Range(RangeLow, RangeHigh), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));
   works1->pdf("model")->plotOn(massPlot, Name("modelPlot"));
 //  works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*Signal2S)), LineColor(kRed), LineStyle(kDashed), MoveToBack());
-  if( state ==1 ) {works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*Signal1S)), LineColor(kRed), LineStyle(kDashed), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CB1S_1)), LineColor(kGreen), LineStyle(kSolid), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CB1S_2)), LineColor(kMagenta), LineStyle(kDashDotted), MoveToBack());}
-  if( state ==3 ) {works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*Signal3S)), LineColor(kRed), LineStyle(kDashed), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CB3S_1)), LineColor(kGreen), LineStyle(kSolid), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CB3S_2)), LineColor(kMagenta), LineStyle(kDashDotted), MoveToBack());}
+  if( state ==1 ) {works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*Signal1S)), LineColor(kRed), LineStyle(kDashed), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CB1S_1)), LineColor(kGreen), LineStyle(kSolid), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*G1S_2)), LineColor(kMagenta), LineStyle(kDashDotted), MoveToBack());}
+  if( state ==3 ) {works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*Signal3S)), LineColor(kRed), LineStyle(kDashed), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CB3S_1)), LineColor(kGreen), LineStyle(kSolid), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*G3S_2)), LineColor(kMagenta), LineStyle(kDashDotted), MoveToBack());}
   works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*bkg)), LineColor(kBlue), LineStyle(kDashed));
   massPlot->SetTitle("");
   massPlot->SetXTitle("M (GeV/c^2)");
@@ -388,7 +392,7 @@ std::cout << "///////////////////////////////////////////////////////// test cod
  
 };
 
-void MassYieldFit_MC(const string _fname1s = "", const string _fname3s = "", const Double_t _ptMin = 0, const Double_t _ptMax = 30, const Double_t _rapMin = -2.4, const Double_t _rapMax = 2.4, const TString _MupT = "4", const string _Trig = "", int _cBinHigh = 180, int _state = 1, bool _fixvar =false){
+void MassYieldFit_CBGaus_MC(const string _fname1s = "", const string _fname3s = "", const Double_t _ptMin = 0, const Double_t _ptMax = 30, const Double_t _rapMin = -2.4, const Double_t _rapMax = 2.4, const TString _MupT = "4", const string _Trig = "", int _cBinHigh = 180, int _state = 1, bool _fixvar =false){
   struct Y1Sfitvar Y1Svar;
   if( _fixvar == true){
     MassYieldSingleStateMCFit( &Y1Svar, _fname1s, _ptMin, _ptMax, _rapMin, _rapMax, _MupT , _Trig, _cBinHigh, 1, _fixvar);

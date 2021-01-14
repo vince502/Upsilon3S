@@ -29,11 +29,12 @@
 #include <RooFormulaVar.h>
 #include "Headers/Style_Upv2.h"
 #include "Headers/Upsilon.h"
+#include "Custom_Pdf.h"
 
 using namespace std;
 using namespace RooFit;
 
-void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "4", const string Trig = "", int cBinLow =0, int cBinHigh = 180, Double_t params[/*sigma1S_1, alpha, n , frac, Erfmean, Erfsigma, Erfp0*/]= {}){
+void _MassYieldFit_GausExp(const string fname = "", const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "4", const string Trig = "", int cBinLow =0, int cBinHigh = 180, Double_t params[/*sigma1S_1, k, frac, Erfmean, Erfsigma, Erfp0*/]= {}){
   Double_t etaMax= 2.4;
   Double_t etaMin = -2.4;
 
@@ -72,30 +73,6 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
           cout << "There is no such muon pT cut value" << endl;
           return;
   }
-//  Double_t sig11;
-//  Double_t Frac, alp, N;
-//  Double_t erfm, erfsig, erfp0;
-
-/*  ifstream in;
-  in.open(Form("Parameter/Parameters_pt_%d-%d_rap_%d-%d_Data_Trig_%s_noWeight_MupT%s.txt", (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Trig.c_str(),  MupT.Data()));
-  if(in.is_open())
-  {
-     while(!in.eof())
-     {
-       if(!in.good())
-       {
-         cout << "Parameter File is wrong!!! Please Check!!!" << endl;
-         return;
-       }
-       else
-       {
-         //if(SigSys) in >> sig11 >> Frac >> alp >> N >> erfm >> erfsig >> erfp0;
-         //else if(BkgSys) in >> sig11 >> Frac >> alp >> N >> chebyp0 >> chebyp1 >> chebyp2 >> ch    ebyp3;
-          in >> sig11 >> Frac >> alp >> N >> erfm >> erfsig >> erfp0;
-       }
-     }
-  }
-  in.close(); */
 
   TFile* fin;
   fin = new TFile(Form("roodatasetFiles/%s",fname.c_str()),"READ");
@@ -138,7 +115,7 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
   RooFormulaVar mean2S("mean2S", "mean1S*mratio2", RooArgSet(mean1S, mratio2));
   RooFormulaVar mean3S("mean3S", "mean1S*mratio3", RooArgSet(mean1S, mratio3));
 
-  RooRealVar sigma1S_1("sigma1S_1", "sigma1 of 1S", 0.05, 0.01, 0.2);
+  RooRealVar sigma1S_1("sigma1S_1", "sigma1 of 1S", 0.05, 0.01, 0.5);
   RooFormulaVar sigma2S_1("sigma2S_1", "@0*@1", RooArgList(sigma1S_1, mratio2));
   RooFormulaVar sigma3S_1("sigma3S_1", "@0*@1", RooArgList(sigma1S_1, mratio3));
 
@@ -148,23 +125,27 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
   RooFormulaVar sigma2S_2("sigma1S_2", "@0*@1", RooArgList(sigma1S_2, mratio2));
   RooFormulaVar sigma3S_2("sigma1S_2", "@0*@1", RooArgList(sigma1S_2, mratio3));
 
-  RooRealVar alpha("alpha", "alpha of Crystal ball", 2.0, 4, 20.0);
-  RooRealVar n("n", "n of Crystal ball", 2.0, 0.5, 20.0);
-  RooRealVar* frac = new RooRealVar("frac", "CB fraction", 0.5, 0, 1);
+  RooRealVar k("k", "k of Gaus-Exp Pdf", 1.0, 0, 5.0);
+  RooRealVar* frac = new RooRealVar("frac", "GE fraction", 0.5, 0, 1);
 
-  RooCBShape* CB1S_1 = new RooCBShape("CB1S_1", "1S Crystal ball function1", *(works1->var("mass")), mean1S, sigma1S_1, alpha, n);
-  RooCBShape* CB2S_1 = new RooCBShape("CB2S_1", "2S Crystal ball function1", *(works1->var("mass")), mean2S, sigma2S_1, alpha, n);
-  RooCBShape* CB3S_1 = new RooCBShape("CB3S_1", "3S Crystal ball function1", *(works1->var("mass")), mean3S, sigma3S_1, alpha, n);
-  RooCBShape* CB1S_2 = new RooCBShape("CB1S_2", "1S Crystal ball function2", *(works1->var("mass")), mean1S, sigma1S_2, alpha, n);
-  RooCBShape* CB2S_2 = new RooCBShape("CB2S_2", "2S Crystal ball function2", *(works1->var("mass")), mean2S, sigma2S_2, alpha, n);
-  RooCBShape* CB3S_2 = new RooCBShape("CB3S_2", "3S Crystal ball function2", *(works1->var("mass")), mean3S, sigma3S_2, alpha, n);
+//  RooCBShape* CB1S_1 = new RooCBShape("CB1S_1", "1S Crystal ball function1", *(works1->var("mass")), mean1S, sigma1S_1, alpha, n);
+//  RooCBShape* CB2S_1 = new RooCBShape("CB2S_1", "2S Crystal ball function1", *(works1->var("mass")), mean2S, sigma2S_1, alpha, n);
+//  RooCBShape* CB3S_1 = new RooCBShape("CB3S_1", "3S Crystal ball function1", *(works1->var("mass")), mean3S, sigma3S_1, alpha, n);
+//  RooCBShape* CB1S_2 = new RooCBShape("CB1S_2", "1S Crystal ball function2", *(works1->var("mass")), mean1S, sigma1S_2, alpha, n);
+//  RooCBShape* CB2S_2 = new RooCBShape("CB2S_2", "2S Crystal ball function2", *(works1->var("mass")), mean2S, sigma2S_2, alpha, n);
+//  RooCBShape* CB3S_2 = new RooCBShape("CB3S_2", "3S Crystal ball function2", *(works1->var("mass")), mean3S, sigma3S_2, alpha, n);
 //  RooGaussian* G1S = new RooGaussian("G1S", "1S Gaussian", *(works1->var("mass")), mean1S, sigma1S_2);
 //  RooGaussian* G2S = new RooGaussian("G2S", "2S Gaussian", *(works1->var("mass")), mean2S, sigma2S_2);
 //  RooGaussian* G3S = new RooGaussian("G3S", "3S Gaussian", *(works1->var("mass")), mean3S, sigma3S_2);
-
-  RooAddPdf* twoCB1S = new RooAddPdf("twoCB1S", "Sum of 1S Crystal ball", RooArgList(*CB1S_1, *CB1S_2), RooArgList(*frac));
-  RooAddPdf* twoCB2S = new RooAddPdf("twoCB2S", "Sum of 2S Crystal ball", RooArgList(*CB2S_1, *CB2S_2), RooArgList(*frac));
-  RooAddPdf* twoCB3S = new RooAddPdf("twoCB3S", "Sum of 3S Crystal ball", RooArgList(*CB3S_1, *CB3S_2), RooArgList(*frac));
+  RooAbsPdf* GausExp1S_1 = RooFit::bindPdf("GE1S_1", GausExp, *(works1->var("mass")), mean1S, k, sigma1S_1);
+  RooAbsPdf* GausExp1S_2 = RooFit::bindPdf("GE1S_2", GausExp, *(works1->var("mass")), mean1S, k, sigma1S_2);
+  RooAbsPdf* GausExp2S_1 = RooFit::bindPdf("GE2S_1", GausExp, *(works1->var("mass")), mean2S, k, sigma2S_1);
+  RooAbsPdf* GausExp2S_2 = RooFit::bindPdf("GE2S_2", GausExp, *(works1->var("mass")), mean2S, k, sigma2S_2);
+  RooAbsPdf* GausExp3S_1 = RooFit::bindPdf("GE3S_1", GausExp, *(works1->var("mass")), mean3S, k, sigma3S_1);
+  RooAbsPdf* GausExp3S_2 = RooFit::bindPdf("GE3S_2", GausExp, *(works1->var("mass")), mean3S, k, sigma3S_2);
+  RooAddPdf* twoGE1S = new RooAddPdf("twoGE1S", "Sum of 1S Gaus-Exp", RooArgList(*GausExp1S_1, *GausExp1S_2), RooArgList(*frac));
+  RooAddPdf* twoGE2S = new RooAddPdf("twoGE2S", "Sum of 2S Gaus-Exp", RooArgList(*GausExp2S_1, *GausExp2S_2), RooArgList(*frac));
+  RooAddPdf* twoGE3S = new RooAddPdf("twoGE3S", "Sum of 3S Gaus-Exp", RooArgList(*GausExp3S_1, *GausExp3S_2), RooArgList(*frac));
 //  RooAddPdf* CBG1S = new RooAddPdf("CBG1S", "Sum of 1S Crystal ball Gauss", RooArgList(*CB1S_1, *G1S), RooArgList(*frac));
 //  RooAddPdf* CBG2S = new RooAddPdf("CBG2S", "Sum of 2S Crystal ball Gauss", RooArgList(*CB2S_1, *G2S), RooArgList(*frac));
 //  RooAddPdf* CBG3S = new RooAddPdf("CBG3S", "Sum of 3S Crystal ball Gauss", RooArgList(*CB3S_1, *G3S), RooArgList(*frac));
@@ -177,21 +158,20 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
   RooGenericPdf* Signal2S;
   RooGenericPdf* Signal3S;
 
-  Signal1S = (RooGenericPdf*) twoCB1S;
-  Signal2S = (RooGenericPdf*) twoCB2S;
-  Signal3S = (RooGenericPdf*) twoCB3S;
+  Signal1S = (RooGenericPdf*) twoGE1S;
+  Signal2S = (RooGenericPdf*) twoGE2S;
+  Signal3S = (RooGenericPdf*) twoGE3S;
 
   RooGenericPdf* Background;
   Background = (RooGenericPdf*) bkgErf;
-
-  sigma1S_1.setVal(params[0]);
-  alpha.setVal(params[1]);
-  n.setVal(params[2]);
-  frac->setVal(params[3]);
-
-  Erfmean.setVal(params[4]);
-  Erfsigma.setVal(params[5]);
-  Erfp0.setVal(params[6]);
+//
+//  sigma1S_1.setVal(params[0]);
+//  k.setVal(params[1]);
+//  frac->setVal(params[2]);
+//
+//  Erfmean.setVal(params[3]);
+//  Erfsigma.setVal(params[4]);
+//  Erfp0.setVal(params[5]);
 
   RooRealVar* nSig1S = new RooRealVar("nSig1S", "# of 1S signal", 400, -1000, 1000000);
   RooRealVar* nSig2S = new RooRealVar("nSig2S", "# of 2S signal", 100, -1000, 300000);
@@ -201,7 +181,7 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
 
   works1->import(*model);
 
-  RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), Hesse(kTRUE), Range(RangeLow, RangeHigh), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));
+  RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), Hesse(kTRUE), Range(RangeLow, RangeHigh), Minos(kTRUE), SumW2Error(kTRUE), Extended(kTRUE));
   works1->pdf("model")->plotOn(massPlot, Name("modelPlot"));
   works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*Signal1S)), LineColor(kRed), LineStyle(kDashed), MoveToBack());
   works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*Signal2S)), LineColor(kRed), LineStyle(kDashed), MoveToBack());
@@ -241,6 +221,8 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
     Npullbin++;
   }
   Int_t Nfitpar = Result->floatParsFinal().getSize();
+  Double_t NLL = Result->minNll();
+  std::cout << "NLL : " << NLL << std::endl;
   Int_t ndf = Npullbin - Nfitpar;
 
   TLatex* NormChi2tex = new TLatex();
@@ -289,9 +271,9 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
   TF1* Sgnfc2S;
   TF1* Sgnfc3S;
 
-  Sgnfc1S = works1->pdf("twoCB1S")->asTF(*(works1->var("mass")));
-  Sgnfc2S = works1->pdf("twoCB2S")->asTF(*(works1->var("mass")));
-  Sgnfc3S = works1->pdf("twoCB3S")->asTF(*(works1->var("mass")));
+  Sgnfc1S = works1->pdf("twoGE1S")->asTF(*(works1->var("mass")));
+  Sgnfc2S = works1->pdf("twoGE2S")->asTF(*(works1->var("mass")));
+  Sgnfc3S = works1->pdf("twoGE3S")->asTF(*(works1->var("mass")));
 
   TF1* Bkgfc;
   Bkgfc = works1->pdf("bkgErf")->asTF(*(works1->var("mass")));
@@ -325,7 +307,7 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
   }
   
 
-  c1->SaveAs(Form("MassDist/MassDistribution_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s.pdf",(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str()));
+  c1->SaveAs(Form("MassDist/GEMassDistribution_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s.pdf",(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str()));
   TH1D* hmass = new TH1D("hmass", ";M (GeV/c^2);Counts", Nmassbins, RangeLow, RangeHigh);
   reducedDS->fillHistogram(hmass, (*works1->var("mass")));
   FormTH1Marker(hmass, 0, 0, 1.4);
@@ -337,7 +319,7 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
   lt1->DrawLatex(0.6, 0.80, Form("p_{T}^{#mu} #geq %.1f GeV/c", MupTCut));
   lt1->DrawLatex(0.6, 0.75, Form("%d #leq p_{T}^{#mu#mu} < %d GeV/c", (int) ptMin, (int) ptMax));
 
-  c2->SaveAs(Form("MassDist/WithoutFit_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s.pdf",(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10),  Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str()));
+  c2->SaveAs(Form("MassDist/GEWithoutFit_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s.pdf",(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10),  Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str()));
 
   fout->cd();
   massPlot->Write();
