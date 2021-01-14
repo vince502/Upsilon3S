@@ -11,24 +11,23 @@ double getAccWeight(TH1D* h = 0, double pt = 0);
 double getEffWeight(TH1D* h = 0, double pt = 0);
 
 
-void SkimTree_Event(int nevt=-1, bool isMC = true, int kTrigSel = kTrigUps, int hiHFBinEdge = 0, int PDtype = 1) 
+void DiMu_Oniatree_TurnOnRatio(int nevt=-1, bool isMC = false, int kTrigSel = 0, int hiHFBinEdge = 0, int PDtype = 1) 
 {
 
   using namespace std;
   using namespace hi;
-  
-  if( isMC ) kTrigUps = 10;
+
   // Example of using event plane namespace 
   cout << " Index of "<< EPNames[HFm2] << " = " << HFm2 << endl;
   cout << " Index of "<< EPNames[HFp2] << " = " << HFp2 << endl;
   cout << " Index of "<< EPNames[trackmid2] << " = " << trackmid2 << endl;
 
   //TString fname1 = "/eos/cms/store/group/phys_heavyions/dileptons/Data2018/PbPb502TeV/TTrees/PromptAOD/DoubleMuonPD/MinBias/HIMinimumBias_Run2018_Upsilon_PromptReco_v1.root";
-  TString fnameData1 = "/eos/cms/store/group/phys_heavyions/dileptons/Data2018/PbPb502TeV/TTrees/PromptAOD/DoubleMuonPD/PromptAOD_v1_Oniatree_addvn_part*.root";
+  TString fnameData1 ="../Oniatree_skim_AODSkim_v2_1_part_20201214.root"; //"/u/user/vince402/root_tmpONIATREE_HIMB_20201228.root"; 
   TString fnameData2 = "/eos/cms/store/group/phys_heavyions/dileptons/Data2018/PbPb502TeV/TTrees/PromptAOD/DoubleMuonPD/PromptAOD_v2_Oniatree_addvn_part*.root";
-  TString fnameDataReReco = "/eos/cms/store/group/phys_heavyions/dileptons/Data2018/PbPb502TeV/TTrees/ReReco/AOD/DoubleMuon/ReReco_Oniatree_addvn_part*.root";
+  TString fnameDataReReco = "/u/user/vince402/root_tmp/ONIATREE_HIMB_20201228.root";// "./Oniatree_part_20201217/Oniatree_skim_AODSkim_v2_1*.root";
   TString fnameDataReRecoPeri = "/eos/cms/store/group/phys_heavyions/dileptons/Data2018/PbPb502TeV/TTrees/ReReco/AOD/DoubleMuonPsiPeri/ReReco_Oniatree_addvn_part*.root";
-  TString fnameMC = "./Oniatree_MC/*.root";
+  TString fnameMC = "/eos/cms/store/group/phys_heavyions/dileptons/MC2018/PbPb502TeV/TTrees/Upsi1S_TuneCP5_HydjetDrumMB_officialPythia8MC*_v20190801.root";
 
   TString fPD;
   if(PDtype==1) fPD = "DB";
@@ -45,8 +44,8 @@ void SkimTree_Event(int nevt=-1, bool isMC = true, int kTrigSel = kTrigUps, int 
 
   const int maxBranchSize = 1000;
 
-  UInt_t          runNb, LS;
-  UInt_t          eventNb;
+  UInt_t          runNb;
+  UInt_t          eventNb, LS;
   float           zVtx;
   Int_t           Centrality;
   ULong64_t       HLTriggers;
@@ -132,8 +131,8 @@ void SkimTree_Event(int nevt=-1, bool isMC = true, int kTrigSel = kTrigUps, int 
   Bool_t          Reco_mu_TMOneStaTight[maxBranchSize];   //[Reco_mu_size]
   TBranch        *b_Reco_mu_TMOneStaTight;   //!
 
-  mytree->SetBranchAddress("Reco_mu_TMOneStaTight", Reco_mu_TMOneStaTight, &b_Reco_mu_TMOneStaTight);
-Int_t           Reco_mu_nPixWMea[maxBranchSize];   //[Reco_mu_size]
+//  mytree->SetBranchAddress("Reco_mu_TMOneStaTight", Reco_mu_TMOneStaTight, &b_Reco_mu_TMOneStaTight);
+  Int_t           Reco_mu_nPixWMea[maxBranchSize];   //[Reco_mu_size]
   TBranch        *b_Reco_mu_nPixWMea;   //!
   mytree->SetBranchAddress("Reco_mu_nPixWMea", Reco_mu_nPixWMea, &b_Reco_mu_nPixWMea);
   Short_t           Reco_QQ_sign[maxBranchSize];   //[Reco_QQ_size]
@@ -141,14 +140,14 @@ Int_t           Reco_mu_nPixWMea[maxBranchSize];   //[Reco_mu_size]
   mytree->SetBranchAddress("Reco_QQ_sign", Reco_QQ_sign, &b_Reco_QQ_sign);
   Float_t         rpAng[29];   //[nEP]
   TBranch        *b_rpAng;   //!
-  mytree->SetBranchAddress("rpAng", rpAng, &b_rpAng);
+//  mytree->SetBranchAddress("rpAng", rpAng, &b_rpAng);
 
   Int_t           Reco_mu_nPixValHits[maxBranchSize];   //[Reco_QQ_size]
   TBranch        *b_Reco_mu_nPixValHits;   //!
   mytree->SetBranchAddress("Reco_mu_nPixValHits", Reco_mu_nPixValHits, &b_Reco_mu_nPixValHits);
   Float_t         Reco_mu_ptErr_global[maxBranchSize];   //[Reco_QQ_size]
   TBranch        *b_Reco_mu_ptErr_global;   //!
-  mytree->SetBranchAddress("Reco_mu_ptErr_global", Reco_mu_ptErr_global, &b_Reco_mu_ptErr_global);
+//  mytree->SetBranchAddress("Reco_mu_ptErr_global", Reco_mu_ptErr_global, &b_Reco_mu_ptErr_global);
 
   Int_t           Reco_mu_SelectionType[maxBranchSize];
   TBranch        *b_Reco_mu_SelectionType;
@@ -161,7 +160,7 @@ Int_t           Reco_mu_nPixWMea[maxBranchSize];   //[Reco_mu_size]
   mytree->SetBranchAddress("Reco_QQ_ctau3D", Reco_QQ_ctau3D, &b_Reco_QQ_ctau3D);
   mytree->SetBranchAddress("Reco_QQ_ctauErr3D", Reco_QQ_ctauErr3D, &b_Reco_QQ_ctauErr3D);
   
-  Short_t Reco_mu_whichGen[maxBranchSize];
+  Int_t Reco_mu_whichGen[maxBranchSize];
   TBranch *b_Reco_mu_whichGen;
   Float_t Gen_weight;
   TBranch *b_Gen_weight;
@@ -191,9 +190,10 @@ Int_t           Reco_mu_nPixWMea[maxBranchSize];   //[Reco_mu_size]
 
   int trigIndx=0;
   if(kTrigSel == kTrigJpsi) trigIndx=0;
-  else if(kTrigSel == kTrigUps) trigIndx= 1;
+  else if(kTrigSel == kTrigUps) trigIndx=1;
   else if(kTrigSel == kTrigL1DBOS40100) trigIndx=2;
   else if(kTrigSel == kTrigL1DB50100) trigIndx=3;
+  else if(kTrigSel == 0) trigIndx=4;
   
   double tnp_weight = 1;
   double tnp_trig_weight_mupl = -1;
@@ -209,7 +209,7 @@ Int_t           Reco_mu_nPixWMea[maxBranchSize];   //[Reco_mu_size]
   if(hiHFBinEdge==1) fCentSelHF = "HFUp";
   else if(hiHFBinEdge==-1) fCentSelHF = "HFDown";
   TFile* newfile;
-  newfile = new TFile(Form("OniaFlowSkim_%sTrig_%sPD_isMC%d_%s_190813.root",fTrigName[trigIndx].Data(),fPD.Data(),isMC,fCentSelHF.Data()),"recreate");
+  newfile = new TFile("MBTrigCentPlots_DiMu_2p9m_fullCut.root","recreate");
 
   const static int nMaxDimu = 1000;
   int evt;
@@ -298,45 +298,22 @@ Int_t           Reco_mu_nPixWMea[maxBranchSize];   //[Reco_mu_size]
   if(nevt == -1) nevt = mytree->GetEntries();
 
   cout << "Total events = " << nevt << ", : " << eptree->GetEntries() << endl;
+  
+  TH1D* h1 = new TH1D("h1","DoubleMuOpen;centrality;counts",200,0,200);
+  TH1D* h2 = new TH1D("h2","DoubleMuOpenOS40100;centrality;counts",200,0,200);
+  TH1D* h3 = new TH1D("h3","DoubleMuOpen50100;centrality;counts",200,0,200);
+
 
   for(int iev=0; iev<nevt ; ++iev)
   {
+
     if(iev%100000==0) cout << ">>>>> EVENT " << iev << " / " << mytree->GetEntries() <<  " ("<<(int)(100.*iev/mytree->GetEntries()) << "%)" << endl;
 
     mytree->GetEntry(iev);
-    eptree->GetEntry(iev);
   
-    nDimu = 0;
-    
-    if(!( (HLTriggers&((ULong64_t)pow(2, kTrigSel))) == ((ULong64_t)pow(2, kTrigSel)) ) ) continue;
-
-    for (Int_t irqq=0; irqq<Reco_QQ_size; ++irqq) 
-    {
-      runN = runNb;
-      evt = eventNb;
-      lumi = LS;
-      cBin = -999;
-      if(hiHFBinEdge ==0) cBin = getHiBinFromhiHF(SumET_HF);
-      else if(hiHFBinEdge == 1) cBin = getHiBinFromhiHF_Up(SumET_HF);
-      else if(hiHFBinEdge == -1) cBin = getHiBinFromhiHF_Down(SumET_HF);
-      if(cBin==-999){ cout << "ERROR!!! No HF Centrality Matching!!" << endl; return;}
-      vz = zVtx;
-
-
-      JP_Reco = (TLorentzVector*) Reco_QQ_4mom->At(irqq);
-      mupl_Reco = (TLorentzVector*) Reco_mu_4mom->At(Reco_QQ_mupl_idx[irqq]);
-      mumi_Reco = (TLorentzVector*) Reco_mu_4mom->At(Reco_QQ_mumi_idx[irqq]);
-      
-      weight = 1.;
-      if(isMC) weight = findNcoll(Centrality) * Gen_weight;
-
-      if(!( (Reco_QQ_trig[irqq]&((ULong64_t)pow(2, kTrigSel))) == ((ULong64_t)pow(2, kTrigSel)) ) ) continue;
-     
-      if(isMC){
-        if(Reco_mu_whichGen[Reco_QQ_mupl_idx[irqq]] == -1) continue;
-        if(Reco_mu_whichGen[Reco_QQ_mumi_idx[irqq]] == -1) continue;
-      }
-      
+    cBin = getHiBinFromhiHF(SumET_HF);
+    if( (HLTriggers&((ULong64_t)pow(2, kTrigSel))) == ((ULong64_t)pow(2, kTrigSel)) ) continue; 
+    for (Int_t irqq=0; irqq<Reco_QQ_size; ++irqq){
       bool passMuonTypePl = true;
       passMuonTypePl = passMuonTypePl && (Reco_mu_SelectionType[Reco_QQ_mupl_idx[irqq]]&((int)pow(2,1)));
       passMuonTypePl = passMuonTypePl && (Reco_mu_SelectionType[Reco_QQ_mupl_idx[irqq]]&((int)pow(2,3)));
@@ -360,122 +337,33 @@ Int_t           Reco_mu_nPixWMea[maxBranchSize];   //[Reco_mu_size]
           (fabs(Reco_mu_dz[Reco_QQ_mumi_idx[irqq]])<20.)  && 
           passMuonTypeMi       //			 &&  (Reco_mu_highPurity[Reco_QQ_mupl_idx[irqq]]==true) 
           ) ; 
-
-      if ( !(muplSoft && mumiSoft) ) 
-        continue;   
       
-      if ( Reco_QQ_VtxProb[irqq]  < 0.01 ) 
-        continue;
-   
-      recoQQsign[irqq] = Reco_QQ_sign[irqq];     
- 
-      count++;     
-      /*if(isMC){
-       tnp_weight = 1;
-       tnp_trig_weight_mupl = -1;
-       tnp_trig_weight_mumi = -1;
-       tnp_weight = tnp_weight * tnp_weight_muid_pbpb(mupl_Reco->Pt(), mupl_Reco->Eta(), 0) * tnp_weight_muid_pbpb(mumi_Reco->Pt(), mumi_Reco->Eta(), 0); //mu id
-       tnp_weight = tnp_weight * tnp_weight_trk_pbpb(mupl_Reco->Eta(), 0) * tnp_weight_trk_pbpb(mumi_Reco->Eta(), 0); //inner tracker
+      if ( !(muplSoft && mumiSoft) ) continue;
+      if ( Reco_QQ_VtxProb[irqq] < 0.01) continue;
+      if (!(Reco_QQ_sign[irqq]==0)) continue; 
+      mupl_Reco = (TLorentzVector*) Reco_mu_4mom->At(Reco_QQ_mupl_idx[irqq]);
+      mumi_Reco = (TLorentzVector*) Reco_mu_4mom->At(Reco_QQ_mumi_idx[irqq]);
+      float mupt1 = mupl_Reco->Pt();
+      float mupt2 = mumi_Reco->Pt();
+      float mueta1 = mupl_Reco->Eta();
+      float mueta2 = mumi_Reco->Eta();
+      if( !( ((mueta1 > -2.4) && (mueta1 <2.4)) &&((mueta2 > -2.4) && (mueta2 <2.4)) )) continue; 
+      if( !(mupt1 > 3.0 && mupt2 > 3.0)) continue;
+      if( !((Reco_QQ_trig[irqq]&((ULong64_t)pow(2,0)) )==((ULong64_t)pow(2,0))) ) continue;
+      h1->Fill(cBin);
 
-       //Trigger part
-       if(!((Reco_mu_trig[Reco_QQ_mupl_idx[irqq]]&((ULong64_t)pow(2, kL2filter))) == ((ULong64_t)pow(2, kL2filter)) && (Reco_mu_trig[Reco_QQ_mumi_idx[irqq]]&((ULong64_t)pow(2, kL2filter))) == ((ULong64_t)pow(2, kL2filter)) ) ){
-//         cout << "irqq : " << irqq << " - iev : " << iev << endl;
-        // cout << "TnP ERROR !!!! ::: No matched L2 filter1 " << endl;
-         continue;
-       }
-       bool mupl_L2Filter = ( (Reco_mu_trig[Reco_QQ_mupl_idx[irqq]]&((ULong64_t)pow(2, kL2filter))) == ((ULong64_t)pow(2, kL2filter)) ) ? true : false ;
-       bool mupl_L3Filter = ( (Reco_mu_trig[Reco_QQ_mupl_idx[irqq]]&((ULong64_t)pow(2, kL3filter))) == ((ULong64_t)pow(2, kL3filter)) ) ? true : false ;
-       bool mumi_L2Filter = ( (Reco_mu_trig[Reco_QQ_mumi_idx[irqq]]&((ULong64_t)pow(2, kL2filter))) == ((ULong64_t)pow(2, kL2filter)) ) ? true : false ;
-       bool mumi_L3Filter = ( (Reco_mu_trig[Reco_QQ_mumi_idx[irqq]]&((ULong64_t)pow(2, kL3filter))) == ((ULong64_t)pow(2, kL3filter)) ) ? true : false ;
-       if(mupl_L2Filter == false || mumi_L2Filter == false){ cout << "TnP ERROR !!!! ::: No matched L2 filter2 " << endl; cout << endl;} 
-
-       bool mupl_isL2 = (mupl_L2Filter && !mupl_L3Filter) ? true : false;
-       bool mupl_isL3 = (mupl_L2Filter && mupl_L3Filter) ? true : false;
-       bool mumi_isL2 = (mumi_L2Filter && !mumi_L3Filter) ? true : false;
-       bool mumi_isL3 = (mumi_L2Filter && mumi_L3Filter) ? true : false;
-       bool SelDone = false;
-
-       if( mupl_isL2 && mumi_isL3){
-         tnp_trig_weight_mupl = tnp_weight_trg_pbpb(mupl_Reco->Pt(), mupl_Reco->Eta(), 2, 0);
-         tnp_trig_weight_mumi = tnp_weight_trg_pbpb(mumi_Reco->Pt(), mumi_Reco->Eta(), 3, 0);
-         SelDone = true;
-       }
-       else if( mupl_isL3 && mumi_isL2){
-         tnp_trig_weight_mupl = tnp_weight_trg_pbpb(mupl_Reco->Pt(), mupl_Reco->Eta(), 3, 0);
-         tnp_trig_weight_mumi = tnp_weight_trg_pbpb(mumi_Reco->Pt(), mumi_Reco->Eta(), 2, 0);
-         SelDone = true;
-       }
-       else if( mupl_isL3 && mumi_isL3){
-         int t[2] = {-1,1}; // mupl, mumi
-         int l = rand() % (2); 
-         //pick up what will be L2
-         if(t[l]==-1){
-           tnp_trig_weight_mupl = tnp_weight_trg_pbpb(mupl_Reco->Pt(), mupl_Reco->Eta(), 2, 0);
-           tnp_trig_weight_mumi = tnp_weight_trg_pbpb(mumi_Reco->Pt(), mumi_Reco->Eta(), 3, 0);
-         }
-         else if(t[l]==1){
-           tnp_trig_weight_mupl = tnp_weight_trg_pbpb(mupl_Reco->Pt(), mupl_Reco->Eta(), 3, 0);
-           tnp_trig_weight_mumi = tnp_weight_trg_pbpb(mumi_Reco->Pt(), mumi_Reco->Eta(), 2, 0);
-         }
-         else {cout << "ERROR :: No random selection done !!!!" << endl; continue;}
-         SelDone = true;
-       }    
-       if(SelDone == false || (tnp_trig_weight_mupl == -1 || tnp_trig_weight_mumi == -1)){cout << "ERROR :: No muon filter combination selected !!!!" << endl; continue;}
-       tnp_weight = tnp_weight * tnp_trig_weight_mupl * tnp_trig_weight_mumi;
-       counttnp++;
-      }*/
-
-
-      // Fill the output tree
-      if ( JP_Reco->Eta() < 0 )  {  
-        qxa[nDimu] = qx[HFp2];
-        qya[nDimu] = qy[HFp2];
-        qxb[nDimu] = qx[HFm2];
-        qyb[nDimu] = qy[HFm2];
-
-      }
-      else {
-        qxa[nDimu] = qx[HFm2];
-        qya[nDimu] = qy[HFm2];
-        qxb[nDimu] = qx[HFp2];
-        qyb[nDimu] = qy[HFp2];
-      }
-      
-      qxc[nDimu] = qx[trackmid2];
-      qyc[nDimu] = qy[trackmid2];
-
-      if(isMC) TnPweight[nDimu] = tnp_weight;
-      mass[nDimu] = JP_Reco->M();
-      phi[nDimu] = JP_Reco->Phi();
-      phi1[nDimu] = mupl_Reco->Phi();
-      phi2[nDimu] = mumi_Reco->Phi();
-      eta[nDimu] = JP_Reco->Eta();
-      y[nDimu] = JP_Reco->Rapidity();
-      pt[nDimu] = JP_Reco->Pt();
-      pt1[nDimu] = mupl_Reco->Pt();
-      pt2[nDimu] = mumi_Reco->Pt();
-      eta1[nDimu] = mupl_Reco->Eta();
-      eta2[nDimu] = mumi_Reco->Eta();
-      qxdimu[nDimu] = TMath::Cos(2*phi[nDimu]);
-      qydimu[nDimu] = TMath::Sin(2*phi[nDimu]);
-      qxmupl[nDimu] = TMath::Cos(2*phi1[nDimu]);
-      qxmumi[nDimu] = TMath::Cos(2*phi2[nDimu]);
-      qymupl[nDimu] = TMath::Sin(2*phi1[nDimu]);
-      qymumi[nDimu] = TMath::Sin(2*phi2[nDimu]);
-      ctau3D[nDimu] = Reco_QQ_ctau3D[irqq];
-      ctau3DErr[nDimu] = Reco_QQ_ctauErr3D[irqq];
-      nDimu++;
-
-    } // end of dimuon loop
+      if( (HLTriggers&((ULong64_t)pow(2,1))) == ((ULong64_t)pow(2,1)) && (Reco_QQ_trig[irqq]&((ULong64_t)pow(2,1)) )==((ULong64_t)pow(2,1))  ) h2->Fill(cBin);
+      if( (HLTriggers&((ULong64_t)pow(2,2))) == ((ULong64_t)pow(2,2)) && (Reco_QQ_trig[irqq]&((ULong64_t)pow(2,2)) )==((ULong64_t)pow(2,2)) ) h3->Fill(cBin);
+    }
     
-    if(nDimu>0) mmevttree->Fill();  
-    
-  } //end of event loop
-//  mmtree->Write();  // Don't need to call Write() for trees
-  cout << "count " << count << endl;
-  cout << "counttnp " << counttnp << endl;
-  newfile->cd();
-  mmevttree->Write();
-  newfile->Close();
   
+ 
+  } //end of event loop
+   
+//  mmtree->Write();  // Don't need to call Write() for trees
+
+  newfile->cd();
+  h1->Write();h2->Write();h3->Write();
+  newfile->Close();
+    
 } 
