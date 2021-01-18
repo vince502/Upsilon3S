@@ -46,12 +46,18 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,const string fname = "", 
   Double_t etaMax= 2.4;
   Double_t etaMin = -2.4;
 
+  bool swflag = false;
+  if( fname.find("Switch1") != std::string::npos) { swflag = true;}
   
   TString mainDIR = gSystem->ExpandPathName(gSystem->pwd());
   TString massDIR = mainDIR + Form("/MassDist/%dS",state);
+  TString massDIRp = mainDIR + Form("/MassDist/%dS/png",state);
   void * dirpM = gSystem->OpenDirectory(massDIR.Data());
   if(dirpM) gSystem->FreeDirectory(dirpM);
   else gSystem->mkdir(massDIR.Data(), kTRUE);
+  void * dirpMp = gSystem->OpenDirectory(massDIRp.Data());
+  if(dirpMp) gSystem->FreeDirectory(dirpMp);
+  else gSystem->mkdir(massDIRp.Data(), kTRUE);
   TString yieldDIR = mainDIR + "/Yield";
   void * dirpY = gSystem->OpenDirectory(yieldDIR.Data());
   if(dirpY) gSystem->FreeDirectory(dirpY);
@@ -61,15 +67,15 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,const string fname = "", 
 
    Double_t RangeLow, RangeHigh;
   if( state == 1){
-    RangeLow = 8.7;
-    RangeHigh = 10.3;
+    RangeLow = 8.8;
+    RangeHigh = 10.1;
   }
   if( state == 3){
     RangeLow = 9.6;
     RangeHigh = 11.2;
   }
   Int_t Nmassbins = (RangeHigh - RangeLow)*30;
-  if(Trig == "Ups") Nmassbins = (RangeHigh -RangeLow)*150; 
+  if(Trig == "Ups") Nmassbins = (RangeHigh -RangeLow)*30; 
   TFile* fout;
   fout = new TFile(Form("Yield/Yield_%dS_pt_%d-%d_rap_%d-%d_Data_noWeight_MupT%s_%s_MC_%d.root",(int) state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), MupT.Data(), Trig.c_str(), (int) fixvar), "RECREATE");
 
@@ -131,9 +137,9 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,const string fname = "", 
   RooRealVar mratio3("mratio3", "mratio3", U3S_mass/U1S_mass);
 //  RooFormulaVar mean2S("mean2S", "mean1S*mratio2", RooArgSet(mean1S, mratio2));
 //  RooFormulaVar mean3S("mean3S", "mean1S*mratio3", RooArgSet(mean1S, mratio3));
-  RooRealVar sigma1S_1("sigma1S_1", "sigma1 of 1S", 0.05, 0.01, 0.2);
+  RooRealVar sigma1S_1("sigma1S_1", "sigma1 of 1S", 0.11, 0.01, 0.2);
   RooRealVar* sigma3S_1;
-  if(fixvar == false) sigma3S_1  = new RooRealVar("sigma3S_1", "sigma3 of 1S", 0.05, 0.01, 0.2);
+  if(fixvar == false) sigma3S_1  = new RooRealVar("sigma3S_1", "sigma3 of 1S", 0.11, 0.01, 0.2);
   if(fixvar == true ) sigma3S_1  = new RooRealVar("sigma3S_1", "sigma3 of 1S", (Double_t) (Y1S->sigma*(mratio3.getVal())));
 //  RooFormulaVar sigma2S_1("sigma2S_1", "@0*@1", RooArgList(sigma1S_1, mratio2));
 //  RooFormulaVar sigma3S_1("sigma3S_1", "@0*@1", RooArgList(sigma1S_1, mratio3));
@@ -143,9 +149,9 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,const string fname = "", 
 
   Double_t _tmp_x1S = Y1S->x1s;
   if( state == 3 && fixvar == true  ) x1S = new RooRealVar("x1S", "sigma ratio", _tmp_x1S);
-  else x1S = new RooRealVar("x1S", "sigma ratio", 0.35, 0, 1);
+  else x1S = new RooRealVar("x1S", "sigma ratio", 0.45, 0, 1);
   
-  RooRealVar* x3S = new RooRealVar("x3S", "sigma ratio", 0.35, 0, 1);
+  RooRealVar* x3S = new RooRealVar("x3S", "sigma ratio", 0.45, 0, 1);
   works1->import(*x1S);
   works1->import(*x3S);
 
@@ -159,9 +165,9 @@ std::cout << "///////////////////////////////////////////////////////// test cod
 
   RooRealVar *alpha, *n, *frac;
   if ( state == 1 || fixvar == false ){
-     alpha = new RooRealVar("alpha", "alpha of Crystal ball", 2.0, 0.8, 10.0);
-     n = new RooRealVar("n", "n of Crystal ball", 3.0, 0.8,50.0);
-     frac = new RooRealVar("frac", "CB fraction", 0.5, 0, 1);
+     alpha = new RooRealVar("alpha", "alpha of Crystal ball", 1.0, 0.5, 3.0);
+     n = new RooRealVar("n", "n of Crystal ball", 4.0, 1,10.0);
+     frac = new RooRealVar("frac", "CB fraction", 0.5, 0.03, 0.97);
    }
    if ( fixvar == true && state == 3 ){
      alpha = new RooRealVar("alpha", "alpha of Crystal ball", Y1S->alp);
@@ -365,6 +371,7 @@ std::cout << "///////////////////////////////////////////////////////// test cod
   
 
   c1->SaveAs(Form("%s/MassDistribution_%dS_pt_%d-%d_rap_%d-%d_%dbin_noWeight_MupT%s_%s_MC_fix%d.pdf",massDIR.Data(), state,(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, MupT.Data(), Trig.c_str(), (int) fixvar));
+  c1->SaveAs(Form("%s/png/MassDistribution_%dS_pt_%d-%d_rap_%d-%d_%dbin_noWeight_MupT%s_%s_MC_fix%d.png",massDIR.Data(), state,(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, MupT.Data(), Trig.c_str(), (int) fixvar));
   TH1D* hmass = new TH1D("hmass", ";M (GeV/c^2);Counts", Nmassbins, RangeLow, RangeHigh);
   reducedDS->fillHistogram(hmass, (*works1->var("mass")));
   FormTH1Marker(hmass, 0, 0, 1.4);
@@ -379,6 +386,7 @@ std::cout << "///////////////////////////////////////////////////////// test cod
   c2->SaveAs(Form("%s/WithoutFit_%dS_pt_%d-%d_rap_%d-%d_%dbin_noWeight_MupT%s_%s_MC_fix%d.pdf",massDIR.Data(), state, (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10),  Nmassbins, MupT.Data(), Trig.c_str(), (int) fixvar));
 
   fout->cd();
+  Result->Write();
   massPlot->Write();
   hYield->Write();
   hmass->Write();

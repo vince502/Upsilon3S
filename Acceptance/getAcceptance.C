@@ -12,7 +12,7 @@
 
 using namespace std;
 
-void getAcceptance(double ptLow = 0, double ptHigh=30, double yLow=0, double yHigh=2.4, double SiMuPtCut=4)
+void getAcceptance(double ptLow = 0, double ptHigh=50, double yLow=0, double yHigh=2.4, double SiMuPtCut=3.5)
 {
   gStyle->SetOptFit(kTRUE);
 

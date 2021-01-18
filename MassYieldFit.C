@@ -36,13 +36,24 @@ using namespace RooFit;
 void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "4", const string Trig = "", int cBinLow =0, int cBinHigh = 180, Double_t params[/*sigma1S_1, alpha, n , frac, Erfmean, Erfsigma, Erfp0*/]= {}){
   Double_t etaMax= 2.4;
   Double_t etaMin = -2.4;
-
+  
+  bool swflag = false;
+  if( fname.find("Switch1") != std::string::npos) { swflag = true;}
   
   TString mainDIR = gSystem->ExpandPathName(gSystem->pwd());
-  TString massDIR = mainDIR + "/MassDist";
+  TString massDIR = mainDIR +  Form("/MassDist/FreeFit/%s/%s/FitResult",Trig.c_str(),MupT.Data());
+  TString massDIRp = mainDIR +  Form("/MassDist/FreeFit/%s/%s/FitResult/png",Trig.c_str(),MupT.Data());
+  TString massDIRl = mainDIR + Form("/MassDist/FreeFit/%s/%s/FitResult/logY",Trig.c_str(),MupT.Data());
+  TString massDIR2 = mainDIR + Form("/MassDist/FreeFit/%s/%s/WithoutFit",Trig.c_str(),MupT.Data());
   void * dirpM = gSystem->OpenDirectory(massDIR.Data());
   if(dirpM) gSystem->FreeDirectory(dirpM);
-  else gSystem->mkdir(massDIR.Data(), kTRUE);
+  else{ gSystem->mkdir(massDIR.Data(), kTRUE); gSystem->mkdir(massDIRl.Data(),kTRUE);}
+  void * dirpM2 = gSystem->OpenDirectory(massDIR2.Data());
+  if(dirpM) gSystem->FreeDirectory(dirpM2);
+  else gSystem->mkdir(massDIR2.Data(), kTRUE);
+  void * dirpMp = gSystem->OpenDirectory(massDIRp.Data());
+  if(dirpMp) gSystem->FreeDirectory(dirpMp);
+  else gSystem->mkdir(massDIRp.Data(), kTRUE);
   TString yieldDIR = mainDIR + "/Yield";
   void * dirpY = gSystem->OpenDirectory(yieldDIR.Data());
   if(dirpY) gSystem->FreeDirectory(dirpY);
@@ -55,7 +66,7 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
   const Int_t Nmassbins = 120;
 
   TFile* fout;
-  fout = new TFile(Form("Yield/Yield_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s.root", (int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str()), "RECREATE");
+  fout = new TFile(Form("Yield/Yield_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_%s%d_%s%d_%s%d.root", (int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, "", 0,"",0,"",0), "RECREATE");
 
   Double_t MupTCut;
   if(MupT == "0") MupTCut = 0;
@@ -72,30 +83,6 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
           cout << "There is no such muon pT cut value" << endl;
           return;
   }
-//  Double_t sig11;
-//  Double_t Frac, alp, N;
-//  Double_t erfm, erfsig, erfp0;
-
-/*  ifstream in;
-  in.open(Form("Parameter/Parameters_pt_%d-%d_rap_%d-%d_Data_Trig_%s_noWeight_MupT%s.txt", (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Trig.c_str(),  MupT.Data()));
-  if(in.is_open())
-  {
-     while(!in.eof())
-     {
-       if(!in.good())
-       {
-         cout << "Parameter File is wrong!!! Please Check!!!" << endl;
-         return;
-       }
-       else
-       {
-         //if(SigSys) in >> sig11 >> Frac >> alp >> N >> erfm >> erfsig >> erfp0;
-         //else if(BkgSys) in >> sig11 >> Frac >> alp >> N >> chebyp0 >> chebyp1 >> chebyp2 >> ch    ebyp3;
-          in >> sig11 >> Frac >> alp >> N >> erfm >> erfsig >> erfp0;
-       }
-     }
-  }
-  in.close(); */
 
   TFile* fin;
   fin = new TFile(Form("roodatasetFiles/%s",fname.c_str()),"READ");
@@ -158,16 +145,11 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
   RooCBShape* CB1S_2 = new RooCBShape("CB1S_2", "1S Crystal ball function2", *(works1->var("mass")), mean1S, sigma1S_2, alpha, n);
   RooCBShape* CB2S_2 = new RooCBShape("CB2S_2", "2S Crystal ball function2", *(works1->var("mass")), mean2S, sigma2S_2, alpha, n);
   RooCBShape* CB3S_2 = new RooCBShape("CB3S_2", "3S Crystal ball function2", *(works1->var("mass")), mean3S, sigma3S_2, alpha, n);
-//  RooGaussian* G1S = new RooGaussian("G1S", "1S Gaussian", *(works1->var("mass")), mean1S, sigma1S_2);
-//  RooGaussian* G2S = new RooGaussian("G2S", "2S Gaussian", *(works1->var("mass")), mean2S, sigma2S_2);
-//  RooGaussian* G3S = new RooGaussian("G3S", "3S Gaussian", *(works1->var("mass")), mean3S, sigma3S_2);
 
   RooAddPdf* twoCB1S = new RooAddPdf("twoCB1S", "Sum of 1S Crystal ball", RooArgList(*CB1S_1, *CB1S_2), RooArgList(*frac));
   RooAddPdf* twoCB2S = new RooAddPdf("twoCB2S", "Sum of 2S Crystal ball", RooArgList(*CB2S_1, *CB2S_2), RooArgList(*frac));
   RooAddPdf* twoCB3S = new RooAddPdf("twoCB3S", "Sum of 3S Crystal ball", RooArgList(*CB3S_1, *CB3S_2), RooArgList(*frac));
-//  RooAddPdf* CBG1S = new RooAddPdf("CBG1S", "Sum of 1S Crystal ball Gauss", RooArgList(*CB1S_1, *G1S), RooArgList(*frac));
-//  RooAddPdf* CBG2S = new RooAddPdf("CBG2S", "Sum of 2S Crystal ball Gauss", RooArgList(*CB2S_1, *G2S), RooArgList(*frac));
-//  RooAddPdf* CBG3S = new RooAddPdf("CBG3S", "Sum of 3S Crystal ball Gauss", RooArgList(*CB3S_1, *G3S), RooArgList(*frac));
+
   RooRealVar Erfmean("Erfmean", "Mean of Errfunction", 5, 0, 10.0);//for 0~40, 4~7 GeV
   RooRealVar Erfsigma("Erfsigma", "Sigma of Errfunction", 1, 0, 30);//for 0~40, 4~7 GeV
   RooRealVar Erfp0("Erfp0", "1st parameter of Errfunction", 1, 0, 30);
@@ -201,7 +183,7 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
 
   works1->import(*model);
 
-  RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), Hesse(kTRUE), Range(RangeLow, RangeHigh), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));
+  RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), NumCPU(4), Hesse(kTRUE), Range(RangeLow, RangeHigh), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));
   works1->pdf("model")->plotOn(massPlot, Name("modelPlot"));
   works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*Signal1S)), LineColor(kRed), LineStyle(kDashed), MoveToBack());
   works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*Signal2S)), LineColor(kRed), LineStyle(kDashed), MoveToBack());
@@ -325,7 +307,12 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
   }
   
 
-  c1->SaveAs(Form("MassDist/MassDistribution_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s.pdf",(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str()));
+  c1->SaveAs(Form("%s/MassDistribution_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_%s%d_%s%d_%s%d.pdf",massDIR.Data(),(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag,"",0,"",0,"",0));
+  c1->SaveAs(Form("%s/png/MassDistribution_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_%s%d_%s%d_%s%d.png",massDIR.Data(),(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag,"",0,"",0,"",0));
+  TCanvas* c1_tmp = (TCanvas*) c1->Clone("ylogc1");
+  c1_tmp->SetLogy();
+  c1_tmp->Modified();
+  c1_tmp->SaveAs(Form("%s/MassDistribution_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_%s%d_%s%d_%s%d.pdf",massDIRl.Data(),(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag,"",0,"",0,"",0));
   TH1D* hmass = new TH1D("hmass", ";M (GeV/c^2);Counts", Nmassbins, RangeLow, RangeHigh);
   reducedDS->fillHistogram(hmass, (*works1->var("mass")));
   FormTH1Marker(hmass, 0, 0, 1.4);
@@ -337,9 +324,10 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
   lt1->DrawLatex(0.6, 0.80, Form("p_{T}^{#mu} #geq %.1f GeV/c", MupTCut));
   lt1->DrawLatex(0.6, 0.75, Form("%d #leq p_{T}^{#mu#mu} < %d GeV/c", (int) ptMin, (int) ptMax));
 
-  c2->SaveAs(Form("MassDist/WithoutFit_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s.pdf",(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10),  Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str()));
+  c2->SaveAs(Form("%s/WithoutFit_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_%s%d_%s%d_%s%d.pdf",massDIR2.Data(), (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10),  Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag,"",0,"",0,"",0));
 
   fout->cd();
+  Result->Write();
   massPlot->Write();
   hYield->Write();
   hmass->Write();
