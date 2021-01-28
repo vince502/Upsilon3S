@@ -179,9 +179,9 @@ void MassYieldFit_fix(const string fname = "", const Double_t ptMin = 0, const D
 //  RooAddPdf* CBG1S = new RooAddPdf("CBG1S", "Sum of 1S Crystal ball Gauss", RooArgList(*CB1S_1, *G1S), RooArgList(*frac));
 //  RooAddPdf* CBG2S = new RooAddPdf("CBG2S", "Sum of 2S Crystal ball Gauss", RooArgList(*CB2S_1, *G2S), RooArgList(*frac));
 //  RooAddPdf* CBG3S = new RooAddPdf("CBG3S", "Sum of 3S Crystal ball Gauss", RooArgList(*CB3S_1, *G3S), RooArgList(*frac));
-  RooRealVar Erfmean("Erfmean", "Mean of Errfunction", 7, 3, 10.0);//for 0~40, 4~7 GeV
-  RooRealVar Erfsigma("Erfsigma", "Sigma of Errfunction", 1, 0, 5);//for 0~40, 4~7 GeV
-  RooRealVar Erfp0("Erfp0", "1st parameter of Errfunction", 1, 0, 10);
+  RooRealVar Erfmean("Erfmean", "Mean of Errfunction", 7, 3, 9.0);//for 0~40, 4~7 GeV
+  RooRealVar Erfsigma("Erfsigma", "Sigma of Errfunction", 1, 0, 2);//for 0~40, 4~7 GeV
+  RooRealVar Erfp0("Erfp0", "1st parameter of Errfunction", 1, 0, 8);
   RooGenericPdf* bkgErf = new RooGenericPdf("bkgErf", "Error background", "TMath::Exp(-@0/@1)*(TMath::Erf((@0-@2)/(TMath::Sqrt(2)*@3))+1)*0.5", RooArgList(*(works1->var("mass")), Erfp0, Erfmean, Erfsigma));
 
   RooGenericPdf* Signal1S;

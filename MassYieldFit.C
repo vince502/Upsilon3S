@@ -183,7 +183,7 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
 
   works1->import(*model);
 
-  RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), NumCPU(4), Hesse(kTRUE), Range(RangeLow, RangeHigh), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));
+  RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), NumCPU(2), Hesse(kTRUE), Range(RangeLow, RangeHigh), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));
   works1->pdf("model")->plotOn(massPlot, Name("modelPlot"));
   works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*Signal1S)), LineColor(kRed), LineStyle(kDashed), MoveToBack());
   works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*Signal2S)), LineColor(kRed), LineStyle(kDashed), MoveToBack());

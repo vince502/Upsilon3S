@@ -61,17 +61,17 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,const string fname = "", 
 
    Double_t RangeLow, RangeHigh;
   if( state == 1){
-    RangeLow = 8.7;
-    RangeHigh = 10.3;
+    RangeLow = 8.8;
+    RangeHigh = 10.1;
   }
   if( state == 3){
     RangeLow = 9.6;
     RangeHigh = 11.2;
   }
   Int_t Nmassbins = (RangeHigh - RangeLow)*30;
-  if(Trig == "Ups") Nmassbins = (RangeHigh -RangeLow)*150; 
+  if(Trig == "Ups") Nmassbins = (RangeHigh -RangeLow)*30; 
   TFile* fout;
-  fout = new TFile(Form("Yield/Yield_%dS_pt_%d-%d_rap_%d-%d_Data_noWeight_MupT%s_%s_MC_%d.root",(int) state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), MupT.Data(), Trig.c_str(), (int) fixvar), "RECREATE");
+  fout = new TFile(Form("Yield/Yield_CBG_%dS_pt_%d-%d_rap_%d-%d_Data_noWeight_MupT%s_%s_MC_%d.root",(int) state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), MupT.Data(), Trig.c_str(), (int) fixvar), "RECREATE");
 
   Double_t MupTCut;
   if(MupT == "0") MupTCut = 0;
@@ -159,7 +159,7 @@ std::cout << "///////////////////////////////////////////////////////// test cod
 
   RooRealVar *alpha, *n, *frac;
   if ( state == 1 || fixvar == false ){
-     alpha = new RooRealVar("alpha", "alpha of Crystal ball", 2.0, 0.8, 10.0);
+     alpha = new RooRealVar("alpha", "alpha of Crystal ball", 1.0, 0.8, 3.0);
      n = new RooRealVar("n", "n of Crystal ball", 2.0, 0.8, 10.0);
      frac = new RooRealVar("frac", "CB fraction", 0.5, 0, 1);
    }
