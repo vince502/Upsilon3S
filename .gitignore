@@ -3,6 +3,6 @@ skimmedFiles
 *.root
 Oniatree_MC
 Yield
-./BDT/BDTResult
-./BDT/dataset
-./BDT/roodatasets
+BDT/BDTResult
+BDT/dataset
+BDT/roodatasets
