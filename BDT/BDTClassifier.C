@@ -31,11 +31,14 @@ bool BDTClassifier_Function(bool IDvar = true, bool MoreVar = false, bool IDonly
   TFile* inputMC   = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1.root","read");
   TFile* output    = new TFile(Form("%s/BDTresultY3S_%ld_IDv%d_MoreVar%d.root",BDTDir.Data(),(long) tstamp, (int) IDvar, (int) MoreVar),"recreate");
 
+  TCut cut1 = "pt1>3.5&&pt2>3.5&&QQVtxProb>0.01";
+  TCut cut2 = "pt1>3.5&&pt2>3.5&&QQVtxProb>0.01";
+
   TMVA::DataLoader *loader = new TMVA::DataLoader("dataset");
   TTree* SigTree =(TTree*) inputMC->Get("tree");
   TTree* BkgTreeTest =(TTree*) inputDATA->Get("tree");
-  TTree* BkgTreeTrain = BkgTreeTest->CopyTree("QQVtxProb<=0.01");
-  std::cout << "Number of Events in Trees (Sig, BkgTest, BkgTrain) : ( " << SigTree->GetEntries() << ", "<< BkgTreeTest->GetEntries() << ", " << BkgTreeTrain->GetEntries() << " )" << std::endl;
+  TTree* BkgTreeTrain = BkgTreeTest->CopyTree("mass>10.2&&mass<10.7");
+  std::cout << "Number of Events in Trees (Sig, BkgTest, BkgTrain) : ( " << SigTree->GetEntries(cut1) << ", "<< BkgTreeTest->GetEntries(cut2) << ", " << BkgTreeTrain->GetEntries(cut2) << " )" << std::endl;
   //Factory Call
   TMVA::Factory *factory = new TMVA::Factory("TMVA_BDT_Classifier", output, "!V:Silent:Color:DrawProgressBar:Transformations=I;D;P;G;D:AnalysisType=Classification");
   if(!IDonly){
@@ -64,17 +67,19 @@ bool BDTClassifier_Function(bool IDvar = true, bool MoreVar = false, bool IDonly
     }
   }
   if(MoreVar){
-    loader->AddVariable("nTrkHits1", "nTrk Hit 1", "I");
-    loader->AddVariable("nTrkHits2", "nTrk Hit 2", "I");
-    loader->AddVariable("nPixValHits1", "nPix Valid Hits 1", "I");
-    loader->AddVariable("nPixValHits2", "nPix Valid Hits 2", "I");
-    loader->AddVariable("highPurity1", "Purity Flag 1", "I", 0, 1);
-    loader->AddVariable("highPurity2", "Purity Flag 2", "I", 0, 1);
+   // loader->AddVariable("nTrkHits1", "nTrk Hit 1", "I");
+   // loader->AddVariable("nTrkHits2", "nTrk Hit 2", "I");
+   // loader->AddVariable("nPixValHits1", "nPix Valid Hits 1", "I");
+   // loader->AddVariable("nPixValHits2", "nPix Valid Hits 2", "I");
+    loader->AddVariable("nMuValHits1", "nMu Valid Hits 1", "I");
+    loader->AddVariable("nMuValHits2", "nMu Valid Hits 2", "I");
+//    loader->AddVariable("StationsMatched1", "Single muon Matched to Muon Station 1", "I");
+    loader->AddVariable("QQMassErr", "Dimu Mass error", "F");
 
-    loader->AddVariable("QQVtxProb", "Vtx prob", "F");
+    loader->AddSpectator("QQVtxProb", "Vtx prob", "F");
  //   loader->AddVariable("ctau3D", "*ctau3D var", "F");
-    loader->AddVariable("normChi2_global1", "global Nchi squared valu of mu 1", "F");
-    loader->AddVariable("normChi2_global2", "global Nchi squared valu of mu 2", "F");
+//    loader->AddVariable("normChi2_global1", "global Nchi squared valu of mu 1", "F");
+//    loader->AddVariable("normChi2_global2", "global Nchi squared valu of mu 2", "F");
     if(IDonly){
       loader->AddSpectator("pt1","Single muon pt1",  "F");
       loader->AddSpectator("pt2","Single muon pt2",  "F");
@@ -93,20 +98,20 @@ bool BDTClassifier_Function(bool IDvar = true, bool MoreVar = false, bool IDonly
   Double_t backgroundWeight = 1.0;
 
   loader->AddSignalTree     (SigTree, signalWeight);
-  loader->AddBackgroundTree (BkgTreeTest, backgroundWeight, "Test");
-  loader->AddBackgroundTree (BkgTreeTrain, backgroundWeight, "Training" );
+//  loader->AddBackgroundTree (BkgTreeTest, backgroundWeight, "Test");
+  loader->AddBackgroundTree (BkgTreeTrain, backgroundWeight);
 
   loader->SetSignalWeightExpression("weight");
+//  loader->SetBackgroundWeightExpression("weight");
 
   //Preselection Cut -> Conventional Kinematics 
-  TCut cut1 = "pt1>3.5&&pt2>3.5";
-  TCut cut2 = "pt1>3.5&&pt2>3.5";
 
-  loader->PrepareTrainingAndTestTree( cut1, cut2, "nTrain_Signal=100000:nTrain_Background=100000:SplitMode=Random:Random:NormMode=None:!V");
+
+  loader->PrepareTrainingAndTestTree( cut1, cut2, "nTrain_Signal=400000:nTrain_Background=40000:SplitMode=Random:Random:NormMode=NumEvents:!V");
 
   //Book Training BDT Method
   factory->BookMethod( loader, TMVA::Types::kBDT, TString::Format("BDT_train_%ld", (long) tstamp ),
-  	"!H:!V:NTrees=500:MaxDepth=8:MinNodeSize=1%:SeparationType=GiniIndex:BoostType=AdaBoost:AdaBoostBeta=0.3:UseBaggedBoost:SeparationType=CrossEntropy:BaggedSampleFraction=0.5:nCuts=32:CreateMVAPdfs");
+  	"!H:!V:NTrees=250:MaxDepth=6:MinNodeSize=3%:BoostType=AdaBoost:AdaBoostBeta=0.6:UseBaggedBoost:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=10:PruningValFraction=0.3:UseRandomisedTrees=True:UseNvars=3:BaggedSampleFraction=0.4:nCuts=2000:CreateMVAPdfs");
 
   //Train Test Evaluate
   factory->TrainAllMethods();

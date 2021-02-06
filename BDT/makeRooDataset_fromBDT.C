@@ -25,14 +25,14 @@ double getAccWeight(TH1D* h = 0, double pt = 0);
 double getEffWeight(TH1D* h = 0, double pt = 0);
 void GetHistSqrt(TH1D* h1 =0, TH1D* h2=0);
 
-void makeRooDataset_fromBDT(string fname=""){
-  TFile* rf = new TFile(fname.c_str(), "OPEN");
-  TTree* tree = (TTree*) rf->Get("dataset/TestTree");
-  string delim = "Y3S_";
-  size_t pos= fname.find(delim)+4;
-  string ts = fname.substr(pos,10);
-  string bdtv = Form("BDT_train_%s",ts.c_str());
-  string pbdtv = Form("prob_BDT_train_%s",ts.c_str());
+void makeRooDataset_fromBDT(long ts){
+  TFile* rf = new TFile(Form("/BDTAppliedData/BDTApp_%ld.root",ts), "OPEN");
+  TTree* tree = (TTree*) rf->Get("tree");
+//  string delim = "Y3S_";
+//  size_t pos= fname.find(delim)+4;
+//  string ts = fname.substr(pos,10);
+//  string bdtv = Form("BDT_train_%s",ts.c_str());
+//  string pbdtv = Form("prob_BDT_train_%s",ts.c_str());
 
   Int_t classID;
   Char_t className;
@@ -51,8 +51,8 @@ void makeRooDataset_fromBDT(string fname=""){
   tree -> SetBranchAddress("cBin", &cBin, &b_cBin);
   tree -> SetBranchAddress("mass", &mass, &b_mass);
   tree -> SetBranchAddress("weight", &weight, &b_weight);
-  tree -> SetBranchAddress(Form("BDT_train_%s",ts.c_str()), &BDT, &b_BDT);
-  tree -> SetBranchAddress(Form("prob_BDT_train_%s",ts.c_str()), &pBDT, &b_BDT_prob);
+  tree -> SetBranchAddress(Form("BDT",ts.c_str()), &BDT, &b_BDT);
+//  tree -> SetBranchAddress(Form("prob_BDT_train_%s",ts.c_str()), &pBDT, &b_BDT_prob);
 
 
   ////////////////////////////////////////////////////////////////////////
@@ -97,7 +97,7 @@ void makeRooDataset_fromBDT(string fname=""){
       dataSet->add( *argSet);
     }
   }
-  TFile* wf = new TFile(Form("roodatasets/OniaRooDataset_BDT%s_OniaSkim_TrigS13_BDT.root",ts.c_str()),"recreate");
+  TFile* wf = new TFile(Form("roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root",ts),"recreate");
   wf->cd();
   dataSet->Write();
   wf->Write();
