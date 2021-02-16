@@ -121,7 +121,7 @@ void MassYieldFit_BDT_fix(const string fname = "", const Double_t ptMin = 0, con
 
   RooArgSet* argRD = new RooArgSet(*(works1->var("mass")), *(works1->var("pt")), *(works1->var("y")), *(works1->var("cBin")), *(works1->var("pt1")), *(works1->var("pt2")), *(works1->var("eta1")), *(works1->var("eta2")), *(works1->var("QQVtxProb")));
   argRD->add(*(works1->var("BDT")));
-  argRD->add(*(works1->var("pBDT")));
+//  argRD->add(*(works1->var("pBDT")));
   RooDataSet* initialDS = (RooDataSet*) dataset->reduce(*argRD);
   initialDS->SetName("initialDS");
   

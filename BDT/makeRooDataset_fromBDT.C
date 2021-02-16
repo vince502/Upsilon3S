@@ -26,7 +26,7 @@ double getEffWeight(TH1D* h = 0, double pt = 0);
 void GetHistSqrt(TH1D* h1 =0, TH1D* h2=0);
 
 void makeRooDataset_fromBDT(long ts){
-  TFile* rf = new TFile(Form("/BDTAppliedData/BDTApp_%ld.root",ts), "OPEN");
+  TFile* rf = new TFile(Form("./BDTAppliedData/BDTApp_%ld.root",ts), "OPEN");
   TTree* tree = (TTree*) rf->Get("tree");
 //  string delim = "Y3S_";
 //  size_t pos= fname.find(delim)+4;
@@ -34,13 +34,13 @@ void makeRooDataset_fromBDT(long ts){
 //  string bdtv = Form("BDT_train_%s",ts.c_str());
 //  string pbdtv = Form("prob_BDT_train_%s",ts.c_str());
 
-  Int_t classID;
+  Int_t classID, cBin;
   Char_t className;
-  float QQVtxProb, pt1, pt2, eta1, eta2, mass, y, weight, BDT, pBDT, cBin, pt;
+  Double_t  QQVtxProb, pt1, pt2, eta1, eta2, mass, y, weight, BDT, pBDT, pt;
   TBranch *b_classID, *b_className, *b_QQVtxProb, *b_cBin, *b_pt1, *b_pt2, *b_eta1, *b_eta2, *b_pt, *b_mass, *b_y, *b_weight, *b_BDT, *b_BDT_prob;
   
-  tree -> SetBranchAddress("classID", &classID, &b_classID);
-  tree -> SetBranchAddress("className", &className, &b_className);
+//  tree -> SetBranchAddress("classID", &classID, &b_classID);
+//  tree -> SetBranchAddress("className", &className, &b_className);
   tree -> SetBranchAddress("QQVtxProb", &QQVtxProb, &b_QQVtxProb);
   tree -> SetBranchAddress("pt1", &pt1, &b_pt1);
   tree -> SetBranchAddress("pt2", &pt2, &b_pt2);
@@ -51,7 +51,7 @@ void makeRooDataset_fromBDT(long ts){
   tree -> SetBranchAddress("cBin", &cBin, &b_cBin);
   tree -> SetBranchAddress("mass", &mass, &b_mass);
   tree -> SetBranchAddress("weight", &weight, &b_weight);
-  tree -> SetBranchAddress(Form("BDT",ts.c_str()), &BDT, &b_BDT);
+  tree -> SetBranchAddress("BDT", &BDT, &b_BDT);
 //  tree -> SetBranchAddress(Form("prob_BDT_train_%s",ts.c_str()), &pBDT, &b_BDT_prob);
 
 
@@ -69,9 +69,9 @@ void makeRooDataset_fromBDT(long ts){
   RooRealVar* evtWeight = new RooRealVar("weight","corr weight", 0, 10000,"");
   RooRealVar* QQVPVar  = new RooRealVar("QQVtxProb", "dimuon Vertex Probability", 0,1, ""); 
   RooRealVar* BDTVar   = new RooRealVar("BDT", "BDT score", -1,1, ""); 
-  RooRealVar* pBDTVar  = new RooRealVar("pBDT", "BDT probabilty", 0,1, ""); 
+//  RooRealVar* pBDTVar  = new RooRealVar("pBDT", "BDT probabilty", 0,1, ""); 
   RooArgSet* argSet    = new RooArgSet(*massVar, *ptVar, *yVar, *pt1Var, *pt2Var, *eta1Var, *eta2Var,*evtWeight);
-  argSet->add(*cBinVar);argSet->add(*QQVPVar); argSet->add(*BDTVar); argSet->add(*pBDTVar);//argSet->add(*ctau3D);
+  argSet->add(*cBinVar);argSet->add(*QQVPVar); argSet->add(*BDTVar);// argSet->add(*pBDTVar);//argSet->add(*ctau3D);
   
   RooDataSet* dataSet  = new RooDataSet("dataset", " a dataset", *argSet);
 
@@ -79,9 +79,9 @@ void makeRooDataset_fromBDT(long ts){
   Int_t nEvt = tree->GetEntries();
   std::cout << "nEvt :" << nEvt<< std::endl;
   for(int i=0; i < nEvt; i++){
-    if((i%10000)==0)std::cout<< "Fetching index : " << i << std::endl;
+    if((i%10000)==0)std::cout<< "Fetching index : " << i << "\r";
     tree->GetEntry(i);
-    if(!strcmp(&className,"Background")){
+  //  if(!strcmp(&className,"Background")){
       massVar->setVal( (double)mass ) ;
       ptVar->setVal(   (double)pt   ) ;
       yVar->setVal(    (double)y    ) ;
@@ -93,9 +93,9 @@ void makeRooDataset_fromBDT(long ts){
       evtWeight->setVal( (double) 1.0) ;
       QQVPVar->setVal( (double)QQVtxProb ) ;
       BDTVar-> setVal( (double)BDT ) ;
-      pBDTVar->setVal( (double)pBDT ) ;
+//      pBDTVar->setVal( (double)pBDT ) ;
       dataSet->add( *argSet);
-    }
+//    }
   }
   TFile* wf = new TFile(Form("roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root",ts),"recreate");
   wf->cd();

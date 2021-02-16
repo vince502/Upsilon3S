@@ -7,72 +7,84 @@
 #include "TMVA/Tools.h"
 #include "TMVA/Reader.h"
 #include "TMVA/MethodCuts.h"
+#include "TXMLDocument.h"
 
-void BDTClassifierApplication(string fname, long ts){
+//template<typename T> 
+
+void BDTClassifierApplication(long ts){
 
   TMVA::Tools::Instance();
   TMVA::Reader *reader = new TMVA::Reader("!Silent");
-  bool IDonly = true;
-  bool MoreVar, IDvar;
-  MoreVar = (bool) std::stoi(fname.substr(fname.find("MoreVar")+7,1));
-  IDvar = (bool) std::stoi(fname.substr(fname.find("IDv")+3,1));
+  TXMLEngine xml;
+  XMLDocPointer_t xmldoc = xml.ParseFile(Form("./dataset/weights/TMVA_BDT_Classifier_BDT_train_%ld.weights.xml", ts));
+  XMLDocPointer_t mainnode = xml.DocGetRootElement(xmldoc);
+
+//  bool IDonly = true;
+//  bool MoreVar, IDvar;
+//  MoreVar = (bool) std::stoi(fname.substr(fname.find("MoreVar")+7,1));
+//  IDvar = (bool) std::stoi(fname.substr(fname.find("IDv")+3,1));
 
   Double_t mass, pt, y, pt1, pt2, eta1, eta2, dxy1, dxy2, dz1, dz2, QQVtxProb,QQMassErr; 
   Int_t cBin,  nPixWMea1, nPixWMea2, nTrkWMea1, nTrkWMea2,nMuValHits1, nMuValHits2, StationsMatched1, StationsMatched2;
-  Float_t cBin_f,  nPixWMea1_f, nPixWMea2_f, nTrkWMea1_f, nTrkWMea2_f,nMuValHits1_f, nMuValHits2_f, StationsMatched1_f, StationsMatched2_f, mass_f, pt_f, y_f, pt1_f, pt2_f, eta1_f, eta2_f, dxy1_f, dxy2_f, dz1_f, dz2_f, QQVtxProb_f,QQMassErr_f;
-  if(!IDonly){
-  reader->AddVariable("pt1", &pt1_f);
-  reader->AddVariable("pt2", &pt2_f);
-  reader->AddVariable("eta1", &eta1_f);
-  reader->AddVariable("eta2", &eta2_f);
-  }
-  if(IDvar){
-    reader->AddVariable("nPixWMea1",&nPixWMea1_f);
-    reader->AddVariable("nPixWMea2",&nPixWMea2_f);
-    reader->AddVariable("nTrkWMea1",&nTrkWMea1_f);
-    reader->AddVariable("nTrkWMea2",&nTrkWMea2_f);
-    reader->AddVariable("dxy1", &dxy1_f);
-    reader->AddVariable("dxy2", &dxy2_f);
-    reader->AddVariable("dz1",&dz1_f);
-    reader->AddVariable("dz2",&dz2_f);
-    if(!MoreVar){
-      reader->AddSpectator("QQVtxProb", &QQVtxProb_f);
-    }
-    if(IDonly){
-      reader->AddSpectator("pt1",  &pt1_f);
-      reader->AddSpectator("pt2",  &pt2_f);
-      reader->AddSpectator("eta1",  &eta1_f);
-      reader->AddSpectator("eta2",  &eta2_f);
-    }
-  }
-  if(MoreVar){
-   // reader->AddVariable("nTrkHits1", "nTrk Hit 1", "I"_f);
-   // reader->AddVariable("nTrkHits2", "nTrk Hit 2", "I"_f);
-   // reader->AddVariable("nPixValHits1", "nPix Valid Hits 1", "I"_f);
-   // reader->AddVariable("nPixValHits2", "nPix Valid Hits 2", "I"_f);
-    reader->AddVariable("nMuValHits1", &nMuValHits1_f);
-    reader->AddVariable("nMuValHits2", &nMuValHits2_f);
-//    reader->AddVariable("StationsMatched1", &StationsMatched1_f);
-//    reader->AddVariable("StationsMatched2", &StationsMatched2_f);
-    reader->AddVariable("QQMassErr",&QQMassErr_f);
+  std::vector<string> namelist = {"mass", "pt", "y", "pt1", "pt2", "eta1", "eta2", "dxy1", "dxy2", "dz1", "dz2", "QQVtxProb", "QQMassErr", "cBin",  "nPixWMea1", "nPixWMea2", "nTrkWMea1", "nTrkWMea2","nMuValHits1", "nMuValHits2", "StationsMatched1", "StationsMatched2"};
+  std::map<string, Double_t*>mdouble;
+  std::map<string, Int_t*>mint;
+  mdouble["mass"] = &mass;
+  mdouble["pt"] = &pt;
+  mdouble["y"] = &y;
+  mdouble["pt1"] = &pt1;
+  mdouble["pt2"] = &pt2;
+  mdouble["eta1"] = &eta1;
+  mdouble["eta2"] = &eta2;
+  mdouble["dxy1"] = &dxy1;
+  mdouble["dxy2"] = &dxy2;
+  mdouble["dz1"] = &dz1;
+  mdouble["dz2"] = &dz2;
+  mdouble["QQVtxProb"] = &QQVtxProb;
+  mdouble["QQMassErr"] = &QQMassErr;
+  mint["cBin"] = &cBin;
+  mint["nPixWMea1"] = &nPixWMea1;
+  mint["nPixWMea2"] = &nPixWMea2;
+  mint["nTrkWMea1"] = &nTrkWMea1;
+  mint["nTrkWMea2"] = &nTrkWMea2;
+  mint["nMuValHits1"] = &nMuValHits1;
+  mint["nMuValHits2"] = &nMuValHits2;
+  mint["StationsMatched1"] = &StationsMatched1;
+  mint["StationsMatched2"] = &StationsMatched2;
 
-    reader->AddSpectator("QQVtxProb",&QQVtxProb_f);
- //   reader->AddVariable("ctau3D", "F"_f);
-//    reader->AddVariable("normChi2_global1", "F"_f);
-//    reader->AddVariable("normChi2_global2", "F"_f);
-    if(IDonly){
-      reader->AddSpectator("pt1", &pt1_f);
-      reader->AddSpectator("pt2", &pt2_f);
-      reader->AddSpectator("eta1", &eta1_f);
-      reader->AddSpectator("eta2", &eta2_f);
-    }
+  XMLNodePointer_t nodevar = xml.GetChild(mainnode);
+  while( strcmp(xml.GetNodeName(nodevar),"Variables")!=0){
+  nodevar = xml.GetNext(nodevar);
   }
-
-  //Spectator Call, Will NOT Use For Training
-  reader->AddSpectator("cBin",&cBin_f);
-  reader->AddSpectator("mass",&mass_f);
-  reader->AddSpectator("pt",&pt_f);
-  reader->AddSpectator("y",&y_f);
+  XMLNodePointer_t nodespc = xml.GetChild(mainnode);
+  while( strcmp(xml.GetNodeName(nodespc),"Spectators")!=0){
+  nodespc = xml.GetNext(nodespc);
+  }
+  int nvar = stoi(xml.GetAttrValue(xml.GetFirstAttr(nodevar)));
+  int nspc = stoi(xml.GetAttrValue(xml.GetFirstAttr(nodespc)));
+  Float_t varptr[nvar];
+  Float_t spcptr[nspc];
+  std::map<TString, Float_t*>mvar;
+  std::map<TString, Float_t*>mspc;
+  std::vector<TString> listvar;
+  std::vector<TString> listspc;
+  XMLNodePointer_t childvar = xml.GetChild(nodevar);
+  XMLNodePointer_t childspc = xml.GetChild(nodespc);
+  TString varname, spcname;
+  for(int i=0; i < nvar; i++){
+    varname =xml.GetAttr(childvar, "Expression"); 
+    std::cout << varname << std::endl;
+    mvar[varname]=&varptr[i];
+    reader->AddVariable(varname, &varptr[i]);
+    childvar = xml.GetNext(childvar);
+  }
+  for(int i=0; i < nspc; i++){
+    spcname =(xml.GetAttr(childspc, "Expression"));
+    mspc[spcname]=&spcptr[i];
+    reader->AddSpectator(spcname, &spcptr[i]);
+    childspc = xml.GetNext(childspc);
+  }
+  
 
   TString dir = "dataset/weights/";
   TString prefix = "TMVA_BDT_Classifier_BDT_train_";
@@ -121,17 +133,21 @@ void BDTClassifierApplication(string fname, long ts){
     tree->GetEntry(ievt);
     outtree->GetEntry(ievt);
     if (ievt%10000 == 0) std::cout << "--- ... Processing event: " << ievt << "\r";
-    cBin_f=cBin;pt_f=pt;y_f=y;mass_f=mass;pt1_f=pt1;pt2_f=pt2;eta1_f=eta1;eta2_f=eta2;nPixWMea1_f=nPixWMea1;nPixWMea2_f=nPixWMea2;nTrkWMea1_f=nTrkWMea1;nTrkWMea2_f=nTrkWMea2;dxy1_f=dxy1;dxy2_f=dxy2;dz1_f=dz1;dz2_f=dz2;QQVtxProb_f=QQVtxProb;nMuValHits1_f=nMuValHits1;nMuValHits2_f=nMuValHits2;StationsMatched1_f=StationsMatched1;
+    for( string name : namelist ){
+      if( mvar[name] !=nullptr){
+	if( mdouble[name] !=nullptr) *mvar[name] = *mdouble[name];
+	if( mint[name] !=nullptr) *mvar[name] = *mint[name];
+      }
+      if( mspc[name] !=nullptr){
+	if( mdouble[name] !=nullptr) *mspc[name] = *mdouble[name];
+	if( mint[name] !=nullptr) *mspc[name] = *mint[name];
+      }
+    }
   BDT=reader->EvaluateMVA( Form("BDT_train_%ld",ts));
   outtree->Fill();
   }
   outtree->Write();
   std::cout << "done Writiing " << Form("BDTApp_%ld.root",ts) << std::endl;
   target->Close();
-
-
-
-
-
 
 }
