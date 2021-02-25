@@ -11,7 +11,7 @@
 
 //template<typename T> 
 
-void BDTClassifierApplication(long ts){
+void BDTClassifierApplication(long ts, int isMC = 0){
 
   TMVA::Tools::Instance();
   TMVA::Reader *reader = new TMVA::Reader("!Silent");
@@ -94,7 +94,7 @@ void BDTClassifierApplication(long ts){
   reader->BookMVA( methodName, weightfile );
   TH1F* histBDT = new TH1F( "MVA_BDT", "MVA_BDT", 100, -1, 1);
   TFile* input(0);
-  input = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0.root", "open");
+  input = new TFile(Form("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC%d.root",isMC), "open");
 
   TTree* tree = (TTree*) input->Get("tree");
   tree->SetBranchAddress("cBin", &cBin);
@@ -124,7 +124,9 @@ void BDTClassifierApplication(long ts){
   Double_t BDT;
 
   TTreeReader newreader("tree", input);
-  TFile *target = new TFile(Form("./BDTAppliedData/BDTApp_%ld.root",ts),"recreate");
+  TFile *target;
+  if (!isMC) target =new TFile(Form("./BDTAppliedData/BDTApp_%ld.root",ts),"recreate");
+  else if (isMC) target =new TFile(Form("./BDTAppliedData/BDTApp_%ld_MC.root",ts),"recreate");
   TTree* outtree = tree->CloneTree(0);
   outtree->Branch("BDT", &BDT, "BDT/D");
 

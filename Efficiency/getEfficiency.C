@@ -11,7 +11,7 @@
 using namespace std;
 
 void getEfficiency(
-  float ptLow = 0.0, float ptHigh = 50.0,
+  float ptLow = 0.0, float ptHigh = 30.0,
   float yLow = 0.0, float yHigh = 2.4,
   int cLow = 0, int cHigh = 180, bool isTnP = false, bool isPtWeight = false, bool isSwitch=false, int kTrigSel = kTrigUps
   ) {
@@ -37,7 +37,7 @@ void getEfficiency(
   else if(!isSwitch) ftrigSel += Form("_%s",fTrigName[kTrigSel_].Data());
 
   //input files
-  TString inputMC = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/SkimmedFiles/MC/OniaTree_MC_Ups3S_PbPb2018_HydjetDrumMB_5p02TeV_merged.root";
+  TString inputMC = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/OniaTree/MC/OniaTree_MC_Ups3S_PbPb2018_HydjetDrumMB_5p02TeV_merged.root";
   TChain* mytree = new TChain("hionia/myTree"); 
   mytree->Add(inputMC.Data());
 
@@ -50,8 +50,8 @@ void getEfficiency(
   //TF1* f1 = (TF1*) fPtW->Get("fitRatio");
 
   TString histName = Form("pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_TrigSel%s",ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight,ftrigSel.c_str());
-  TH1D* hreco = new TH1D(Form("hreco_%s",histName.Data()),"hreco",1,xmin,xmax);
-  TH1D* hgen = new TH1D(Form("hgen_%s",histName.Data()),"hgen",1,xmin,xmax);
+  TH1D* hreco = new TH1D(Form("hreco"),"hreco",1,xmin,xmax);
+  TH1D* hgen = new TH1D(Form("hgen"),"hgen",1,xmin,xmax);
 
   hreco->Sumw2();
   hgen->Sumw2();
@@ -125,7 +125,7 @@ void getEfficiency(
       if(Reco_mu_whichGen[Reco_QQ_mupl_idx[irqq]] == -1) continue;
       if(Reco_mu_whichGen[Reco_QQ_mumi_idx[irqq]] == -1) continue;
 
-      if(!settree_.SoftMuIdCut(irqq)) continue;
+ //     if(!settree_.SoftMuIdCut(irqq)) continue;
 
       
       if ( Reco_QQ_VtxProb[irqq]  < 0.01 ) continue;

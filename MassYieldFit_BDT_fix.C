@@ -362,6 +362,11 @@ void MassYieldFit_BDT_fix(const string fname = "", const Double_t ptMin = 0, con
   c2->SaveAs(Form("%s/WithoutFit_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_%s%d_%s%.4f_%s%.4f.pdf",massDIR2.Data(),(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10),  Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag,"BDT",1,"cut",cutBDT,"vp",cutQVP));
 
   fout->cd();
+  RooWorkspace* wtmp = new RooWorkspace("workspace");
+  wtmp->import(*works1->var("mass")); 
+  wtmp->import(*works1->pdf("model")); 
+  wtmp->import(*works1->data("reducedDS")); 
+  wtmp->Write();
   Result->Write();
   massPlot->Write();
   hYield->Write();

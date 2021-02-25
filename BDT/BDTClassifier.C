@@ -28,7 +28,7 @@ bool BDTClassifier_Function(bool IDvar = true, bool MoreVar = false, bool IDonly
   
   //INPUT & OUTPUT Call
   TFile* inputDATA = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0.root","read");
-  TFile* inputMC   = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1.root","read");
+  TFile* inputMC   = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_QQVtxProb1percAccPt3p5Cut.root","read");
   TFile* output    = new TFile(Form("%s/BDTresultY3S_%ld_IDv%d_MoreVar%d.root",BDTDir.Data(),(long) tstamp, (int) IDvar, (int) MoreVar),"recreate");
 
   TCut cut1 = "pt1>3.5&&pt2>3.5&&QQVtxProb>0.01";
@@ -52,10 +52,10 @@ bool BDTClassifier_Function(bool IDvar = true, bool MoreVar = false, bool IDonly
     loader->AddVariable("nPixWMea2", "nPix Mea 2", "I");
     loader->AddVariable("nTrkWMea1", "nTrk Mea 1", "I");
     loader->AddVariable("nTrkWMea2", "nTrk Mea 2", "I");
-    loader->AddSpectator("dxy1", "dxy of single mu 1", "F");
-    loader->AddSpectator("dxy2", "dxy of single mu 2", "F");
-    loader->AddSpectator("dz1", "dz of single mu 1", "F");
-    loader->AddSpectator("dz2", "dz of single mu 2", "F");
+    loader->AddVariable("dxy1", "dxy of single mu 1", "F");
+    loader->AddVariable("dxy2", "dxy of single mu 2", "F");
+    loader->AddVariable("dz1", "dz of single mu 1", "F");
+    loader->AddVariable("dz2", "dz of single mu 2", "F");
     if(!MoreVar){
       loader->AddSpectator("QQVtxProb","Vrtx prob", "F");
     }
@@ -111,7 +111,7 @@ bool BDTClassifier_Function(bool IDvar = true, bool MoreVar = false, bool IDonly
 
   //Book Training BDT Method
   factory->BookMethod( loader, TMVA::Types::kBDT, TString::Format("BDT_train_%ld", (long) tstamp ),
-  	"!H:!V:NTrees=600:MaxDepth=6:MinNodeSize=1%:BoostType=AdaBoost:AdaBoostBeta=0.6:UseBaggedBoost:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=True:UseNvars=2:BaggedSampleFraction=0.4:nCuts=2000:CreateMVAPdfs");
+  	"!H:!V:NTrees=200:MaxDepth=4:MinNodeSize=5%:BoostType=AdaBoost:AdaBoostBeta=0.6:UseBaggedBoost:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=True:UseNvars=2:BaggedSampleFraction=0.4:nCuts=4000:CreateMVAPdfs");
 
   //Train Test Evaluate
   factory->TrainAllMethods();
