@@ -5,12 +5,12 @@
 #include "../../HiEvtPlaneList.h"
 #include "../../cutsAndBinUpsilonV2.h"
 
-double getEffhist(string what,float pl, float ph, float yl, float yh, int cl, int ch, bool istnp, bool wei, int opt1, double opt2, int opt3){
+double getEffhist(string what,float pl, float ph, float yl, float yh, int cl, int ch, bool istnp, bool wei, int opt1, double opt2, double opt22, int opt3){
 
 TString histName;
 
 if(what=="reco"){
-  string fname =Form("mc_eff_BDT_%d_bdt_%.3f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_ID", opt1, opt2, pl, ph, yl, yh, 3.5, 9.0, 11.0, cl, ch, istnp, wei);
+  string fname =Form("mc_eff_BDT_%d_bdt_%.3f-%.3f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_ID", opt1, opt2, opt22, pl, ph, yl, yh, 3.5, 9.0, 11.0, cl, ch, istnp, wei);
   TFile* histfile = new TFile(Form("%s.root",fname.c_str()),"read");
   TList* list1 = (TList*) histfile->GetListOfKeys();
   TH1D* rechist = (TH1D*) histfile->Get(list1->At(1)->GetName());
@@ -43,10 +43,10 @@ else return 10000.0;
 
 };
 
-void openEffhist(float _pl, float _ph, float _yl, float _yh, int _cl, int _ch, bool _istnp, bool wei, bool _sw, int kTrigSel, int _ts, double _bdt_ts ){
-  double gen = getEffhist("gen", _pl,  _ph, _yl, _yh, _cl, _ch, _istnp, wei, (int) _sw, 0., kTrigSel);
-  double reco = getEffhist("reco", _pl,  _ph, _yl, _yh, _cl, _ch, _istnp, wei, _ts, _bdt_ts, 0);
+void openEffhist(float _pl, float _ph, float _yl, float _yh, int _cl, int _ch, bool _istnp, bool wei, bool _sw, int kTrigSel, int _ts, double _bdt_tsl, double _bdt_tsh ){
+  double gen = getEffhist("gen", _pl,  _ph, _yl, _yh, _cl, _ch, _istnp, wei, (int) _sw, 0.,0., kTrigSel);
+  double reco = getEffhist("reco", _pl,  _ph, _yl, _yh, _cl, _ch, _istnp, wei, _ts, _bdt_tsl, _bdt_tsh, 0);
   double BDTratio = reco/gen;
-  std::cout << Form("Efficiency of BDT %d, ", _ts) << Form("Cut %f : ", _bdt_ts) << BDTratio << std::endl;
+  std::cout << Form("Efficiency of BDT %d, ", _ts) << Form("Cut %f-%f : ", _bdt_tsl, _bdt_tsh) << BDTratio << std::endl;
 
 }

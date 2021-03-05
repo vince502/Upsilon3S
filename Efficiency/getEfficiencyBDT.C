@@ -13,7 +13,7 @@ using namespace std;
 void getEfficiencyBDT(
   float ptLow = 0.0, float ptHigh = 50.0,
   float yLow = 0.0, float yHigh = 2.4,
-  int cLow = 0, int cHigh = 180, bool isTnP = false, bool isPtWeight = false, long  ts = 0000000000, double bdt_ts = 0.0
+  int cLow = 0, int cHigh = 180, bool isTnP = false, bool isPtWeight = false, long  ts = 0000000000, double bdt_tsl = 0.0, double bdt_tsh =0.0
   ) {
 
   gStyle->SetOptStat(0);
@@ -49,7 +49,7 @@ void getEfficiencyBDT(
   //TFile *fPtW = new TFile("../Reweight/WeightedFunc/Func_dNdpT_3S.root","read");
   //TF1* f1 = (TF1*) fPtW->Get("fitRatio");
 
-  TString histName = Form("BDT_%ld_bdt_%.3f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d", ts, bdt_ts,ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight);
+  TString histName = Form("BDT_%ld_bdt_%.3f-%.3f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d", ts, bdt_tsl, bdt_tsh, ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight);
   TH1D* hreco = new TH1D(Form("hreco"),"hreco",1,xmin,xmax);
   TH1D* hgen = new TH1D(Form("hgen"),"hgen",1,xmin,xmax);
 
@@ -87,7 +87,7 @@ void getEfficiencyBDT(
     if(iev%100000==0) cout << ">>>>> EVENT " << iev << " / " << mytree->GetEntries() <<  " ("<<(int)(100.*iev/mytree->GetEntries()) << "%)" << endl;
 
     mytree->GetEntry(iev);
-    if(BDT< bdt_ts) continue;
+    if(BDT< bdt_tsl || BDT> bdt_tsh) continue;
     if(!( fabs(y) < yHigh && fabs(y) > yLow && pt < ptHigh && pt >ptLow )) continue;
     if(!( pt1> muPtCut && pt2> muPtCut && fabs(eta1) < muEtaCut && fabs(eta2) < muEtaCut )) continue;
     if(!( QQVtxProb > 0.01 )) continue;
@@ -97,7 +97,7 @@ void getEfficiencyBDT(
     if (checkID) {
       if(!( nTrkWMea1 >5 && nTrkWMea2 >5 && nPixWMea1 > 0 && nPixWMea2 > 0 && fabs(dxy1) < 0.3 && fabs(dxy2) < 0.3 && fabs(dz1) < 20. && fabs(dz2) < 20.) ) continue;
 
-    histName = Form("BDT_%ld_bdt_%.3f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_ID", ts, bdt_ts,ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight);
+    histName = Form("BDT_%ld_bdt_%.3f-%.3f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_ID", ts, bdt_tsl, bdt_tsh,ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight);
     }
     hreco->Fill(pt,weight);
     count++;

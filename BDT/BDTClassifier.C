@@ -27,7 +27,7 @@ bool BDTClassifier_Function(bool IDvar = true, bool MoreVar = false, bool IDonly
   else gSystem->mkdir(BDTDir.Data(),kTRUE);
   
   //INPUT & OUTPUT Call
-  TFile* inputDATA = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0.root","read");
+  TFile* inputDATA = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_NewSkimWithTrackerMuonCut_QQVtxProb5Perc_AccPt3p5.root","read");
   TFile* inputMC   = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_QQVtxProb1percAccPt3p5Cut.root","read");
   TFile* output    = new TFile(Form("%s/BDTresultY3S_%ld_IDv%d_MoreVar%d.root",BDTDir.Data(),(long) tstamp, (int) IDvar, (int) MoreVar),"recreate");
 

@@ -25,8 +25,13 @@ double getAccWeight(TH1D* h = 0, double pt = 0);
 double getEffWeight(TH1D* h = 0, double pt = 0);
 void GetHistSqrt(TH1D* h1 =0, TH1D* h2=0);
 
-void makeRooDataset_fromBDT(long ts){
-  TFile* rf = new TFile(Form("./BDTAppliedData/BDTApp_%ld.root",ts), "OPEN");
+void makeRooDataset_fromBDT(long ts, bool isMC){
+  string smc = "";
+  if (isMC) smc = "_MC";
+
+  TFile* rf; 
+  if(!isMC) rf = new TFile(Form("./BDTAppliedData/BDTApp_%ld.root",ts), "OPEN");
+  else if(isMC) rf = new TFile(Form("./BDTAppliedData/BDTApp_%ld_MC.root",ts), "OPEN");
   TTree* tree = (TTree*) rf->Get("tree");
 //  string delim = "Y3S_";
 //  size_t pos= fname.find(delim)+4;
@@ -97,7 +102,7 @@ void makeRooDataset_fromBDT(long ts){
       dataSet->add( *argSet);
 //    }
   }
-  TFile* wf = new TFile(Form("roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root",ts),"recreate");
+  TFile* wf = new TFile(Form("roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT%s.root",ts,smc.c_str()),"recreate");
   wf->cd();
   dataSet->Write();
   wf->Write();
