@@ -37,7 +37,7 @@ void getEfficiencyBDT(
 //  else if(!isSwitch) ftrigSel += Form("_%s",fTrigName[kTrigSel_].Data());
 
   //input files
-  TString inputMC = Form("../../BDT/BDTAppliedData/BDTApp_%ld_MC.root", ts);
+  TString inputMC = Form("/home/vince402/Upsilon3S/BDT/BDTAppliedData/BDTApp_%ld_MC.root", ts);
   TChain* mytree = new TChain("tree"); 
   mytree->Add(inputMC.Data());
 
@@ -93,7 +93,7 @@ void getEfficiencyBDT(
     if(!( QQVtxProb > 0.01 )) continue;
     if(!( cBin <= cHigh && cBin >= cLow)) continue;
     if(!( mass < massHigh && mass > massLow)) continue;
-    bool checkID = true; 
+    bool checkID = false; 
     if (checkID) {
       if(!( nTrkWMea1 >5 && nTrkWMea2 >5 && nPixWMea1 > 0 && nPixWMea2 > 0 && fabs(dxy1) < 0.3 && fabs(dxy2) < 0.3 && fabs(dz1) < 20. && fabs(dz2) < 20.) ) continue;
 
@@ -131,7 +131,7 @@ void getEfficiencyBDT(
 
   //Save efficiency files for later use.
   heff->SetName(Form("mc_eff_vs_pt_TnP%d_Cent090",isTnP));
-  TString outFileName = Form("mc_eff_%s.root",histName.Data());
+  TString outFileName = Form("/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_%s.root",histName.Data());
   TFile* outFile = new TFile(outFileName,"RECREATE");
   heff->Write();
   hreco->Write();

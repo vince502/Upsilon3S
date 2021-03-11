@@ -7,11 +7,12 @@
 
 using namespace RooFit;
 
-void DrawTemp(long ts, float blow, float bhigh, float vcut, TString MupT = "3p5", string Trig = "S13", TString fittype = "freefit"){
+void DrawTemp(long ts,double ylim, float blow, float bhigh, float vcut, TString MupT = "3p5", string Trig = "S13", TString fittype = "freefit"){
   string fitdir;
+  int ylim10 = (int) (ylim*10);
   if( fittype=="freefit") fitdir = "FF";
   else if (fittype=="DatafixtoMC") fitdir = "DFM";
-  TFile* file1 = new TFile(Form("Yield/Yield_%ld_%s_pt_0-30_rap_-24-24_120bin_cbin_0-180_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", ts, fitdir.c_str(), blow, bhigh, vcut),"read");
+  TFile* file1 = new TFile(Form("Yield/Yield_%ld_%s_pt_0-30_rap_-%d-%d_120bin_cbin_0-180_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", ts, fitdir.c_str(), ylim10, ylim10, blow, bhigh, vcut),"read");
   TString mainDIR = gSystem->ExpandPathName(gSystem->pwd());
   TString massDIR = mainDIR +  Form("/MassDist/BDT/%ld/freefit/%s/%s/Temp/FitResult", ts,Trig.c_str(),MupT.Data());
   TString massDIRp = mainDIR + Form("/MassDist/BDT/%ld/freefit/%s/%s/Temp/FitResult/png",ts,Trig.c_str(),MupT.Data());

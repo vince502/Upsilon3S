@@ -31,8 +31,8 @@ bool BDTClassifier_Function(bool IDvar = true, bool MoreVar = false, bool IDonly
   TFile* inputMC   = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_QQVtxProb1percAccPt3p5Cut.root","read");
   TFile* output    = new TFile(Form("%s/BDTresultY3S_%ld_IDv%d_MoreVar%d.root",BDTDir.Data(),(long) tstamp, (int) IDvar, (int) MoreVar),"recreate");
 
-  TCut cut1 = "pt1>3.5&&pt2>3.5&&QQVtxProb>0.01";
-  TCut cut2 = "pt1>3.5&&pt2>3.5&&QQVtxProb>0.01";
+  TCut cut1 = "pt1>3.5&&pt2>3.5&&QQVtxProb>0.01&&fabs(y)<1.2";
+  TCut cut2 = "pt1>3.5&&pt2>3.5&&QQVtxProb>0.01&&fabs(y)<1.2";
 
   TMVA::DataLoader *loader = new TMVA::DataLoader("dataset");
   TTree* SigTree =(TTree*) inputMC->Get("tree");
@@ -107,7 +107,7 @@ bool BDTClassifier_Function(bool IDvar = true, bool MoreVar = false, bool IDonly
   //Preselection Cut -> Conventional Kinematics 
 
 
-  loader->PrepareTrainingAndTestTree( cut1, cut2, "nTrain_Signal=400000:nTrain_Background=200000:SplitMode=Random:Random:NormMode=NumEvents:!V");
+  loader->PrepareTrainingAndTestTree( cut1, cut2, "nTrain_Signal=200000:nTrain_Background=200000:SplitMode=Random:Random:NormMode=NumEvents:!V");
 
   //Book Training BDT Method
   factory->BookMethod( loader, TMVA::Types::kBDT, TString::Format("BDT_train_%ld", (long) tstamp ),

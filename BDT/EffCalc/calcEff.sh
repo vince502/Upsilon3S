@@ -7,10 +7,10 @@ if [ $# -ne 12 ]
   echo "unmatching variable numbers, setting default"
   pl="0.0"; ph="30.0"; yl="0.0"; yh="2.4"; cl="0"; ch="180"; tnp="false"; wei="false"; sw="false"; ktrig="kTrigUps"; ts="1613554344"; bdt_tsl="0.2"; bdt_tsh="0.3"
 fi
-if [ $# -eq 3 ]
+if [ $# -eq 4 ]
   then
-  ts=$1; bdt_tsl=$2; bdt_tsh=$3
-  echo "using timestamp $1, bdt threshold $2-$3"
+  ts=$1; yh=$2;  bdt_tsl=$3; bdt_tsh=$4
+  echo "using timestamp $1, |y|-range $2, bdt threshold $3-$4"
 fi
 
 if [ $# -eq 12 ]

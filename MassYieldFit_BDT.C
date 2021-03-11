@@ -33,7 +33,7 @@
 using namespace std;
 using namespace RooFit;
 
-void MassYieldFit_BDT(const string fname = "", const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "4", const string Trig = "", int cBinLow =0, int cBinHigh = 180, double cutQVP = 0.01, double cutBDTlow=-1, double cutBDThigh = 1. ,Double_t params[/*sigma1S_1, alpha, n , frac, Erfmean, Erfsigma, Erfp0*/]= {}){
+void MassYieldFit_BDT(const string fname = "", const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", int cBinLow =0, int cBinHigh = 180, double cutQVP = 0.01, double cutBDTlow=-1, double cutBDThigh = 1. ,Double_t params[/*sigma1S_1, alpha, n , frac, Erfmean, Erfsigma, Erfp0*/]= {},Double_t paramslow[/*sigma1S_1, alpha, n , frac, Erfmean, Erfsigma, Erfp0*/]= {},Double_t paramshigh[/*sigma1S_1, alpha, n , frac, Erfmean, Erfsigma, Erfp0*/]= {}){
   Double_t etaMax= 2.4;
   Double_t etaMin = -2.4;
   string delim = "OniaRooDataset_BDT";
@@ -44,10 +44,10 @@ void MassYieldFit_BDT(const string fname = "", const Double_t ptMin = 0, const D
   if( fname.find("Switch1") != std::string::npos) { swflag = true;}
   
   TString mainDIR = gSystem->ExpandPathName(gSystem->pwd());
-  TString massDIR = mainDIR +  Form("/MassDist/BDT/%s/freefit/%s/%s/FitResult",ts.c_str(), Trig.c_str(), MupT.Data());
-  TString massDIRp = mainDIR + Form("/MassDist/BDT/%s/freefit/%s/%s/FitResult/png", ts.c_str(), Trig.c_str(), MupT.Data());
-  TString massDIRl = mainDIR + Form("/MassDist/BDT/%s/freefit/%s/%s/FitResult/logY", ts.c_str(), Trig.c_str(), MupT.Data());
-  TString massDIR2 = mainDIR + Form("/MassDist/BDT/%s/freefit/%s/%s/WithoutFit", ts.c_str(), Trig.c_str(), MupT.Data());
+  TString massDIR = mainDIR +  Form("/MassDist/BDT/%s/freefit/%s/%.1f/cent%d-%d/pT%.1f-%.1f/FitResult",ts.c_str(), Trig.c_str(), rapMax,cBinLow,cBinHigh,ptMin,ptMax);
+  TString massDIRp = mainDIR + Form("/MassDist/BDT/%s/freefit/%s/%.1f/cent%d-%d/pT%.1f-%.1f/FitResult/png", ts.c_str(), Trig.c_str(), rapMax,cBinLow,cBinHigh,ptMin,ptMax);
+  TString massDIRl = mainDIR + Form("/MassDist/BDT/%s/freefit/%s/%.1f/cent%d-%d/pT%.1f-%.1f/FitResult/logY", ts.c_str(), Trig.c_str(), rapMax,cBinLow,cBinHigh,ptMin,ptMax);
+  TString massDIR2 = mainDIR + Form("/MassDist/BDT/%s/freefit/%s/%.1f/cent%d-%d/pT%.1f-%.1f/WithoutFit", ts.c_str(), Trig.c_str(), rapMax,cBinLow,cBinHigh,ptMin,ptMax);
   void * dirpM = gSystem->OpenDirectory(massDIR.Data());
   if(dirpM) gSystem->FreeDirectory(dirpM);
   else{ gSystem->mkdir(massDIR.Data(), kTRUE); gSystem->mkdir(massDIRl.Data(),kTRUE);}
@@ -86,30 +86,6 @@ void MassYieldFit_BDT(const string fname = "", const Double_t ptMin = 0, const D
           cout << "There is no such muon pT cut value" << endl;
           return;
   }
-//  Double_t sig11;
-//  Double_t Frac, alp, N;
-//  Double_t erfm, erfsig, erfp0;
-
-/*  ifstream in;
-  in.open(Form("Parameter/Parameters_pt_%d-%d_rap_%d-%d_Data_Trig_%s_noWeight_MupT%s.txt", (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Trig.c_str(),  MupT.Data()));
-  if(in.is_open())
-  {
-     while(!in.eof())
-     {
-       if(!in.good())
-       {
-         cout << "Parameter File is wrong!!! Please Check!!!" << endl;
-         return;
-       }
-       else
-       {
-         //if(SigSys) in >> sig11 >> Frac >> alp >> N >> erfm >> erfsig >> erfp0;
-         //else if(BkgSys) in >> sig11 >> Frac >> alp >> N >> chebyp0 >> chebyp1 >> chebyp2 >> ch    ebyp3;
-          in >> sig11 >> Frac >> alp >> N >> erfm >> erfsig >> erfp0;
-       }
-     }
-  }
-  in.close(); */
 
   TFile* fin;
   fin = new TFile(Form("%s",fname.c_str()),"READ");
@@ -121,7 +97,6 @@ void MassYieldFit_BDT(const string fname = "", const Double_t ptMin = 0, const D
 
   RooArgSet* argRD = new RooArgSet(*(works1->var("mass")), *(works1->var("pt")), *(works1->var("y")), *(works1->var("cBin")), *(works1->var("pt1")), *(works1->var("pt2")), *(works1->var("eta1")), *(works1->var("eta2")), *(works1->var("QQVtxProb")));
   argRD->add(*(works1->var("BDT")));
-//  argRD->add(*(works1->var("pBDT")));
   RooDataSet* initialDS = (RooDataSet*) dataset->reduce(*argRD);
   initialDS->SetName("initialDS");
   
@@ -150,12 +125,13 @@ void MassYieldFit_BDT(const string fname = "", const Double_t ptMin = 0, const D
   works1->data("reducedDS")->plotOn(massPlot, Name("massPlot"));
 
   RooRealVar mean1S("mean1S", "mean of Upsilon 1S", U1S_mass, U1S_mass-0.015, U1S_mass+0.015);
+  RooRealVar mean3S("mean3S", "mean of Upsilon 1S", U3S_mass, U3S_mass-0.010, U3S_mass+0.010);
   RooRealVar mratio2("mratio2", "mratio2", U2S_mass/U1S_mass);
   RooRealVar mratio3("mratio3", "mratio3", U3S_mass/U1S_mass);
   RooFormulaVar mean2S("mean2S", "mean1S*mratio2", RooArgSet(mean1S, mratio2));
-  RooFormulaVar mean3S("mean3S", "mean1S*mratio3", RooArgSet(mean1S, mratio3));
+  //RooFormulaVar mean3S("mean3S", "mean1S*mratio3", RooArgSet(mean1S, mratio3));
 
-  RooRealVar sigma1S_1("sigma1S_1", "sigma1 of 1S", 0.05, 0.01, 0.15);
+  RooRealVar sigma1S_1("sigma1S_1", "sigma1 of 1S", 0.05, paramslow[0], paramshigh[0]);
   RooFormulaVar sigma2S_1("sigma2S_1", "@0*@1", RooArgList(sigma1S_1, mratio2));
   RooFormulaVar sigma3S_1("sigma3S_1", "@0*@1", RooArgList(sigma1S_1, mratio3));
 
@@ -165,9 +141,9 @@ void MassYieldFit_BDT(const string fname = "", const Double_t ptMin = 0, const D
   RooFormulaVar sigma2S_2("sigma1S_2", "@0*@1", RooArgList(sigma1S_2, mratio2));
   RooFormulaVar sigma3S_2("sigma1S_2", "@0*@1", RooArgList(sigma1S_2, mratio3));
 
-  RooRealVar alpha("alpha", "alpha of Crystal ball", 2.0, 1, 10.);
-  RooRealVar n("n", "n of Crystal ball", 2.0, 1, 20);
-  RooRealVar* frac = new RooRealVar("frac", "CB fraction", 0.5, 0.05, 0.95);
+  RooRealVar alpha("alpha", "alpha of Crystal ball", 2.0, paramslow[1], paramshigh[1]);
+  RooRealVar n("n", "n of Crystal ball", 2.0, paramslow[2], paramshigh[2]);
+  RooRealVar* frac = new RooRealVar("frac", "CB fraction", 0.5, paramslow[3], paramshigh[3]);
 
   RooCBShape* CB1S_1 = new RooCBShape("CB1S_1", "1S Crystal ball function1", *(works1->var("mass")), mean1S, sigma1S_1, alpha, n);
   RooCBShape* CB2S_1 = new RooCBShape("CB2S_1", "2S Crystal ball function1", *(works1->var("mass")), mean2S, sigma2S_1, alpha, n);
@@ -185,9 +161,9 @@ void MassYieldFit_BDT(const string fname = "", const Double_t ptMin = 0, const D
 //  RooAddPdf* CBG1S = new RooAddPdf("CBG1S", "Sum of 1S Crystal ball Gauss", RooArgList(*CB1S_1, *G1S), RooArgList(*frac));
 //  RooAddPdf* CBG2S = new RooAddPdf("CBG2S", "Sum of 2S Crystal ball Gauss", RooArgList(*CB2S_1, *G2S), RooArgList(*frac));
 //  RooAddPdf* CBG3S = new RooAddPdf("CBG3S", "Sum of 3S Crystal ball Gauss", RooArgList(*CB3S_1, *G3S), RooArgList(*frac));
-  RooRealVar Erfmean("Erfmean", "Mean of Errfunction", 7, 3, 10.0);//for 0~40, 4~7 GeV
-  RooRealVar Erfsigma("Erfsigma", "Sigma of Errfunction", 1, 0.1, 5);//for 0~40, 4~7 GeV
-  RooRealVar Erfp0("Erfp0", "1st parameter of Errfunction", 1, 0.1, 10);
+  RooRealVar Erfmean("Erfmean", "Mean of Errfunction", 7, paramslow[4], paramshigh[4]);//for 0~40, 4~7 GeV
+  RooRealVar Erfsigma("Erfsigma", "Sigma of Errfunction", 1, paramslow[5], paramshigh[5]);//for 0~40, 4~7 GeV
+  RooRealVar Erfp0("Erfp0", "1st parameter of Errfunction", 1, paramslow[6], paramshigh[6]);
   RooGenericPdf* bkgErf = new RooGenericPdf("bkgErf", "Error background", "TMath::Exp(-@0/@1)*(TMath::Erf((@0-@2)/(TMath::Sqrt(2)*@3))+1)*0.5", RooArgList(*(works1->var("mass")), Erfp0, Erfmean, Erfsigma));
 
   RooGenericPdf* Signal1S;
