@@ -1,4 +1,8 @@
+#ifndef YIELD_EFF_SIGNIF_H
+#define YIELD_EFF_SIGNIF_H
+
 #include <iostream>
+#include <cstdlib>
 #include "TROOT.h"
 #include "RooFit.h"
 #include "./EffCalc/openEffhist.C"
@@ -32,7 +36,15 @@ RooRealVar binplotter::yield_eff(){
   int ylim10 = (int) (ylim*10);
   if( fittype=="freefit") fitdir = "FF";
   else if (fittype=="DatafixtoMC") fitdir = "DFM";
-  TFile* file1 = new TFile(Form("../Yield/Yield_%ld_%s_pt_%d-%d_rap_-%d-%d_120bin_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", ts, fitdir.c_str(),pl,ph, ylim10, ylim10,cl, ch, blow, bhigh, vcut),"read");
+  string filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%ld_%s_pt_%d-%d_rap_-%d-%d_120bin_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", ts, fitdir.c_str(),pl,ph, ylim10, ylim10,cl, ch, blow, bhigh, vcut);
+
+  if(TFile::Open(filename.c_str(), "open")==nullptr || TFile::Open(filename.c_str(),"read")->IsZombie()){
+    std::cout << "Running Fitter for new Yield" << std::endl;
+    string command = Form("root -l -b -q \'../MassYieldFit_BDT.C(\"/home/vince402/Upsilon3S/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root\", %d, %d, %.1f, %.1f, \"3p5\", \"S13\", %d, %d, %.3f, %.2f, %.2f , (Double_t[]) {0.13, 1.54, 3.68, 0.56, 5.0, 1.8, 3.13}, (Double_t[]) {0.01, 0.5, 0.5, 0.15, 0.5, 0.1, 0.1}, (Double_t[]) {0.25, 4, 7, 0.95, 9, 4.0, 8})\'",ts, pl, ph,-1*ylim,ylim, cl, ch, vcut, blow, bhigh);
+    int a = system(command.c_str());
+  }
+  TFile* file1 = new TFile(filename.c_str(),"read");
+  std::cout << filename.c_str() << std::endl;
 
   RooFitResult * res = (RooFitResult*) file1->Get("fitresult_model_reducedDS");
   RooRealVar* Yield3S;
@@ -56,7 +68,7 @@ double binplotter::getsignificance(){
   int ylim10 = (int) (ylim*10);
   if( fittype=="freefit") fitdir = "FF";
   else if (fittype=="DatafixtoMC") fitdir = "DFM";
-  TFile* file1 = new TFile(Form("../Yield/Yield_%ld_%s_pt_%d-%d_rap_-%d-%d_120bin_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", ts, fitdir.c_str(),pl,ph, ylim10, ylim10,cl, ch, blow, bhigh, vcut),"read");
+  TFile* file1 = new TFile(Form("/home/vince402/Upsilon3S/Yield/Yield_%ld_%s_pt_%d-%d_rap_-%d-%d_120bin_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", ts, fitdir.c_str(),pl,ph, ylim10, ylim10,cl, ch, blow, bhigh, vcut),"read");
   
   RooWorkspace* works1 = (RooWorkspace*) file1->Get("workspace");
   RooFitResult* Rsult = (RooFitResult*) file1->Get("fitresult_model_reducedDS");
@@ -76,3 +88,5 @@ double binplotter::getsignificance(){
   double significance = sig_sum/TMath::Sqrt(sig_sum+bkg_sum);
   return significance;
 };
+
+#endif

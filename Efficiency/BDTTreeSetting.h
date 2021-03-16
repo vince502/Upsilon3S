@@ -1,5 +1,5 @@
-#ifndef TreeSetting_h
-#define TreeSetting_h
+#ifndef BDTTreeSetting_h
+#define BDTTreeSetting_h
 
 #include <iostream>
 #include "TTree.h"
@@ -11,7 +11,7 @@
 
 using namespace std;
 
-const long int maxBranchSize = 100000;
+extern const long int maxBranchSize = 100000;
 
 // import the tree to the RooDataSet
 int		 cBin;
@@ -66,21 +66,21 @@ double		 BDT;
 //~*~*~*~*~*~*~*Conversion~*~*~*~*~*~*~*~*~//
 //~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~//
 
-class SetTree
+class SetTreeBDT
 {
   public:
-    SetTree(){};
+    SetTreeBDT(){};
 
-    virtual ~SetTree();
+    virtual ~SetTreeBDT();
     virtual void TreeSetting(TTree* tree);
 };
 
-SetTree::~SetTree()
+SetTreeBDT::~SetTreeBDT()
 {
 }
 
 
-void SetTree::TreeSetting(TTree* tree)
+void SetTreeBDT::TreeSetting(TTree* tree)
 {
   tree->SetBranchAddress("mass", &mass);
   tree->SetBranchAddress("cBin", &cBin);

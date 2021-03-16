@@ -42,7 +42,7 @@ void getEfficiencyBDT(
   mytree->Add(inputMC.Data());
 
   //SetBranchAddress
-  SetTree settree_;
+  SetTreeBDT settree_;
   settree_.TreeSetting(mytree);
 
   //pT reweighting function

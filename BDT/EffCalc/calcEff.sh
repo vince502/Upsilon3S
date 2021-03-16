@@ -20,7 +20,7 @@ fi
 
 
 root -l -b -q '../../Efficiency/getEfficiencyBDT.C('$pl', '$ph' , '$yl', '$yh', '$cl','$ch','$tnp', '$wei', '$ts','$bdt_tsl','$bdt_tsh')'
-#root -l -b -q '../../Efficiency/getEfficiency.C('$pl', '$ph' , '$yl', '$yh', '$cl','$ch','$tnp','$wei', '$sw','$ktrig')'
+#root -l -b -q '../../Efficiency/getEfficiency.C('$pl', '$ph' , '$yl', '$yh', '$cl','$ch','$tnp','$wei', '$sw','$ktrig', true)'
 
 root -l -b -q 'openEffhist.C('$pl', '$ph','$yl','$yh','$cl','$ch','$tnp','$sw','$sw','$ktrig','$ts','$bdt_tsl', '$bdt_tsh')'
 
