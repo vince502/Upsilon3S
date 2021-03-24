@@ -1,10 +1,11 @@
 #include <iostream>
+#include <cstdlib>
 #include <string>
 #include <TFile.h>
 #include <TH1D.h>
 #include "../../HiEvtPlaneList.h"
 #include "../../cutsAndBinUpsilonV2.h"
-#include "../../Efficiency/getEfficiencyBDT.C"
+//#include "../../Efficiency/getEfficiencyBDT.C"
 //#include "../../Efficiency/getEfficiency.C"
 
 double getEffhist(string what,float pl, float ph, float yl, float yh, int cl, int ch, bool istnp, bool wei, int opt1, double opt2, double opt22, int opt3){
@@ -13,14 +14,16 @@ TString histName;
 
 if(what=="reco"){
   string fname =Form("/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_BDT_%d_bdt_%.3f-%.3f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d", opt1, opt2, opt22, pl, ph, yl, yh, 3.5, 9.0, 11.0, cl, ch, istnp, wei);
-   //if(!TFile::Open(Form("%s.root",fname.c_str()),"read")){
+  // if(!TFile::Open(Form("%s.root",fname.c_str()),"read")){
     std::cout << "-----Calculate new Efficiency for current parameters-----" << std::endl;
-    getEfficiencyBDT(pl, ph, yl, yh, cl, ch, istnp, wei, (long) opt1, opt2, opt22); 
+    string command = Form("root -l -b -q \'/home/vince402/Upsilon3S/Efficiency/getEfficiencyBDT.C(%.2f, %.2f, %.2f, %.2f, %d, %d, %d, %d, %ld, %.3f, %.5f)\'",pl, ph, yl, yh, cl, ch, (int) istnp, (int) wei, (long) opt1, opt2, opt22);
+    int a = system(command.c_str());
+//    getEfficiencyBDT(pl, ph, yl, yh, cl, ch, istnp, wei, (long) opt1, opt2, opt22); 
   //}
   TFile* histfile = new TFile(Form("%s.root",fname.c_str()),"read");
+  std::cout << fname.c_str() << std::endl;
   TList* list1 = (TList*) histfile->GetListOfKeys();
   TH1D* rechist = (TH1D*) histfile->Get(list1->At(1)->GetName());
-//  std::cout << rechist->GetName() << std::endl;
   double NumReco = rechist->GetBinContent(1);
   return NumReco;
   
@@ -43,7 +46,6 @@ else if(what=="gen"){
   TFile* histfile = new TFile(Form("%s.root",fname.c_str()),"read");
   TList* list1 = (TList*) histfile->GetListOfKeys();
   TH1D* genhist = (TH1D*) histfile->Get(list1->At(2)->GetName());
-  std::cout << genhist->GetName() << std::endl;
 
   double NumGen = (double) genhist->GetBinContent(1);
 
