@@ -11,7 +11,7 @@
 
 using namespace std;
 
-const long int maxBranchSize = 100000;
+extern const long int maxBranchSize = 100000;
 
 // import the tree to the RooDataSet
 UInt_t          runNb;
@@ -245,7 +245,6 @@ Bool_t SetTree::SoftMuIdCut(int irqq)
 
   return (muplSoft && mumiSoft);
 }  
-
 
 
 #endif 

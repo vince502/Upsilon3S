@@ -29,6 +29,7 @@
 #include <RooFormulaVar.h>
 #include "Headers/Style_Upv2.h"
 #include "Headers/Upsilon.h"
+#include ".workdir.h"
 
 using namespace std;
 using namespace RooFit;
@@ -43,7 +44,7 @@ void MassYieldFit_BDT(const string fname = "", const Double_t ptMin = 0, const D
   bool swflag = false;
   if( fname.find("Switch1") != std::string::npos) { swflag = true;}
   
-  TString mainDIR = gSystem->ExpandPathName(gSystem->pwd());
+  TString mainDIR = workdir;
   TString massDIR = mainDIR +  Form("/MassDist/BDT/%s/freefit/%s/%.1f/cent%d-%d/pT%.1f-%.1f/FitResult",ts.c_str(), Trig.c_str(), rapMax,cBinLow,cBinHigh,ptMin,ptMax);
   TString massDIRp = mainDIR + Form("/MassDist/BDT/%s/freefit/%s/%.1f/cent%d-%d/pT%.1f-%.1f/FitResult/png", ts.c_str(), Trig.c_str(), rapMax,cBinLow,cBinHigh,ptMin,ptMax);
   TString massDIRl = mainDIR + Form("/MassDist/BDT/%s/freefit/%s/%.1f/cent%d-%d/pT%.1f-%.1f/FitResult/logY", ts.c_str(), Trig.c_str(), rapMax,cBinLow,cBinHigh,ptMin,ptMax);
@@ -69,7 +70,7 @@ void MassYieldFit_BDT(const string fname = "", const Double_t ptMin = 0, const D
   const Int_t Nmassbins = 120;
 
   TFile* fout;
-  fout = new TFile(Form("Yield/Yield_%s_FF_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_%s%d_%s%.4f-%.4f_%s%.4f.root",ts.c_str(), (int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(),(int) swflag, "BDT",1,"cut",cutBDTlow, cutBDThigh ,"vp",cutQVP), "RECREATE");
+  fout = new TFile(Form("/home/vince402/Upsilon3S/Yield/Yield_%s_FF_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_%s%d_%s%.4f-%.4f_%s%.4f.root",ts.c_str(), (int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(),(int) swflag, "BDT",1,"cut",cutBDTlow, cutBDThigh ,"vp",cutQVP), "RECREATE");
 
   Double_t MupTCut;
   if(MupT == "0") MupTCut = 0;
@@ -206,6 +207,7 @@ void MassYieldFit_BDT(const string fname = "", const Double_t ptMin = 0, const D
   massPlot->Draw();
   TLatex* lt0 = new TLatex();
   FormLatex(lt0, 12, 0.035);
+  lt0->DrawLatex(0.43,0.85, Form("BDT #in [%.2f, %.2f]",cutBDTlow, cutBDThigh));
   lt0->DrawLatex(0.43,0.80, Form("p_{T}^{#mu} #geq %.1f GeV/c",MupTCut));
   lt0->DrawLatex(0.43,0.75, Form("%d #leq p_{T}^{#mu#mu} < %d GeV/c", (int) ptMin, (int) ptMax));
   lt0->DrawLatex(0.43,0.70, Form("Centrality %d-%d %%",(int) cBinLow/2, (int) cBinHigh/2));
@@ -352,6 +354,7 @@ void MassYieldFit_BDT(const string fname = "", const Double_t ptMin = 0, const D
   Sgnfc3S->Write();
   hfrac->Write();
   hfracdist->Write();
+
  
 }
 

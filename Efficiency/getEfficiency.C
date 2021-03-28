@@ -13,7 +13,7 @@ using namespace std;
 void getEfficiency(
   float ptLow = 0.0, float ptHigh = 30.0,
   float yLow = 0.0, float yHigh = 2.4,
-  int cLow = 0, int cHigh = 180, bool isTnP = false, bool isPtWeight = false, bool isSwitch=false, int kTrigSel = kTrigUps
+  int cLow = 0, int cHigh = 180, bool isTnP = false, bool isPtWeight = false, bool isSwitch=false, int kTrigSel = kTrigUps, bool isBDT = false
   ) {
 
   gStyle->SetOptStat(0);
@@ -232,6 +232,7 @@ void getEfficiency(
   //Save efficiency files for later use.
   heff->SetName(Form("mc_eff_vs_pt_TnP%d_Cent090",isTnP));
   TString outFileName = Form("mc_eff_%s.root",histName.Data());
+  if(isBDT){ outFileName = Form("/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_%s.root",histName.Data());}
   TFile* outFile = new TFile(outFileName,"RECREATE");
   heff->Write();
   hreco->Write();

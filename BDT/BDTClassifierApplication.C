@@ -94,7 +94,8 @@ void BDTClassifierApplication(long ts, int isMC = 0){
   reader->BookMVA( methodName, weightfile );
   TH1F* histBDT = new TH1F( "MVA_BDT", "MVA_BDT", 100, -1, 1);
   TString dfname = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_NewSkimWithTrackerMuonCut_QQVtxProb5Perc_AccPt3p5.root";
-  TString mfname = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1.root";
+  //TString mfname = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1.root";
+  TString mfname = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_QQVtxProb1percAccPt3p5Cut.root";
   TFile* input(0);
   input = new TFile(isMC ? mfname.Data() : dfname.Data(), "open");
   TString outtext = isMC ? mfname : dfname;
