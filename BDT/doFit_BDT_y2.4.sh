@@ -5,29 +5,30 @@ export timestamp=$ts
 	cd ..
 if [ $2 -eq 1 ]
   then 
-  plow=12;phigh=30;
-#root -l -b -q 'MassYieldFit_BDT.C("./BDT/roodatasets/OniaRooDataset_BDT'$timestamp'_OniaSkim_TrigS13_BDT.root", 0, 30, -2.4, 2.4, "3p5", "S13", 0, 180, 0.01, -0.3, -0.1 , (Double_t[]) {0.13, 1.54, 3.68, 0.56, 5.0, 1.8, 3.13}, (Double_t[]) {0.01, 1.5, 1.5, 0.15, 0.5, 0.1, 0.1}, (Double_t[]) {0.2, 5, 5, 0.95, 8, 2, 8})' &  2>/dev/null
+  plow=6;phigh=30;
+  clow=40;chigh=100;
+#root -l -b -q 'MassYieldFit_BDT.C("./BDT/roodatasets/OniaRooDataset_BDT'$timestamp'_OniaSkim_TrigS13_BDT.root", 0, 30, -2.4, 2.4, "3p5", "S13", '$clow', '$chigh', 0.01, -0.3, -0.1 , (Double_t[]) {0.13, 1.54, 3.68, 0.56, 5.0, 1.8, 3.13}, (Double_t[]) {0.01, 1.5, 1.5, 0.15, 0.5, 0.1, 0.1}, (Double_t[]) {0.2, 5, 5, 0.95, 8, 2, 8})' &  2>/dev/null
 
 # BDT  - 1.0   ~  - 0.2
-#root -l -b -q 'MassYieldFit_BDT.C("./BDT/roodatasets/OniaRooDataset_BDT'$timestamp'_OniaSkim_TrigS13_BDT.root", '$plow', '$phigh', -2.4, 2.4, "3p5", "S13", 0, 180, 0.01, -1., -0.2 , (Double_t[]) {0.13, 1.54, 3.68, 0.56, 5.0, 1.8, 3.13}, (Double_t[]) {0.01, 1.2, 3.2, 0.15, 0.5, 0.5, 0.1}, (Double_t[]) {0.24, 7, 30, 0.9, 9, 3.4, 9})' &  2>/dev/null
+root -l -b -q 'MassYieldFit_BDT.C("./BDT/roodatasets/OniaRooDataset_BDT'$timestamp'_OniaSkim_TrigS13_BDT.root", '$plow', '$phigh', -2.4, 2.4, "3p5", "S13", '$clow', '$chigh', 0.01, -1., -0.2 , (Double_t[]) {0.13, 1.74, 2.68, 0.56, 5.0, 1.8, 3.13}, (Double_t[]) {0.01, 1.4, 2.1, 0.15, 0.5, 0.5, 0.1}, (Double_t[]) {0.24, 4, 7., 0.9, 9, 5, 9})' &  2>/dev/null
 
 # BDT  - 0.2   ~  - 0.1
-#root -l -b -q 'MassYieldFit_BDT.C("./BDT/roodatasets/OniaRooDataset_BDT'$timestamp'_OniaSkim_TrigS13_BDT.root", '$plow', '$phigh', -2.4, 2.4, "3p5", "S13", 0, 180, 0.01, -0.2, -0.1 , (Double_t[]) {0.13, 1.54, 3.68, 0.56, 5.0, 1.8, 3.13}, (Double_t[]) {0.01, 1.3, 1.5, 0.15, 0.5, 0.3, 0.1}, (Double_t[]) {0.14, 3, 6, 0.95, 8, 2.0, 9})' &  2>/dev/null
+root -l -b -q 'MassYieldFit_BDT.C("./BDT/roodatasets/OniaRooDataset_BDT'$timestamp'_OniaSkim_TrigS13_BDT.root", '$plow', '$phigh', -2.4, 2.4, "3p5", "S13", '$clow', '$chigh', 0.01, -0.2, -0.1 , (Double_t[]) {0.13, 3.54, 3.68, 0.56, 5.0, 1.8, 3.13}, (Double_t[]) {0.01, 0.1, 2.1, 0.10, 0.5, 0.3, 0.1}, (Double_t[]) {0.34, 5, 7, 0.95, 9, 3.0, 7})' &  2>/dev/null
 
 # BDT  - 0.1   ~  0.05
-root -l -b -q 'MassYieldFit_BDT.C("./BDT/roodatasets/OniaRooDataset_BDT'$timestamp'_OniaSkim_TrigS13_BDT.root", '$plow', '$phigh', -2.4, 2.4, "3p5", "S13", 0, 180, 0.01, -0.1, 0.05 , (Double_t[]) {0.13, 1.54, 3.68, 0.56, 5.0, 1.8, 3.13}, (Double_t[]) {0.05, 1.0, 1.00, 0.15, 0.5, 0.1, 0.1}, (Double_t[]) {0.3, 7, 10, 0.90, 8, 4.0, 10})' &  2>/dev/null
+root -l -b -q 'MassYieldFit_BDT.C("./BDT/roodatasets/OniaRooDataset_BDT'$timestamp'_OniaSkim_TrigS13_BDT.root", '$plow', '$phigh', -2.4, 2.4, "3p5", "S13", '$clow', '$chigh', 0.01, -0.1, 0.05 , (Double_t[]) {0.18, 1.54, 4.68, 0.56, 6.0, 1.2, 4.13}, (Double_t[]) {0.05, 1.4, 2.60, 0.05, 0.5, 0.1, 0.1}, (Double_t[]) {0.20, 6, 09.0, 0.95, 9.1, 5.5, 9})' &  2>/dev/null
 
 # BDT  0.05   ~   0.2
-#root -l -b -q 'MassYieldFit_BDT.C("./BDT/roodatasets/OniaRooDataset_BDT'$timestamp'_OniaSkim_TrigS13_BDT.root", '$plow', '$phigh', -2.4, 2.4, "3p5", "S13", 0, 180, 0.01, 0.05, 0.2 , (Double_t[]) {0.13, 2.54, 3.68, 0.56, 5.0, 1.8, 3.13}, (Double_t[]) {0.01, 1.5, 1.5, 0.15, 0.5, 0.1, 0.1}, (Double_t[]) {0.25, 10, 90, 0.85, 8, 2.0, 7})' &  2>/dev/null
+root -l -b -q 'MassYieldFit_BDT.C("./BDT/roodatasets/OniaRooDataset_BDT'$timestamp'_OniaSkim_TrigS13_BDT.root", '$plow', '$phigh', -2.4, 2.4, "3p5", "S13", '$clow', '$chigh', 0.01, 0.05, 0.2 , (Double_t[]) {0.16, 1.74, 3.78, 0.56, 5.0, 1.8, 3.13}, (Double_t[]) {0.01, 1.4, 2.1, 0.05, 0.5, 0.1, 0.1}, (Double_t[]) {0.27, 5, 9, 0.90, 9.1, 3.0, 07.})' &  2>/dev/null
 
 # BDT   0.2   ~   1.0
-root -l -b -q 'MassYieldFit_BDT.C("./BDT/roodatasets/OniaRooDataset_BDT'$timestamp'_OniaSkim_TrigS13_BDT.root", '$plow', '$phigh', -2.4, 2.4, "3p5", "S13", 0, 180, 0.01, 0.2, 1.0 , (Double_t[]) {0.13, 1.54, 3.68, 0.56, 5.0, 1.8, 3.13}, (Double_t[]) {0.03, 0.5, 0.5, 0.15, 0.5, 0.5, 0.1}, (Double_t[]) {0.24, 15, 80, 0.8, 8, 2.0, 7})' &  2>/dev/null
+root -l -b -q 'MassYieldFit_BDT.C("./BDT/roodatasets/OniaRooDataset_BDT'$timestamp'_OniaSkim_TrigS13_BDT.root", '$plow', '$phigh', -2.4, 2.4, "3p5", "S13", '$clow', '$chigh', 0.01, 0.2, 1.0 , (Double_t[]) {0.13, 2.24, 2.68, 0.56, 5.0, 1.8, 3.13}, (Double_t[]) {0.03, 2.0, 2.1, 0.15, 0.5, 0.5, 0.1}, (Double_t[]) {0.24, 7.5, 4.0, 0.9, 9.5, 4.0, 7})' &  2>/dev/null
 
-#root -l -b -q 'MassYieldFit_BDT.C("./BDT/roodatasets/OniaRooDataset_BDT'$timestamp'_OniaSkim_TrigS13_BDT.root", 0, 30, -2.4, 2.4, "3p5", "S13", 0, 180, 0.01, 0., 0.1 , (Double_t[]) {0.13, 1.54, 3.68, 0.56, 5.0, 1.8, 3.13}, (Double_t[]) {0.01, 1.5, 1.5, 0.15, 0.5, 0.1, 0.1}, (Double_t[]) {0.3, 5, 10, 0.95, 8, 10, 10})' &  2>/dev/null
+#root -l -b -q 'MassYieldFit_BDT.C("./BDT/roodatasets/OniaRooDataset_BDT'$timestamp'_OniaSkim_TrigS13_BDT.root", 0, 30, -2.4, 2.4, "3p5", "S13", '$clow', '$chigh', 0.01, 0., 0.1 , (Double_t[]) {0.13, 1.54, 3.68, 0.56, 5.0, 1.8, 3.13}, (Double_t[]) {0.01, 1.5, 1.5, 0.15, 0.5, 0.1, 0.1}, (Double_t[]) {0.3, 5, 10, 0.95, 8, 10, 10})' &  2>/dev/null
 wait && 2</dev/null
 cd ./BDT
-root -l -b -q 'PlotYieldtoEffandSignifbin.C('$ts', 2.4, '$plow'., '$phigh', 0, 180, false)'
-root -l -b -q 'plotresult.C('$ts', 2.4, '$plow', '$phigh', 0, 180,0.01, "3p5","S13", "freefit")'
+root -l -b -q 'PlotYieldtoEffandSignifbin.C('$ts', 2.4, '$plow'., '$phigh', '$clow', '$chigh', false)'
+root -l -b -q 'plotresult.C('$ts', 2.4, '$plow', '$phigh', '$clow', '$chigh',0.01, "3p5","S13", "freefit")'
 fi
 
 if [ $2 -eq  0 ]

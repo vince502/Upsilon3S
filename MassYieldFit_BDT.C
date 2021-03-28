@@ -29,6 +29,7 @@
 #include <RooFormulaVar.h>
 #include "Headers/Style_Upv2.h"
 #include "Headers/Upsilon.h"
+#include ".workdir.h"
 
 using namespace std;
 using namespace RooFit;
@@ -43,7 +44,7 @@ void MassYieldFit_BDT(const string fname = "", const Double_t ptMin = 0, const D
   bool swflag = false;
   if( fname.find("Switch1") != std::string::npos) { swflag = true;}
   
-  TString mainDIR = "/home/vince402/Upsilon3S";
+  TString mainDIR = workdir;
   TString massDIR = mainDIR +  Form("/MassDist/BDT/%s/freefit/%s/%.1f/cent%d-%d/pT%.1f-%.1f/FitResult",ts.c_str(), Trig.c_str(), rapMax,cBinLow,cBinHigh,ptMin,ptMax);
   TString massDIRp = mainDIR + Form("/MassDist/BDT/%s/freefit/%s/%.1f/cent%d-%d/pT%.1f-%.1f/FitResult/png", ts.c_str(), Trig.c_str(), rapMax,cBinLow,cBinHigh,ptMin,ptMax);
   TString massDIRl = mainDIR + Form("/MassDist/BDT/%s/freefit/%s/%.1f/cent%d-%d/pT%.1f-%.1f/FitResult/logY", ts.c_str(), Trig.c_str(), rapMax,cBinLow,cBinHigh,ptMin,ptMax);

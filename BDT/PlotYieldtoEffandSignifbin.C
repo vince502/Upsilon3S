@@ -1,4 +1,4 @@
-#include "yield_eff_signif.h"
+#include "yield_eff_signif.cxx"
 #include "bininfo.h"
 #include <memory>
 #include <ROOT/TProcessExecutor.hxx>

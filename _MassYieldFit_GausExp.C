@@ -30,6 +30,7 @@
 #include "Headers/Style_Upv2.h"
 #include "Headers/Upsilon.h"
 #include "Custom_Pdf.h"
+#include ".workdir.h"
 
 using namespace std;
 using namespace RooFit;
@@ -39,7 +40,7 @@ void _MassYieldFit_GausExp(const string fname = "", const Double_t ptMin = 0, co
   Double_t etaMin = -2.4;
 
   
-  TString mainDIR = gSystem->ExpandPathName(gSystem->pwd());
+  TString mainDIR = workdir;
   TString massDIR = mainDIR + "/MassDist";
   void * dirpM = gSystem->OpenDirectory(massDIR.Data());
   if(dirpM) gSystem->FreeDirectory(dirpM);

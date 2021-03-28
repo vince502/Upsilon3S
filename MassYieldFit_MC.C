@@ -29,6 +29,7 @@
 #include <RooFormulaVar.h>
 #include "Headers/Style_Upv2.h"
 #include "Headers/Upsilon.h"
+#include ".workdir.h"
 
 using namespace std;
 using namespace RooFit;
@@ -49,7 +50,7 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,const string fname = "", 
   bool swflag = false;
   if( fname.find("Switch1") != std::string::npos) { swflag = true;}
   
-  TString mainDIR = gSystem->ExpandPathName(gSystem->pwd());
+  TString mainDIR = workdir;
   TString massDIR = mainDIR + Form("/MassDist/%dS",state);
   TString massDIRp = mainDIR + Form("/MassDist/%dS/png",state);
   void * dirpM = gSystem->OpenDirectory(massDIR.Data());
