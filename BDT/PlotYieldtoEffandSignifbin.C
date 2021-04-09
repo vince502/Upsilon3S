@@ -9,13 +9,9 @@
 #include "plotresult.C"
 
 
-//std::map<std::pair<double,double>, std::pair<double, std::pair<double,double>> > hybfitinfo= {{{0,4},{0.4750,{304,40} }},{{4,9},{0.5135,{264,139}}},{{9,12},{0.5849,{57,68}}},{{12,30},{0.6358,{174,48}}},{{0,30},{0.5100,{860,252}}}}; 
-
-void PlotYieldtoEffandSignifbin(long ts = 1614848550, double ylim = 2.4, double ptlow = 0, double pthigh = 4, int cbinlow = 0, int cbinhigh = 180, double fitover = false){
+void PlotYieldtoEffandSignifbin(long ts = 1614848550, double ylim = 2.4, double ptlow = 0, double pthigh = 4, int cbinlow = 0, int cbinhigh = 180, double fitover = false, int binnum=5){
   if(ts == 1614848550){ylim = 2.4;}
   if(ts == 1614932252){ylim = 1.2;}
-//  ofstream debug;
-//  debug.open("debug_Plotter.log");
 
   TCanvas* c1 = new TCanvas("c1","c1", 600, 600);
   TPad* pad1 = new TPad("pad1","",0,0., 1,0.5);
@@ -28,7 +24,11 @@ void PlotYieldtoEffandSignifbin(long ts = 1614848550, double ylim = 2.4, double 
   TGraphAsymmErrors* g2 = new TGraphAsymmErrors();
 //  TCanvas* c2 = new TCanvas("c1","c1", 600, 600);
 //  RooRealVar x = bp->yield_eff();
-  std::vector<std::pair<double, double> > bdtbin = {{-1, -0.2}, {-0.2, -0.1},{-0.1, 0.05},{0.05, 0.2}, {0.2, 1.0}/*{-1, -0.1}, {-0.4,0.1}, {-0.1, 0.0}, {0.0, 0.1}, {0.1, 0.2}, {0.2, 0.3}, {0.3, 0.4},{-0.1, 0.1}, {0.1, 0.3}, {0.3, 1.0}, {0.1, 1.0}, {0.2, 1.0} lastconfig{-1., -0.3},{-1, 0.},{-0.3, -0.1},{-0.1, 0.0},{0.0, 0.1},{0.1, 1.0}*/};
+  std::vector<std::pair<double, double> > bdtbin;
+  if (binnum==5) {bdtbin ={{-1, -0.2}, {-0.2, -0.1},{-0.1, 0.05},{0.05, 0.2}, {0.2, 1.0}/*{-1, -0.1}, {-0.4,0.1}, {-0.1, 0.0}, {0.0, 0.1}, {0.1, 0.2}, {0.2, 0.3}, {0.3, 0.4},{-0.1, 0.1}, {0.1, 0.3}, {0.3, 1.0}, {0.1, 1.0}, {0.2, 1.0} lastconfig{-1., -0.3},{-1, 0.},{-0.3, -0.1},{-0.1, 0.0},{0.0, 0.1},{0.1, 1.0}*/};}
+  else if (binnum ==3) {bdtbin ={{-1, -0.2}, {-0.2, 0.05},{0.05, 1.0}};}
+  else std::cout << "BDT bin #"<< binnum <<" not defined" << std::endl;
+
   int nCores = bdtbin.size();
   string* summary = new string(" ---[INFO]--- Bin Criteria ---------- \n");
   ROOT::EnableImplicitMT();
@@ -71,13 +71,15 @@ void PlotYieldtoEffandSignifbin(long ts = 1614848550, double ylim = 2.4, double 
   double hyberreff = hyberr/hybeff;
 
   pad1->cd();
-  g1->SetMarkerStyle(11);
+  g1->SetMarkerStyle(kFullSquare);
   g1->SetMarkerSize(1);
   g1->GetXaxis()->SetLimits(-1, 1);
   g1->GetXaxis()->SetRangeUser(-1, 1);
 
   g1->GetXaxis()->SetTitle("BDT");
   g1->GetYaxis()->SetTitle("S/#sqrt{S+B}");
+  g1->GetYaxis()->SetLimits(-5,8);
+  g1->GetYaxis()->SetRangeUser(-5,8);
   g1->Draw("pea");
 
 
@@ -87,10 +89,10 @@ void PlotYieldtoEffandSignifbin(long ts = 1614848550, double ylim = 2.4, double 
   leg2->AddEntry(g2, "BDT Fit");
   g2_1->SetPoint(0, 0, hybvaleff);
   g2_1->SetPointError(0, 1, 1, hyberreff, hyberreff);
-  g2_1->SetMarkerStyle(11);
+  g2_1->SetMarkerStyle(kFullCircle);
   g2_1->SetMarkerSize(1);
   g2_1->SetMarkerColor(kGreen);
-  g2->SetMarkerStyle(11);
+  g2->SetMarkerStyle(kFullCircle);
   g2->SetMarkerSize(1);
   g2->SetMarkerColor(kRed);
   g2->GetXaxis()->SetLimits(-1, 1);
@@ -114,8 +116,8 @@ void PlotYieldtoEffandSignifbin(long ts = 1614848550, double ylim = 2.4, double 
   g2_1->Draw("pe same");
 
   c1->Update();
-  c1->SaveAs(Form("/home/vince402/Upsilon3S/BDT/YieldSigPlot/YtoE_SignifTest_y%.1f_pt_%.1f_%.1f_cBin_%d-%d.pdf", ylim, ptlow, pthigh, cbinlow, cbinhigh));
+  c1->SaveAs(Form("/home/vince402/Upsilon3S/BDT/YieldSigPlot/YtoE_SignifTest_Nbin_%d_y%.1f_pt_%.1f_%.1f_cBin_%d-%d.pdf",binnum, ylim, ptlow, pthigh, cbinlow, cbinhigh));
   //c1->Close();
-  plotresult(ts, ylim, (int) ptlow, (int) pthigh, cbinlow, cbinhigh ,0.01, "3p5", "S13", "freefit");
+  plotresult(ts, ylim, (int) ptlow, (int) pthigh, cbinlow, cbinhigh ,0.01, "3p5", "S13", "freefit", binnum);
 
 }

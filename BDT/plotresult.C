@@ -6,7 +6,8 @@
 
 using namespace RooFit;
 
-std::vector<std::pair<double, double>> bdtbin = {{-1.0, -0.2}, {-0.2, -0.1}, {-0.1, 0.05},{0.05, 0.2}, {0.2, 1.0}};
+std::vector<std::pair<double, double>> bdtbin5 = {{-1.0, -0.2}, {-0.2, -0.1}, {-0.1, 0.05},{0.05, 0.2}, {0.2, 1.0}};
+std::vector<std::pair<double, double>> bdtbin3 = {{-1.0, -0.2}, {-0.2, 0.05}, {0.05, 1.0}};
 
 string workdir = "/home/vince402/Upsilon3S";
 string plotdir;
@@ -50,11 +51,11 @@ TPad* plotone(long ts,double ylim, int ptlow, int pthigh, int cbinlow, int cbinh
   TPad* pad_leg = new TPad("pad_leg", "pad_leg", 0.7, 0.0, 1.0, 1.0);
   c1->cd();
   pad_mass->Draw();
+  pad_pull->SetBottomMargin(0);
   pad_pull->Draw();
   pad_leg->Draw();
   pad_mass->cd();
   plot1->Draw();
-
 
   pad_pull->cd();
   pad_pull->SetGrid(0,1);
@@ -67,10 +68,26 @@ TPad* plotone(long ts,double ylim, int ptlow, int pthigh, int cbinlow, int cbinh
   pullPlot->GetYaxis()->SetLabelSize(0.13);
   pullPlot->Draw();
   line_pull->Draw("same");
+  RooArgList parList = Result->floatParsFinal();
+  Double_t chi2 = 0.;
+  Double_t *ypull = hpull->GetY();
+  Double_t Npullbin =0;
+  for(Int_t ibin = 0; ibin < 120; ibin++){
+    if(ypull[ibin] == 0) continue;
+    chi2 += TMath::Power(ypull[ibin],2);
+    Npullbin++;
+  }
+  int Nfitpar = parList.getSize();
+  int ndf = Npullbin - Nfitpar;
+  TLatex* NormChi2tex = new TLatex();
+  NormChi2tex->SetNDC();
+  NormChi2tex->SetTextSize(0.035);
+  NormChi2tex->SetTextFont(42);
+  pad_mass->cd();
+  NormChi2tex->DrawLatex(0.1, 0.02, Form("#chi^{2}/ndf: %3.f/%d", chi2, ndf));
 
   pad_leg->cd();
   RooPlot* legPlot = works1->var("mass")->frame(Name("Fit Results"), Title("Fit Results"));
-  RooArgList parList = Result->floatParsFinal();
   works1->pdf("model")->paramOn(legPlot, Layout(0, 0.93, 0.97), Parameters(parList));
   legPlot->getAttText()->SetTextAlign(11);
   legPlot->getAttText()->SetTextSize(0.07);
@@ -84,9 +101,12 @@ TPad* plotone(long ts,double ylim, int ptlow, int pthigh, int cbinlow, int cbinh
   return c1;
 };
 
-void plotresult(long ts, double ylim, int ptlow, int pthigh, int cbinlow, int cbinhigh,  float vcut, TString MupT = "3p5", string Trig = "S13", TString fittype = "freefit"){
-  TCanvas* c1 = new TCanvas("c1", "", 3000,1800);
-  c1->Divide(3,2);
+void plotresult(long ts, double ylim, int ptlow, int pthigh, int cbinlow, int cbinhigh,  float vcut, TString MupT = "3p5", string Trig = "S13", TString fittype = "freefit", int binnum=5){
+  auto bdtbin = (binnum ==5) ? bdtbin5 : ( (binnum ==3) ?  bdtbin3 : bdtbin5);
+  TCanvas* c1;
+  
+  if(binnum == 5){ c1 = new TCanvas("c1", "", 3000,1800); c1->Divide(3,2);}
+  else if (binnum ==3 ) {c1 = new TCanvas("c1", "", 3000, 900); c1->Divide(3,1);}
   c1->cd();
   TPad* p1, p2, p3, p4, p5;
   int count=1;
@@ -101,7 +121,7 @@ void plotresult(long ts, double ylim, int ptlow, int pthigh, int cbinlow, int cb
     count++;
   }
   c1->Update();
-  c1->SaveAs(Form("%s/FitResult_BDT_%ld_bin_collection_pt%d-%d_cbin%d-%d.pdf",plotdir.c_str(), ts, ptlow, pthigh, cbinlow, cbinhigh));
+  c1->SaveAs(Form("%s/FitResult_BDT_%ld_y%.1f_%dbin_collection_pt%d-%d_cbin%d-%d.pdf",plotdir.c_str(), ts,ylim, binnum, ptlow, pthigh, cbinlow, cbinhigh));
 }
 
 

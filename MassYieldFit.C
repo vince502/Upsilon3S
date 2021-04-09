@@ -86,7 +86,7 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
   }
 
   TFile* fin;
-  fin = new TFile(Form("roodatasetFiles/%s",fname.c_str()),"READ");
+  fin = new TFile(Form("%s/roodatasetFiles/%s",mainDIR.Data(), fname.c_str()),"READ");
   RooDataSet* dataset;
   dataset = (RooDataSet*) fin->Get("dataset");
 
@@ -126,7 +126,7 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
   RooFormulaVar mean2S("mean2S", "mean1S*mratio2", RooArgSet(mean1S, mratio2));
   RooFormulaVar mean3S("mean3S", "mean1S*mratio3", RooArgSet(mean1S, mratio3));
 
-  RooRealVar sigma1S_1("sigma1S_1", "sigma1 of 1S", 0.05, 0.01, 0.2);
+  RooRealVar sigma1S_1("sigma1S_1", "sigma1 of 1S", 0.05, 0.01, 0.25);
   RooFormulaVar sigma2S_1("sigma2S_1", "@0*@1", RooArgList(sigma1S_1, mratio2));
   RooFormulaVar sigma3S_1("sigma3S_1", "@0*@1", RooArgList(sigma1S_1, mratio3));
 
@@ -136,9 +136,9 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
   RooFormulaVar sigma2S_2("sigma1S_2", "@0*@1", RooArgList(sigma1S_2, mratio2));
   RooFormulaVar sigma3S_2("sigma1S_2", "@0*@1", RooArgList(sigma1S_2, mratio3));
 
-  RooRealVar alpha("alpha", "alpha of Crystal ball", 2.0, 4, 20.0);
+  RooRealVar alpha("alpha", "alpha of Crystal ball", 2.0, 1, 20.0);
   RooRealVar n("n", "n of Crystal ball", 2.0, 0.5, 20.0);
-  RooRealVar* frac = new RooRealVar("frac", "CB fraction", 0.5, 0, 1);
+  RooRealVar* frac = new RooRealVar("frac", "CB fraction", 0.5, 0.05, 0.95);
 
   RooCBShape* CB1S_1 = new RooCBShape("CB1S_1", "1S Crystal ball function1", *(works1->var("mass")), mean1S, sigma1S_1, alpha, n);
   RooCBShape* CB2S_1 = new RooCBShape("CB2S_1", "2S Crystal ball function1", *(works1->var("mass")), mean2S, sigma2S_1, alpha, n);
@@ -151,9 +151,9 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
   RooAddPdf* twoCB2S = new RooAddPdf("twoCB2S", "Sum of 2S Crystal ball", RooArgList(*CB2S_1, *CB2S_2), RooArgList(*frac));
   RooAddPdf* twoCB3S = new RooAddPdf("twoCB3S", "Sum of 3S Crystal ball", RooArgList(*CB3S_1, *CB3S_2), RooArgList(*frac));
 
-  RooRealVar Erfmean("Erfmean", "Mean of Errfunction", 5, 0, 10.0);//for 0~40, 4~7 GeV
-  RooRealVar Erfsigma("Erfsigma", "Sigma of Errfunction", 1, 0, 30);//for 0~40, 4~7 GeV
-  RooRealVar Erfp0("Erfp0", "1st parameter of Errfunction", 1, 0, 30);
+  RooRealVar Erfmean("Erfmean", "Mean of Errfunction", 5, 1, 9.1);//for 0~40, 4~7 GeV
+  RooRealVar Erfsigma("Erfsigma", "Sigma of Errfunction", 1, 0.1, 10);//for 0~40, 4~7 GeV
+  RooRealVar Erfp0("Erfp0", "1st parameter of Errfunction", 1, 0.1, 30);
   RooGenericPdf* bkgErf = new RooGenericPdf("bkgErf", "Error background", "TMath::Exp(-@0/@1)*(TMath::Erf((@0-@2)/(TMath::Sqrt(2)*@3))+1)*0.5", RooArgList(*(works1->var("mass")), Erfp0, Erfmean, Erfsigma));
 
   RooGenericPdf* Signal1S;
@@ -184,7 +184,7 @@ void MassYieldFit(const string fname = "", const Double_t ptMin = 0, const Doubl
 
   works1->import(*model);
 
-  RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), NumCPU(2), Hesse(kTRUE), Range(RangeLow, RangeHigh), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));
+  RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), NumCPU(4), Hesse(kTRUE), Range(RangeLow, RangeHigh), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));
   works1->pdf("model")->plotOn(massPlot, Name("modelPlot"));
   works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*Signal1S)), LineColor(kRed), LineStyle(kDashed), MoveToBack());
   works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*Signal2S)), LineColor(kRed), LineStyle(kDashed), MoveToBack());

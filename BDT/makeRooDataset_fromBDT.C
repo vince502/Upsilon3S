@@ -33,11 +33,6 @@ void makeRooDataset_fromBDT(long ts, bool isMC){
   if(!isMC) rf = new TFile(Form("./BDTAppliedData/BDTApp_%ld.root",ts), "OPEN");
   else if(isMC) rf = new TFile(Form("./BDTAppliedData/BDTApp_%ld_MC.root",ts), "OPEN");
   TTree* tree = (TTree*) rf->Get("tree");
-//  string delim = "Y3S_";
-//  size_t pos= fname.find(delim)+4;
-//  string ts = fname.substr(pos,10);
-//  string bdtv = Form("BDT_train_%s",ts.c_str());
-//  string pbdtv = Form("prob_BDT_train_%s",ts.c_str());
 
   Int_t classID, cBin;
   Char_t className;

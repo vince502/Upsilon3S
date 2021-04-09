@@ -10,6 +10,7 @@
 class binplotter
 {
   public:
+	binplotter();
   	binplotter(long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh);
 	~binplotter();
 	RooRealVar yield_eff();
@@ -30,6 +31,9 @@ class binplotter
 	TString fittype = "freefit";
 	string filename;
 };
+binplotter::binplotter(){
+};
+
 binplotter::binplotter(long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh){
   ts = _ts; ylim = _ylim;  pl = _pl; ph = _ph; cl = _cl; ch = _ch; blow = _blow; bhigh = _bhigh;
   int ylim10 = (int) (ylim*10);

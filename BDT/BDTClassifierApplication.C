@@ -93,12 +93,12 @@ void BDTClassifierApplication(long ts, int isMC = 0){
   TString weightfile = dir+prefix + TString::Format("%ld",ts)+ TString(".weights.xml");
   reader->BookMVA( methodName, weightfile );
   TH1F* histBDT = new TH1F( "MVA_BDT", "MVA_BDT", 100, -1, 1);
-  TString dfname = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_NewSkimWithTrackerMuonCut_QQVtxProb5Perc_AccPt3p5.root";
+  TString dfname = (isMC==2) ? "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_1S.root" : "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_NewSkimWithTrackerMuonCut_QQVtxProb5Perc_AccPt3p5.root";
   //TString mfname = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1.root";
-  TString mfname = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_QQVtxProb1percAccPt3p5Cut.root";
+  TString mfname =  "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_QQVtxProb1percAccPt3p5Cut.root";
   TFile* input(0);
-  input = new TFile(isMC ? mfname.Data() : dfname.Data(), "open");
-  TString outtext = isMC ? mfname : dfname;
+  input = new TFile((isMC==1) ? mfname.Data() : dfname.Data(), "open");
+  TString outtext = input->GetName();
   std::cout << "Using file: " << outtext << std::endl;
 
 
@@ -131,8 +131,9 @@ void BDTClassifierApplication(long ts, int isMC = 0){
 
   TTreeReader newreader("tree", input);
   TFile *target;
-  if (!isMC) target =new TFile(Form("./BDTAppliedData/BDTApp_%ld.root",ts),"recreate");
-  else if (isMC) target =new TFile(Form("./BDTAppliedData/BDTApp_%ld_MC.root",ts),"recreate");
+  if (isMC ==0) target =new TFile(Form("./BDTAppliedData/BDTApp_%ld.root",ts),"recreate");
+  else if (isMC==1) target =new TFile(Form("./BDTAppliedData/BDTApp_%ld_MC.root",ts),"recreate");
+  else if (isMC==2) target = new TFile(Form("./BDTAppliedData/BDTApp_Custom.root"),"recreate");
   TTree* outtree = tree->CloneTree(0);
   outtree->Branch("BDT", &BDT, "BDT/D");
 
@@ -155,7 +156,7 @@ void BDTClassifierApplication(long ts, int isMC = 0){
   outtree->Fill();
   }
   outtree->Write();
-  std::cout << "done Writiing " << Form("BDTApp_%ld.root",ts) << std::endl;
+  std::cout << "done Writiing " << target->GetName()<< std::endl;
   target->Close();
 
 }
