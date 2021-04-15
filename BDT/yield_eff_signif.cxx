@@ -47,11 +47,11 @@ binplotter::~binplotter(){ return; };
 
 RooRealVar binplotter::yield_eff(){
   std::cout << "Opening Yield file : " << filename.c_str() << std::endl;
-  if(TFile::Open(filename.c_str(), "open")==nullptr || TFile::Open(filename.c_str(),"read")->IsZombie()|| refit){
+ // if(TFile::Open(filename.c_str(), "open")==nullptr || TFile::Open(filename.c_str(),"read")->IsZombie()|| refit){
     std::cout << "Running Fitter for new Yield" << std::endl;
     string command = Form("root -l -b -q \'../MassYieldFit_BDT.C(\"/home/vince402/Upsilon3S/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root\", %d, %d, %.1f, %.1f, \"3p5\", \"S13\", %d, %d, %.3f, %.2f, %.2f , (Double_t[]) {0.13, 1.54, 3.68, 0.56, 5.0, 1.8, 3.13}, (Double_t[]) {0.01, 0.5, 0.5, 0.15, 0.5, 0.1, 0.1}, (Double_t[]) {0.25, 4, 7, 0.95, 9, 4.0, 8})\'",ts, pl, ph,-1*ylim,ylim, cl, ch, vcut, blow, bhigh);
     int a = system(command.c_str());
-  }
+  //}
 
   TFile* file1 = new TFile(filename.c_str(),"read");
   RooFitResult * res = (RooFitResult*) file1->Get("fitresult_model_reducedDS");

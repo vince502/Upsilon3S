@@ -11,7 +11,7 @@
 #include <ctime>
 long _ts;
 
-bool BDT_BLIND_Classifier_Function(bool IDvar = true, bool MoreVar = false, bool IDonly= false ){
+bool BDT_BLIND_Classifier_Function(bool IDvar = true, bool MoreVar = false, bool IDonly= true ){
   //Load Library
   TMVA::Tools::Instance();
 
@@ -27,9 +27,9 @@ bool BDT_BLIND_Classifier_Function(bool IDvar = true, bool MoreVar = false, bool
   else gSystem->mkdir(BDTDir.Data(),kTRUE);
   
   //INPUT & OUTPUT Call
-  TFile* inputDATA = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_NewSkimWithTrackerMuonCut_QQVtxProb5Perc_AccPt3p5.root","read");
+  TFile* inputDATA = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_NewSkimWithTrackerMuonCut_QQVtxProb5Perc_AccPt3p5_ForBLIND.root","read");
   TFile* inputMC   = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_QQVtxProb1percAccPt3p5Cut.root","read");
-  TFile* output    = new TFile(Form("%s/BDTresultY3S_%ld_IDv%d_MoreVar%d.root",BDTDir.Data(),(long) tstamp, (int) IDvar, (int) MoreVar),"recreate");
+  TFile* output    = new TFile(Form("%s/BDTresultY3S_%ld_IDv%d_MoreVar%d_BLIND.root",BDTDir.Data(),(long) tstamp, (int) IDvar, (int) MoreVar),"recreate");
 
   double ycut = 1.2;
   TCut cut1 = Form("pt1>3.5&&pt2>3.5&&QQVtxProb>0.01&&fabs(y)<%f",ycut);
@@ -37,8 +37,9 @@ bool BDT_BLIND_Classifier_Function(bool IDvar = true, bool MoreVar = false, bool
 
   TMVA::DataLoader *loader = new TMVA::DataLoader("dataset");
   TTree* SigTree =(TTree*) inputMC->Get("tree");
-  TTree* BkgTreeTest =(TTree*) inputDATA->Get("tree");
-  TTree* BkgTreeTrain = BkgTreeTest->CopyTree("(mass>10.5&&mass<14)||(mass>8.&&mass<8.6)");
+  TTree* BkgTreeTest =(TTree*) inputDATA->Get("tree2");
+  TTree* BkgTreeTrain_primary =(TTree*) inputDATA->Get("tree1");
+  TTree* BkgTreeTrain = BkgTreeTrain_primary->CopyTree("(mass>10.5&&mass<14)||(mass>8.&&mass<8.6)");
   std::cout << "Number of Events in Trees (Sig, BkgTest, BkgTrain) : ( " << SigTree->GetEntries(cut1) << ", "<< BkgTreeTest->GetEntries(cut2) << ", " << BkgTreeTrain->GetEntries(cut2) << " )" << std::endl;
   //Factory Call
   TMVA::Factory *factory = new TMVA::Factory("TMVA_BDT_Classifier", output, "!V:Silent:Color:DrawProgressBar:Transformations=I;D;P;G;D:AnalysisType=Classification");

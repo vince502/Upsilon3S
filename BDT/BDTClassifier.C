@@ -19,6 +19,13 @@ bool BDTClassifier_Function(bool IDvar = true, bool MoreVar = false, bool IDonly
   _ts = (long) tstamp;
   std::cout <<"time stamp---> " <<  tstamp << std::endl;
   std::system(Form("cat BDTClassifier.C >> ./.past_source/_BDTClassifier_%ld.old",(long) tstamp));
+  ofstream log;
+  log.open("BDT_description.log", std::ios_base::out|std::ios_base::app);
+  log << tstamp;
+  char logbuf[2000];
+  std::cout << "Write down description for this run :";
+  std::cin.getline(logbuf,2000);
+  log << ", " << logbuf << std::endl;
 
   TString mainDIR= gSystem->ExpandPathName(gSystem->pwd());
   TString BDTDir = mainDIR + ("/BDTResult");
@@ -27,12 +34,15 @@ bool BDTClassifier_Function(bool IDvar = true, bool MoreVar = false, bool IDonly
   else gSystem->mkdir(BDTDir.Data(),kTRUE);
   
   //INPUT & OUTPUT Call
-  TFile* inputDATA = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_NewSkimWithTrackerMuonCut_QQVtxProb5Perc_AccPt3p5.root","read");
-  TFile* inputMC   = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_QQVtxProb1percAccPt3p5Cut.root","read");
+  TFile* inputDATA = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_v210414.root","read");
+  TFile* inputMC   = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_v210414.root","read");
   TFile* output    = new TFile(Form("%s/BDTresultY3S_%ld_IDv%d_MoreVar%d.root",BDTDir.Data(),(long) tstamp, (int) IDvar, (int) MoreVar),"recreate");
-
-  TCut cut1 = "pt1>3.5&&pt2>3.5&&QQVtxProb>0.01&&fabs(y)<1.2";
-  TCut cut2 = "pt1>3.5&&pt2>3.5&&QQVtxProb>0.01&&fabs(y)<1.2";
+	
+  double ylim = 2.4;
+  string HybSoft = "&&nPixWMea1>0&&nPixWMea2>0&&nTrkWMea1>5&&nTrkWMea2>5&&dxy1<0.2&&dxy2<0.2&&dz1<20&&dz2<20";
+  string rejectNAN = "&&!TMath::IsNaN(ctau)&&!TMath::IsNaN(ctau3D)&&!TMath::IsNaN(cosAlpha)&&!TMath::IsNaN(cosAlpha3D)";//"&&!TMath::IsNaN(QQMassErr)&&!TMath::IsNaN(dxyErr1)&&!TMath::IsNaN(dxyErr2)&&!TMath::IsNaN(QQVtxProb)&&!TMath::IsNaN(QQdca)&&!TMath::IsNaN(cosAlpha)&&!TMath::IsNaN(cosAlpha3D)";
+  TCut cut1 = Form("pt1>3.5&&pt2>3.5&&fabs(y)<%f%s%s",ylim, HybSoft.c_str(),rejectNAN.c_str());
+  TCut cut2 = Form("pt1>3.5&&pt2>3.5&&fabs(y)<%f%s%s",ylim, HybSoft.c_str(),rejectNAN.c_str());
 
   TMVA::DataLoader *loader = new TMVA::DataLoader("dataset");
   TTree* SigTree =(TTree*) inputMC->Get("tree");
@@ -41,6 +51,7 @@ bool BDTClassifier_Function(bool IDvar = true, bool MoreVar = false, bool IDonly
   std::cout << "Number of Events in Trees (Sig, BkgTest, BkgTrain) : ( " << SigTree->GetEntries(cut1) << ", "<< BkgTreeTest->GetEntries(cut2) << ", " << BkgTreeTrain->GetEntries(cut2) << " )" << std::endl;
   //Factory Call
   TMVA::Factory *factory = new TMVA::Factory("TMVA_BDT_Classifier", output, "!V:Silent:Color:DrawProgressBar:Transformations=I;D;P;G;D:AnalysisType=Classification");
+  //factory->SetVerbose();
   if(!IDonly){
   loader->AddVariable("pt1","Single muon pt1",  "F");
   loader->AddVariable("pt2","Single muon pt2",  "F");
@@ -67,16 +78,27 @@ bool BDTClassifier_Function(bool IDvar = true, bool MoreVar = false, bool IDonly
     }
   }
   if(MoreVar){
-   // loader->AddVariable("nTrkHits1", "nTrk Hit 1", "I");
-   // loader->AddVariable("nTrkHits2", "nTrk Hit 2", "I");
-   // loader->AddVariable("nPixValHits1", "nPix Valid Hits 1", "I");
-   // loader->AddVariable("nPixValHits2", "nPix Valid Hits 2", "I");
-    loader->AddVariable("nMuValHits1", "nMu Valid Hits 1", "I");
-    loader->AddVariable("nMuValHits2", "nMu Valid Hits 2", "I");
-//    loader->AddVariable("StationsMatched1", "Single muon Matched to Muon Station 1", "I");
-    loader->AddVariable("QQMassErr", "Dimu Mass error", "F");
-
+    loader->AddVariable("nTrkHits1", "nTrk Hit 1", "I");
+    loader->AddVariable("nTrkHits2", "nTrk Hit 2", "I");
+    loader->AddVariable("nPixValHits1", "nPix Valid Hits 1", "I");
+    loader->AddVariable("nPixValHits2", "nPix Valid Hits 2", "I");
+    loader->AddVariable("nMuValHits1", "global pt error1", "I");
+    loader->AddVariable("nMuValHits2", "global pt error2", "I");
+    loader->AddVariable("StationsMatched1", "global pt error1", "I");
+    loader->AddVariable("StationsMatched2", "global pt error2", "I");
+    loader->AddVariable("normChi2_inner1", "global pt error1", "F");
+    loader->AddVariable("normChi2_inner2", "global pt error2", "F");
+    loader->AddVariable("StationsMatched1", "Single muon Matched to Muon Station 1", "I");
+//    loader->AddVariable("QQMassErr", "Dimu Mass error", "F");
+//    loader->AddVariable("dxyErr1", "Single Muon vertex position error1", "F");
+//    loader->AddVariable("dxyErr2", "Single Muon vertex position error2", "F");
+//    loader->AddVariable("ptErr_inner1", "pterr of inner tracker single muon 1", "F");
+//    loader->AddVariable("ptErr_inner2", "pterr of inner tracker single muon 2", "F");
     loader->AddSpectator("QQVtxProb", "Vtx prob", "F");
+//    loader->AddVariable("QQdca", "QQdca", "F");
+    loader->AddVariable("cosAlpha", "cos alpha for trajectory angle", "F");
+    loader->AddVariable("cosAlpha3D", "cos alpha for trajectory angle 3D", "F");
+
  //   loader->AddVariable("ctau3D", "*ctau3D var", "F");
 //    loader->AddVariable("normChi2_global1", "global Nchi squared valu of mu 1", "F");
 //    loader->AddVariable("normChi2_global2", "global Nchi squared valu of mu 2", "F");
@@ -111,7 +133,7 @@ bool BDTClassifier_Function(bool IDvar = true, bool MoreVar = false, bool IDonly
 
   //Book Training BDT Method
   factory->BookMethod( loader, TMVA::Types::kBDT, TString::Format("BDT_train_%ld", (long) tstamp ),
-  	"!H:!V:NTrees=200:MaxDepth=4:MinNodeSize=5%:BoostType=AdaBoost:AdaBoostBeta=0.6:UseBaggedBoost:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=True:UseNvars=2:BaggedSampleFraction=0.4:nCuts=4000:CreateMVAPdfs");
+  	"!H:!V:NTrees=200:MaxDepth=4:MinNodeSize=5%:BoostType=AdaBoost:AdaBoostBeta=0.6:UseBaggedBoost:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=True:UseNvars=2:BaggedSampleFraction=0.4:nCuts=20000:CreateMVAPdfs");
 
   //Train Test Evaluate
   factory->TrainAllMethods();

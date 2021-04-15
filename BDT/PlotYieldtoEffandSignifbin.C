@@ -10,8 +10,11 @@
 
 
 void PlotYieldtoEffandSignifbin(long ts = 1614848550, double ylim = 2.4, double ptlow = 0, double pthigh = 4, int cbinlow = 0, int cbinhigh = 180, double fitover = false, int binnum=5){
+  string isblind = "";
   if(ts == 1614848550){ylim = 2.4;}
   if(ts == 1614932252){ylim = 1.2;}
+  if(ts == 1617963007){ylim = 2.4; isblind = "BLIND"; }
+  if(ts == 1617964901){ylim = 1.2; isblind = "BLIND"; }
 
   TCanvas* c1 = new TCanvas("c1","c1", 600, 600);
   TPad* pad1 = new TPad("pad1","",0,0., 1,0.5);
@@ -116,7 +119,7 @@ void PlotYieldtoEffandSignifbin(long ts = 1614848550, double ylim = 2.4, double 
   g2_1->Draw("pe same");
 
   c1->Update();
-  c1->SaveAs(Form("/home/vince402/Upsilon3S/BDT/YieldSigPlot/YtoE_SignifTest_Nbin_%d_y%.1f_pt_%.1f_%.1f_cBin_%d-%d.pdf",binnum, ylim, ptlow, pthigh, cbinlow, cbinhigh));
+  c1->SaveAs(Form("/home/vince402/Upsilon3S/BDT/YieldSigPlot/YtoE_SignifTest_Nbin_%d_y%.1f_pt_%.1f_%.1f_cBin_%d-%d_%s.pdf",binnum, ylim, ptlow, pthigh, cbinlow, cbinhigh, isblind.c_str()));
   //c1->Close();
   plotresult(ts, ylim, (int) ptlow, (int) pthigh, cbinlow, cbinhigh ,0.01, "3p5", "S13", "freefit", binnum);
 

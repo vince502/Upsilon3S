@@ -25,7 +25,7 @@ double getAccWeight(TH1D* h = 0, double pt = 0);
 double getEffWeight(TH1D* h = 0, double pt = 0);
 void GetHistSqrt(TH1D* h1 =0, TH1D* h2=0);
 
-void makeRooDataset_fromBDT(long ts, bool isMC){
+void makeRooDataset_fromBDT(long ts, bool cutID, bool isMC){
   string smc = "";
   if (isMC) smc = "_MC";
 
@@ -37,6 +37,9 @@ void makeRooDataset_fromBDT(long ts, bool isMC){
   Int_t classID, cBin;
   Char_t className;
   Double_t  QQVtxProb, pt1, pt2, eta1, eta2, mass, y, weight, BDT, pBDT, pt;
+  Double_t dz1, dz2, dxy1, dxy2;
+  Int_t nTrkWMea1, nTrkWMea2, nPixWMea1, nPixWMea2;
+  TBranch *b_dz1, *b_dz2, *b_dxy1, *b_dxy2, *b_nTrkWMea1, *b_nTrkWMea2, *b_nPixWMea1, *b_nPixWMea2;
   TBranch *b_classID, *b_className, *b_QQVtxProb, *b_cBin, *b_pt1, *b_pt2, *b_eta1, *b_eta2, *b_pt, *b_mass, *b_y, *b_weight, *b_BDT, *b_BDT_prob;
   
 //  tree -> SetBranchAddress("classID", &classID, &b_classID);
@@ -52,6 +55,16 @@ void makeRooDataset_fromBDT(long ts, bool isMC){
   tree -> SetBranchAddress("mass", &mass, &b_mass);
   tree -> SetBranchAddress("weight", &weight, &b_weight);
   tree -> SetBranchAddress("BDT", &BDT, &b_BDT);
+  if( cutID){
+    tree ->SetBranchAddress("dz1", &dz1, &b_dz1);
+    tree ->SetBranchAddress("dz2", &dz2, &b_dz2);
+    tree ->SetBranchAddress("dxy1", &dxy1, &b_dxy1);
+    tree ->SetBranchAddress("dxy2", &dxy2, &b_dxy2);
+    tree ->SetBranchAddress("nTrkWMea1", &nTrkWMea1, &b_nTrkWMea1);
+    tree ->SetBranchAddress("nTrkWMea2", &nTrkWMea2, &b_nTrkWMea2);
+    tree ->SetBranchAddress("nPixWMea1", &nPixWMea1, &b_nPixWMea1);
+    tree ->SetBranchAddress("nPixWMea2", &nPixWMea2, &b_nPixWMea2);
+  }
 //  tree -> SetBranchAddress(Form("prob_BDT_train_%s",ts.c_str()), &pBDT, &b_BDT_prob);
 
 
@@ -79,8 +92,9 @@ void makeRooDataset_fromBDT(long ts, bool isMC){
   Int_t nEvt = tree->GetEntries();
   std::cout << "nEvt :" << nEvt<< std::endl;
   for(int i=0; i < nEvt; i++){
-    if((i%10000)==0)std::cout<< "Fetching index : " << i << "\r";
+    if((i%10000)==0)std::cout<< "Fetching index : " << i << "\n";
     tree->GetEntry(i);
+    if( !(dz1<0.2&&dz2<0.2&&dxy1<20&&dxy2<20&&nPixWMea1>0&&nPixWMea2>0&&nTrkWMea1>5&&nTrkWMea2>5) ) continue;
   //  if(!strcmp(&className,"Background")){
       massVar->setVal( (double)mass ) ;
       ptVar->setVal(   (double)pt   ) ;
