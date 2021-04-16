@@ -1,2 +1,15 @@
 1618505174, Many training variable setup
 1618505368, Train with QQVtx cosAlpha's and aux tracking info
+1618506795, Include QQVtx as variable, many variable training
+1618553605, Using only Dimuon varialbe (with QQVtxProb)
+1618554895, Training with only dimuon variables and without QQVtxProb
+1618555164, dimuon variable without ctau info
+1618557066, dimuon witout VtxProb
+1618557109, dimuon without Vtx and only with 2D ctau, cosAlpha
+1618557150, dimuon without Vtx and without 2D ctau and cos alpha
+1618557840, dimuon with Vtx and without 2D ctau and cos alpha
+1618563058, Flawed
+1618563123, Flawed
+1618563558, Flawed
+1618564208, new data, dimuon var with QQVtx not included
+1618564634, new data, QQdca and QQVtx included

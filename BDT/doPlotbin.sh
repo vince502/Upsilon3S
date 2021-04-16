@@ -13,7 +13,8 @@
 #INCLUDED COS_ALPHA
 #ylim=2.4;ts=1618491012;
 #ALL VAR
-ylim=2.4;ts=1618505174;
+ylim=2.4; #ts=1618505174;
+ts=1618506795;
 numbin=3;
 
 #root -l -b -q 'plotresult.C('$ts', '$ylim', 0,30, 0, 180,0.01, "3p5","S13", "freefit")'
