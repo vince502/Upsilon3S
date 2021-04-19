@@ -5,6 +5,7 @@
 
 int main(){
   int ts= 1618557840;
+  std::cout << "Type 'exit' or 0 to escape" << std::endl;
   std::cout << "timestamp :";
   std::string _ts;
   std::cin >> _ts;
