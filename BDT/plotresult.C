@@ -3,8 +3,10 @@
 #include "TROOT.h"
 #include "RooFit.h"
 #include "RooPlot.h"
+#include "bininfo.h"
 
-using namespace RooFit;
+using namespace RooFoit;
+
 
 std::vector<std::pair<double, double>> bdtbin5 = {{-1.0, -0.2}, {-0.2, -0.1}, {-0.1, 0.05},{0.05, 0.2}, {0.2, 1.0}};
 std::vector<std::pair<double, double>> bdtbin3 = {{-1.0, -0.2}, {-0.2, 0.05}, {0.05, 1.0}};
@@ -102,9 +104,13 @@ TPad* plotone(long ts,double ylim, int ptlow, int pthigh, int cbinlow, int cbinh
 };
 
 void plotresult(long ts, double ylim, int ptlow, int pthigh, int cbinlow, int cbinhigh,  float vcut, TString MupT = "3p5", string Trig = "S13", TString fittype = "freefit", int binnum=5){
-  auto bdtbin = (binnum ==5) ? bdtbin5 : ( (binnum ==3) ?  bdtbin3 : bdtbin5);
+  std::vector<std::pair<double, double>> bdtbin;
+  bdtbin = bdtbinsec[ts][binnum];
+  if(bdtbinsec.find[ts] == bdtbinsec.end()){
+  bdtbin = (binnum ==5) ? bdtbin5 : ( (binnum ==3) ?  bdtbin3 : bdtbin5);
+  }
+
   TCanvas* c1;
-  
   if(binnum == 5){ c1 = new TCanvas("c1", "", 3000,1800); c1->Divide(3,2);}
   else if (binnum ==3 ) {c1 = new TCanvas("c1", "", 3000, 900); c1->Divide(3,1);}
   c1->cd();

@@ -115,7 +115,7 @@ void MassYieldFit_BDT(const string fname = "", const Double_t ptMin = 0, const D
   TPad* pad_pull = new TPad("pad_pull", "pad_pull", 0, 0.05, 0.98, 0.25);
   pad_pull->SetBottomMargin(0);
   pad_pull->Draw();
-  TPad* pad_leg = new TPad("pad_leg", "pad_leg", 0.65, 0.35, 0.94, 0.92);
+  TPad* pad_leg = new TPad("pad_leg", "pad_leg", 0.65, 0.40, 0.99, 0.92);
   pad_leg->SetBottomMargin(0);
   pad_leg->Draw();
 
