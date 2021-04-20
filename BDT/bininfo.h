@@ -1,6 +1,28 @@
 #ifndef BININFO_H
 #define BININFO_H
 
+std::map<long, std::map<int, std::vector<std::pair<double,double> > > >bdtbinsec =
+{
+	{1618900984, 
+		{
+			{ 3, {{-1.0, -0},{0, 0.34},{0.34, 1.0}}
+			},
+			{ 5, {{-1.0, -0.2},{-0.2, 0.0},{0.0, 0.2},{0.2, 0.34},{0.34, 1.0}}
+			}
+		}
+	},
+	{1618900983, 
+		{
+			{ 3, {{-1.0, -0},{0, 0.34},{0.34, 1.0}}
+			},
+			{ 5, {{-1.0, -0.2},{-0.2, 0.0},{0.0, 0.2},{0.2, 0.34},{0.34, 1.0}}
+			}
+		}
+	}
+};
+
+
+//STANDARD ID FIT RESULT YIELD, EFFICIENCY MAP
 //std::map<std::map<YLIM ,std::pair<std::pair<CBINL, CBINH>, std::pair<PTLOW ,PTHIGH> >, std::pair<EFF, std::pair<YIELD, ERR>> >> 
 std::map<double ,std::map<std::pair<std::pair<int, int>, std::pair<double,double> >, std::pair<double, std::pair<double,double>> >> hybfitinfo= {
 	{2.4,

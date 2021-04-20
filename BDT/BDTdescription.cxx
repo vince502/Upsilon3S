@@ -3,9 +3,20 @@
 #include <map>
 #include <cstring>
 
+void searcher();
+
 int main(){
-  int ts= 1618557840;
+
   std::cout << "Type 'exit' or 0 to escape" << std::endl;
+  searcher();
+
+  return 0;
+}
+
+void searcher(){
+  int ts= 1618557840;
+
+
   std::cout << "timestamp :";
   std::string _ts;
   std::cin >> _ts;
@@ -20,18 +31,14 @@ int main(){
   }
   try{stoi(_ts);
     if (stoi(_ts) !=0) ts= stoi(_ts);
-    if (stoi(_ts) == 0) return 0;
+    if (stoi(_ts) == 0) return ;
     std::cout <<"Description: " <<  dictmap[ts] << std::endl;
   }
   catch(...){
-    if( strcmp(_ts.c_str(),"exit")==0) return 0;
+    if( strcmp(_ts.c_str(),"exit")==0) return ;
     else std::cout << "input 10 digit POSIX timestamp" << std::endl;
   }
   input.close();
-  main();
+  searcher();
 
-  return 0;
-  
-}
-
-
+};

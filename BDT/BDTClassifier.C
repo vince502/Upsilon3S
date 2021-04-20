@@ -89,18 +89,18 @@ bool BDTClassifier_Function(bool IDvar = false, bool MoreVar = true, bool IDonly
   //  loader->AddVariable("normChi2_inner1", "global pt error1", "F");
   //  loader->AddVariable("normChi2_inner2", "global pt error2", "F");
   //  loader->AddVariable("StationsMatched1", "Single muon Matched to Muon Station 1", "I");
-    loader->AddVariable("QQMassErr", "Dimu Mass error", "F");
+  //  loader->AddVariable("QQMassErr", "Dimu Mass error", "F");
   //  loader->AddVariable("dxyErr1", "Single Muon vertex position error1", "F");
   //  loader->AddVariable("dxyErr2", "Single Muon vertex position error2", "F");
   //  loader->AddVariable("ptErr_inner1", "pterr of inner tracker single muon 1", "F");
   //  loader->AddVariable("ptErr_inner2", "pterr of inner tracker single muon 2", "F");
 
     loader->AddVariable("ctau3D", "3 dim ctau of the dimuon","F");
-//    loader->AddVariable("ctau", "2 dim ctau of the dimuon","F");
-    loader->AddVariable("QQVtxProb", "Vtx prob", "F");
-//    loader->AddSpectator("QQVtxProb", "Vtx prob", "F");
+    loader->AddVariable("ctau", "2 dim ctau of the dimuon","F");
+//    loader->AddVariable("QQVtxProb", "Vtx prob", "F");
+    loader->AddSpectator("QQVtxProb", "Vtx prob", "F");
     loader->AddVariable("QQdca", "QQdca", "F");
-//    loader->AddVariable("cosAlpha", "cos alpha for trajectory angle", "F");
+    loader->AddVariable("cosAlpha", "cos alpha for trajectory angle", "F");
     loader->AddVariable("cosAlpha3D", "cos alpha for trajectory angle 3D", "F");
 
  //   loader->AddVariable("ctau3D", "*ctau3D var", "F");

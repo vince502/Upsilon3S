@@ -28,8 +28,11 @@ void PlotYieldtoEffandSignifbin(long ts = 1614848550, double ylim = 2.4, double 
 //  TCanvas* c2 = new TCanvas("c1","c1", 600, 600);
 //  RooRealVar x = bp->yield_eff();
   std::vector<std::pair<double, double> > bdtbin;
+  bdtbin = bdtbinsec[ts][binnum];
+  if(bdtbinsec.find(ts) == bdtbinsec.end()){
   if (binnum==5) {bdtbin ={{-1, -0.2}, {-0.2, -0.1},{-0.1, 0.05},{0.05, 0.2}, {0.2, 1.0}/*{-1, -0.1}, {-0.4,0.1}, {-0.1, 0.0}, {0.0, 0.1}, {0.1, 0.2}, {0.2, 0.3}, {0.3, 0.4},{-0.1, 0.1}, {0.1, 0.3}, {0.3, 1.0}, {0.1, 1.0}, {0.2, 1.0} lastconfig{-1., -0.3},{-1, 0.},{-0.3, -0.1},{-0.1, 0.0},{0.0, 0.1},{0.1, 1.0}*/};}
   else if (binnum ==3) {bdtbin ={{-1, -0.2}, {-0.2, 0.05},{0.05, 1.0}};}
+  }
   else std::cout << "BDT bin #"<< binnum <<" not defined" << std::endl;
 
   int nCores = bdtbin.size();

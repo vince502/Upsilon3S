@@ -13,3 +13,6 @@
 1618563558, Flawed
 1618564208, new data, dimuon var with QQVtx not included
 1618564634, new data, QQdca and QQVtx included
+1618900141, full data with QQVtxPrb included with QQdca, but without QQMassErr
+1618900655, full data without QQVtxProb & QQMassErr, included QQdca
+1618900984, full data no QQVtx, QQMass, include 3D, 2D ctau, cosAlpha
