@@ -1,5 +1,7 @@
 #ifndef BININFO_H
 #define BININFO_H
+#include <vector>
+#include <map>
 
 std::map<long, std::map<int, std::vector<std::pair<double,double> > > >bdtbinsec =
 {
@@ -8,6 +10,14 @@ std::map<long, std::map<int, std::vector<std::pair<double,double> > > >bdtbinsec
 			{ 3, {{-1.0, -0},{0, 0.34},{0.34, 1.0}}
 			},
 			{ 5, {{-1.0, -0.2},{-0.2, 0.0},{0.0, 0.2},{0.2, 0.34},{0.34, 1.0}}
+			}
+		}
+	},
+	{1619007178, 
+		{
+			{ 3, {{-1.0, -0},{0, 0.3},{0.3, 1.0}}
+			},
+			{ 5, {{-1.0, -0.2},{-0.2, 0.0},{0.0, 0.2},{0.2, 0.3},{0.3, 1.0}}
 			}
 		}
 	},
@@ -24,7 +34,9 @@ std::map<long, std::map<int, std::vector<std::pair<double,double> > > >bdtbinsec
 std::map<long, std::pair<double,double> > massrng = 
 {
 	{1618913300, {8, 11.5} },
-	{1618930830, {8, 11.5} }
+	{1618930830, {8, 11.5} },
+	{1619007268, {8, 11.5} },
+	{1619007178, {8, 11.5} }
 };
 
 

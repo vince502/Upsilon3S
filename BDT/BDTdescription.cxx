@@ -2,6 +2,7 @@
 #include <fstream>
 #include <map>
 #include <cstring>
+#include "bininfo.h"
 
 void searcher();
 
@@ -33,6 +34,9 @@ void searcher(){
     if (stoi(_ts) !=0) ts= stoi(_ts);
     if (stoi(_ts) == 0) return ;
     std::cout <<"Description: " <<  dictmap[ts] << std::endl;
+    if( massrng.find(ts) != massrng.end()){
+    std::cout <<"Fit mass range: " << massrng[ts].first << ", " << massrng[ts].second << std::endl;
+    }
   }
   catch(...){
     if( strcmp(_ts.c_str(),"exit")==0) return ;
@@ -42,3 +46,4 @@ void searcher(){
   searcher();
 
 };
+

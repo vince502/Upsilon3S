@@ -11,14 +11,23 @@
 #include <ctime>
 long _ts;
 
-bool BDT_BLIND_Classifier_Function(bool IDvar = true, bool MoreVar = false, bool IDonly= true ){
+bool BDTClassifier_BLIND_Function(bool IDvar = true, bool MoreVar = false, bool IDonly= true ){
   //Load Library
   TMVA::Tools::Instance();
+  int traintree = 1;
+  int testtree = 2;
 
   std::time_t tstamp = std::time(nullptr);
   _ts = (long) tstamp;
   std::cout <<"time stamp---> " <<  tstamp << std::endl;
-  std::system(Form("cat BDT_Blind_Classifier.C >> ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) tstamp));
+  std::system(Form("cat BDTClassifier_BLIND.C >> ./.past_source/_BDTClassifier_BLIND_%ld.old",(long) tstamp));
+  ofstream log;
+  log.open("BDT_description.log", std::ios_base::out|std::ios_base::app);
+  log << tstamp;
+  char logbuf[2000];
+  std::cout << "Write down description for this run :";
+  std::cin.getline(logbuf,2000);
+  log << ", " << Form("BLIND[%d,%d], ",traintree, testtree)<<logbuf << std::endl;
 
   TString mainDIR= "/home/vince402/Upsilon3S/BDT";
   TString BDTDir = mainDIR + ("/BDTResult");
@@ -27,19 +36,21 @@ bool BDT_BLIND_Classifier_Function(bool IDvar = true, bool MoreVar = false, bool
   else gSystem->mkdir(BDTDir.Data(),kTRUE);
   
   //INPUT & OUTPUT Call
-  TFile* inputDATA = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_NewSkimWithTrackerMuonCut_QQVtxProb5Perc_AccPt3p5_ForBLIND.root","read");
-  TFile* inputMC   = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_QQVtxProb1percAccPt3p5Cut.root","read");
+  TFile* inputDATA = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_v210416_ForBLIND.root","read");
+  TFile* inputMC   = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_v210416.root","read");
   TFile* output    = new TFile(Form("%s/BDTresultY3S_%ld_IDv%d_MoreVar%d_BLIND.root",BDTDir.Data(),(long) tstamp, (int) IDvar, (int) MoreVar),"recreate");
 
-  double ycut = 1.2;
-  TCut cut1 = Form("pt1>3.5&&pt2>3.5&&QQVtxProb>0.01&&fabs(y)<%f",ycut);
-  TCut cut2 = Form("pt1>3.5&&pt2>3.5&&QQVtxProb>0.01&&fabs(y)<%f",ycut);
+  double ylim = 2.4;
+  string HybSoft = "&&nPixWMea1>0&&nPixWMea2>0&&nTrkWMea1>5&&nTrkWMea2>5&&dxy1<0.2&&dxy2<0.2&&dz1<20&&dz2<20";
+  string rejectNAN = "&&!TMath::IsNaN(ctau)&&!TMath::IsNaN(ctau3D)&&!TMath::IsNaN(cosAlpha)&&!TMath::IsNaN(cosAlpha3D)";//"&&!TMath::IsNaN(QQMassErr)&&!TMath::IsNaN(dxyErr1)&&!TMath::IsNaN(dxyErr2)&&!TMath::IsNaN(QQVtxProb)&&!TMath::IsNaN(QQdca)&&!TMath::IsNaN(cosAlpha)&&!TMath::IsNaN(cosAlpha3D)";
+  TCut cut1 = Form("mass<11.5&&pt1>3.5&&pt2>3.5&&fabs(y)<%f%s%s",ylim, HybSoft.c_str(),rejectNAN.c_str());
+  TCut cut2 = Form("mass<11.5&&pt1>3.5&&pt2>3.5&&fabs(y)<%f%s%s",ylim, HybSoft.c_str(),rejectNAN.c_str());
 
   TMVA::DataLoader *loader = new TMVA::DataLoader("dataset");
   TTree* SigTree =(TTree*) inputMC->Get("tree");
-  TTree* BkgTreeTest =(TTree*) inputDATA->Get("tree2");
-  TTree* BkgTreeTrain_primary =(TTree*) inputDATA->Get("tree1");
-  TTree* BkgTreeTrain = BkgTreeTrain_primary->CopyTree("(mass>10.5&&mass<14)||(mass>8.&&mass<8.6)");
+  TTree* BkgTreeTest =(TTree*) inputDATA->Get(Form("tree%d",testtree));
+  TTree* BkgTreeTrain_primary =(TTree*) inputDATA->Get(Form("tree%d",traintree));
+  TTree* BkgTreeTrain = BkgTreeTrain_primary->CopyTree("(mass>10.5&&mass<11.5)||(mass>8.&&mass<8.6)");
   std::cout << "Number of Events in Trees (Sig, BkgTest, BkgTrain) : ( " << SigTree->GetEntries(cut1) << ", "<< BkgTreeTest->GetEntries(cut2) << ", " << BkgTreeTrain->GetEntries(cut2) << " )" << std::endl;
   //Factory Call
   TMVA::Factory *factory = new TMVA::Factory("TMVA_BDT_Classifier", output, "!V:Silent:Color:DrawProgressBar:Transformations=I;D;P;G;D:AnalysisType=Classification");
@@ -69,16 +80,15 @@ bool BDT_BLIND_Classifier_Function(bool IDvar = true, bool MoreVar = false, bool
     }
   }
   if(MoreVar){
-   // loader->AddVariable("nTrkHits1", "nTrk Hit 1", "I");
-   // loader->AddVariable("nTrkHits2", "nTrk Hit 2", "I");
-   // loader->AddVariable("nPixValHits1", "nPix Valid Hits 1", "I");
-   // loader->AddVariable("nPixValHits2", "nPix Valid Hits 2", "I");
-    loader->AddVariable("nMuValHits1", "nMu Valid Hits 1", "I");
-    loader->AddVariable("nMuValHits2", "nMu Valid Hits 2", "I");
-//    loader->AddVariable("StationsMatched1", "Single muon Matched to Muon Station 1", "I");
     loader->AddVariable("QQMassErr", "Dimu Mass error", "F");
+    loader->AddVariable("ctau3D", "3 dim ctau of the dimuon","F");
+    loader->AddVariable("ctau", "2 dim ctau of the dimuon","F");
+    loader->AddVariable("QQVtxProb", "Vtx prob", "F");
+//    loader->AddSpectator("QQVtxProb", "Vtx prob", "F");
+    loader->AddVariable("QQdca", "QQdca", "F");
+    loader->AddVariable("cosAlpha", "cos alpha for trajectory angle", "F");
+    loader->AddVariable("cosAlpha3D", "cos alpha for trajectory angle 3D", "F");
 
-    loader->AddSpectator("QQVtxProb", "Vtx prob", "F");
  //   loader->AddVariable("ctau3D", "*ctau3D var", "F");
 //    loader->AddVariable("normChi2_global1", "global Nchi squared valu of mu 1", "F");
 //    loader->AddVariable("normChi2_global2", "global Nchi squared valu of mu 2", "F");
@@ -132,8 +142,8 @@ bool BDT_BLIND_Classifier_Function(bool IDvar = true, bool MoreVar = false, bool
 }
 
 //Main Function
-void BDT_Blind_Classifier(bool _IDvar = true, bool _MoreVar = false, bool _IDonly= false ){
-  bool res = BDT_BLIND_Classifier_Function(_IDvar, _MoreVar, _IDonly);
+void BDTClassifier_BLIND(bool _IDvar = true, bool _MoreVar = false, bool _IDonly= false ){
+  bool res = BDTClassifier_BLIND_Function(_IDvar, _MoreVar, _IDonly);
   if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
 //  BDTClassifier_Function(true, false, false);
 //  BDTClassifier_Function(false, false, false);

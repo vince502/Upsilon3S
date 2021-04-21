@@ -8,10 +8,12 @@
 #include "TMVA/Reader.h"
 #include "TMVA/MethodCuts.h"
 #include "TXMLDocument.h"
+#include "blindsearch.cxx"
 
-//template<typename T> 
 
-void BDTClassifierApplication_BLIND(long ts, int isMC = 0, int whichtree= 2){
+void BDTClassifierApplication_BLIND(long ts, int isMC = 0){
+  std::pair<int,int> _bf = blindpair(ts);
+  int whichtree = _bf.second;
   if (whichtree >5) {std::cout << "tree selection wrong? " << std::endl; return; }
 
   TMVA::Tools::Instance();
