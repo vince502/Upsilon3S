@@ -35,7 +35,7 @@
 using namespace std;
 using namespace RooFit;
 
-void MassYieldFit_BDT(const string fname = "", const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", int cBinLow =0, int cBinHigh = 180, double cutQVP = 0.01, double cutBDTlow=-1, double cutBDThigh = 1. ,Double_t params[/*sigma1S_1, alpha, n , frac, Erfmean, Erfsigma, Erfp0*/]= {},Double_t paramslow[/*sigma1S_1, alpha, n , frac, Erfmean, Erfsigma, Erfp0*/]= {},Double_t paramshigh[/*sigma1S_1, alpha, n , frac, Erfmean, Erfsigma, Erfp0*/]= {}){
+void MassYieldFit_BDT_CC2(const string fname = "", const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", int cBinLow =0, int cBinHigh = 180, double cutQVP = 0.01, double cutBDTlow=-1, double cutBDThigh = 1. ,Double_t params[/*sigma1S_1, alpha, n , frac, k1, k2*/]= {},Double_t paramslow[/*sigma1S_1, alpha, n , frac, k1, k2*/]= {},Double_t paramshigh[/*sigma1S_1, alpha, n , frac, k1, k2*/]= {}){
   Double_t etaMax= 2.4;
   Double_t etaMin = -2.4;
   string delim = "OniaRooDataset_BDT";
@@ -80,7 +80,7 @@ void MassYieldFit_BDT(const string fname = "", const Double_t ptMin = 0, const D
   }
 
   TFile* fout;
-  fout = new TFile(Form("/home/vince402/Upsilon3S/Yield/Yield_%s_FF_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_%s%d_%s%.4f-%.4f_%s%.4f.root",ts.c_str(), (int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(),(int) swflag, "BDT",1,"cut",cutBDTlow, cutBDThigh ,"vp",cutQVP), "RECREATE");
+  fout = new TFile(Form("/home/vince402/Upsilon3S/Yield/Yield_%s_FF_CC2_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_%s%d_%s%.4f-%.4f_%s%.4f.root",ts.c_str(), (int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(),(int) swflag, "BDT",1,"cut",cutBDTlow, cutBDThigh ,"vp",cutQVP), "RECREATE");
 
   Double_t MupTCut;
   if(MupT == "0") MupTCut = 0;
@@ -172,10 +172,15 @@ void MassYieldFit_BDT(const string fname = "", const Double_t ptMin = 0, const D
 //  RooAddPdf* CBG1S = new RooAddPdf("CBG1S", "Sum of 1S Crystal ball Gauss", RooArgList(*CB1S_1, *G1S), RooArgList(*frac));
 //  RooAddPdf* CBG2S = new RooAddPdf("CBG2S", "Sum of 2S Crystal ball Gauss", RooArgList(*CB2S_1, *G2S), RooArgList(*frac));
 //  RooAddPdf* CBG3S = new RooAddPdf("CBG3S", "Sum of 3S Crystal ball Gauss", RooArgList(*CB3S_1, *G3S), RooArgList(*frac));
-  RooRealVar Erfmean("Erfmean", "Mean of Errfunction", 7, paramslow[4], paramshigh[4]);//for 0~40, 4~7 GeV
-  RooRealVar Erfsigma("Erfsigma", "Sigma of Errfunction", 1, paramslow[5], paramshigh[5]);//for 0~40, 4~7 GeV
-  RooRealVar Erfp0("Erfp0", "1st parameter of Errfunction", 1, paramslow[6], paramshigh[6]);
-  RooGenericPdf* bkgErf = new RooGenericPdf("bkgErf", "Error background", "TMath::Exp(-@0/@1)*(TMath::Erf((@0-@2)/(TMath::Sqrt(2)*@3))+1)*0.5", RooArgList(*(works1->var("mass")), Erfp0, Erfmean, Erfsigma));
+//  RooRealVar Erfmean("Erfmean", "Mean of Errfunction", 7, paramslow[4], paramshigh[4]);//for 0~40, 4~7 GeV
+//  RooRealVar Erfsigma("Erfsigma", "Sigma of Errfunction", 1, paramslow[5], paramshigh[5]);//for 0~40, 4~7 GeV
+//  RooRealVar Erfp0("Erfp0", "1st parameter of Errfunction", 1, paramslow[6], paramshigh[6]);
+//  RooGenericPdf* bkgErf = new RooGenericPdf("bkgErf", "Error background", "TMath::Exp(-@0/@1)*(TMath::Erf((@0-@2)/(TMath::Sqrt(2)*@3))+1)*0.5", RooArgList(*(works1->var("mass")), Erfp0, Erfmean, Erfsigma));
+  RooRealVar ch4_k1("ch4_k1", "ch4_k1", 0.02, paramslow[4], paramshigh[4]);
+  RooRealVar ch4_k2("ch4_k2", "ch4_k2", 0.02, paramslow[5], paramshigh[5]);
+//  RooRealVar ch4_k3("ch4_k3", "ch4_k3", 0.02, paramslow[6], paramshigh[6]);
+//  RooRealVar ch4_k4("ch4_k4", "ch4_k4", 0.02, paramslow[7], paramshigh[7]);
+  RooChebychev *bkg = new RooChebychev("CCBkg", "Background", *(works1->var("mass")), RooArgSet(ch4_k1, ch4_k2));
 
   RooGenericPdf* Signal1S;
   RooGenericPdf* Signal2S;
@@ -186,16 +191,17 @@ void MassYieldFit_BDT(const string fname = "", const Double_t ptMin = 0, const D
   Signal3S = (RooGenericPdf*) twoCB3S;
 
   RooGenericPdf* Background;
-  Background = (RooGenericPdf*) bkgErf;
+  Background = (RooGenericPdf*) bkg;
 
   sigma1S_1.setVal(params[0]);
   alpha.setVal(params[1]);
   n.setVal(params[2]);
   frac->setVal(params[3]);
 
-  Erfmean.setVal(params[4]);
-  Erfsigma.setVal(params[5]);
-  Erfp0.setVal(params[6]);
+  ch4_k1.setVal(params[4]);
+  ch4_k2.setVal(params[5]);
+//  ch4_k3.setVal(params[6]);
+//  ch4_k4.setVal(params[7]);
 
   RooRealVar* nSig1S = new RooRealVar("nSig1S", "# of 1S signal", 400, -1000, 1000000);
   RooRealVar* nSig2S = new RooRealVar("nSig2S", "# of 2S signal", 100, -1000, 300000);
@@ -246,15 +252,12 @@ void MassYieldFit_BDT(const string fname = "", const Double_t ptMin = 0, const D
     Npullbin++;
   }
   Int_t Nfitpar = Result->floatParsFinal().getSize();
-
   Double_t NLL = Result->minNll();
   ofstream log;
   log.open("BDT_fitcomparisonNLL.log",std::ios_base::out|std::ios_base::app);
-  log << "\n"<< ts.c_str() << Form(", pt eta : %.1f-%.1f |%.1f|, BDT [ %.2f, %.2f ]", ptMin, ptMax, rapMax, cutBDTlow, cutBDThigh) << std::endl;
-  log << "BDT with ExpErf NLL : " << NLL; 
+  log << "\n"<<ts.c_str() << Form(", pt eta : %.1f-%.1f |%.1f|, BDT [ %.2f, %.2f ]", ptMin, ptMax, rapMax, cutBDTlow, cutBDThigh) << std::endl;
+  log << "BDT with Chebychev2  NLL : " << NLL; 
   log.close();
-  
-
   std::cout << "NLL : " << NLL << std::endl;
   Int_t ndf = Npullbin - Nfitpar;
 
@@ -309,7 +312,7 @@ void MassYieldFit_BDT(const string fname = "", const Double_t ptMin = 0, const D
   Sgnfc3S = works1->pdf("twoCB3S")->asTF(*(works1->var("mass")));
 
   TF1* Bkgfc;
-  Bkgfc = works1->pdf("bkgErf")->asTF(*(works1->var("mass")));
+  Bkgfc = works1->pdf("CCBkg")->asTF(*(works1->var("mass")));
 
   Double_t TIntgr1S = Sgnfc1S->Integral(RangeLow, RangeHigh);
   Double_t TIntgr2S = Sgnfc2S->Integral(RangeLow, RangeHigh);
@@ -340,12 +343,12 @@ void MassYieldFit_BDT(const string fname = "", const Double_t ptMin = 0, const D
   }
   
 
-  c1->SaveAs(Form("%s/MassDistribution_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_%s%d_%s%.4f-%.4f_%s%.4f.pdf",massDIR.Data(), (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag,"BDT",1,"cut",cutBDTlow, cutBDThigh,"vp",cutQVP));
-  c1->SaveAs(Form("%s/png/MassDistribution_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_%s%d_%s%.4f-%.4f_%s%.4f.png",massDIR.Data(), (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag,"BDT",1,"cut",cutBDTlow, cutBDThigh,"vp",cutQVP));
+  c1->SaveAs(Form("%s/MassDistribution_CC2_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_%s%d_%s%.4f-%.4f_%s%.4f.pdf",massDIR.Data(), (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag,"BDT",1,"cut",cutBDTlow, cutBDThigh,"vp",cutQVP));
+  c1->SaveAs(Form("%s/png/MassDistribution_CC2_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_%s%d_%s%.4f-%.4f_%s%.4f.png",massDIR.Data(), (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag,"BDT",1,"cut",cutBDTlow, cutBDThigh,"vp",cutQVP));
   TCanvas* c1_tmp = (TCanvas*) c1->Clone("ylogc1");
   c1_tmp->SetLogy();
   c1_tmp->Modified();
-  c1_tmp->SaveAs(Form("%s/MassDistribution_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_%s%d_%s%.4f-%.4f_%s%.4f.pdf",massDIRl.Data(), (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag,"BDT",1,"cut",cutBDTlow, cutBDThigh,"vp",cutQVP));
+  c1_tmp->SaveAs(Form("%s/MassDistribution_CC2_pt_%d-%d_rap_%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_%s%d_%s%.4f-%.4f_%s%.4f.pdf",massDIRl.Data(), (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag,"BDT",1,"cut",cutBDTlow, cutBDThigh,"vp",cutQVP));
   TH1D* hmass = new TH1D("hmass", ";M (GeV/c^2);Counts", Nmassbins, RangeLow, RangeHigh);
   reducedDS->fillHistogram(hmass, (*works1->var("mass")));
   FormTH1Marker(hmass, 0, 0, 1.4);

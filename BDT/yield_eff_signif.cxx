@@ -6,6 +6,7 @@
 #include "TROOT.h"
 #include "RooFit.h"
 #include "./EffCalc/openEffhist.C"
+#include "bininfo.h"
 
 class binplotter
 {
@@ -38,9 +39,11 @@ binplotter::binplotter(long _ts, double _ylim, int _pl, int _ph, int _cl, int _c
   ts = _ts; ylim = _ylim;  pl = _pl; ph = _ph; cl = _cl; ch = _ch; blow = _blow; bhigh = _bhigh;
   int ylim10 = (int) (ylim*10);
   string fitdir;
+  int nbin = 120;
+  if (massrng.find(_ts) != massrng.end()) { nbin = (int) (massrng[_ts].second - massrng[_ts].first)/0.05; } 
   if( fittype=="freefit") fitdir = "FF";
   else if (fittype=="DatafixtoMC") fitdir = "DFM";
-  filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%ld_%s_pt_%d-%d_rap_-%d-%d_120bin_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", ts, fitdir.c_str(),pl,ph, ylim10, ylim10,cl, ch, blow, bhigh, vcut);
+  filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%ld_%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", ts, fitdir.c_str(),pl,ph, ylim10, ylim10,nbin, cl, ch, blow, bhigh, vcut);
 };
 
 binplotter::~binplotter(){ return; };

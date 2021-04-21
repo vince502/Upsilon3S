@@ -16,3 +16,7 @@
 1618900141, full data with QQVtxPrb included with QQdca, but without QQMassErr
 1618900655, full data without QQVtxProb & QQMassErr, included QQdca
 1618900984, full data no QQVtx, QQMass, include 3D, 2D ctau, cosAlpha
+1618909787, full data, included QQ dca, Vtx, 2D 3D ctau,cosAlpha
+1618912058, all var, full data with Vtx, too
+1618913300, mass up 11.5, full data, full var with Vtx
+1618930830, all variables without ctau variables

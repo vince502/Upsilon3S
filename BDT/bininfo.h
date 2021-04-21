@@ -21,6 +21,12 @@ std::map<long, std::map<int, std::vector<std::pair<double,double> > > >bdtbinsec
 	}
 };
 
+std::map<long, std::pair<double,double> > massrng = 
+{
+	{1618913300, {8, 11.5} },
+	{1618930830, {8, 11.5} }
+};
+
 
 //STANDARD ID FIT RESULT YIELD, EFFICIENCY MAP
 //std::map<std::map<YLIM ,std::pair<std::pair<CBINL, CBINH>, std::pair<PTLOW ,PTHIGH> >, std::pair<EFF, std::pair<YIELD, ERR>> >> 

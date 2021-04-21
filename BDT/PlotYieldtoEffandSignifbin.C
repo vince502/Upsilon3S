@@ -7,6 +7,7 @@
 #include <fstream>
 #include "TSystem.h"
 #include "plotresult.C"
+#include "bininfo.h"
 
 
 void PlotYieldtoEffandSignifbin(long ts = 1614848550, double ylim = 2.4, double ptlow = 0, double pthigh = 4, int cbinlow = 0, int cbinhigh = 180, double fitover = false, int binnum=5){
