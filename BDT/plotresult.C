@@ -5,7 +5,7 @@
 #include "RooPlot.h"
 #include "bininfo.h"
 
-using namespace RooFoit;
+using namespace RooFit;
 
 
 std::vector<std::pair<double, double>> bdtbin5 = {{-1.0, -0.2}, {-0.2, -0.1}, {-0.1, 0.05},{0.05, 0.2}, {0.2, 1.0}};
@@ -18,9 +18,13 @@ TPad* plotone(long ts,double ylim, int ptlow, int pthigh, int cbinlow, int cbinh
   string fitdir;
   int ylim10 = (int) (ylim*10);
 
+  string fitfunc = "_CC3";
+  int nbin =120;
+  if (massrng.find(ts) != massrng.end()) { nbin = (int) ((massrng[ts].second - massrng[ts].first)/0.05); } 
+
   if( fittype=="freefit") fitdir = "FF";
   else if (fittype=="DatafixtoMC") fitdir = "DFM";
-  TFile* file1 = new TFile(Form("%s/Yield/Yield_%ld_%s_pt_%d-%d_rap_-%d-%d_120bin_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", workdir.c_str(), ts, fitdir.c_str(),ptlow, pthigh, ylim10, ylim10, cbinlow, cbinhigh, blow, bhigh, vcut),"read");
+  TFile* file1 = new TFile(Form("%s/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", workdir.c_str(), ts, fitdir.c_str(),fitfunc.c_str(),ptlow, pthigh, ylim10, ylim10,nbin, cbinlow, cbinhigh, blow, bhigh, vcut),"read");
 //  TString mainDIR = gSystem->ExpandPathName(gSystem->pwd());
   TString massDIR = Form("%s/MassDist/BDT/%ld/freefit/%s/%.1f/cent%d-%d/pT%.1f-%.1f/FitResult",workdir.c_str(), ts,Trig.c_str(),ylim,cbinlow, cbinhigh, (double) ptlow, (double) pthigh);
   plotdir = massDIR;
@@ -44,7 +48,12 @@ TPad* plotone(long ts,double ylim, int ptlow, int pthigh, int cbinlow, int cbinh
   works1->pdf("model")->plotOn(plot1, Components(RooArgSet(*works1->pdf("twoCB1S")) ), LineWidth(1),LineStyle(1), LineColor(kRed) , MoveToBack());
   works1->pdf("model")->plotOn(plot1, Components(RooArgSet(*works1->pdf("twoCB2S")) ), LineWidth(1),LineStyle(1), LineColor(kRed) , MoveToBack());
   works1->pdf("model")->plotOn(plot1, Components(RooArgSet(*works1->pdf("twoCB3S")) ), LineWidth(1),LineStyle(1), LineColor(kRed) , MoveToBack());
+  if(strcmp(fitfunc.c_str(),"")==0){
   works1->pdf("model")->plotOn(plot1, Components(RooArgSet(*works1->pdf("bkgErf")) ), LineWidth(1), LineStyle(1), LineColor(kGreen), MoveToBack() );
+  }
+  if(strcmp(fitfunc.c_str(),"_CC3")==0){
+  works1->pdf("model")->plotOn(plot1, Components(RooArgSet(*works1->pdf("CCBkg")) ), LineWidth(1), LineStyle(1), LineColor(kGreen), MoveToBack() );
+  }
 
 //  TCanvas* c1 = new TCanvas("c1", "", 1100, 800);
   TPad* c1 = new TPad("c1","", 0,0,1,1);
@@ -106,7 +115,7 @@ TPad* plotone(long ts,double ylim, int ptlow, int pthigh, int cbinlow, int cbinh
 void plotresult(long ts, double ylim, int ptlow, int pthigh, int cbinlow, int cbinhigh,  float vcut, TString MupT = "3p5", string Trig = "S13", TString fittype = "freefit", int binnum=5){
   std::vector<std::pair<double, double>> bdtbin;
   bdtbin = bdtbinsec[ts][binnum];
-  if(bdtbinsec.find[ts] == bdtbinsec.end()){
+  if(bdtbinsec.find(ts) == bdtbinsec.end()){
   bdtbin = (binnum ==5) ? bdtbin5 : ( (binnum ==3) ?  bdtbin3 : bdtbin5);
   }
 

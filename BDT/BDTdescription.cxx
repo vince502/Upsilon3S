@@ -3,26 +3,27 @@
 #include <map>
 #include <cstring>
 #include "bininfo.h"
+#include "../.workdir.h"
 
-void searcher();
+
+void BDTdescription();
 
 int main(){
 
   std::cout << "Type 'exit' or 0 to escape" << std::endl;
-  searcher();
+  BDTdescription();
 
   return 0;
 }
 
-void searcher(){
+void BDTdescription(){
   int ts= 1618557840;
-
 
   std::cout << "timestamp :";
   std::string _ts;
   std::cin >> _ts;
   std::fstream input;
-  input.open("BDT_description.log");
+  input.open(Form("%s/BDT_description.log",workdir.Data()));
   std::map<int, std::string> dictmap;
   std::string stringbuf;
   while (input.peek() != EOF){
@@ -43,7 +44,7 @@ void searcher(){
     else std::cout << "input 10 digit POSIX timestamp" << std::endl;
   }
   input.close();
-  searcher();
+  BDTdescription();
 
 };
 

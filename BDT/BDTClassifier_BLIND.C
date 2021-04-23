@@ -81,13 +81,13 @@ bool BDTClassifier_BLIND_Function(bool IDvar = true, bool MoreVar = false, bool 
   }
   if(MoreVar){
     loader->AddVariable("QQMassErr", "Dimu Mass error", "F");
-    loader->AddVariable("ctau3D", "3 dim ctau of the dimuon","F");
+//    loader->AddVariable("ctau3D", "3 dim ctau of the dimuon","F");
     loader->AddVariable("ctau", "2 dim ctau of the dimuon","F");
     loader->AddVariable("QQVtxProb", "Vtx prob", "F");
 //    loader->AddSpectator("QQVtxProb", "Vtx prob", "F");
     loader->AddVariable("QQdca", "QQdca", "F");
     loader->AddVariable("cosAlpha", "cos alpha for trajectory angle", "F");
-    loader->AddVariable("cosAlpha3D", "cos alpha for trajectory angle 3D", "F");
+//    loader->AddVariable("cosAlpha3D", "cos alpha for trajectory angle 3D", "F");
 
  //   loader->AddVariable("ctau3D", "*ctau3D var", "F");
 //    loader->AddVariable("normChi2_global1", "global Nchi squared valu of mu 1", "F");
