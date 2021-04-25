@@ -23,10 +23,8 @@ namespace upsi{
 		binplotter bp = binplotter(ts, yhigh, ptlow, pthigh, (int) clow, (int) chigh, blow, bhigh);
 		bp.set_params("_CC3",0.00);
 		bp.refit = false;
-		bp.yield_eff();
-		yield = *bp.yield;
-		std::cout << bp.Eff<< std::endl;
-		eff= RooRealVar("eff", "efficiency" ,bp.Eff);
+		yield = bp.get_yield();
+		eff= RooRealVar("eff", "efficiency" ,bp.get_eff());
 		acc = upsi::getacceptance(ptlow, pthigh, ylow, yhigh, sm_ptcut);
 
 		double Nmb = 11968044281; 

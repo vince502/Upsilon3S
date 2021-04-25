@@ -3,8 +3,6 @@
 #include "TFile.h"
 
 void BlindTree(){
-  //TFile* fo = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_NewSkimWithTrackerMuonCut_QQVtxProb5Perc_AccPt3p5.root","READ");
-  //TFile* fn = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_NewSkimWithTrackerMuonCut_QQVtxProb5Perc_AccPt3p5_ForBLIND.root","recreate");
   TFile* fo = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_v210416.root","READ");
   TFile* fn = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_v210416_ForBLIND.root","recreate");
   TTree* t0 = (TTree*) fo->Get("tree");

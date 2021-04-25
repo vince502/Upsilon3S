@@ -19,12 +19,12 @@ class binplotter
 	void set_params(string _fitfunc, double _vcut);
 	void dump();
 	~binplotter();
+	RooRealVar get_yield();
+	double get_eff();
 	RooRealVar yield_eff();
-	RooRealVar* yield;
 	RooRealVar getsignificance();
 	RooRealVar* NS;
 	RooRealVar* NB;
-	double Eff;
 	bool refit = false;
   	
   private:
@@ -50,7 +50,7 @@ binplotter::binplotter(long _ts, double _ylim, int _pl, int _ph, int _cl, int _c
   init();
 };
 
-binplotter::~binplotter(){ return; };
+binplotter::~binplotter(){ };
 
 void binplotter::init(){
   int ylim10 = (int) (ylim*10);
@@ -83,7 +83,7 @@ void binplotter::dump(){
 };
 
 
-RooRealVar binplotter::yield_eff(){
+RooRealVar binplotter::get_yield(){
   std::cout << "Opening Yield file : " << filename.c_str() << std::endl;
   if(TFile::Open(filename.c_str(), "open")==nullptr || TFile::Open(filename.c_str(),"read")->IsZombie()|| refit){
     std::cout << "Running Fitter for new Yield" << std::endl;
@@ -95,21 +95,29 @@ RooRealVar binplotter::yield_eff(){
 
   TFile* file1 = new TFile(filename.c_str(),"read");
   RooFitResult * res = (RooFitResult*) file1->Get("fitresult_model_reducedDS");
-  RooRealVar* Yield3S;
+  RooRealVar Yield3S;
   RooArgList* paramList = (RooArgList*) &res->floatParsFinal();
   for( auto arg : *paramList) {
     if(strcmp(arg->GetName(),"nSig3S")==0){
       std::cout<< arg->GetName() << std::endl;
-      Yield3S = (RooRealVar*) arg;
+      Yield3S = (RooRealVar)*(RooRealVar*) arg;
     }
   }
-  yield = Yield3S;
-  std::cout << Yield3S->GetName()<< ": " << Yield3S->getVal() << ", Error: " << Yield3S->getError()<< std::endl;
+  return Yield3S;
+//  yield = Yield3S;
+};
+double binplotter::get_eff(){
   double bdteff = openEffhist((float) pl, (float) ph, 0, ylim, cl, ch, false, false, false, kTrigUps, ts, blow, bhigh);  
-  Eff=bdteff;
+  return bdteff;
+};
+
+RooRealVar binplotter::yield_eff(){
+  RooRealVar Yield3S = binplotter::get_yield();
+  double bdteff = get_eff();
+  std::cout << Yield3S.GetName()<< ": " << Yield3S.getVal() << ", Error: " << Yield3S.getError()<< std::endl;
   std::cout << "BDT efficiency of : " << bdteff << std::endl;
-  RooRealVar YoverE("YE","Yield over Eff", (Yield3S->getVal()/bdteff), -100, 100000);
-  YoverE.setError(Yield3S->getError()/bdteff);
+  RooRealVar YoverE("YE","Yield over Eff", (Yield3S.getVal()/bdteff), -100, 100000);
+  YoverE.setError(Yield3S.getError()/bdteff);
   return YoverE;
 };
 
