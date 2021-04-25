@@ -21,6 +21,7 @@ namespace upsi{
 	RooRealVar getcrosssection(long ts, double ptlow, double pthigh, double ylow, double yhigh, double sm_ptcut, double clow, double chigh, double blow, double bhigh){
 		RooRealVar yield, acc, eff, Lum;
 		binplotter bp = binplotter(ts, yhigh, ptlow, pthigh, (int) clow, (int) chigh, blow, bhigh);
+		bp.set_params("_CC3",0.00);
 		bp.refit = false;
 		bp.yield_eff();
 		yield = *bp.yield;

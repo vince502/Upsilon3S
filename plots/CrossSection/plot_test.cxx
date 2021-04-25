@@ -1,9 +1,9 @@
 void plot_test()
 {
 //=========Macro generated from canvas: c1/Cross Section plot
-//=========  (Thu Apr 22 18:08:15 2021) by ROOT version 6.22/06
+//=========  (Fri Apr 23 15:06:10 2021) by ROOT version 6.22/06
    TCanvas *c1 = new TCanvas("c1", "Cross Section plot",0,0,800,700);
-   c1->Range(-3.75,-4.609487,33.75,-2.359858);
+   c1->Range(-3.75,-4.626341,33.75,-2.239076);
    c1->SetFillColor(0);
    c1->SetBorderMode(0);
    c1->SetBorderSize(2);
@@ -13,14 +13,14 @@ void plot_test()
    Double_t xAxis1[5] = {0, 4, 9, 12, 30}; 
    
    TH1D *h1__1 = new TH1D("h1__1","CS hist",4, xAxis1);
-   h1__1->SetBinContent(1,0.0008592235);
-   h1__1->SetBinContent(2,0.001010787);
-   h1__1->SetBinContent(3,0.0004354643);
-   h1__1->SetBinContent(4,8.250984e-05);
-   h1__1->SetBinError(1,0.000203737);
-   h1__1->SetBinError(2,0.0003620847);
-   h1__1->SetBinError(3,0.0008066075);
-   h1__1->SetBinError(4,0.0001536001);
+   h1__1->SetBinContent(1,0.001402059);
+   h1__1->SetBinContent(2,0.0003995142);
+   h1__1->SetBinContent(3,-4.220327e-05);
+   h1__1->SetBinContent(4,9.923007e-05);
+   h1__1->SetBinError(1,0.0003544439);
+   h1__1->SetBinError(2,0.0001720593);
+   h1__1->SetBinError(3,5.656957e-07);
+   h1__1->SetBinError(4,1.730516e-05);
    h1__1->SetEntries(4);
    
    TPaveStats *ptstats = new TPaveStats(0.78,0.775,0.98,0.935,"brNDC");
@@ -32,8 +32,8 @@ void plot_test()
    TText *ptstats_LaTex = ptstats->AddText("h1");
    ptstats_LaTex->SetTextSize(0.0368);
    ptstats_LaTex = ptstats->AddText("Entries = 4      ");
-   ptstats_LaTex = ptstats->AddText("Mean  =  6.111");
-   ptstats_LaTex = ptstats->AddText("Std Dev   =  4.161");
+   ptstats_LaTex = ptstats->AddText("Mean  =  3.789");
+   ptstats_LaTex = ptstats->AddText("Std Dev   =  4.334");
    ptstats->SetOptStat(1111);
    ptstats->SetOptFit(0);
    ptstats->Draw();
