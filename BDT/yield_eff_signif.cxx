@@ -26,6 +26,7 @@ class binplotter
 	RooRealVar* NS;
 	RooRealVar* NB;
 	bool refit = false;
+	RooRealVar yield1S, yield2S, yield3S;
   	
   private:
   	long ts;
@@ -37,6 +38,7 @@ class binplotter
 	TString fittype = "freefit";
 	string filename;
 	string fitfunc="";//"_CC3";
+
 };
 binplotter::binplotter(){
 };
@@ -95,16 +97,24 @@ RooRealVar binplotter::get_yield(){
 
   TFile* file1 = new TFile(filename.c_str(),"read");
   RooFitResult * res = (RooFitResult*) file1->Get("fitresult_model_reducedDS");
-  RooRealVar Yield3S;
+  RooRealVar Yield1S, Yield2S, Yield3S;
   RooArgList* paramList = (RooArgList*) &res->floatParsFinal();
   for( auto arg : *paramList) {
+    if(strcmp(arg->GetName(),"nSig1S")==0){
+      Yield1S = (RooRealVar)*(RooRealVar*) arg;
+    }
+    if(strcmp(arg->GetName(),"nSig2S")==0){
+      Yield2S = (RooRealVar)*(RooRealVar*) arg;
+    }
     if(strcmp(arg->GetName(),"nSig3S")==0){
-      std::cout<< arg->GetName() << std::endl;
       Yield3S = (RooRealVar)*(RooRealVar*) arg;
     }
   }
+  yield1S = Yield1S;
+  yield2S = Yield2S;
+  yield3S = Yield3S;
   return Yield3S;
-//  yield = Yield3S;
+
 };
 double binplotter::get_eff(){
   double bdteff = openEffhist((float) pl, (float) ph, 0, ylim, cl, ch, false, false, false, kTrigUps, ts, blow, bhigh);  

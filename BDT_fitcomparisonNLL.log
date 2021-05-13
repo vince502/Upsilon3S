@@ -349,3 +349,5 @@ BDT with Chebychev3  NLL : -18499
 BDT with Chebychev3  NLL : -12839.2
 1619021800, pt eta : 9.0-12.0 |2.4|, BDT [ 0.20, 1.00 ]
 BDT with Chebychev3  NLL : -18499
+1619743777, pt eta : 0.0-30.0 |2.4|, BDT [ 0.20, 1.00 ]
+BDT with Chebychev3  NLL : -110662

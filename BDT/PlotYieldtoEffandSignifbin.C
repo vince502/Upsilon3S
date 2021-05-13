@@ -57,7 +57,8 @@ void PlotYieldtoEffandSignifbin(long ts = 1614848550, double ylim = 2.4, double 
     bp.refit = fitover;
     RooRealVar adjY = bp.yield_eff();
     RooRealVar s = bp.getsignificance(); 
-    *summary += Form("nSig: %.2f +- %.3f, nBkg: %.2f += %.3f, Eff: %.5f, Signif: %.2f += %.3f \n",bp.NS->getVal(),bp.NS->getError(),bp.NB->getVal(), bp.NB->getError(), bp.Eff, s.getVal(), s.getError() );
+    double Eff = bp.get_eff();
+    *summary += Form("nSig: %.2f +- %.3f, nBkg: %.2f += %.3f, Eff: %.5f, Signif: %.2f += %.3f \n",bp.NS->getVal(),bp.NS->getError(),bp.NB->getVal(), bp.NB->getError(), Eff, s.getVal(), s.getError() );
     std::cout << *summary << std::endl;
     std::pair<std::pair<double, double> ,std::pair<RooRealVar, RooRealVar> >result = std::pair<std::pair<double, double>, std::pair<RooRealVar, RooRealVar>>{{b_low, b_high},{adjY, s}};
     return result;
