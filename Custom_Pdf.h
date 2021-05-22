@@ -20,5 +20,6 @@ Double_t ExpGausExp(Double_t x, Double_t meanx, Double_t kl, Double_t kh, Double
   else if(((x-meanx)/sig > kh)){
     return TMath::Exp(TMath::Power(kl,2)/2 - kh*((x-meanx)/sig));
   }
+  else return 0;
 };
 
