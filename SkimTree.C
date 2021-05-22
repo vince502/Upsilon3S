@@ -2,7 +2,6 @@
 
 #include <TLorentzVector.h>
 #include "commonUtility.h"
-#include "HiEvtPlaneList.h"
 #include "cutsAndBinUpsilonV2.h"
 
 static const long MAXTREESIZE = 10000000000;
@@ -11,12 +10,6 @@ void SkimTree(int nevt=-1)
 {
 
   using namespace std;
-  using namespace hi;
-
-  // Example of using event plane namespace 
-  cout << " Index of "<< EPNames[HFm2] << " = " << HFm2 << endl;
-  cout << " Index of "<< EPNames[HFp2] << " = " << HFp2 << endl;
-  cout << " Index of "<< EPNames[trackmid2] << " = " << trackmid2 << endl;
 
   TString fname1 = "/eos/cms/store/group/phys_heavyions/dileptons/Data2018/PbPb502TeV/TTrees/PromptAOD/DoubleMuonPD/PromptAOD_v1_Oniatree_addvn_part*.root";
   TString fname2 = "/eos/cms/store/group/phys_heavyions/dileptons/Data2018/PbPb502TeV/TTrees/PromptAOD/DoubleMuonPD/PromptAOD_v2_Oniatree_addvn_part*.root";
@@ -135,14 +128,6 @@ void SkimTree(int nevt=-1)
   eptree->Add(fname2.Data());
   
   
-  const int nEP = 29;  // number of event planes in the tree
-  double qx[nEP]; 
-  double qy[nEP]; 
-  TBranch *b_qx;
-  TBranch *b_qy;
-  eptree->SetBranchAddress("qx",qx, &b_qx);
-  eptree->SetBranchAddress("qy",qy, &b_qy);
-  
   TFile* newfile;
   newfile = new TFile("OniaFlow_skim.root","recreate");
 
@@ -253,21 +238,6 @@ void SkimTree(int nevt=-1)
       cout <<endl;
      */      
       // Fill the output tree
-      if ( eta < 0 )  {  
-        dm.qxa = qx[HFp2] ;  
-        dm.qya = qy[HFp2] ;  
-        dm.qxb = qx[HFm2] ;  
-        dm.qyb = qy[HFm2] ;  
-      }
-      else {
-        dm.qxa = qx[HFm2] ;  
-        dm.qya = qy[HFm2] ;  
-        dm.qxb = qx[HFp2] ;  
-        dm.qyb = qy[HFp2] ;  
-      }
-      
-      dm.qxc = qx[trackmid2];
-      dm.qyc = qy[trackmid2];
       
       dm.mass   = JP_Reco->M();
       dm.pt     = JP_Reco->Pt();
@@ -292,11 +262,9 @@ void SkimTree(int nevt=-1)
       ptVar->setVal(   (double)dm.pt   ) ;
       yVar->setVal(    (double)dm.y    ) ;
       pt1Var->setVal(  (double)dm.pt1  ) ;
-      dphiEp2Var->setVal(   (double)dm.dphiEp2  ) ;
       eta1Var->setVal( (double)dm.eta1 ) ;
       pt2Var->setVal(  (double)dm.pt2  ) ;
       eta2Var->setVal( (double)dm.eta2 ) ;
-      ep2Var->setVal( (double)dm.ep2 ) ;
       cBinVar->setVal( (double)dm.cBin ) ;
       evtWeight->setVal( (double)dm.weight ) ;
       dataSet->add( *argSet);

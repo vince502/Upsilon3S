@@ -14,7 +14,7 @@ void drawDoubleRatioplot(){
   c1->Close();
 };
 RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair){
-  long ts = 1619021800; //BLIND Nominal
+  long ts = 1621568219;// 1619021800; //BLIND Nominal
   std::pair<double, double> ptpair = {0,30};
   std::pair<double, double> bdtpair = {0.20,1.00}; //BLIND Nominal ?
   double ylim = 2.4;

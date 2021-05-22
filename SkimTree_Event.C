@@ -2,7 +2,6 @@
 
 #include <TLorentzVector.h>
 #include "commonUtility.h"
-#include "HiEvtPlaneList.h"
 #include "cutsAndBinUpsilonV2.h"
 #include "tnp_weight_lowptPbPb.h"
 
@@ -15,13 +14,8 @@ void SkimTree_Event(int nevt=-1, bool isMC = true, int kTrigSel = kTrigUps, int 
 {
 
   using namespace std;
-  using namespace hi;
   
   if( isMC ) kTrigUps = 10;
-  // Example of using event plane namespace 
-  cout << " Index of "<< EPNames[HFm2] << " = " << HFm2 << endl;
-  cout << " Index of "<< EPNames[HFp2] << " = " << HFp2 << endl;
-  cout << " Index of "<< EPNames[trackmid2] << " = " << trackmid2 << endl;
 
   //TString fname1 = "/eos/cms/store/group/phys_heavyions/dileptons/Data2018/PbPb502TeV/TTrees/PromptAOD/DoubleMuonPD/MinBias/HIMinimumBias_Run2018_Upsilon_PromptReco_v1.root";
   TString fnameData1 = "/eos/cms/store/group/phys_heavyions/dileptons/Data2018/PbPb502TeV/TTrees/PromptAOD/DoubleMuonPD/PromptAOD_v1_Oniatree_addvn_part*.root";
@@ -180,15 +174,6 @@ Int_t           Reco_mu_nPixWMea[maxBranchSize];   //[Reco_mu_size]
   }
   
   
-  const int nEP = 29;  // number of event planes in the tree
-  double qx[nEP]; 
-  double qy[nEP]; 
-  TBranch *b_qx;
-  TBranch *b_qy;
-  eptree->SetBranchAddress("qx",qx, &b_qx);
-  eptree->SetBranchAddress("qy",qy, &b_qy);
-  
-
   int trigIndx=0;
   if(kTrigSel == kTrigJpsi) trigIndx=0;
   else if(kTrigSel == kTrigUps) trigIndx= 1;
@@ -427,25 +412,6 @@ Int_t           Reco_mu_nPixWMea[maxBranchSize];   //[Reco_mu_size]
        tnp_weight = tnp_weight * tnp_trig_weight_mupl * tnp_trig_weight_mumi;
        counttnp++;
       }*/
-
-
-      // Fill the output tree
-      if ( JP_Reco->Eta() < 0 )  {  
-        qxa[nDimu] = qx[HFp2];
-        qya[nDimu] = qy[HFp2];
-        qxb[nDimu] = qx[HFm2];
-        qyb[nDimu] = qy[HFm2];
-
-      }
-      else {
-        qxa[nDimu] = qx[HFm2];
-        qya[nDimu] = qy[HFm2];
-        qxb[nDimu] = qx[HFp2];
-        qyb[nDimu] = qy[HFp2];
-      }
-      
-      qxc[nDimu] = qx[trackmid2];
-      qyc[nDimu] = qy[trackmid2];
 
       if(isMC) TnPweight[nDimu] = tnp_weight;
       mass[nDimu] = JP_Reco->M();

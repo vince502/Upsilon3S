@@ -30,3 +30,14 @@
 1620630542, BLIND[2,2], guass!
 1620631235, BLIND[2,2], bkg range 11-11.5, gauss trans
 1620633375, BLIND[2,2], no 3D, gauss vartrans
+1621564724, BLIND[2,2], new TnP'ed MC, Full var(2D)
+1621566386, BLIND[2,2], same as last but bkg weight x50
+1621567017, BLIND[2,2], same with last run, clone testtree
+1621567081, BLIND[2,2], same from the last run
+1621567215, BLIND[2,2], d
+1621567517, BLIND[2,2], test!
+1621568171, BLIND[2,2], please work, 2D
+1621568219, BLIND[2,2], fix
+1621570122, BLIND[2,2], wider high mass bkg sample
+1621574030, BLIND[2,2], no ctau
+1621574976, BLIND[2,2], all var, bkg weighted

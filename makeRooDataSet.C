@@ -1,7 +1,6 @@
 #include <iostream>
 #include "commonUtility.h"
 #include "cutsAndBinUpsilonV2.h"
-#include "HiEvtPlaneList.h"
 #include "Style_jaebeom.h"
 #include "tdrstyle.C"
 #include "CMS_lumi_v2mass.C"
@@ -19,7 +18,6 @@
 using namespace std;
 using namespace RooFit;
 
-using namespace hi;
 
 double getAccWeight(TH1D* h = 0, double pt = 0);
 double getEffWeight(TH1D* h = 0, double pt = 0);

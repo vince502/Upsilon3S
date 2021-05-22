@@ -2,7 +2,6 @@
 
 #include <TLorentzVector.h>
 #include "commonUtility.h"
-#include "HiEvtPlaneList.h"
 #include "cutsAndBinUpsilonV2.h"
 #include "tnp_weight_lowptPbPb.h"
 
@@ -15,12 +14,6 @@ void Event_Oniatree_TurnOnRatio(int nevt=-1, bool isMC = false, int kTrigSel = 0
 {
 
   using namespace std;
-  using namespace hi;
-
-  // Example of using event plane namespace 
-  cout << " Index of "<< EPNames[HFm2] << " = " << HFm2 << endl;
-  cout << " Index of "<< EPNames[HFp2] << " = " << HFp2 << endl;
-  cout << " Index of "<< EPNames[trackmid2] << " = " << trackmid2 << endl;
 
   //TString fname1 = "/eos/cms/store/group/phys_heavyions/dileptons/Data2018/PbPb502TeV/TTrees/PromptAOD/DoubleMuonPD/MinBias/HIMinimumBias_Run2018_Upsilon_PromptReco_v1.root";
   TString fnameData1 ="../Oniatree_skim_AODSkim_v2_1_part_20201214.root"; //"/u/user/vince402/root_tmpONIATREE_HIMB_20201228.root"; 
@@ -177,15 +170,6 @@ void Event_Oniatree_TurnOnRatio(int nevt=-1, bool isMC = false, int kTrigSel = 0
   else if(isMC){
     eptree->Add(fnameMC.Data());
   }
-  
-  
-  const int nEP = 29;  // number of event planes in the tree
-  double qx[nEP]; 
-  double qy[nEP]; 
-  TBranch *b_qx;
-  TBranch *b_qy;
-  eptree->SetBranchAddress("qx",qx, &b_qx);
-  eptree->SetBranchAddress("qy",qy, &b_qy);
   
 
   int trigIndx=0;

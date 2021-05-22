@@ -3,23 +3,22 @@
 #include "TROOT.h"
 #include "../upsilonAna.h"
 
-void drawCSplot(){
-  long ts =1619743777;//11.0 mass up //1619742556; //11.5 mass////// 1618913300; //1619021800;
+void f_drawCSplot(){
+  long ts =1621574976; //2D var 1621568219 ;//1619743777;//11.0 mass up //1619742556; //11.5 mass////// 1618913300; //1619021800;
   double blow, bhigh, yhigh;
-  blow =0.00;
+  blow =0.20;
   bhigh =1.0;
   yhigh = 2.4;
-
 
   std::pair<int, int> cbinrange = {0,180}; 
   TCanvas* c1 = new TCanvas("c1", "Cross Section plot", 900,700);
   Double_t* ptbinfour = new Double_t[5]{0,4,9,12,30};
   Double_t* ptbintwo = new Double_t[3]{0,6,30};
-  TH1D* h1 = new TH1D("h1", "CS hist", 4, ptbinfour); 
+  TH1D* h1 = new TH1D("h1", "CS hist", 2, ptbintwo); 
   gStyle->SetOptStat(kFALSE);
   gStyle->SetOptTitle(kFALSE);
-  for(int idx =0; idx <4; ++idx){
-    RooRealVar cs_bin = upsi::getcrosssection(ts, ptbinfour[idx], ptbinfour[idx+1],0, yhigh, 3.5, (double)cbinrange.first, (double) cbinrange.second, blow, bhigh);
+  for(int idx =0; idx <2; ++idx){
+    RooRealVar cs_bin = upsi::getcrosssection(ts, ptbintwo[idx], ptbintwo[idx+1],0, yhigh, 3.5, (double)cbinrange.first, (double) cbinrange.second, blow, bhigh);
     h1->SetBinContent(idx+1, cs_bin.getVal());
     h1->SetBinError(idx+1, cs_bin.getError());
   }
@@ -34,7 +33,11 @@ void drawCSplot(){
   bdtlabel->SetNDC();
   bdtlabel->DrawLatex(0.25,0.8, Form("BDT #in [%.2f, %.2f]",blow, bhigh));
   c1->SetLogy();
-  c1->SaveAs(Form("%s/plots/CrossSection/plot_test_%ld_cBin_%d_%d_%.2f.pdf", workdir.Data(), ts, cbinrange.first, cbinrange.second, blow ));
-  c1->SaveAs(Form("%s/plots/CrossSection/plot_test_%ld_cBin_%d_%d_%.2f.cxx", workdir.Data(), ts, cbinrange.first, cbinrange.second, blow ));
+  c1->SaveAs(Form("%s/plots/CrossSection/plot_%d_%ld_cBin_%d_%d_%.2f.pdf", workdir.Data(),2,ts, cbinrange.first, cbinrange.second, blow ));
+  c1->SaveAs(Form("%s/plots/CrossSection/plot_%d_%ld_cBin_%d_%d_%.2f.cxx", workdir.Data(),2,ts, cbinrange.first, cbinrange.second, blow ));
 
+};
+
+void drawCSplot(){
+  f_drawCSplot();
 }
