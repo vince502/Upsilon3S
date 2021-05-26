@@ -1,4 +1,7 @@
 //Headers{{{
+#ifndef UPSILON_H
+#define UPSILON_H
+
 #include <TROOT.h>
 #include <TTree.h>
 #include <TString.h>
@@ -560,3 +563,6 @@ class DiMuon
 	}
 //}}}
 };
+
+
+#endif

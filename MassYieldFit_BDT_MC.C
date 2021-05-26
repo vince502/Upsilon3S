@@ -1,35 +1,5 @@
 #include <TROOT.h>
-#include <TFile.h>
-#include <TStyle.h>
-#include <TCanvas.h>
-#include <TH1.h>
-#include <TF1.h>
-#include <TLegend.h>
-#include <TLatex.h>
-#include <TPaveText.h>
-#include <TMath.h>
-#include <iostream>
-#include <fstream>
-#include <TParameter.h>
-#include <TSystem.h>
-#include <RooRealVar.h>
-#include <RooArgSet.h>
-#include <RooDataSet.h>
-#include <RooWorkspace.h>
-#include <RooPlot.h>
-#include <RooHist.h>
-#include <RooGaussian.h>
-#include <RooCBShape.h>
-#include <RooChebychev.h>
-#include <RooPolynomial.h>
-#include <RooExponential.h>
-#include <RooGenericPdf.h>
-#include <RooAddPdf.h>
-#include <RooFitResult.h>
-#include <RooFormulaVar.h>
-#include "Headers/Style_Upv2.h"
-#include "Headers/Upsilon.h"
-#include ".workdir.h"
+#include "fitter.h"
 
 using namespace std;
 using namespace RooFit;
@@ -38,15 +8,10 @@ struct Y1Sfitvar{
   Double_t alp=0., frac=0., x1s=0., sigma=0., n=0.;
 };
 
-void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fname = "", const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "4", const string Trig = "", int cBinHigh = 180, int state = 1, bool fixvar = false, double cutQVP= 0.01, double bdtlow = -1., double bdthigh =1. ){
-  int cBinLow = 0;
-  if (Trig=="L1DoubleMuOpen") cBinLow =0;
-  if (Trig=="L1DoubleMuOpenOS40100") cBinLow =80;
-  else if (Trig=="L1DoubleMuOpen50100") cBinLow= 100;
+void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fname = "", const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "4", const string Trig = "",int cBinLow=0, int cBinHigh = 180, int state = 1, bool fixvar = false, bool swflag = false, double cutQVP= 0.01, double bdtlow = -1., double bdthigh =1. ){
   Double_t etaMax= 2.4;
   Double_t etaMin = -2.4;
 
-  bool swflag = false;
   if( fname.find("Switch1") != std::string::npos) { swflag = true;}
   
   TString mainDIR = workdir;
@@ -79,21 +44,7 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
   TFile* fout;
   fout = new TFile(Form("Yield/Yield_%dS_pt_%d-%d_rap_%d-%d_noWeight_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_%d.root",(int) state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), MupT.Data(), Trig.c_str(), bdtlow, bdthigh, cutQVP,(int) fixvar), "RECREATE");
 
-  Double_t MupTCut;
-  if(MupT == "0") MupTCut = 0;
-  else if(MupT == "0p5") MupTCut = 0.5;
-  else if(MupT == "1") MupTCut = 1.0;
-  else if(MupT == "1p5") MupTCut = 1.5;
-  else if(MupT == "2") MupTCut = 2.0;
-  else if(MupT == "2p5") MupTCut = 2.5;
-  else if(MupT == "3") MupTCut = 3.0;
-  else if(MupT == "3p5") MupTCut = 3.5;
-  else if(MupT == "4") MupTCut = 4.0;
-  else
-  {
-          cout << "There is no such muon pT cut value" << endl;
-          return;
-  }
+  Double_t MupTCut = single_LepPtCut(MupT);
 
   TFile* fin;
   fin = new TFile(Form("./BDT/roodatasets/%s", fname.c_str()),"READ");
@@ -157,7 +108,7 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
   works1->import(*x1S);
   works1->import(*x3S);
 
-std::cout << "///////////////////////////////////////////////////////// test code ////////////////////////////////////////////////////////////" << std::endl;
+//std::cout << "///////////////////////////////////////////////////////// test code ////////////////////////////////////////////////////////////" << std::endl;
   RooFormulaVar sigma1S_2("sigma1S_2", "@0*@1", RooArgList(sigma1S_1, *x1S));
   RooFormulaVar* sigma3S_2;
   if (fixvar == false ) sigma3S_2 = new RooFormulaVar("sigma3S_2", "@0*@1", RooArgList(*sigma3S_1, *x3S));
@@ -399,7 +350,7 @@ std::cout << "///////////////////////////////////////////////////////// test cod
  
 };
 
-void MassYieldFit_BDT_MC(long _ts, const string _fname1s = "", const string _fname3s = "", const Double_t _ptMin = 0, const Double_t _ptMax = 30, const Double_t _rapMin = -2.4, const Double_t _rapMax = 2.4, const TString _MupT = "4", const string _Trig = "", int _cBinHigh = 180, int _state = 1, bool _fixvar =false, double _cutQVP = 0.01, double _bdtlow =-1., double _bdthigh = 1.){
+void MassYieldFit_BDT_MC(long _ts, const string _fname1s = "", const string _fname3s = "", const Double_t _ptMin = 0, const Double_t _ptMax = 30, const Double_t _rapMin = -2.4, const Double_t _rapMax = 2.4, const TString _MupT = "4", const string _Trig = "", int _cBinLow = 0, int _cBinHigh = 180, int _state = 1, bool _fixvar =false, bool _swflag = false, double _cutQVP = 0.01, double _bdtlow =-1., double _bdthigh = 1.){
   struct Y1Sfitvar Y1Svar;
 //  if( _fixvar == true){
 //    MassYieldSingleStateMCFit( &Y1Svar, _fname1s, _ptMin, _ptMax, _rapMin, _rapMax, _MupT , _Trig, _cBinHigh, 1, _fixvar);
@@ -407,7 +358,7 @@ void MassYieldFit_BDT_MC(long _ts, const string _fname1s = "", const string _fna
 //    MassYieldSingleStateMCFit( &Y1Svar, _fname3s, _ptMin, _ptMax, _rapMin, _rapMax, _MupT , _Trig, _cBinHigh, 3, _fixvar);
 //  }
 //  else if( _fixvar ==false){
-    if( _state == 3){MassYieldSingleStateMCFit( &Y1Svar,_ts, _fname3s, _ptMin, _ptMax, _rapMin, _rapMax, _MupT , _Trig, _cBinHigh, 3, _fixvar, _cutQVP, _bdtlow, _bdthigh);}
+    if( _state == 3){MassYieldSingleStateMCFit( &Y1Svar,_ts, _fname3s, _ptMin, _ptMax, _rapMin, _rapMax, _MupT , _Trig, _cBinLow, _cBinHigh, 3, _fixvar, _swflag, _cutQVP, _bdtlow, _bdthigh);}
 //  }
 }
 

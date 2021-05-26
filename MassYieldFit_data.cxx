@@ -99,39 +99,67 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
   RooRealVar alpha("alpha", "alpha of Crystal ball", 2.0, paramslow[1], paramshigh[1]);
   RooRealVar n("n", "n of Crystal ball", 2.0, paramslow[2], paramshigh[2]);
   RooRealVar* frac = new RooRealVar("frac", "CB fraction", 0.5, paramslow[3], paramshigh[3]);
-  RooRealVar ch4_k1("ch4_k1", "ch4_k1", 0.02, paramslow[4], paramshigh[4]);
-  RooRealVar ch4_k2("ch4_k2", "ch4_k2", 0.02, paramslow[5], paramshigh[5]);
-  RooRealVar ch4_k3("ch4_k3", "ch4_k3", 0.02, paramslow[6], paramshigh[6]);
+//  RooRealVar ch4_k1("ch4_k1", "ch4_k1", 0.02, paramslow[4], paramshigh[4]);
+//  RooRealVar ch4_k2("ch4_k2", "ch4_k2", 0.02, paramslow[5], paramshigh[5]);
+//  RooRealVar ch4_k3("ch4_k3", "ch4_k3", 0.02, paramslow[6], paramshigh[6]);
 //  RooRealVar ch4_k4("ch4_k4", "ch4_k4", 0.02, paramslow[7], paramshigh[7]);
+  RooRealVar *ch4_k1, *ch4_k2, *ch4_k3, *ch4_k4;
   std::map<std::string, RooRealVar*> map_rrv;
   map_rrv = {
 	{"alpha"	, &alpha	 },	
 	{"n"		, &n		},	
     };
 
-  fit_model_ups::CB2* cb2 = new fit_model_ups::CB2((mf.works->var("mass")), &mean1S, &mean2S, &mean3S, &sigma1S_1, &sigma2S_1, &sigma3S_1, &sigma1S_2, &sigma2S_2, &sigma3S_2, &alpha, &alpha, &alpha, &n, &n, &n, frac, frac, frac); 
-  fit_model_ups::ChebyChev* cc3 = new fit_model_ups::ChebyChev((mf.works->var("mass")), &ch4_k1, &ch4_k2, &ch4_k3);
-
+  fit_model_ups::CB2* cb2 ;
+  fit_model_ups::ChebyChev* cc ;
   RooGenericPdf* Signal1S;
   RooGenericPdf* Signal2S;
   RooGenericPdf* Signal3S;
-
-  Signal1S = (RooGenericPdf*) cb2->twoCB1S;
-  Signal2S = (RooGenericPdf*) cb2->twoCB2S;
-  Signal3S = (RooGenericPdf*) cb2->twoCB3S;
-
   RooGenericPdf* Background;
-  Background = (RooGenericPdf*) cc3->bkg;
 
-  sigma1S_1.setVal(params[0]);
-  alpha.setVal(params[1]);
-  n.setVal(params[2]);
-  frac->setVal(params[3]);
-
-  ch4_k1.setVal(params[4]);
-  ch4_k2.setVal(params[5]);
-  ch4_k3.setVal(params[6]);
-//  ch4_k4.setVal(params[7]);
+  if (sig_func == "CB2"){
+    cb2 = new fit_model_ups::CB2((mf.works->var("mass")), &mean1S, &mean2S, &mean3S, &sigma1S_1, &sigma2S_1, &sigma3S_1, &sigma1S_2, &sigma2S_2, &sigma3S_2, &alpha, &alpha, &alpha, &n, &n, &n, frac, frac, frac); 
+    Signal1S = (RooGenericPdf*) cb2->twoCB1S;
+    Signal2S = (RooGenericPdf*) cb2->twoCB2S;
+    Signal3S = (RooGenericPdf*) cb2->twoCB3S;
+    sigma1S_1.setVal(params[0]);
+    alpha.setVal(params[1]);
+    n.setVal(params[2]);
+    frac->setVal(params[3]);
+  }
+  if (bkg_func.find("CC")!= std::string::npos){
+    int order_CC = bkg_func[2]-'0';
+    switch (order_CC){
+      case 2 :
+        ch4_k1 = new RooRealVar("ch4_k1", "ch4_k1", 0.02, paramslow[4], paramshigh[4]);
+        ch4_k2 = new RooRealVar("ch4_k2", "ch4_k2", 0.02, paramslow[5], paramshigh[5]);
+        cc = new fit_model_ups::ChebyChev((mf.works->var("mass")), ch4_k1, ch4_k2);
+        ch4_k1->setVal(params[4]);
+        ch4_k2->setVal(params[5]);
+	break;
+      case 3 :
+        ch4_k1 = new RooRealVar("ch4_k1", "ch4_k1", 0.02, paramslow[4], paramshigh[4]);
+        ch4_k2 = new RooRealVar("ch4_k2", "ch4_k2", 0.02, paramslow[5], paramshigh[5]);
+        ch4_k3 = new RooRealVar("ch4_k3", "ch4_k3", 0.02, paramslow[6], paramshigh[6]);
+        cc = new fit_model_ups::ChebyChev((mf.works->var("mass")), ch4_k1, ch4_k2, ch4_k3);
+        ch4_k1->setVal(params[4]);
+        ch4_k2->setVal(params[5]);
+        ch4_k3->setVal(params[6]);
+	break;
+      case 4 :
+        ch4_k1 = new RooRealVar("ch4_k1", "ch4_k1", 0.02, paramslow[4], paramshigh[4]);
+        ch4_k2 = new RooRealVar("ch4_k2", "ch4_k2", 0.02, paramslow[5], paramshigh[5]);
+        ch4_k3 = new RooRealVar("ch4_k3", "ch4_k3", 0.02, paramslow[6], paramshigh[6]);
+        ch4_k4 = new RooRealVar("ch4_k4", "ch4_k4", 0.02, paramslow[7], paramshigh[7]);
+        cc = new fit_model_ups::ChebyChev((mf.works->var("mass")), ch4_k1, ch4_k2, ch4_k3, ch4_k4);
+        ch4_k1->setVal(params[4]);
+        ch4_k2->setVal(params[5]);
+        ch4_k3->setVal(params[6]);
+        ch4_k4->setVal(params[7]);
+	break;
+    }
+    Background = (RooGenericPdf*) cc->bkg;
+  }
 
   RooRealVar* nSig1S = new RooRealVar("nSig1S", "# of 1S signal", 400, -1000, 1000000);
   RooRealVar* nSig2S;
