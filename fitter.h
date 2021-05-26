@@ -72,7 +72,6 @@ massfitter::massfitter(std::string file_input, std::string file_output){
 void massfitter::ws_init(std::string name_ds, std::vector<std::string> list_arg, std::string fitvar = "mass"){
   	if(list_arg.begin()==list_arg.end()) throw "No workspace elements?";
 	dataset = (RooDataSet*) fin->Get(name_ds.c_str());
-	std::cout << fin->GetTitle() << std::endl;
 	works = new RooWorkspace("workspace");
 	works->import(*dataset);
 	vArg = new RooArgSet();
@@ -80,9 +79,10 @@ void massfitter::ws_init(std::string name_ds, std::vector<std::string> list_arg,
 		vArg->add(*(works->var( arg.c_str() ) ));
 	}
 	iDS = (RooDataSet*) dataset->reduce(*vArg);
-	fDS =  (RooDataSet*) iDS->reduce(RooArgSet(*(works->var(fitvar.c_str())), dsCut.c_str()));
+	fDS =  (RooDataSet*) iDS->reduce(RooArgSet(*(works->var(fitvar.c_str()))), dsCut.c_str());
 	fDS->SetName("reducedDS");
 	works->import(*fDS);
+	std::cout << Range_fit_low << ", " << Range_fit_high << std::endl;
 	works->var(fitvar.c_str())->setRange(Range_fit_low, Range_fit_high);
 	works->var(fitvar.c_str())->Print();
 };
@@ -109,6 +109,25 @@ double single_LepPtCut(TString pTstr)
 void dbg(int x=0){
     std::string indx = (x==0) ? "" : Form("%d",x);
       std::cout << "-------------------------_____DEBUG"<<indx<<"_____----------------------------" << std::endl;
+};
+std::vector<std::string> parser_symbol(std::string type,std::string delim = ":"){
+  if(type.find(delim) == std::string::npos) return std::vector<std::string>{"nan","nan","nan"};
+  std::vector<size_t> positions;
+  size_t pos = type.find(delim,0);
+  while(pos != std::string::npos){
+    positions.push_back(pos);
+    pos = type.find(delim, pos+1);
+  }
+  std::vector<std::string> result_parse;
+  size_t front =0;
+  for (size_t pos : positions){
+    result_parse.push_back(type.substr(front,pos-front));
+    front = pos +1;
+  }
+  result_parse.push_back(type.substr(front));
+
+  return result_parse;
+
 };
 
 #endif
