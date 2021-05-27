@@ -3,7 +3,7 @@
 #include "MassYieldFit_data.cxx"
 //#include "./BDT/Get_Optimal_BDT.cxx"
 void doConstraintFit(int step = 0){
-  std::string type 			= "CB2:CC2:GC"	;
+  std::string type 			= "CB2:CC3:GC"	;
   std::string constraints		="alpha:n"	;
   long ts				= 1621574976	;
   double ptMin				= 0		;
@@ -23,10 +23,12 @@ void doConstraintFit(int step = 0){
   double cutBDThigh			= 1.0		;
   const std::string fname3S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC.root", ts, Trig.c_str());
 
-//cutBDTlow = Get_Optimal_BDT(ts,ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP );
+/*
+  cutBDTlow = Get_Optimal_BDT(ts,ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP );
 
   MassYieldFit_BDT_MC(ts, "", fname3S, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, state, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh);
 
+*/
 
   TFile* file_MCres_input = new TFile(Form("%s/Yield/Yield_%dS_pt_%d-%d_rap_%d-%d_noWeight_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_%d.root",workdir.Data(), (int) state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), MupT.Data(), Trig.c_str(), cutBDTlow, cutBDThigh, cutQVP,(int) fixvar), "READ");
 
@@ -46,6 +48,6 @@ void doConstraintFit(int step = 0){
 //  Double_t params_low[];
 //  Double_t params_high[];
 
-  MassYieldFit_data(type, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {0.2, map_keyval["alpha"].first, map_keyval["n"].first, 0.56, 0.2,0.1,0.1}, (Double_t[]) {0.01, 0.5, 0.5, 0.15, -0.2, -0.2, -0.2}, (Double_t[]) {0.35, (map_keyval["alpha"].first+map_keyval["alpha"].second)*5, (map_keyval["n"].first+map_keyval["n"].second)*5, 0.95, 0.3, 0.3, 0.3});
+  MassYieldFit_data(type, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {0.3, map_keyval["alpha"].first, map_keyval["n"].first, 0.56, 0.2,0.1,0.1,0.1}, (Double_t[]) {0.11, 0.5, 0.5, 0.05, -0.3, -0.3, -0.3,-0.3}, (Double_t[]) {0.45, (map_keyval["alpha"].first+map_keyval["alpha"].second)*5, (map_keyval["n"].first+map_keyval["n"].second)*5, 0.90, 0.3, 0.3, 0.3,0.3});
 
 }

@@ -2,6 +2,7 @@
 #define BININFO_H
 #include <vector>
 #include <map>
+#include "../.workdir.h"
 
 std::map<long, std::map<int, std::vector<std::pair<double,double> > > >bdtbinsec =
 {
@@ -161,6 +162,26 @@ std::map<double ,std::map<std::pair<std::pair<int, int>, std::pair<double,double
 		{{{0,180},{0,6}},{0.4750,{304,40}}}, {{{0,180},{6,30}},{0.5135,{264,139}}}
 		}
 	}
+};
+
+std::pair<int, int> blindpair(long ts= 1618557840){
+
+  std::fstream input;
+  input.open(Form("%s/BDT/BDT_description.log",workdir.Data()));
+  std::map<int, std::string> dictmap;
+  std::string stringbuf;
+  while (input.peek() != EOF){
+    std::getline(input, stringbuf);
+    int inputts = stoi(stringbuf.substr(0,10));
+    dictmap[inputts] = stringbuf.substr(12);
+  }
+  if(strcmp(dictmap[ts].substr(0,5).c_str(),"BLIND")==0){
+    int nttrain = std::stoi(dictmap[ts].substr(6,1));
+    int nttest = std::stoi(dictmap[ts].substr(8,1));
+    return std::pair<int, int> (nttrain, nttest);
+  }
+  else{ std::cout << "This timestamp is not for BLIND train" << std::endl; return std::pair<int, int>(0,0);}
+  input.close();
 };
 
 #endif

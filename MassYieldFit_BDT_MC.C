@@ -37,7 +37,7 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
   }
   if( state == 3){
     RangeLow = 9.6;
-    RangeHigh = 11.2;
+    RangeHigh = 11.0;
   }
   Int_t Nmassbins = (RangeHigh - RangeLow)*30;
   if(Trig == "Ups") Nmassbins = (RangeHigh -RangeLow)*30; 
@@ -119,7 +119,7 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
   RooRealVar *alpha, *n, *frac;
   if ( state == 1 || fixvar == false ){
      alpha = new RooRealVar("alpha", "alpha of Crystal ball", 1.5, 0.5, 2.0);
-     n = new RooRealVar("n", "n of Crystal ball", 4.0, 1, 20.0);
+     n = new RooRealVar("n", "n of Crystal ball", 4.0, 1, 5.0);
      frac = new RooRealVar("frac", "CB fraction", 0.5, 0.05, 0.95);
    }
    if ( fixvar == true && state == 3 ){
