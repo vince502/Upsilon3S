@@ -1,7 +1,8 @@
 #include "fitter.h"
 #include "MassYieldFit_BDT_MC.C"
 #include "MassYieldFit_data.cxx"
-//#include "./BDT/Get_Optimal_BDT.cxx"
+#include "./BDT/Get_Optimal_BDT.cxx"
+
 void doConstraintFit(int step = 0){
   std::string type 			= "CB2:CC3:GC"	;
   std::string constraints		="alpha:n"	;
@@ -24,11 +25,10 @@ void doConstraintFit(int step = 0){
   const std::string fname3S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC.root", ts, Trig.c_str());
 
 /*
-  cutBDTlow = Get_Optimal_BDT(ts,ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP );
-
-  MassYieldFit_BDT_MC(ts, "", fname3S, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, state, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh);
-
 */
+
+  cutBDTlow = Get_Optimal_BDT(ts,ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP ).first;
+  MassYieldFit_BDT_MC(ts, "", fname3S, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, state, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh);
 
   TFile* file_MCres_input = new TFile(Form("%s/Yield/Yield_%dS_pt_%d-%d_rap_%d-%d_noWeight_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_%d.root",workdir.Data(), (int) state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), MupT.Data(), Trig.c_str(), cutBDTlow, cutBDThigh, cutQVP,(int) fixvar), "READ");
 
