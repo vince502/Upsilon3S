@@ -65,7 +65,7 @@ void Produce2DPlots(){
   for ( int idx_entry=0; idx_entry < number_entries_MC; idx_entry++){
     treeMC->GetEntry(idx_entry);
       for( int idx_var = 0; idx_var < 7;  idx_var++){
-      if((idx_entry%10000)==0)  std::cout << "POS : ("<<tuple_value_MC[7]<< ", "<< tuple_value_MC[idx_var] <<")"  << std::endl;
+      if((idx_entry%100000)==0)  std::cout << "POS : ("<<tuple_value_MC[7]<< ", "<< tuple_value_MC[idx_var] <<")"  << std::endl;
       tuple_plot_var_MC[idx_var].Fill(tuple_value_MC[7],tuple_value_MC[idx_var]);
     }
     if(fabs(y_MC) < 0.6 ) { tuple_plot_var_MC[7].Fill(tuple_value_MC[7],tuple_value_MC[2]); }
