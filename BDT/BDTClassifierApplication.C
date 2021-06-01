@@ -8,7 +8,7 @@
 #include "TMVA/Reader.h"
 #include "TMVA/MethodCuts.h"
 #include "TXMLDocument.h"
-#include "blindsearch.cxx"
+#include "bininfo.h"
 
 
 void BDTClassifierApplication(long ts, int isMC = 0){

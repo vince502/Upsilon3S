@@ -152,7 +152,7 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,const string fname = "", 
   if( state == 3 && fixvar == true  ) x1S = new RooRealVar("x1S", "sigma ratio", _tmp_x1S);
   else x1S = new RooRealVar("x1S", "sigma ratio", 0.45, 0, 1);
   
-  RooRealVar* x3S = new RooRealVar("x3S", "sigma ratio", 0.45, 0, 1);
+  RooRealVar* x3S = new RooRealVar("x3S", "sigma ratio", 0.45, 0.1, 0.9);
   works1->import(*x1S);
   works1->import(*x3S);
 
@@ -166,7 +166,7 @@ std::cout << "///////////////////////////////////////////////////////// test cod
 
   RooRealVar *alpha, *n, *frac;
   if ( state == 1 || fixvar == false ){
-     alpha = new RooRealVar("alpha", "alpha of Crystal ball", 1.0, 0.5, 3.0);
+     alpha = new RooRealVar("alpha", "alpha of Crystal ball", 1.0, 0.5, 2.0);
      n = new RooRealVar("n", "n of Crystal ball", 4.0, 1,10.0);
      frac = new RooRealVar("frac", "CB fraction", 0.5, 0.03, 0.97);
    }

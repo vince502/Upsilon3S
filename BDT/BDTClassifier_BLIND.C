@@ -44,8 +44,8 @@ bool BDTClassifier_BLIND_Function( ){
   double ylim = 2.4;
   string HybSoft = "&&nPixWMea1>0&&nPixWMea2>0&&nTrkWMea1>5&&nTrkWMea2>5&&dxy1<0.3&&dxy2<0.3&&dz1<20&&dz2<20";
   string rejectNAN = "&&!TMath::IsNaN(ctau)&&!TMath::IsNaN(ctau3D)&&!TMath::IsNaN(cosAlpha)&&!TMath::IsNaN(cosAlpha3D)";//"&&!TMath::IsNaN(QQMassErr)&&!TMath::IsNaN(dxyErr1)&&!TMath::IsNaN(dxyErr2)&&!TMath::IsNaN(QQVtxProb)&&!TMath::IsNaN(QQdca)&&!TMath::IsNaN(cosAlpha)&&!TMath::IsNaN(cosAlpha3D)";
-  TCut cut1 = Form("mass<11.5&&pt1>3.5&&pt2>3.5&&fabs(y)<%f%s%s",ylim, HybSoft.c_str(),rejectNAN.c_str());
-  TCut cut2 = Form("mass<11.5&&pt1>3.5&&pt2>3.5&&fabs(y)<%f%s%s",ylim, HybSoft.c_str(),rejectNAN.c_str());
+  TCut cut1 = Form("mass<11.5&&pt<6&&pt>0&&pt1>3.5&&pt2>3.5&&fabs(y)<%f%s%s",ylim, HybSoft.c_str(),rejectNAN.c_str());
+  TCut cut2 = Form("mass<11.5&&pt<6&&pt>0&&pt1>3.5&&pt2>3.5&&fabs(y)<%f%s%s",ylim, HybSoft.c_str(),rejectNAN.c_str());
 
   TMVA::DataLoader *loader = new TMVA::DataLoader("dataset");
   TTree* SigTree =(TTree*) inputMC->Get("tree");

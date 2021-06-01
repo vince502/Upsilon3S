@@ -15,8 +15,8 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
   if( fname.find("Switch1") != std::string::npos) { swflag = true;}
   
   TString mainDIR = workdir;
-  TString massDIR  = mainDIR + Form("/MassDist/BDT/%ld/MC/%s/%s/%dS", ts, Trig.c_str(),MupT.Data(), state);
-  TString massDIRp = mainDIR + Form("/MassDist/BDT/%ld/MC/%s/%s/%dS/png", ts, Trig.c_str(), MupT.Data(), state);
+  TString massDIR  = mainDIR + Form("/MassDist/BDT/%ld/MC/%s/%s/%dS/%1.1f/cent%d-%d/pT%2.1f-%2.1f", ts, Trig.c_str(),MupT.Data(), state, rapMax, cBinLow, cBinHigh, ptMin, ptMax);
+  TString massDIRp = mainDIR + Form("/MassDist/BDT/%ld/MC/%s/%s/%dS/%1.1f/cent%d-%d/pT%2.1f-%2.1f/png", ts, Trig.c_str(), MupT.Data(), state, rapMax, cBinLow, cBinHigh, ptMin, ptMax);
   void * dirpM = gSystem->OpenDirectory(massDIR.Data());
   if(dirpM) gSystem->FreeDirectory(dirpM);
   else gSystem->mkdir(massDIR.Data(), kTRUE);
@@ -90,9 +90,9 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
   RooRealVar mratio3("mratio3", "mratio3", U3S_mass/U1S_mass);
 //  RooFormulaVar mean2S("mean2S", "mean1S*mratio2", RooArgSet(mean1S, mratio2));
 //  RooFormulaVar mean3S("mean3S", "mean1S*mratio3", RooArgSet(mean1S, mratio3));
-  RooRealVar sigma1S_1("sigma1S_1", "sigma1 of 1S", 0.11, 0.01, 0.2);
+  RooRealVar sigma1S_1("sigma1S_1", "sigma1 of 1S", 0.16, 0.01, 0.35);
   RooRealVar* sigma3S_1;
-  if(fixvar == false) sigma3S_1  = new RooRealVar("sigma3S_1", "sigma3 of 1S", 0.11, 0.01, 0.2);
+  if(fixvar == false) sigma3S_1  = new RooRealVar("sigma3S_1", "sigma3 of 1S", 0.14, 0.08, 0.25);
   if(fixvar == true ) sigma3S_1  = new RooRealVar("sigma3S_1", "sigma3 of 1S", (Double_t) (Y1S->sigma*(mratio3.getVal())));
 //  RooFormulaVar sigma2S_1("sigma2S_1", "@0*@1", RooArgList(sigma1S_1, mratio2));
 //  RooFormulaVar sigma3S_1("sigma3S_1", "@0*@1", RooArgList(sigma1S_1, mratio3));
@@ -104,7 +104,7 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
   if( state == 3 && fixvar == true  ) x1S = new RooRealVar("x1S", "sigma ratio", _tmp_x1S);
   else x1S = new RooRealVar("x1S", "sigma ratio", 0.45, 0, 1);
   
-  RooRealVar* x3S = new RooRealVar("x3S", "sigma ratio", 0.55, 0, 1);
+  RooRealVar* x3S = new RooRealVar("x3S", "sigma ratio", 0.54, 0, 1);
   works1->import(*x1S);
   works1->import(*x3S);
 
@@ -118,9 +118,9 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
 
   RooRealVar *alpha, *n, *frac;
   if ( state == 1 || fixvar == false ){
-     alpha = new RooRealVar("alpha", "alpha of Crystal ball", 1.5, 0.5, 2.0);
-     n = new RooRealVar("n", "n of Crystal ball", 4.0, 1, 5.0);
-     frac = new RooRealVar("frac", "CB fraction", 0.5, 0.05, 0.95);
+     alpha = new RooRealVar("alpha", "alpha of Crystal ball", 1.6, 0.5, 2.0);
+     n = new RooRealVar("n", "n of Crystal ball", 2, 1.4, 4.0);
+     frac = new RooRealVar("frac", "CB fraction", 0.5, 0.10, 0.90);
    }
    if ( fixvar == true && state == 3 ){
      alpha = new RooRealVar("alpha", "alpha of Crystal ball", Y1S->alp);
@@ -149,8 +149,8 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
 //  RooRealVar Erfmean("Erfmean", "Mean of Errfunction", 5, 0, 10.0);//for 0~40, 4~7 GeV
 //  RooRealVar Erfsigma("Erfsigma", "Sigma of Errfunction", 1, 0, 100);//for 0~40, 4~7 GeV
 //  RooRealVar Erfp0("Erfp0", "1st parameter of Errfunction", 1, 0, 100);
-  RooRealVar ch4_k1("ch4_k1", "ch4_k1", 0.02, -3.0, 3.0);
-  RooRealVar ch4_k2("ch4_k2", "ch4_k2", -0.0025, -3.0, 3.00);
+  RooRealVar ch4_k1("ch4_k1", "ch4_k1", -0.02, -3.0, 3.0);
+  RooRealVar ch4_k2("ch4_k2", "ch4_k2", -0.05, -3.0, 3.00);
 //  RooGenericPdf* bkgErf = new RooGenericPdf("bkgErf", "Error background", "TMath::Exp(-@0/@1)*(TMath::Erf((@0-@2)/(TMath::Sqrt(2)*@3))+1)*0.5", RooArgList(*(works1->var("mass")), Erfp0, Erfmean, Erfsigma));
   RooChebychev *bkg = new RooChebychev("cPol1Bkg", "Background", *(works1->var("mass")), RooArgSet(ch4_k1, ch4_k2));
 
@@ -337,7 +337,7 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
   lt1->DrawLatex(0.6, 0.80, Form("p_{T}^{#mu} #geq %.1f GeV/c", MupTCut));
   lt1->DrawLatex(0.6, 0.75, Form("%d #leq p_{T}^{#mu#mu} < %d GeV/c", (int) ptMin, (int) ptMax));
 
-  c2->SaveAs(Form("%s/WithoutFit_%dS_pt_%d-%d_rap_%d-%d_%dbin_noWeight_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_fix%d.pdf",massDIR.Data(), state, (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10),  Nmassbins, MupT.Data(), Trig.c_str(),  bdtlow, bdthigh, cutQVP, (int) fixvar));
+//  c2->SaveAs(Form("%s/WithoutFit_%dS_pt_%d-%d_rap_%d-%d_%dbin_noWeight_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_fix%d.pdf",massDIR.Data(), state, (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10),  Nmassbins, MupT.Data(), Trig.c_str(),  bdtlow, bdthigh, cutQVP, (int) fixvar));
 
   fout->cd();
   Result->Write();

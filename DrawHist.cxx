@@ -58,7 +58,7 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
   works->pdf(name_model.c_str())->plotOn(plot1, Components(RooArgSet(*works->pdf("twoCB1S")) ), LineWidth(2),LineStyle(1), LineColor(kRed) , MoveToBack());
   works->pdf(name_model.c_str())->plotOn(plot1, Components(RooArgSet(*works->pdf("twoCB2S")) ), LineWidth(2),LineStyle(1), LineColor(kRed) , MoveToBack());
   works->pdf(name_model.c_str())->plotOn(plot1, Components(RooArgSet(*works->pdf("twoCB3S")) ), LineWidth(2),LineStyle(1), LineColor(kRed) , MoveToBack());
-  works->pdf(name_model.c_str())->plotOn(plot1, Components(RooArgSet(*works->pdf("CCBkg")) ), LineWidth(1), LineStyle(1), LineColor(kGreen), MoveToBack() );
+  works->pdf(name_model.c_str())->plotOn(plot1, Components(RooArgSet(*works->pdf(name_pdf_bkg.c_str())) ), LineWidth(1), LineStyle(1), LineColor(kGreen), MoveToBack() );
 
   TCanvas* c1 = new TCanvas("c1", "", 1100, 800);
   TPad* pad_mass = new TPad("pad_mass", "pad_mass", 0, 0.25, 0.7, 1.0);
