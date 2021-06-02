@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include "../.workdir.h"
+#include "../fitter.h"
 
 std::map<long, std::map<int, std::vector<std::pair<double,double> > > >bdtbinsec =
 {
@@ -150,7 +151,7 @@ std::map<long, std::pair<double,double> > massrng =
 	{1620630542, {8, 11.5} }
 };
 
-//STANDARD ID FIT RESULT YIELD, EFFICIENCY MAP
+//STANDARD ID FIT RESULT YIELD, EFFICIENCY MAP, NOT GOING TO BE USED FOR NOMINAL RESULTS
 //std::map<std::map<YLIM ,std::pair<std::pair<CBINL, CBINH>, std::pair<PTLOW ,PTHIGH> >, std::pair<EFF, std::pair<YIELD, ERR>> >> 
 std::map<double ,std::map<std::pair<std::pair<int, int>, std::pair<double,double> >, std::pair<double, std::pair<double,double>> >> hybfitinfo= {
 	{2.4,
@@ -191,6 +192,27 @@ std::pair<int, int> blindpair(long ts= 1618557840){
   }
   else{ std::cout << "This timestamp is not for BLIND train" << std::endl; return std::pair<int, int>(0,0);}
   input.close();
+};
+
+std::vector< std::string > info_BDT(long ts)
+{
+	std::fstream input;
+	input.open(Form("%s/BDT/BDT_description.log",workdir.Data()));
+	std::map<long, std::string> dictmap;
+	std::string stringbuf;
+	while (input.peek() != EOF){
+	  std::getline(input, stringbuf);
+	  long inputts = stol(stringbuf.substr(0,10));
+	  dictmap[inputts] = stringbuf;
+	}
+	try{
+	  return parser_symbol(dictmap[ts], "::");
+	}
+	catch(...){
+	  std::vector<std::string> null_pair = {{""}};
+	  return null_pair;
+	}
+
 };
 
 #endif

@@ -32,7 +32,7 @@
 #include "Headers/Style_Upv2.h"
 #include "Headers/Upsilon.h"
 #include ".workdir.h"
-#include "./BDT/bininfo.h"
+//#include "./BDT/bininfo.h"
 #include "fit_model.h"
 
 class massfitter
@@ -122,7 +122,7 @@ std::vector<std::string> parser_symbol(std::string type,std::string delim = ":")
   size_t front =0;
   for (size_t pos : positions){
     result_parse.push_back(type.substr(front,pos-front));
-    front = pos +1;
+    front = pos +delim.length();
   }
   result_parse.push_back(type.substr(front));
 

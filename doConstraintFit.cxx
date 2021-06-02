@@ -6,7 +6,7 @@
 void doConstraintFit(int step = 0){
   std::string type 			= "CB2:EE:FF"	;
   std::string constraints		="alpha:n:frac"	;
-  long ts				= 1621574976;	//	1622517421;
+  long ts				= 1622626134;	//1621574976;	//	1622517421;
   double ptMin				= 0		;
   double ptMax				= 6		;
   double rapMin				= -2.4		;
@@ -18,7 +18,7 @@ void doConstraintFit(int step = 0){
   bool swflag				= false		;
   int cBinLow				= 0		;
   int cBinHigh				= 180 		;
-  double cutQVP				= 0.01		;
+  double cutQVP				= 0.00		;
   bool isBDT 				= true		;
   double cutBDTlow			= -1.0		;
   double cutBDThigh			= 1.0		;
@@ -26,10 +26,11 @@ void doConstraintFit(int step = 0){
 
 /*
 
-        cutBDTlow = Get_Optimal_BDT(ts,ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP ).first;
+
 
 */
-  //      MassYieldFit_BDT_MC(ts, "", fname3S, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, state, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh);
+        cutBDTlow = Get_Optimal_BDT(ts,ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP ).first;
+        MassYieldFit_BDT_MC(ts, "", fname3S, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, state, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh);
         TFile* file_MCres_input = new TFile(Form("%s/Yield/Yield_%dS_pt_%d-%d_rap_%d-%d_noWeight_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_%d.root",workdir.Data(), (int) state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), MupT.Data(), Trig.c_str(), cutBDTlow, cutBDThigh, cutQVP,(int) fixvar), "READ");
       
         RooFitResult* result_MC = (RooFitResult*) file_MCres_input->Get("fitresult_model_reducedDS");

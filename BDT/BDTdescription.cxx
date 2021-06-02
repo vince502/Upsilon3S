@@ -23,7 +23,7 @@ void BDTdescription(){
   std::string _ts;
   std::cin >> _ts;
   std::fstream input;
-  input.open(Form("%s/BDT_description.log",workdir.Data()));
+  input.open(Form("%s/BDT/BDT_description.log",workdir.Data()));
   std::map<int, std::string> dictmap;
   std::string stringbuf;
   while (input.peek() != EOF){
@@ -38,6 +38,7 @@ void BDTdescription(){
     if( massrng.find(ts) != massrng.end()){
     std::cout <<"Fit mass range: " << massrng[ts].first << ", " << massrng[ts].second << std::endl;
     }
+
   }
   catch(...){
     if( strcmp(_ts.c_str(),"exit")==0) return ;

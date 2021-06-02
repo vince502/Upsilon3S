@@ -1,4 +1,4 @@
-#include "fitter.h"
+#include "./BDT/bininfo.h"
 #include "./DrawHist.cxx"
 
 //using namespace std;
@@ -24,9 +24,15 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
   Int_t Nmassbins;
   double range_mass_low, range_mass_high;
   if (massrng.find(ts) == massrng.end()){
-  range_mass_low = 8;
-  range_mass_high = 14;
-  Nmassbins = 120;
+    range_mass_low = 8;
+    range_mass_high = 14;
+    Nmassbins = 120;
+    if(info_BDT(ts)[0]!="nan"){
+      auto _pair_mass = parser_symbol(info_BDT(ts)[1],",");
+      range_mass_low = stod(_pair_mass[0]);
+      range_mass_high = stod(_pair_mass[1]);
+      Nmassbins = (range_mass_high - range_mass_low)/0.05;
+    }
   }
   else{
     range_mass_low = massrng[ts].first;

@@ -9,6 +9,7 @@
 #include "TMVA/Tools.h"
 #include "TMVA/TMVAGui.h"
 #include <ctime>
+#include "../.workdir.h"
 long _ts;
 
 bool BDTClassifier_BLIND_Function( ){
@@ -27,9 +28,9 @@ bool BDTClassifier_BLIND_Function( ){
   char logbuf[2000];
   std::cout << "Write down description for this run :";
   std::cin.getline(logbuf,2000);
-  log << ", " << Form("BLIND[%d,%d], ",traintree, testtree)<<logbuf << std::endl;
 
-  TString mainDIR= "/home/vince402/Upsilon3S/BDT";
+
+  TString mainDIR= workdir+"/BDT";
   TString BDTDir = mainDIR + ("/BDTResult");
   void* dirp = gSystem->OpenDirectory(BDTDir.Data());
   if(dirp) gSystem->FreeDirectory(dirp);
@@ -42,10 +43,12 @@ bool BDTClassifier_BLIND_Function( ){
   TFile* output    = new TFile(Form("%s/BDTresultY3S_%ld_BLIND.root",BDTDir.Data(),(long) tstamp),"recreate");
 
   double ylim = 2.4;
+  double massLow = 8;
+  ouble massHigh = 11.5;
   string HybSoft = "&&nPixWMea1>0&&nPixWMea2>0&&nTrkWMea1>5&&nTrkWMea2>5&&dxy1<0.3&&dxy2<0.3&&dz1<20&&dz2<20";
   string rejectNAN = "&&!TMath::IsNaN(ctau)&&!TMath::IsNaN(ctau3D)&&!TMath::IsNaN(cosAlpha)&&!TMath::IsNaN(cosAlpha3D)";//"&&!TMath::IsNaN(QQMassErr)&&!TMath::IsNaN(dxyErr1)&&!TMath::IsNaN(dxyErr2)&&!TMath::IsNaN(QQVtxProb)&&!TMath::IsNaN(QQdca)&&!TMath::IsNaN(cosAlpha)&&!TMath::IsNaN(cosAlpha3D)";
-  TCut cut1 = Form("mass<11.5&&pt<6&&pt>0&&pt1>3.5&&pt2>3.5&&fabs(y)<%f%s%s",ylim, HybSoft.c_str(),rejectNAN.c_str());
-  TCut cut2 = Form("mass<11.5&&pt<6&&pt>0&&pt1>3.5&&pt2>3.5&&fabs(y)<%f%s%s",ylim, HybSoft.c_str(),rejectNAN.c_str());
+  TCut cut1 = Form("mass>%f&&mass<%f&&pt<6&&pt>0&&pt1>3.5&&pt2>3.5&&fabs(y)<%f%s%s", massLow, massHigh, ylim, HybSoft.c_str(),rejectNAN.c_str());
+  TCut cut2 = Form("mass>%f&&mass<%f&&pt<6&&pt>0&&pt1>3.5&&pt2>3.5&&fabs(y)<%f%s%s", massLow, massHigh, ylim, HybSoft.c_str(),rejectNAN.c_str());
 
   TMVA::DataLoader *loader = new TMVA::DataLoader("dataset");
   TTree* SigTree =(TTree*) inputMC->Get("tree");
@@ -103,6 +106,9 @@ bool BDTClassifier_BLIND_Function( ){
   c1->Draw();
   c1->SaveAs(Form("%s/ROC_%ld.pdf",BDTDir.Data(), (long) tstamp));
   output->Close();
+  log << "::"<< Form("%2.2f,%2.2f",massLow,massHigh) << "::" << Form("BLIND[%d,%d]:: ",traintree, testtree)<<logbuf << std::endl;
+
+  log.close();
 
   ofstream out;
   out.open("timestamp.tmp");

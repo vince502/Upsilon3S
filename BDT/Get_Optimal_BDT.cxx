@@ -6,7 +6,7 @@
 std::pair<double,double> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, string name_input_opt = "", string formula_significance= "S12")
 {
   string tag_BLIND = "";
-  if(blindpair(ts).first != 0) tag_BLIND = "BLIND";
+  if(info_BDT(ts)[2].find("BLIND")!=std::string::npos) tag_BLIND = "BLIND";
   std::cout << tag_BLIND << std::endl;
   std::string name_input = Form("%s/BDT/BDTResult/BDTresultY3S_%ld_%s%s.root", workdir.Data(), ts, name_input_opt.c_str(), tag_BLIND.c_str());
 

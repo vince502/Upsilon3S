@@ -12,7 +12,8 @@
 
 
 void BDTClassifierApplication(long ts, int isMC = 0){
-  std::pair<int,int> _bf = blindpair(ts);
+  auto info_blind = info_BDT(ts)[2];
+  std::pair<int,int> _bf= {stoi(info_blind.substr(6,1)),stoi(info_blind.substr(8,1)) };
   int whichtree = _bf.second;
   if (whichtree >5) {std::cout << "if BLIND, is tree selection wrong? " << std::endl; return; }
   if (whichtree !=0 && whichtree <6) {std::cout <<"Application in BLIND tree"<<whichtree<< std::endl;}
@@ -24,7 +25,7 @@ void BDTClassifierApplication(long ts, int isMC = 0){
   XMLDocPointer_t mainnode = xml.DocGetRootElement(xmldoc);
 
   TString dfname = (isMC==2) ? "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_1S.root" : (whichtree==0) ? "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_v210416.root" : "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_v210416_ForBLIND.root";
-      TString mfname =  "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_v210416.root";
+      TString mfname =  "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_v210521.root";
 
   TFile* input(0);
   input = new TFile((isMC==1) ? mfname.Data() : dfname.Data(), "open");
