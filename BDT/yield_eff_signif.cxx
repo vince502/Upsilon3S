@@ -7,12 +7,13 @@
 #include "RooFit.h"
 #include "./EffCalc/openEffhist.C"
 #include "bininfo.h"
+#include "Get_Optimal_BDT.cxx"
 
 class binplotter
 {
   public:
 	binplotter();
-  	binplotter(long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh);
+  	binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh);
 	void init();
 	void set_params(double _vcut);
 	void set_params(string _fitfunc);
@@ -27,12 +28,13 @@ class binplotter
 	RooRealVar* NB;
 	bool refit = false;
 	RooRealVar yield1S, yield2S, yield3S;
+	std::string type;
   	
   private:
   	long ts;
 	double ylim, blow, bhigh;
 	int pl, ph,cl, ch;
-	double vcut =0.01;
+	double vcut =0.00;
 	TString MupT = "3p5";
 	string Trig ="S13";
 	TString fittype = "freefit";
@@ -43,8 +45,8 @@ class binplotter
 binplotter::binplotter(){
 };
 
-binplotter::binplotter(long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh){
-  ts = _ts; ylim = _ylim;  pl = _pl; ph = _ph; cl = _cl; ch = _ch; blow = _blow; bhigh = _bhigh;
+binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh){
+  type = _type; ts = _ts; ylim = _ylim;  pl = _pl; ph = _ph; cl = _cl; ch = _ch; blow = _blow; bhigh = _bhigh;
 
   int nbin = 120;
   if (massrng.find(ts) != massrng.end()) { nbin = (int) ((massrng[ts].second - massrng[ts].first)/0.05); } 
@@ -55,13 +57,27 @@ binplotter::binplotter(long _ts, double _ylim, int _pl, int _ph, int _cl, int _c
 binplotter::~binplotter(){ };
 
 void binplotter::init(){
+  auto _fitdir = parser_symbol(type, ":");
+  fitfunc = _fitdir[1];
   int ylim10 = (int) (ylim*10);
   int nbin = 120;
-  string fitdir;
+  std::string fitdir, markDDiter;
+  auto info_string_BDT = info_BDT(ts);
+  auto info_fit = parser_symbol(type, ":");
   if (massrng.find(ts) != massrng.end()) { nbin = (int) ((massrng[ts].second - massrng[ts].first)/0.05); } 
-  if( fittype=="freefit") fitdir = "FF";
-  else if (fittype=="DatafixtoMC") fitdir = "DFM";
-  filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", ts, fitdir.c_str(),fitfunc.c_str() ,pl,ph, ylim10, ylim10,nbin, cl, ch, blow, bhigh, vcut);
+  else if (info_string_BDT[1] != "nan") {
+    auto m_pair =  parser_symbol(info_string_BDT[1],",");
+    double m_low = stod( m_pair[0].c_str()) ;
+    double m_high = stod( m_pair[1].c_str()) ;
+    nbin = (int) ((m_high - m_low)/0.05) ; 
+  }
+  fitdir = info_fit[2].c_str();
+  blow = Get_Optimal_BDT(ts, pl, ph,(double) -1*ylim, ylim, cl, ch, vcut).first;
+  
+  filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10,nbin, cl, ch, blow, bhigh, vcut);
+  if(fitdir.find("DD") != std::string::npos){
+    filename = filename.substr(0, filename.length() -5) + Form("_DDiter%d.root",fitdir[4]-48); 
+  }
 
 };
 
@@ -117,7 +133,7 @@ RooRealVar binplotter::get_yield(){
 
 };
 double binplotter::get_eff(){
-  double bdteff = openEffhist((float) pl, (float) ph, 0, ylim, cl, ch, false, false, false, kTrigUps, ts, blow, bhigh);  
+  double bdteff = openEffhist((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, false, false, false, kTrigUps, ts, blow, bhigh);  
   return bdteff;
 };
 

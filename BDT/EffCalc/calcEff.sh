@@ -5,7 +5,7 @@ if [ $# -ne 12 ]
   then 
 
   echo "unmatching variable numbers, setting default"
-  pl="12.0"; ph="30.0"; yl="0.0"; yh="2.4"; cl="0"; ch="180"; tnp="false"; wei="false"; sw="false"; ktrig="kTrigUps"; ts="1614848550"; bdt_tsl="0.2"; bdt_tsh="1.0"
+  pl="0.0"; ph="6.0"; yl="-2.4"; yh="2.4"; cl="100"; ch="180"; tnp="false"; wei="false"; sw="false"; ktrig="kTrigUps"; ts="1621574976"; bdt_tsl="-1"; bdt_tsh="1.0"
 fi
 if [ $# -eq 4 ]
   then

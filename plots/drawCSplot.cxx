@@ -18,7 +18,8 @@ void f_drawCSplot(){
   gStyle->SetOptStat(kFALSE);
   gStyle->SetOptTitle(kFALSE);
   for(int idx =0; idx <2; ++idx){
-    RooRealVar cs_bin = upsi::getcrosssection(ts, ptbintwo[idx], ptbintwo[idx+1],0, yhigh, 3.5, (double)cbinrange.first, (double) cbinrange.second, blow, bhigh);
+    blow = Get_Optimal_BDT(ts, ptbintwo[idx], ptbintwo[idx+1], -2.4, 2.4, cbinrange.first, cbinrange.second, 0.00).first;
+    RooRealVar cs_bin = upsi::getcrosssection("CB2:CC2:FFDD3",ts, ptbintwo[idx], ptbintwo[idx+1],0, yhigh, 3.5, (double)cbinrange.first, (double) cbinrange.second, blow, bhigh);
     h1->SetBinContent(idx+1, cs_bin.getVal());
     h1->SetBinError(idx+1, cs_bin.getError());
   }

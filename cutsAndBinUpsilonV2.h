@@ -199,65 +199,65 @@ TString getEPSel( int eventPln) {
 int kSoftMuCut = 0;
 int kHighPtMuCut = 0;
 
-class DiMuon {
- public:
- DiMuon() :
-  run(0),   lumi(0), event(0), cBin(0), ep2(0), dphiEp2(0),
-    vz(-99),  mass(-1), pt(-1), y(999), phi(999), eta(999),
-    pt1(-1), eta1(-1), phi1(-1),        
-    pt2(-1), eta2(-1), phi2(-1), weight0(0), weight(0),       
-    oniaIndex(-1), softFlag(0), highPtFlag(0),
-    qxa(0), qya(0),
-    qxb(0), qyb(0),
-    qxc(0), qyc(0),
-    qxdimu(0), qydimu(0)
-
-    {}
-  
-  int run;
-  int lumi;
-  int event;
-  int cBin;
-  float ep2;
-  float dphiEp2;
-  float vz;
-  float mass;
-  float pt;
-  float y;
-  float phi;    
-  float eta;
-  float pt1; 
-  float eta1;
-  float phi1;
-  float pt2;
-  float eta2;
-  float phi2;    
-  float weight0;
-  float weight;
-  int oniaIndex;
-  int softFlag;
-  int highPtFlag;
-  float qxa;
-  float qya;
-  float qxb;
-  float qyb;
-  float qxc;
-  float qyc;
-  float qxdimu;
-  float qydimu;
-
-  void clear() {
-    run = -99;  lumi=-99; event=-99; cBin=-99; ep2=-99, dphiEp2=-99; 
-    vz=-99;     mass = -99; pt=-99; y=-99; phi=-99; eta=-99;      
-    pt1=-99; eta1=-99; phi1=-99; pt2=-99; eta2=-99; phi2=-99; weight0=-99, weight=-99;
-    oniaIndex=-1; softFlag=-1; highPtFlag=-1; 
-    qxa=0;  qya=0; 
-    qxb=0;  qyb=0; 
-    qxc=0;  qyc=0; 
-    qxdimu=0; qydimu=0;
-  }
-
-};
+//class DiMuon {
+// public:
+// DiMuon() :
+//  run(0),   lumi(0), event(0), cBin(0), ep2(0), dphiEp2(0),
+//    vz(-99),  mass(-1), pt(-1), y(999), phi(999), eta(999),
+//    pt1(-1), eta1(-1), phi1(-1),        
+//    pt2(-1), eta2(-1), phi2(-1), weight0(0), weight(0),       
+//    oniaIndex(-1), softFlag(0), highPtFlag(0),
+//    qxa(0), qya(0),
+//    qxb(0), qyb(0),
+//    qxc(0), qyc(0),
+//    qxdimu(0), qydimu(0)
+//
+//    {}
+//  
+//  int run;
+//  int lumi;
+//  int event;
+//  int cBin;
+//  float ep2;
+//  float dphiEp2;
+//  float vz;
+//  float mass;
+//  float pt;
+//  float y;
+//  float phi;    
+//  float eta;
+//  float pt1; 
+//  float eta1;
+//  float phi1;
+//  float pt2;
+//  float eta2;
+//  float phi2;    
+//  float weight0;
+//  float weight;
+//  int oniaIndex;
+//  int softFlag;
+//  int highPtFlag;
+//  float qxa;
+//  float qya;
+//  float qxb;
+//  float qyb;
+//  float qxc;
+//  float qyc;
+//  float qxdimu;
+//  float qydimu;
+//
+//  void clear() {
+//    run = -99;  lumi=-99; event=-99; cBin=-99; ep2=-99, dphiEp2=-99; 
+//    vz=-99;     mass = -99; pt=-99; y=-99; phi=-99; eta=-99;      
+//    pt1=-99; eta1=-99; phi1=-99; pt2=-99; eta2=-99; phi2=-99; weight0=-99, weight=-99;
+//    oniaIndex=-1; softFlag=-1; highPtFlag=-1; 
+//    qxa=0;  qya=0; 
+//    qxb=0;  qyb=0; 
+//    qxc=0;  qyc=0; 
+//    qxdimu=0; qydimu=0;
+//  }
+//
+//};
 TString branchString = "run/I:lumi:event:cBin:ep2/F:dphiEp2:vz:mass:pt:y:phi:eta:pt1:eta1:phi1:pt2:eta2:phi2:weight0:weight:oniaIndex/I:softFlag:highPtFlag:qxa/F:qya:qxb:qyb:qxc:qyc:qxdimu:qydimu";
 
 TString getKineLabelJpsi(float ptLow, float ptHigh, float yLow, float yHigh, int cLow, int cHigh) {

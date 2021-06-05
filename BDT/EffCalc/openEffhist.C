@@ -3,10 +3,9 @@
 #include <string>
 #include <TFile.h>
 #include <TH1D.h>
-#include "../../HiEvtPlaneList.h"
 #include "../../cutsAndBinUpsilonV2.h"
 //#include "../../Efficiency/getEfficiencyBDT.C"
-//#include "../../Efficiency/getEfficiency.C"
+#include "../../Efficiency/getEfficiency.C"
 
 double getEffhist(string what,float pl, float ph, float yl, float yh, int cl, int ch, bool istnp, bool wei, int opt1, double opt2, double opt22, int opt3){
 
@@ -18,7 +17,7 @@ if(what=="reco"){
     std::cout << "-----Calculate new Efficiency for current parameters-----" << std::endl;
     string command = Form("root -l -b -q \'/home/vince402/Upsilon3S/Efficiency/getEfficiencyBDT.C(%.2f, %.2f, %.2f, %.2f, %d, %d, %d, %d, %ld, %.3f, %.5f)\'",pl, ph, yl, yh, cl, ch, (int) istnp, (int) wei, (long) opt1, opt2, opt22);
     int a = system(command.c_str());
-//    getEfficiencyBDT(pl, ph, yl, yh, cl, ch, istnp, wei, (long) opt1, opt2, opt22); 
+    getEfficiencyBDT(pl, ph, yl, yh, cl, ch, istnp, wei, (long) opt1, opt2, opt22); 
   //}
   TFile* histfile = new TFile(Form("%s.root",fname.c_str()),"read");
   std::cout << fname.c_str() << std::endl;
@@ -40,7 +39,7 @@ else if(what=="gen"){
   string fname =Form("/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_TrigSel%s", pl, ph, yl, yh, 3.5, 9.0, 11.0, cl, ch, istnp, wei, ftrigSel.c_str());
 //   if(!TFile::Open(Form("%s.root",fname.c_str()),"read")){
 //    std::cout << "-----Calculate new Efficiency for current parameters-----" << std::endl;
-//    getEfficiency(pl, ph, yl, yh, cl, ch, istnp, wei, opt1, opt3, true); 
+    getEfficiency(pl, ph, yl, yh, cl, ch, istnp, wei, opt1, opt3, true); 
 //  }
 
   TFile* histfile = new TFile(Form("%s.root",fname.c_str()),"read");

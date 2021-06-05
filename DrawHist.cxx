@@ -16,15 +16,24 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
   std::string fitdir = parsed[2];
   std::string name_fitmodel = "_"+bkg_func;
   string fit_param, name_pdf_bkg, name_pdf_sig;
-  if(fitdir=="FF") fit_param = "freefit";
+  if(fitdir.find("FF") != std::string::npos){
+    fit_param = "freefit";
+    if(fitdir.find("DD") != std::string::npos) fit_param = "iterative_fix";
+  }
   if(fitdir=="GC") fit_param = "gaussconst";
   if(bkg_func=="EE") name_pdf_bkg = "bkgErf";
   if(bkg_func.find("CC")!= std::string::npos) name_pdf_bkg = "CCBkg";
   int ylim10 = (int) (rapMax*10);
+  int DDiter =0;
 
 
   std::string method_selection = (isBDT) ? "BDT" : "Data"; 
   std::string name_file_output = Form("%s/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.root" ,workdir.Data(), ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP );
+  if( fitdir.find("DD") !=std::string::npos)
+  {
+    DDiter = fitdir[4] -48;
+    name_file_output = name_file_output.substr(0, name_file_output.length()-5) + Form("_DDiter%d.root",DDiter);
+  }
   TFile* file1 = new TFile(name_file_output.c_str(),"read");
   TString massDIR =  Form("%s/MassDist/%s/%ld/%s/%s/%.1f/cent%d-%d/pT%.1f-%.1f/FitResult", workdir.Data(), method_selection.c_str(), ts, fit_param.c_str(),Trig.c_str(),rapMax, cBinLow, cBinHigh, ptMin, ptMax);
   TString massDIRp = Form("%s/MassDist/%s/%ld/%s/%s/%.1f/cent%d-%d/pT%.1f-%.1f/FitResult/png", workdir.Data(), method_selection.c_str(), ts, fit_param.c_str(),Trig.c_str(),rapMax, cBinLow, cBinHigh, ptMin, ptMax);

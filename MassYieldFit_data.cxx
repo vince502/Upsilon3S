@@ -8,6 +8,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
 
   massfitter mf = massfitter();
 ////////////////////////////////////////////////////////////////////////
+  int DDiter = 0;
 
   if (!isBDT) {
     cutBDTlow =0;
@@ -48,13 +49,16 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
   }
   else name_file_input = Form("%s/roodatasetFiles/OniaRooDataSet_OniaSkim_Trig%s.root", workdir.Data(), Trig.c_str());
   std::string name_file_output = Form("%s/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.root" ,workdir.Data(), ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP );
+  if(fitdir.find("DD") != std::string::npos){
+    DDiter = fitdir[4]-48;
+    name_file_output = name_file_output.substr(0,name_file_output.length()-5) + Form("_DDiter%d.root", DDiter);
+  }
   mf = massfitter( name_file_input.c_str(), name_file_output.c_str() );
   mf.Range_fit_low = range_mass_low;
   mf.Range_fit_high = range_mass_high;
   Double_t MupTCut = single_LepPtCut(MupT);
   Double_t etaMax= 2.4;
   Double_t etaMin = -2.4;
-
   if(!isBDT){
     mf.list_arg	= {"mass", "pt", "y", "cBin", "pt1", "pt2", "eta1", "eta2","QQVtxProb"};
     mf.dsCut	= Form("( pt >=%f && pt <=%f) && (y >= %f && y <=%f) && (cBin>=%d && cBin<=%d) &&(pt1 >= %f) && (pt2 >= %f) && (eta1 >= %f && eta1 <= %f) && ( eta2 >= %f && eta2 <= %f) &&(QQVtxProb > %.f", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, MupTCut, MupTCut, etaMin, etaMax, etaMin, etaMax, cutQVP);
@@ -89,34 +93,60 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
   mf.works->data("reducedDS")->plotOn(massPlot, Name("massPlot"));
 ////////////////////////////////////////////////////////////////////////////////////
 
-  RooRealVar mean1S("mean1S", "mean of Upsilon 1S", U1S_mass, U1S_mass-0.015, U1S_mass+0.015);
+  RooRealVar *mean1S = new RooRealVar("mean1S", "mean of Upsilon 1S", U1S_mass, U1S_mass-0.015, U1S_mass+0.015);
 
-  RooRealVar mratio2("mratio2", "mratio2", U2S_mass/U1S_mass);
-  RooRealVar mratio3("mratio3", "mratio3", U3S_mass/U1S_mass);
-  RooFormulaVar mean2S("mean2S", "mean1S*mratio2", RooArgSet(mean1S, mratio2));
-  //RooFormulaVar mean3S("mean3S", "mean1S*mratio3", RooArgSet(mean1S, mratio3));
-  RooRealVar mean3S("mean3S", "mean of Upsilon 1S", U3S_mass, U3S_mass-0.010, U3S_mass+0.010);
+  RooRealVar *mratio2 = new RooRealVar("mratio2", "mratio2", U2S_mass/U1S_mass);
+  RooRealVar *mratio3 = new RooRealVar("mratio3", "mratio3", U3S_mass/U1S_mass);
+  RooFormulaVar *mean2S = new RooFormulaVar("mean2S", "mean1S*mratio2", RooArgSet(*mean1S, *mratio2));
+  RooFormulaVar *mean3S = new RooFormulaVar("mean3S", "mean1S*mratio3", RooArgSet(*mean1S, *mratio3));
+  //RooRealVar mean3S("mean3S", "mean of Upsilon 1S", U3S_mass, U3S_mass-0.010, U3S_mass+0.010);
 
-  RooRealVar sigma1S_1("sigma1S_1", "sigma1 of 1S", 0.05, paramslow[0], paramshigh[0]);
-  RooFormulaVar sigma2S_1("sigma2S_1", "@0*@1", RooArgList(sigma1S_1, mratio2));
-  RooFormulaVar sigma3S_1("sigma3S_1", "@0*@1", RooArgList(sigma1S_1, mratio3));
+  RooRealVar *sigma1S_1 = new RooRealVar("sigma1S_1", "sigma1 of 1S", 0.05, paramslow[0], paramshigh[0]);
+  RooFormulaVar *sigma2S_1 = new RooFormulaVar("sigma2S_1", "@0*@1", RooArgList(*sigma1S_1, *mratio2));
+  RooFormulaVar *sigma3S_1 = new RooFormulaVar("sigma3S_1", "@0*@1", RooArgList(*sigma1S_1, *mratio3));
 
-  RooRealVar* x1S = new RooRealVar("x1S", "sigma ratio", 0.35, 0, 1);
+  RooRealVar* x1S = new RooRealVar("x1S", "sigma ratio", 0.4, 0.01, 0.95);
 
-  RooFormulaVar sigma1S_2("sigma1S_2", "@0*@1", RooArgList(sigma1S_1, *x1S));
-  RooFormulaVar sigma2S_2("sigma1S_2", "@0*@1", RooArgList(sigma1S_2, mratio2));
-  RooFormulaVar sigma3S_2("sigma1S_2", "@0*@1", RooArgList(sigma1S_2, mratio3));
+  RooFormulaVar *sigma1S_2 = new RooFormulaVar("sigma1S_2", "@0*@1", RooArgList(*sigma1S_1, *x1S));
+  RooFormulaVar *sigma2S_2 = new RooFormulaVar("sigma1S_2", "@0*@1", RooArgList(*sigma1S_2, *mratio2));
+  RooFormulaVar *sigma3S_2 = new RooFormulaVar("sigma1S_2", "@0*@1", RooArgList(*sigma1S_2, *mratio3));
 
   RooRealVar k("k", "k of Gaus-Exp Pdf", 1.0, 0, 5.0);
-  RooRealVar alpha("alpha", "alpha of Crystal ball", 2.0, paramslow[1], paramshigh[1]);
-  RooRealVar n("n", "n of Crystal ball", 2.0, paramslow[2], paramshigh[2]);
+  RooRealVar *alpha;
+  alpha = new RooRealVar("alpha", "alpha of Crystal ball", 2.0, paramslow[1], paramshigh[1]);
+
+  RooRealVar* n = new RooRealVar("n", "n of Crystal ball", 2.0, paramslow[2], paramshigh[2]);
   RooRealVar* frac = new RooRealVar("frac", "CB fraction", 0.5, paramslow[3], paramshigh[3]);
   RooRealVar *ch4_k1, *ch4_k2, *ch4_k3, *ch4_k4;
   RooRealVar *Erfmean, *Erfp0, *Erfsigma;
   std::map<std::string, RooRealVar*> map_rrv;
+  if(fitdir.find("DD") != std::string::npos)
+  {
+    if((int) (fitdir[4]-48)>0)
+    {
+      alpha->setConstant();
+      if( (int) (fitdir[4]-48 >1) )
+      {
+	frac->setConstant();
+	if( (int) (fitdir[4]-48) > 2)
+	{
+	  x1S->setConstant();
+	  x1S->setVal(0.248);
+	  if( (int) (fitdir[4]-48) > 3)
+	  {
+	    sigma1S_1->setConstant();
+	    if( (int) (fitdir[4]-48) > 4 )
+	    {
+	      n->setConstant();
+	    }
+	  }
+	}
+      }
+    }
+  }
   map_rrv = {
-	{"alpha"	, &alpha	 },	
-	{"n"		, &n		},	
+	{"alpha"	, alpha	 },	
+	{"n"		, n		},	
 	{"frac"		, frac		},
 	{"x3S"		, x1S		},
     };
@@ -130,13 +160,13 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
   RooGenericPdf* Background;
 
   if (sig_func == "CB2"){
-    cb2 = new fit_model_ups::CB2((mf.works->var("mass")), &mean1S, &mean2S, &mean3S, &sigma1S_1, &sigma2S_1, &sigma3S_1, &sigma1S_2, &sigma2S_2, &sigma3S_2, &alpha, &alpha, &alpha, &n, &n, &n, frac, frac, frac); 
+    cb2 = new fit_model_ups::CB2((mf.works->var("mass")), mean1S, mean2S, mean3S, sigma1S_1, sigma2S_1, sigma3S_1, sigma1S_2, sigma2S_2, sigma3S_2, alpha, alpha, alpha, n, n, n, frac, frac, frac); 
     Signal1S = (RooGenericPdf*) cb2->twoCB1S;
     Signal2S = (RooGenericPdf*) cb2->twoCB2S;
     Signal3S = (RooGenericPdf*) cb2->twoCB3S;
-    sigma1S_1.setVal(params[0]);
-    alpha.setVal(params[1]);
-    n.setVal(params[2]);
+    sigma1S_1->setVal(params[0]);
+    alpha->setVal(params[1]);
+    n->setVal(params[2]);
     frac->setVal(params[3]);
   }
   if (bkg_func.find("CC")!= std::string::npos){
@@ -196,7 +226,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
     model = new RooAddPdf("model", "1S+2S+3S", RooArgList(*model_sig, *Background), RooArgList(*nSig1S, *nBkg));
   }
 
-  if((fitdir=="FF"||fitdir=="GC")){
+  if((fitdir=="FF"||fitdir=="GC"||fitdir.find("DD") != std::string::npos)){
     nSig2S = new RooRealVar("nSig2S", "# of 2S signal", 100, -1000, 300000);
     nSig3S = new RooRealVar("nSig3S", "# of 3S signal", 30, -10, 90000);
     std::cout << "added # of 2S, 3S signal as free parameter" << std::endl;

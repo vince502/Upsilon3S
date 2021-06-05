@@ -9,19 +9,19 @@
 #root -l -b -q 'getAcceptance.C(0, 50, 0, 2.4, 4  )' &
 #root -l -b -q 'getAcceptance.C(0, 50, 0, 2.4, 3.5)' &
 
-root -l -b -q 'getAcceptance.C(0 , 30, 0, 2.4, 3.5)' &
-root -l -b -q 'getAcceptance.C(6 , 30, 0, 2.4, 3.5)' &
-root -l -b -q 'getAcceptance.C(0 , 6 , 0, 2.4, 3.5)' &
-root -l -b -q 'getAcceptance.C(0 , 4 , 0, 2.4, 3.5)' 
-root -l -b -q 'getAcceptance.C(4 , 9 , 0, 2.4, 3.5)' &
-root -l -b -q 'getAcceptance.C(9 , 12, 0, 2.4, 3.5)' &
-root -l -b -q 'getAcceptance.C(12, 30, 0, 2.4, 3.5)' &
+root -l -b -q 'getAcceptance.C(0 , 30, -2.4, 2.4, 3.5)' &
+root -l -b -q 'getAcceptance.C(6 , 30, -2.4, 2.4, 3.5)' &
+root -l -b -q 'getAcceptance.C(0 , 6 , -2.4, 2.4, 3.5)' &
+#root -l -b -q 'getAcceptance.C(0 , 4 , 0, 2.4, 3.5)' 
+#root -l -b -q 'getAcceptance.C(4 , 9 , 0, 2.4, 3.5)' &
+#root -l -b -q 'getAcceptance.C(9 , 12, 0, 2.4, 3.5)' &
+#root -l -b -q 'getAcceptance.C(12, 30, 0, 2.4, 3.5)' &
 
-root -l -b -q 'getAcceptance.C(0 , 30, 0, 1.2, 3.5)' 
-root -l -b -q 'getAcceptance.C(6 , 30, 0, 1.2, 3.5)' &
-root -l -b -q 'getAcceptance.C(0 , 6 , 0, 1.2, 3.5)' &
-root -l -b -q 'getAcceptance.C(0 , 4 , 0, 1.2, 3.5)' 
-root -l -b -q 'getAcceptance.C(4 , 9 , 0, 1.2, 3.5)' &
-root -l -b -q 'getAcceptance.C(9 , 12, 0, 1.2, 3.5)' &
-root -l -b -q 'getAcceptance.C(12, 30, 0, 1.2, 3.5)' &
+root -l -b -q 'getAcceptance.C(0 , 30, -1.2, 1.2, 3.5)' 
+root -l -b -q 'getAcceptance.C(6 , 30, -1.2, 1.2, 3.5)' &
+root -l -b -q 'getAcceptance.C(0 , 6 , -1.2, 1.2, 3.5)' &
+#root -l -b -q 'getAcceptance.C(0 , 4 , 0, 1.2, 3.5)' 
+#root -l -b -q 'getAcceptance.C(4 , 9 , 0, 1.2, 3.5)' &
+#root -l -b -q 'getAcceptance.C(9 , 12, 0, 1.2, 3.5)' &
+#root -l -b -q 'getAcceptance.C(12, 30, 0, 1.2, 3.5)' &
 
