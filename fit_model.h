@@ -67,6 +67,31 @@ namespace fit_model_ups{
 
 			RooGenericPdf* bkgErf;
 	};
+	
+	class DoubleGausExp
+	{
+	  	public :
+			DoubleGausExp(int state, RooRealVar* mass, RooRealVar* mean, RooRealVar* k, RooRealVar* sigma_1, RooRealVar* sigma_2, RooRealVar* frac);
+			DoubleGausExp(RooRealVar* mass, RooRealVar* mean1S, RooRealVar* mean2S, RooRealVar* mean3S, RooRealVar* k, RooRealVar* sigma1S_1, RooRealVar* sigma1S_2, RooRealVar* sigma2S_1, RooRealVar* sigma2S_2, RooRealVar* sigma3S_1, RooRealVar* sigma3S_2, RooRealVar* frac);
+			~DoubleGausExp();
+
+			GausExp *GE1S_1, *GE2S_1, *GE3S_1;
+			GausExp *GE1S_2, *GE2S_2, *GE3S_2;
+			RooAddPdf *twoGE1S, *twoGE2S, *twoGE3S;
+			std::map<double, std::pair<GausExp*, GausExp*> > map_state = { {1, {GE1S_1, GE1S_2}}, {2, {GE2S_1, GE2S_1}}, {3, {GE3S_1, GE3S_2}} };
+			std::map<double, RooAddPdf* > map_bindfunc = { {1,twoGE1S}, {2, twoGE2S}, {3, twoGE3S} };
+	};
+
+	DoubleGausExp::DoubleGausExp(int state, RooRealVar* mass, RooRealVar* mean, RooRealVar* k, RooRealVar* sigma_1, RooRealVar* sigma_2, RooRealVar* frac){
+	  map_state[state].first = new GausExp(Form("GE%dS_1",state),Form("GE%dS_1 function",state), *mass, *mean, *k, *sigma_1);
+	  map_state[state].second = new GausExp(Form("GE%dS_2",state),Form("GE%dS_2 function",state), *mass, *mean, *k, *sigma_2);
+	  map_bindfunc[state] = new RooAddPdf(Form("twoGE%dS",state),Form("Sum of %dS GausExp function",state), RooArgList(*map_state[state].first, *map_state[state].second), RooArgList(*frac) );
+	};
+
+	DoubleGausExp::DoubleGausExp(RooRealVar* mass, RooRealVar* mean1S, RooRealVar* mean2S, RooRealVar* mean3S, RooRealVar* k, RooRealVar* sigma1S_1, RooRealVar* sigma1S_2, RooRealVar* sigma2S_1, RooRealVar* sigma2S_2, RooRealVar* sigma3S_1, RooRealVar* sigma3S_2, RooRealVar* frac){
+
+	  };
+
 };
 
 #endif
