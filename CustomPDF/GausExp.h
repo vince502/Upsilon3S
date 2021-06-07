@@ -18,6 +18,7 @@ public:
   GausExp() {} ; 
   GausExp(const char *name, const char *title,
 	      RooAbsReal& _mass,
+	      RooAbsReal& _mean,
 	      RooAbsReal& _k,
 	      RooAbsReal& _sigma);
   GausExp(const GausExp& other, const char* name=0) ;
@@ -27,6 +28,7 @@ public:
 protected:
 
   RooRealProxy mass ;
+  RooRealProxy mean ;
   RooRealProxy k ;
   RooRealProxy sigma ;
   

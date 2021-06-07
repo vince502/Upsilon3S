@@ -17,11 +17,13 @@
 ClassImp(GausExp); 
 
  GausExp::GausExp(const char *name, const char *title, 
+ 			RooAblsReal& _mean,
                         RooAbsReal& _mass,
                         RooAbsReal& _k,
                         RooAbsReal& _sigma) :
    RooAbsPdf(name,title), 
    mass("mass","mass",this,_mass),
+   mean("mean","mean",_mean),
    k("k","k",this,_k),
    sigma("sigma","sigma",this,_sigma)
  { 
@@ -31,6 +33,7 @@ ClassImp(GausExp);
  GausExp::GausExp(const GausExp& other, const char* name) :  
    RooAbsPdf(other,name), 
    mass("mass",this,other.mass),
+   mean("mean",this,other.mean),
    k("k",this,other.k),
    sigma("sigma",this,other.sigma)
  { 
@@ -40,11 +43,11 @@ ClassImp(GausExp);
 
  Double_t GausExp::evaluate() const 
  { 
-   if( (x-meanx)/sig >= -k){
-     return TMath::Exp(-(0.5)*TMath::Power(((x-meanx)/sig),2));
+   if( (mass-mean)/sigma >= -k){
+     return TMath::Exp(-(0.5)*TMath::Power(((mass-mean)/sigma),2));
    }
    else{
-     return TMath::Exp(TMath::Power(k,2)/2+k*((x-meanx)/sig));
+     return TMath::Exp(TMath::Power(k,2)/2+k*((mass-mean)/sigma));
    }
  } 
 
