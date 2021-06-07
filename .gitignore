@@ -9,5 +9,6 @@ BDT/roodatasets
 BDT/.past_source
 BDT/timestamp*
 MassDist
+.workdir.h
 
 plots/CrossSection/*.cxx
