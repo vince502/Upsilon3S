@@ -11,8 +11,9 @@
 #include <ctime>
 #include "../.workdir.h"
 long _ts;
+char logbuf[2000];
 
-bool BDTClassifier_BLIND_Function( ){
+bool BDTClassifier_BLIND_Function(double ptLow, double ptHigh, int cBinLow, int cBinHigh){
   //Load Library
   TMVA::Tools::Instance();
   int traintree = 2;
@@ -25,10 +26,6 @@ bool BDTClassifier_BLIND_Function( ){
   ofstream log;
   log.open("BDT_description.log", std::ios_base::out|std::ios_base::app);
   log << tstamp;
-  char logbuf[2000];
-  std::cout << "Write down description for this run :";
-  std::cin.getline(logbuf,2000);
-
 
   TString mainDIR= workdir+"/BDT";
   TString BDTDir = mainDIR + ("/BDTResult");
@@ -47,8 +44,8 @@ bool BDTClassifier_BLIND_Function( ){
   double massHigh = 11.5;
   string HybSoft = "&&nPixWMea1>0&&nPixWMea2>0&&nTrkWMea1>5&&nTrkWMea2>5&&dxy1<0.3&&dxy2<0.3&&dz1<20&&dz2<20";
   string rejectNAN = "&&!TMath::IsNaN(ctau)&&!TMath::IsNaN(ctau3D)&&!TMath::IsNaN(cosAlpha)&&!TMath::IsNaN(cosAlpha3D)";//"&&!TMath::IsNaN(QQMassErr)&&!TMath::IsNaN(dxyErr1)&&!TMath::IsNaN(dxyErr2)&&!TMath::IsNaN(QQVtxProb)&&!TMath::IsNaN(QQdca)&&!TMath::IsNaN(cosAlpha)&&!TMath::IsNaN(cosAlpha3D)";
-  TCut cut1 = Form("mass>%f&&mass<%f&&pt<30&&pt>0&&pt1>3.5&&pt2>3.5&&fabs(y)<%f%s%s", massLow, massHigh, ylim, HybSoft.c_str(),rejectNAN.c_str());
-  TCut cut2 = Form("mass>%f&&mass<%f&&pt<30&&pt>0&&pt1>3.5&&pt2>3.5&&fabs(y)<%f%s%s", massLow, massHigh, ylim, HybSoft.c_str(),rejectNAN.c_str());
+  TCut cut1 = Form("mass>%f&&mass<%f&&pt<%f&&pt>%f&&cBin>%d&&cBin<%d&&pt1>3.5&&pt2>3.5&&fabs(y)<%f%s%s", massLow, massHigh, ptHigh, ptLow, cBinLow, cBinHigh, ylim, HybSoft.c_str(),rejectNAN.c_str());
+  TCut cut2 = Form("mass>%f&&mass<%f&&pt<%f&&pt>%f&&cBin>%d&&cBin<%d&&pt1>3.5&&pt2>3.5&&fabs(y)<%f%s%s", massLow, massHigh, ptHigh, ptLow, cBinLow, cBinHigh, ylim, HybSoft.c_str(),rejectNAN.c_str());
 
   TMVA::DataLoader *loader = new TMVA::DataLoader("dataset");
   TTree* SigTree =(TTree*) inputMC->Get("tree");
@@ -92,11 +89,11 @@ bool BDTClassifier_BLIND_Function( ){
   //Preselection Cut -> Conventional Kinematics 
 
 
-  loader->PrepareTrainingAndTestTree( cut1, cut2, "SplitMode=Random:NormMode=None:!V");
+  loader->PrepareTrainingAndTestTree( cut1, cut2, "SplitSeed=100:NormMode=None:!V");
 
   //Book Training BDT Method
   factory->BookMethod( loader, TMVA::Types::kBDT, TString::Format("BDT_train_%ld", (long) tstamp ),
-  	"!H:!V:NTrees=200:MaxDepth=4:MinNodeSize=5%:BoostType=AdaBoost:AdaBoostBeta=0.6:UseBaggedBoost:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=True:UseNvars=2:BaggedSampleFraction=0.4:nCuts=4000:CreateMVAPdfs");//:VarTransform=Gauss");
+  	"!H:!V:NTrees=200:MaxDepth=4:MinNodeSize=5%:BoostType=AdaBoost:AdaBoostBeta=0.6:UseBaggedBoost:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=4000:CreateMVAPdfs");//:VarTransform=Gauss");
 
   //Train Test Evaluate
   factory->TrainAllMethods();
@@ -106,7 +103,7 @@ bool BDTClassifier_BLIND_Function( ){
   c1->Draw();
   c1->SaveAs(Form("%s/ROC_%ld.pdf",BDTDir.Data(), (long) tstamp));
   output->Close();
-  log << "::"<< Form("%2.2f,%2.2f",massLow,massHigh) << "::" << Form("BLIND[%d,%d]:: ",traintree, testtree)<<logbuf << std::endl;
+  log << "::"<< Form("%2.2f,%2.2f",massLow,massHigh) << "::" << Form("%2.2f,%2.2f",ptLow, ptHigh) <<"::" << Form("%d,%d",cBinLow, cBinHigh) <<  "::" << Form("BLIND[%d,%d]:: ",traintree, testtree)<<logbuf << std::endl;
 
   log.close();
 
@@ -119,6 +116,45 @@ bool BDTClassifier_BLIND_Function( ){
 
 //Main Function
 void BDTClassifier_BLIND( ){
-  bool res = BDTClassifier_BLIND_Function();
+  ofstream log;
+  log.open("BDT_description.log", std::ios_base::out|std::ios_base::app);
+  log << "Bin by Bin training start----------------------" <<std::endl; ; 
+  log.close();
+
+  std::pair<long, long> tsrange;
+  std::cout << "Write down description for this run :";
+  std::cin.getline(logbuf,2000);
+  bool res = BDTClassifier_BLIND_Function(0,30, 0,180);
+  tsrange.first = _ts;
   if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+    res = BDTClassifier_BLIND_Function(0,6, 0,180);
+  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+    res = BDTClassifier_BLIND_Function(6,30, 0, 180);
+  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+
+  res = BDTClassifier_BLIND_Function(0,30, 0,40);
+  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+    res = BDTClassifier_BLIND_Function(0,6, 0,40);
+  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+    res = BDTClassifier_BLIND_Function(6,30,0, 40);
+  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+
+  res = BDTClassifier_BLIND_Function(0,30, 40,100);
+  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+    res = BDTClassifier_BLIND_Function(0,6, 40,100);
+  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+    res = BDTClassifier_BLIND_Function(6,30,40, 100);
+  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  
+    res = BDTClassifier_BLIND_Function(0,30, 100,180);
+  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+    res = BDTClassifier_BLIND_Function(0,6, 100,180);
+  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+    res = BDTClassifier_BLIND_Function(6,30, 100, 180);
+  tsrange.second = _ts;
+  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+
+  log.open("BDT_description.log", std::ios_base::out|std::ios_base::app);
+  log << "Bin by Bin training end::" << Form("%ld,%ld",tsrange.first,tsrange.second) << std::endl;
+  log.close();
 }

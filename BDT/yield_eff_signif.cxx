@@ -21,7 +21,7 @@ class binplotter
 	void dump();
 	~binplotter();
 	RooRealVar get_yield();
-	double get_eff();
+	std::pair<double, double> get_eff();
 	RooRealVar yield_eff();
 	RooRealVar getsignificance();
 	RooRealVar* NS;
@@ -29,10 +29,10 @@ class binplotter
 	bool refit = false;
 	RooRealVar yield1S, yield2S, yield3S;
 	std::string type;
+	double ylim, blow, bhigh;
   	
   private:
   	long ts;
-	double ylim, blow, bhigh;
 	int pl, ph,cl, ch;
 	double vcut =0.00;
 	TString MupT = "3p5";
@@ -132,14 +132,14 @@ RooRealVar binplotter::get_yield(){
   return Yield3S;
 
 };
-double binplotter::get_eff(){
-  double bdteff = openEffhist((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, false, false, false, kTrigUps, ts, blow, bhigh);  
+std::pair<double, double> binplotter::get_eff(){
+  std::pair<double, double> bdteff = openEffhist((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh);  
   return bdteff;
 };
 
 RooRealVar binplotter::yield_eff(){
   RooRealVar Yield3S = binplotter::get_yield();
-  double bdteff = get_eff();
+  double bdteff = get_eff().first;
   std::cout << Yield3S.GetName()<< ": " << Yield3S.getVal() << ", Error: " << Yield3S.getError()<< std::endl;
   std::cout << "BDT efficiency of : " << bdteff << std::endl;
   RooRealVar YoverE("YE","Yield over Eff", (Yield3S.getVal()/bdteff), -100, 100000);

@@ -20,7 +20,7 @@ void getEfficiencyBDT(
 //  if(kTrigSel == kTrigUps) kTrigSel_ = 1;
 //  else if(kTrigSel == kTrigL1DBOS40100) kTrigSel_ = 2; 
 
-  float muPtCut = 3.5;
+  float muPtCut = 4.0;
   float muEtaCut = 2.4;
 
   float massLow = 9.0;
@@ -45,18 +45,21 @@ void getEfficiencyBDT(
   settree_.TreeSetting(mytree);
 
   //pT reweighting function
-  //TFile *fPtW = new TFile("../Reweight/WeightedFunc/Func_dNdpT_3S.root","read");
-  //TF1* f1 = (TF1*) fPtW->Get("fitRatio");
+//  TFile *fPtW = new TFile(Form("%s/Efficiency/Func_dNdpT_2S.root",workdir.Data()),"read");
+//  TF1* f1 = (TF1*) fPtW->Get("fitRatio");
 
   TString histName = Form("BDT_%ld_bdt_%.3f-%.3f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d", ts, bdt_tsl, bdt_tsh, ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight);
   TH1D* hreco = new TH1D(Form("hreco"),"hreco",1,xmin,xmax);
-  TH1D* hgen = new TH1D(Form("hgen"),"hgen",1,xmin,xmax);
+  TH1D* hreco_tnp = new TH1D(Form("hreco_tnp"),"hreco_tnp",(int) ((xmax-xmin)),xmin,xmax);
+  TH1D* hreco_xtnp = new TH1D(Form("hreco_xtnp"),"hreco_xtnp",(int) ((xmax-xmin)),xmin,xmax);
 
   hreco->Sumw2();
-  hgen->Sumw2();
+  hreco_tnp->Sumw2();
+  hreco_xtnp->Sumw2();
 
   hreco->SetTitle("Reco");
-  hgen->SetTitle("Gen");
+  hreco_xtnp->SetTitle("Reco no tnp");
+  hreco_tnp->SetTitle("Reco with tnp");
 
 // -------NO GEN info in BDT DS--------
 //  TLorentzVector* JP_Gen= new TLorentzVector;
@@ -67,10 +70,10 @@ void getEfficiencyBDT(
   TLorentzVector* mupl_Reco = new TLorentzVector;
   TLorentzVector* mumi_Reco = new TLorentzVector;
 
-  double tnp_weight = 1;
+//  double tnp_weight = 1;
   double tnp_trig_weight_mupl = -1;
   double tnp_trig_weight_mumi = -1;
-  double pt_weight = 1;
+//  double pt_weight = 1;
   
   double tnp_trig_dimu=-1;
 
@@ -89,73 +92,62 @@ void getEfficiencyBDT(
     if(BDT< bdt_tsl || BDT> bdt_tsh) continue;
     if(!( fabs(y) < yHigh && fabs(y) > yLow && pt < ptHigh && pt >ptLow )) continue;
     if(!( pt1> muPtCut && pt2> muPtCut && fabs(eta1) < muEtaCut && fabs(eta2) < muEtaCut )) continue;
-    if(!( QQVtxProb > 0.01 )) continue;
+    if(!( QQVtxProb > 0.00 )) continue;
     if(!( cBin <= cHigh && cBin >= cLow)) continue;
     if(!( mass < massHigh && mass > massLow)) continue;
-    bool checkID = false; 
+    bool checkID = true; 
     if (checkID) {
       if(!( nTrkWMea1 >5 && nTrkWMea2 >5 && nPixWMea1 > 0 && nPixWMea2 > 0 && fabs(dxy1) < 0.3 && fabs(dxy2) < 0.3 && fabs(dz1) < 20. && fabs(dz2) < 20.) ) continue;
 
     histName = Form("BDT_%ld_bdt_%.3f-%.3f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_ID", ts, bdt_tsl, bdt_tsh,ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight);
     }
+    
+    
     hreco->Fill(pt,weight);
+    hreco_tnp->Fill(pt,weight);
+    hreco_xtnp->Fill(pt, weight/tnp_weight);
     count++;
 
   }
-
   cout << "count " << count << endl;
-  cout << "counttnp " << counttnp << endl;
-  
-
 
   //Draw
   //RECO
   TCanvas * creco = new TCanvas(Form("creco_%s",histName.Data()),"creco",0,0,400,400);
   creco->cd();
   hreco->Draw();
+
+  //RECO TnP
+  TCanvas * creco_tnp = new TCanvas(Form("creco_tnp_%s",histName.Data()),"creco with tnp",0,0,400,400);
+  creco_tnp->cd();
+  hreco_tnp->Draw("pe");
   
-  //GEN
-  TCanvas * cgen = new TCanvas(Form("cgen_%s",histName.Data()),"creco",0,0,400,400);
-  cgen->cd();
-  hgen->Draw();
+  //RECO xTnP
+//  TCanvas * creco_xtnp = new TCanvas(Form("creco_xtnp_%s",histName.Data()),"creco no tnp",0,0,400,400);
+  hreco_xtnp->Draw("same,pe");
 
   //Divide
-  TH1D* heff;
-  heff = (TH1D*)hreco->Clone(Form("heff_%s",histName.Data()));
-  heff->Divide(heff, hgen, 1, 1, "B");
-  heff->SetTitle("Efficiency");
-  TCanvas * ceff = new TCanvas(Form("ceff_%s",histName.Data()),"ceff",0,400,400,400);
-  ceff->cd();
-  heff->Draw();
+//  TH1D* heff;
+//  heff = (TH1D*)hreco->Clone(Form("heff_%s",histName.Data()));
+//  heff->Divide(heff, hgen, 1, 1, "B");
+//  heff->SetTitle("Efficiency");
+//  TCanvas * ceff = new TCanvas(Form("ceff_%s",histName.Data()),"ceff",0,400,400,400);
+//  ceff->cd();
+//  heff->Draw();
 
   //Save efficiency files for later use.
-  heff->SetName(Form("mc_eff_vs_pt_TnP%d_Cent090",isTnP));
+//  heff->SetName(Form("mc_eff_vs_pt_TnP%d_dNdPt%d_Cent%d%d",isTnP, isPtWeight, cLow, cHigh));
   TString outFileName = Form("/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_%s.root",histName.Data());
   TFile* outFile = new TFile(outFileName,"RECREATE");
-  heff->Write();
+//  heff->Write();
   hreco->Write();
-  hgen->Write();
+  hreco_tnp->Write();
+  hreco_xtnp->Write();
+//  hgen->Write();
   outFile->Close();
 }
 
-//    if(Centrality > cHigh || Centrality < cLow) continue;
-//    weight = findNcoll(Centrality) * Gen_weight;
-//    
-//    for(int igen = 0; igen<Gen_QQ_size; igen++){
-//      JP_Gen = (TLorentzVector*) Gen_QQ_4mom->At(igen);
-//      mupl_Gen = (TLorentzVector*) Gen_mu_4mom->At(Gen_QQ_mupl_idx[igen]);
-//      mumi_Gen = (TLorentzVector*) Gen_mu_4mom->At(Gen_QQ_mumi_idx[igen]);
-//
-//      if(!( fabs(JP_Gen->Rapidity())<yHigh && fabs(JP_Gen->Rapidity())>yLow && (mupl_Gen->Pt()>muPtCut && fabs(mupl_Gen->Eta())<muEtaCut) && (mumi_Gen->Pt()>muPtCut && fabs(mumi_Gen->Eta())<muEtaCut) )) continue;
-//      if(JP_Gen->Pt()>ptHigh || JP_Gen->Pt()<ptLow) continue;
-//
-//      if(Gen_mu_charge[Gen_QQ_mupl_idx[igen]]*Gen_mu_charge[Gen_QQ_mumi_idx[igen]]>0) continue;
-//
-//      pt_weight = 1;
-//      //if(isPtWeight) pt_weight = f1->Eval(JP_Gen->Pt()); 
-//
-//      hgen->Fill(JP_Gen->Pt(),weight*pt_weight);
-//    }
+
 //
 //    bool HLTPass = false;
 //    if(isSwitch){ 

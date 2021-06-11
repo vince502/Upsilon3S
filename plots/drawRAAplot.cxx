@@ -32,7 +32,8 @@ RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair){
 
   RooRealVar _y3 = bp->get_yield();
   RooRealVar _y3acc = upsi::getacceptance(ptpair.first, ptpair.second, (double) -1*ylim, ylim, 3.5);
-  double _y3eff = bp->get_eff();
+  auto _y3eff_pair = bp->get_eff();
+  double _y3eff = _y3eff_pair.first;
   RooRealVar y3AA, y3PP ;
   y3AA = RooRealVar("corrY3yield", "corrected 3S yield", _y3.getVal()/(_y3acc.getVal()*_y3eff));
   y3AA.setError(_y3.getError()/(_y3acc.getVal()*_y3eff ));

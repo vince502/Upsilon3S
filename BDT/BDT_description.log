@@ -46,3 +46,18 @@
 1622625789::8.00,11.50::BLIND[2,2]:: test
 1622626134::8.00,11.50::BLIND[2,2]:: testing with 3 QQMass Derived Variables
 1622656830::8.00,11.50::BLIND[2,2]:: whole variable, 0 to 30 pT
+1623347672::8.00,11.50::0.00,30.00::0,180::BLIND[2,2]:: testing train control
+1623347879::8.00,11.50::0.00,30.00::0,180::BLIND[2,2]:: testing train control 2
+Bin by Bin training start----------------------
+1623349746::8.00,11.50::0.00,6.00::0,180::BLIND[2,2]:: training full var
+1623349844::8.00,11.50::6.00,30.00::0,180::BLIND[2,2]:: training full var
+1623349902::8.00,11.50::0.00,30.00::0,40::BLIND[2,2]:: training full var
+1623349943::8.00,11.50::0.00,6.00::0,40::BLIND[2,2]:: training full var
+1623349971::8.00,11.50::6.00,30.00::0,40::BLIND[2,2]:: training full var
+1623349993::8.00,11.50::0.00,30.00::40,100::BLIND[2,2]:: training full var
+1623350045::8.00,11.50::0.00,6.00::40,100::BLIND[2,2]:: training full var
+1623350081::8.00,11.50::6.00,30.00::40,100::BLIND[2,2]:: training full var
+1623350105::8.00,11.50::0.00,30.00::100,180::BLIND[2,2]:: training full var
+1623350172::8.00,11.50::0.00,6.00::100,180::BLIND[2,2]:: training full var
+1623350222::8.00,11.50::6.00,30.00::100,180::BLIND[2,2]:: training full var
+Bin by Bin training end::1623349594,1623350222

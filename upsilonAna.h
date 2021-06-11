@@ -23,7 +23,9 @@ namespace upsi{
 		binplotter bp = binplotter(type, ts, yhigh, ptlow, pthigh, (int) clow, (int) chigh, blow, bhigh);
 		bp.refit = false;
 		yield = bp.get_yield();
-		eff= RooRealVar("eff", "efficiency" ,bp.get_eff());
+		auto eff_pair = bp.get_eff();
+		eff= RooRealVar("eff", "efficiency" ,eff_pair.first);
+		eff.setError(eff_pair.second);
 		acc = upsi::getacceptance(ptlow, pthigh, ylow, yhigh, sm_ptcut);
 
 		double Nmb = 11968044281; 

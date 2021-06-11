@@ -11,8 +11,10 @@
 #include "bininfo.h"
 
 
-void BDTClassifierApplication(long ts, int isMC = 0){
-  auto info_blind = info_BDT(ts)[2];
+void BDTClassifierApplication(long ts, int isMC = 0, bool isbbb = false){
+  std::string info_blind;
+  if( !isbbb) info_blind = info_BDT(ts)[2];
+  if( isbbb ) info_blind = info_BDT(ts)[4];
   std::pair<int,int> _bf= {stoi(info_blind.substr(6,1)),stoi(info_blind.substr(8,1)) };
   int whichtree = _bf.second;
   if (whichtree >5) {std::cout << "if BLIND, is tree selection wrong? " << std::endl; return; }
@@ -147,6 +149,13 @@ void BDTClassifierApplication(long ts, int isMC = 0){
     }
   BDT=reader->EvaluateMVA( Form("BDT_train_%ld",ts));
   outtree->Fill();
+  }
+  if(isbbb){
+    std::vector<std::string> bdt_info = info_BDT(ts);
+    auto ptpair = parser_symbol( bdt_info[2],",");
+    auto cBinpair = parser_symbol( bdt_info[3],",");
+    std::string cut = Form("pt>%s && pt <%s && cBin > %s && cBin < %s", ptpair[0].c_str(), ptpair[1].c_str(), cBinpair[0].c_str(), cBinpair[1].c_str() ) ;
+    outtree = (TTree*) outtree->CopyTree(cut.c_str());
   }
   outtree->Write();
   std::cout << "done Writiing " << target->GetName()<< std::endl;

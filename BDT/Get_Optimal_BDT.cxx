@@ -9,6 +9,8 @@ std::pair<double,double> Get_Optimal_BDT(long ts, double ptMin, double ptMax, do
   int Nbins = (int) 1.5/interval_score;
   string tag_BLIND = "";
   if(info_BDT(ts)[2].find("BLIND")!=std::string::npos) tag_BLIND = "BLIND";
+  if(info_BDT(ts)[4].find("BLIND")!=std::string::npos) tag_BLIND = "BLIND";
+
   std::cout << tag_BLIND << std::endl;
   std::string name_input = Form("%s/BDT/BDTResult/BDTresultY3S_%ld_%s%s.root", workdir.Data(), ts, name_input_opt.c_str(), tag_BLIND.c_str());
 

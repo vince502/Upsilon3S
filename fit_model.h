@@ -71,21 +71,32 @@ namespace fit_model_ups{
 	class DoubleGausExp
 	{
 	  	public :
-			DoubleGausExp(int state, RooRealVar* mass, RooRealVar* mean, RooRealVar* k, RooRealVar* sigma_1, RooRealVar* sigma_2, RooRealVar* frac);
+			DoubleGausExp(int state, RooRealVar* mass, RooRealVar* mean, RooRealVar* k_1, RooRealVar* k_2, RooRealVar* sigma_1, RooFormulaVar* sigma_2, RooRealVar* frac);
+			DoubleGausExp(int state, RooRealVar* mass, RooRealVar* mean, RooRealVar* k_1, RooRealVar* k_2, RooRealVar* k_3, RooRealVar* sigma_1, RooFormulaVar* sigma_2, RooFormulaVar* sigma_3, RooRealVar* frac1, RooRealVar* frac2);
 			DoubleGausExp(RooRealVar* mass, RooRealVar* mean1S, RooRealVar* mean2S, RooRealVar* mean3S, RooRealVar* k, RooRealVar* sigma1S_1, RooRealVar* sigma1S_2, RooRealVar* sigma2S_1, RooRealVar* sigma2S_2, RooRealVar* sigma3S_1, RooRealVar* sigma3S_2, RooRealVar* frac);
-			~DoubleGausExp();
+			~DoubleGausExp(){};
 
 			GausExp *GE1S_1, *GE2S_1, *GE3S_1;
 			GausExp *GE1S_2, *GE2S_2, *GE3S_2;
+			GausExp *GE1S_3, *GE2S_3, *GE3S_3;
 			RooAddPdf *twoGE1S, *twoGE2S, *twoGE3S;
-			std::map<double, std::pair<GausExp*, GausExp*> > map_state = { {1, {GE1S_1, GE1S_2}}, {2, {GE2S_1, GE2S_1}}, {3, {GE3S_1, GE3S_2}} };
-			std::map<double, RooAddPdf* > map_bindfunc = { {1,twoGE1S}, {2, twoGE2S}, {3, twoGE3S} };
+			RooAddPdf *threeGE1S, *threeGE2S, *threeGE3S;
+			std::map<int, std::pair<GausExp**, GausExp**> > map_state = { {1, {&GE1S_1, &GE1S_2}}, {2, {&GE2S_1, &GE2S_1}}, {3, {&GE3S_1, &GE3S_2}} };
+			std::map<int, GausExp**> map_state_3 = { {1,  &GE1S_3}, {2, &GE2S_3}, {3,&GE3S_3} };
+			std::map<int, RooAddPdf** > map_bindfunc = { {1,&twoGE1S}, {2, &twoGE2S}, {3, &twoGE3S},
+	 {11,&threeGE1S}, {12, &threeGE2S}, {13, &threeGE3S} 		};
 	};
 
-	DoubleGausExp::DoubleGausExp(int state, RooRealVar* mass, RooRealVar* mean, RooRealVar* k, RooRealVar* sigma_1, RooRealVar* sigma_2, RooRealVar* frac){
-	  map_state[state].first = new GausExp(Form("GE%dS_1",state),Form("GE%dS_1 function",state), *mass, *mean, *k, *sigma_1);
-	  map_state[state].second = new GausExp(Form("GE%dS_2",state),Form("GE%dS_2 function",state), *mass, *mean, *k, *sigma_2);
-	  map_bindfunc[state] = new RooAddPdf(Form("twoGE%dS",state),Form("Sum of %dS GausExp function",state), RooArgList(*map_state[state].first, *map_state[state].second), RooArgList(*frac) );
+	DoubleGausExp::DoubleGausExp(int state, RooRealVar* mass, RooRealVar* mean, RooRealVar* k_1, RooRealVar* k_2, RooRealVar* sigma_1, RooFormulaVar* sigma_2, RooRealVar* frac1){
+	  *map_state[state].first = new GausExp(Form("GE%dS_1",state),Form("GE%dS_1 function",state), *mass, *mean, *k_1, *sigma_1);
+	  *map_state[state].second = new GausExp(Form("GE%dS_2",state),Form("GE%dS_2 function",state), *mass, *mean, *k_2, *sigma_2);
+	  *map_bindfunc[state] = new RooAddPdf(Form("twoGE%dS",state),Form("Sum of %dS GausExp function",state), RooArgList(**map_state[state].first, **map_state[state].second), RooArgList(*frac1) );
+	};
+	DoubleGausExp::DoubleGausExp(int state, RooRealVar* mass, RooRealVar* mean, RooRealVar* k_1, RooRealVar* k_2, RooRealVar* k_3, RooRealVar* sigma_1, RooFormulaVar* sigma_2, RooFormulaVar* sigma_3, RooRealVar* frac, RooRealVar* frac2){
+	  *map_state[state].first = new GausExp(Form("GE%dS_1",state),Form("GE%dS_1 function",state), *mass, *mean, *k_1, *sigma_1);
+	  *map_state[state].second = new GausExp(Form("GE%dS_2",state),Form("GE%dS_2 function",state), *mass, *mean, *k_2, *sigma_2);
+	  *map_state_3[state]= new GausExp(Form("GE%dS_3",state),Form("GE%dS_3 function",state), *mass, *mean, *k_3, *sigma_3);
+	  *map_bindfunc[10+state] = new RooAddPdf(Form("threeGE%dS",state),Form("Sum of %dS GausExp function",state), RooArgList(**map_state[state].first, **map_state[state].second, **map_state_3[state]), RooArgList(*frac,*frac2) );
 	};
 
 	DoubleGausExp::DoubleGausExp(RooRealVar* mass, RooRealVar* mean1S, RooRealVar* mean2S, RooRealVar* mean3S, RooRealVar* k, RooRealVar* sigma1S_1, RooRealVar* sigma1S_2, RooRealVar* sigma2S_1, RooRealVar* sigma2S_2, RooRealVar* sigma3S_1, RooRealVar* sigma3S_2, RooRealVar* frac){

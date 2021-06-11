@@ -2,8 +2,8 @@
 #define CUSTOMPDF_H
 #include <TMath.h>
 #include <TROOT.h>
-#include "./CustomPDF/GausExp.h"
-#include "./CustomPDF/ExpGausExp.h"
+#include "./CustomPDF/GausExp.cxx"
+#include "./CustomPDF/ExpGausExp.cxx"
 
 //Double_t GausExp(Double_t x, Double_t meanx, Double_t k, Double_t sig){
 //if( (x-meanx)/sig >= -k){

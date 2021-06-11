@@ -15,8 +15,8 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
   if( fname.find("Switch1") != std::string::npos) { swflag = true;}
   
   TString mainDIR = workdir;
-  TString massDIR  = mainDIR + Form("/MassDist/BDT/%ld/MC_GE2/%s/%s/%dS/%1.1f/cent%d-%d/pT%2.1f-%2.1f", ts, Trig.c_str(),MupT.Data(), state, rapMax, cBinLow, cBinHigh, ptMin, ptMax);
-  TString massDIRp = mainDIR + Form("/MassDist/BDT/%ld/MC_GE2/%s/%s/%dS/%1.1f/cent%d-%d/pT%2.1f-%2.1f/png", ts, Trig.c_str(), MupT.Data(), state, rapMax, cBinLow, cBinHigh, ptMin, ptMax);
+  TString massDIR  = mainDIR + Form("/MassDist/BDT/%ld/MC_GE3/%s/%s/%dS/%1.1f/cent%d-%d/pT%2.1f-%2.1f", ts, Trig.c_str(),MupT.Data(), state, rapMax, cBinLow, cBinHigh, ptMin, ptMax);
+  TString massDIRp = mainDIR + Form("/MassDist/BDT/%ld/MC_GE3/%s/%s/%dS/%1.1f/cent%d-%d/pT%2.1f-%2.1f/png", ts, Trig.c_str(), MupT.Data(), state, rapMax, cBinLow, cBinHigh, ptMin, ptMax);
   void * dirpM = gSystem->OpenDirectory(massDIR.Data());
   if(dirpM) gSystem->FreeDirectory(dirpM);
   else gSystem->mkdir(massDIR.Data(), kTRUE);
@@ -92,7 +92,7 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
 //  RooFormulaVar mean3S("mean3S", "mean1S*mratio3", RooArgSet(mean1S, mratio3));
   RooRealVar sigma1S_1("sigma1S_1", "sigma1 of 1S", 0.16, 0.01, 0.35);
   RooRealVar* sigma3S_1;
-  if(fixvar == false) sigma3S_1  = new RooRealVar("sigma3S_1", "sigma3 of 1S", 0.14, 0.08, 0.25);
+  if(fixvar == false) sigma3S_1  = new RooRealVar("sigma3S_1", "sigma3 of 1S", 0.14, 0.10, 0.25);
   if(fixvar == true ) sigma3S_1  = new RooRealVar("sigma3S_1", "sigma3 of 1S", (Double_t) (Y1S->sigma*(mratio3.getVal())));
 //  RooFormulaVar sigma2S_1("sigma2S_1", "@0*@1", RooArgList(sigma1S_1, mratio2));
 //  RooFormulaVar sigma3S_1("sigma3S_1", "@0*@1", RooArgList(sigma1S_1, mratio3));
@@ -104,31 +104,41 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
   if( state == 3 && fixvar == true  ) x1S = new RooRealVar("x1S", "sigma ratio", _tmp_x1S);
   else x1S = new RooRealVar("x1S", "sigma ratio", 0.45, 0, 1);
   
-  RooRealVar* x3S = new RooRealVar("x3S", "sigma ratio", 0.54, 0, 1);
+  RooRealVar* x3S = new RooRealVar("x3S", "sigma ratio", 0.54, 0.10, 2.00);
+  RooRealVar* x3S_2 = new RooRealVar("x3S_2", "sigma ratio 2", 1.04, 0.10, 3.00);
   works1->import(*x1S);
   works1->import(*x3S);
 
 //std::cout << "///////////////////////////////////////////////////////// test code ////////////////////////////////////////////////////////////" << std::endl;
   RooFormulaVar sigma1S_2("sigma1S_2", "@0*@1", RooArgList(sigma1S_1, *x1S));
-  RooFormulaVar* sigma3S_2;
-  if (fixvar == false ) sigma3S_2 = new RooFormulaVar("sigma3S_2", "@0*@1", RooArgList(*sigma3S_1, *x3S));
+  RooFormulaVar* sigma3S_2, *sigma3S_3;
+  if (fixvar == false ) {
+    sigma3S_2 = new RooFormulaVar("sigma3S_2", "@0*@1", RooArgList(*sigma3S_1, *x3S));
+    sigma3S_3 = new RooFormulaVar("sigma3S_3", "@0*@1", RooArgList(*sigma3S_1, *x3S_2));
+  }
   if (fixvar == true ) sigma3S_2 = new RooFormulaVar("sigma3S_2", "@0*@1", RooArgList(*sigma3S_1, *x1S));
 //  RooFormulaVar sigma2S_2("sigma1S_2", "@0*@1", RooArgList(sigma1S_2, mratio2));
 //  RooFormulaVar sigma3S_2("sigma1S_2", "@0*@1", RooArgList(sigma1S_2, mratio3));
 
-  RooRealVar *alpha, *n, *frac, *k;
+  RooRealVar *alpha, *n, *frac, *frac2, *k_1, *k_2, *k_3;
   if ( state == 1 || fixvar == false ){
      alpha = new RooRealVar("alpha", "alpha of Crystal ball", 1.6, 0.5, 2.0);
      n = new RooRealVar("n", "n of Crystal ball", 2, 1.4, 4.0);
-     frac = new RooRealVar("frac", "CB fraction", 0.5, 0.10, 0.90);
-     k = new RooRealVar("k", "k of GausExp", 2.5, 0.1, 8); 
+     frac = new RooRealVar("frac", "GE fraction", 0.3, 0.10, 0.60);
+     frac2 = new RooRealVar("frac2", "GE fraction 2", 0.3, 0.10, 0.60);
+     k_1 = new RooRealVar("k_1", "k1 of GausExp", 0.8, 0.1, 6); 
+     k_2 = new RooRealVar("k_2", "k2 of GausExp", 1.8, 0.11, 6); 
+     k_3 = new RooRealVar("k_3", "k3 of GausExp", 0.8, 0.11, 3); 
    }
    if ( fixvar == true && state == 3 ){
      alpha = new RooRealVar("alpha", "alpha of Crystal ball", Y1S->alp);
      n = new RooRealVar("n", "n of Crystal ball", Y1S->n);
      frac = new RooRealVar("frac", "CB fraction", Y1S->frac);
    }
-  auto DGE = fit_model_ups::DoubleGausExp(3, (works1->var("mass")), mean3S, k, sigma3S_1, sigma3S_2);
+dbg();
+  fit_model_ups::DoubleGausExp* DGE = new fit_model_ups::DoubleGausExp(3, (works1->var("mass")), &mean3S, k_1, k_2, k_3, sigma3S_1, sigma3S_2, sigma3S_3, frac, frac2);
+dbg();
+  RooBreitWigner* BW3S_1 = new RooBreitWigner("BW3S_1", "3S Breit Wigner function 1", *(works1->var("mass")), mean3S, *sigma3S_3);
   RooCBShape* CB1S_1 = new RooCBShape("CB1S_1", "1S Crystal ball function1", *(works1->var("mass")), mean1S, sigma1S_1, *alpha, *n);
   RooCBShape* CB3S_1 = new RooCBShape("CB3S_1", "3S Crystal ball function1", *(works1->var("mass")), mean3S, *sigma3S_1, *alpha, *n);
 //  RooCBShape* CB2S_1 = new RooCBShape("CB2S_1", "2S Crystal ball function1", *(works1->var("mass")), mean2S, sigma2S_1, alpha, n);
@@ -140,7 +150,7 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
 //  RooGaussian* G1S = new RooGaussian("G1S", "1S Gaussian", *(works1->var("mass")), mean1S, sigma1S_2);
 //  RooGaussian* G2S = new RooGaussian("G2S", "2S Gaussian", *(works1->var("mass")), mean2S, sigma2S_2);
 //  RooGaussian* G3S = new RooGaussian("G3S", "3S Gaussian", *(works1->var("mass")), mean3S, sigma3S_2);
-
+  RooAddPdf* GEBW3S = new RooAddPdf("GEBW3S", "Sum of 3S GE BW", RooArgList(*DGE->GE3S_1, *DGE->GE3S_2, *BW3S_1), RooArgList(*frac, *frac2));
   RooAddPdf* twoCB1S = new RooAddPdf("twoCB1S", "Sum of 1S Crystal ball", RooArgList(*CB1S_1, *CB1S_2), RooArgList(*frac));
   RooAddPdf* twoCB3S = new RooAddPdf("twoCB3S", "Sum of 3S Crystal ball", RooArgList(*CB3S_1, *CB3S_2), RooArgList(*frac));
 //  RooAddPdf* twoCB2S = new RooAddPdf("twoCB2S", "Sum of 2S Crystal ball", RooArgList(*CB2S_1, *CB2S_2), RooArgList(*frac));
@@ -151,10 +161,10 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
 //  RooRealVar Erfmean("Erfmean", "Mean of Errfunction", 5, 0, 10.0);//for 0~40, 4~7 GeV
 //  RooRealVar Erfsigma("Erfsigma", "Sigma of Errfunction", 1, 0, 100);//for 0~40, 4~7 GeV
 //  RooRealVar Erfp0("Erfp0", "1st parameter of Errfunction", 1, 0, 100);
-//  RooRealVar ch4_k1("ch4_k1", "ch4_k1", -0.02, -3.0, 3.0);
-//  RooRealVar ch4_k2("ch4_k2", "ch4_k2", -0.05, -3.0, 3.00);
+  RooRealVar ch4_k1("ch4_k1", "ch4_k1", -0.02, -3.0, 3.0);
+  RooRealVar ch4_k2("ch4_k2", "ch4_k2", -0.05, -3.0, 3.00);
 //  RooGenericPdf* bkgErf = new RooGenericPdf("bkgErf", "Error background", "TMath::Exp(-@0/@1)*(TMath::Erf((@0-@2)/(TMath::Sqrt(2)*@3))+1)*0.5", RooArgList(*(works1->var("mass")), Erfp0, Erfmean, Erfsigma));
-//  RooChebychev *bkg = new RooChebychev("cPol1Bkg", "Background", *(works1->var("mass")), RooArgSet(ch4_k1, ch4_k2));
+  RooChebychev *bkg = new RooChebychev("cPol1Bkg", "Background", *(works1->var("mass")), RooArgSet(ch4_k1, ch4_k2));
 
 
   RooGenericPdf* Signal1S;
@@ -164,28 +174,33 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
 //  Signal1S = (RooGenericPdf*) twoCB1S;
 //  Signal2S = (RooGenericPdf*) twoCB2S;
 //  Signal3S = (RooGenericPdf*) twoCB3S;
-  Signal3S = (RooGenericPdf*) DGE->twoGE3S;
-
+  Signal3S = (RooGenericPdf*) GEBW3S;
+//  std::cout << DGE->GE3S_1->GetName() << std::endl;
+//  std::cout << DGE->threeGE3S->GetName() << std::endl;
+//  std::cout << Signal3S->GetName() << std::endl;
+dbg();
   RooRealVar* nSig1S = new RooRealVar("nSig1S", "# of 1S signal",70000, 0, 1000000);
 //  RooRealVar* nSig2S = new RooRealVar("nSig2S", "# of 2S signal", 100, -1000, 300000);
-  RooRealVar* nSig3S = new RooRealVar("nSig3S", "# of 3S signal", 30, 0, 1000000);
+  RooRealVar* nSig3S = new RooRealVar("nSig3S", "# of 3S signal", 3000, 0, 1000000);
 //  RooRealVar* nBkg = new RooRealVar("nBkg", "# of background signal", 300, -1000, 10000000); //Erf* mean
   RooRealVar* nBkg = new RooRealVar("nBkg", "# of background signal", -100, 100000);
   if (Trig == "Ups"){ nSig3S->setMax(10000000); nSig3S->setVal(100000); nSig1S->setMax(10000000); nSig1S->setVal(1000000); nBkg->setMax(10000000);}
   RooAddPdf* model;
   if( state == 1) model = new RooAddPdf("model", "1S+Bkg", RooArgList(*Signal1S,*bkg), RooArgList(*nSig1S, *nBkg));
   //if( state == 3) model = new RooAddPdf("model", "3S+Bkg", RooArgList(*Signal3S,*bkg), RooArgList(*nSig3S, *nBkg));
-  if( state == 3) model = new RooAddPdf("model", "3S", RooArgList(*Signal3S), RooArgList(*nSig3S, *nBkg));
+dbg(100);
+  if( state == 3) model = new RooAddPdf("model", "3S", RooArgList(*Signal3S), RooArgList(*nSig3S));
 
+dbg(100);
   works1->import(*model);
+dbg();
 /////////////////////////////////////////////////////////////FITTING START//////////////////////////////////////////////////////////////////////////////////////////
   RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), Hesse(kTRUE), Range(RangeLow, RangeHigh), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));
   works1->pdf("model")->plotOn(massPlot, Name("modelPlot"));
 //  works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*Signal2S)), LineColor(kRed), LineStyle(kDashed), MoveToBack());
   if( state ==1 ) {works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*Signal1S)), LineColor(kRed), LineStyle(kDashed), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CB1S_1)), LineColor(kGreen), LineStyle(kSolid), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CB1S_2)), LineColor(kMagenta), LineStyle(kDashDotted), MoveToBack());}
 //  if( state ==3 ) {works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*Signal3S)), LineColor(kRed), LineStyle(kDashed), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CB3S_1)), LineColor(kGreen), LineStyle(kSolid), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CB3S_2)), LineColor(kMagenta), LineStyle(kDashDotted), MoveToBack());}
-  if( state ==3 ) {works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*Signal3S)), LineColor(kRed), LineStyle(kDashed), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*DGE->GE3S_1)), LineColor(kGreen), LineStyle(kSolid), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*DGE->GE3S_2)), LineColor(kMagenta), LineStyle(kDashDotted), MoveToBack());}
-  works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*bkg)), LineColor(kBlue), LineStyle(kDashed));
+  if( state ==3 ) {works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*Signal3S)), LineColor(kRed), LineStyle(kDashed), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*DGE->GE3S_1)), LineColor(kGreen), LineStyle(kSolid), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*DGE->GE3S_2)), LineColor(kMagenta), LineStyle(kDashDotted), MoveToBack());works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*BW3S_1)), LineColor(kOrange), LineStyle(kDotted), MoveToBack());}
   massPlot->SetTitle("");
   massPlot->SetXTitle("M (GeV/c^2)");
   massPlot->SetYTitle("Counts");
@@ -250,7 +265,7 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
 //  Double_t Yield2SErr = works1->var("nSig2S")->getError();
 //  Double_t Yield3S = works1->var("nSig3S")->getVal();
 //  Double_t Yield3SErr = works1->var("nSig3S")->getError();
-  Double_t YieldBkg = works1->var("nBkg")->getVal();
+//  Double_t YieldBkg = works1->var("nBkg")->getVal();
 
   hYield->SetBinContent(1, YieldNS);
   hYield->SetBinError(1, YieldNSErr);
@@ -281,22 +296,23 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
 //  TF1* Sgnfc3S;
 
   if( state ==1 )SgnfcNS = works1->pdf("twoCB1S")->asTF(*(works1->var("mass")));
-  if( state ==3 )SgnfcNS = works1->pdf("twoCB3S")->asTF(*(works1->var("mass")));
+//  if( state ==3 )SgnfcNS = works1->pdf("twoGE3S")->asTF(*(works1->var("mass")));
+  if( state ==3 )SgnfcNS = works1->pdf("GEBW3S")->asTF(*(works1->var("mass")));
 //  Sgnfc2S = works1->pdf("twoCB2S")->asTF(*(works1->var("mass")));
 //  Sgnfc3S = works1->pdf("twoCB3S")->asTF(*(works1->var("mass")));
 
   TF1* Bkgfc;
-  Bkgfc = works1->pdf("cPol1Bkg")->asTF(*(works1->var("mass")));
+//  Bkgfc = works1->pdf("cPol1Bkg")->asTF(*(works1->var("mass")));
 
   Double_t TIntgrNS = SgnfcNS->Integral(RangeLow, RangeHigh);
 //  Double_t TIntgr2S = Sgnfc2S->Integral(RangeLow, RangeHigh);
 //  Double_t TIntgr3S = Sgnfc3S->Integral(RangeLow, RangeHigh);
-  Double_t TIntgrBkg = Bkgfc->Integral(RangeLow, RangeHigh);
+//  Double_t TIntgrBkg = Bkgfc->Integral(RangeLow, RangeHigh);
   Double_t IntgrSig = SgnfcNS->Integral(meanout-2*sigmaout, meanout+2*sigmaout);
-  Double_t IntgrBkg = Bkgfc->Integral(meanout-2*sigmaout, meanout+2*sigmaout);
-  Double_t Significance =(YieldNS*IntgrSig/TIntgrNS/TMath::Sqrt(((YieldNS*IntgrSig/TIntgrNS)+(YieldBkg*IntgrBkg/TIntgrBkg))));
+//  Double_t IntgrBkg = Bkgfc->Integral(meanout-2*sigmaout, meanout+2*sigmaout);
+//  Double_t Significance =(YieldNS*IntgrSig/TIntgrNS/TMath::Sqrt(((YieldNS*IntgrSig/TIntgrNS)+(YieldBkg*IntgrBkg/TIntgrBkg))));
 
-  TH1D* hfrac = new TH1D("hfrac", "", 6, 0, 6);
+/*  TH1D* hfrac = new TH1D("hfrac", "", 6, 0, 6);
   if( state == 1){
     hfrac->SetBinContent(1, SgnfcNS->Eval(U1S_mass));
     hfrac->SetBinContent(2, Bkgfc->Eval(U1S_mass));
@@ -319,16 +335,19 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
   for(Int_t i =0; i <20; i++){
     hfracdist->SetBinContent(i+1, SgnfcNS->Eval(9+0.05*i)/(SgnfcNS->Eval(9+0.05*i)+Bkgfc->Eval(9+0.05*i)));
   }
-  FILE* ftxt = 0;
-  if(ftxt != NULL){
-    fprintf(ftxt, "mean sigma1 sigma2 fraction totsigma totsig totbkg sig bkg nsig nbkg significance \n");
-    fprintf(ftxt, "%.3f	%.3f	%.3f	%.3f	%.3f	%.3f	%.3f	%.3f	%.3f	%.3f	%.3f	%.3f \n", meanout, sigma1out, sigma2out, fracout, sigmaout, TIntgrNS, TIntgrBkg, IntgrSig, IntgrBkg, YieldNS, YieldBkg, Significance);
-    fprintf(ftxt, "mean  U1sigma1  fraction  alpha  n  Erfmean  Erfsigma  Erfp0 \n");
-    fprintf(ftxt, "%.3f   %.3f   %.3f   %.3f \n", YieldNS, YieldBkg, TIntgrNS, TIntgrBkg);
-  }
+  */
+//  FILE* ftxt = 0;
+//  if(ftxt != NULL){
+//    fprintf(ftxt, "mean sigma1 sigma2 fraction totsigma totsig totbkg sig bkg nsig nbkg significance \n");
+//    fprintf(ftxt, "%.3f	%.3f	%.3f	%.3f	%.3f	%.3f	%.3f	%.3f	%.3f	%.3f	%.3f	%.3f \n", meanout, sigma1out, sigma2out, fracout, sigmaout, TIntgrNS, TIntgrBkg, IntgrSig, IntgrBkg, YieldNS, YieldBkg, Significance);
+//    fprintf(ftxt, "mean  U1sigma1  fraction  alpha  n  Erfmean  Erfsigma  Erfp0 \n");
+//    fprintf(ftxt, "%.3f   %.3f   %.3f   %.3f \n", YieldNS, YieldBkg, TIntgrNS, TIntgrBkg);
+//  }
   
   //fout = new TFile(Form("Yield/Yield_%dS_pt_%d-%d_rap_%d-%d_noWeight_MupT%s_%s_BDT_%d-%d_vp_%d_MC_%d.root",(int) state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), MupT.Data(), Trig.c_str(), bdtlow, bdthigh, cutQVP,(int) fixvar), "RECREATE");
 
+  c1->SetLogy();
+  c1->Update();
   c1->SaveAs(Form("%s/MassDistribution_%dS_pt_%d-%d_rap_%d-%d_%dbin_noWeight_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_fix%d.pdf",massDIR.Data(), state,(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, MupT.Data(), Trig.c_str(), bdtlow, bdthigh, cutQVP,(int) fixvar));
   c1->SaveAs(Form("%s/png/MassDistribution_%dS_pt_%d-%d_rap_%d-%d_%dbin_noWeight_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_fix%d.png",massDIR.Data(), state,(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, MupT.Data(), Trig.c_str(), bdtlow, bdthigh, cutQVP, (int) fixvar));
   TH1D* hmass = new TH1D("hmass", ";M (GeV/c^2);Counts", Nmassbins, RangeLow, RangeHigh);
@@ -350,8 +369,8 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
   hYield->Write();
   hmass->Write();
   SgnfcNS->Write();
-  hfrac->Write();
-  hfracdist->Write();
+ // hfrac->Write();
+ // hfracdist->Write();
  
 };
 

@@ -18,12 +18,12 @@ ClassImp(GausExp);
 
  GausExp::GausExp(const char *name, const char *title, 
                         RooAbsReal& _mass,
- 			RooAblsReal& _mean,
+ 			RooAbsReal& _mean,
                         RooAbsReal& _k,
                         RooAbsReal& _sigma) :
    RooAbsPdf(name,title), 
    mass("mass","mass",this,_mass),
-   mean("mean","mean",_mean),
+   mean("mean","mean",this,_mean),
    k("k","k",this,_k),
    sigma("sigma","sigma",this,_sigma)
  { 

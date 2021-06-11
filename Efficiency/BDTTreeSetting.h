@@ -55,6 +55,7 @@ double		 ptErr_inner1;
 double		 ptErr_inner2;
 double		 weight;
 double		 tnp_weight;
+double		 pt_weight;
 double		 BDT;
 
 //  muon id 
@@ -92,6 +93,8 @@ void SetTreeBDT::TreeSetting(TTree* tree)
   tree->SetBranchAddress("eta2", &eta2);
   tree->SetBranchAddress("eta", &eta);
   tree->SetBranchAddress("weight", &weight);
+  tree->SetBranchAddress("tnp_weight", &tnp_weight);
+  tree->SetBranchAddress("pt_weight", &pt_weight);
   tree->SetBranchAddress("QQVtxProb", &QQVtxProb);
   tree->SetBranchAddress("BDT", &BDT);
   tree->SetBranchAddress("nTrkWMea1", &nTrkWMea1);

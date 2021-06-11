@@ -194,7 +194,7 @@ std::pair<int, int> blindpair(long ts= 1618557840){
   input.close();
 };
 
-std::vector< std::string > info_BDT(long ts)
+std::vector< std::string > info_BDT(long ts, std::string aux = "")
 {
 	std::fstream input;
 	input.open(Form("%s/BDT/BDT_description.log",workdir.Data()));
@@ -202,7 +202,20 @@ std::vector< std::string > info_BDT(long ts)
 	std::string stringbuf;
 	while (input.peek() != EOF){
 	  std::getline(input, stringbuf);
-	  long inputts = stol(stringbuf.substr(0,10));
+	  long inputts;
+	  try{
+	    stol( stringbuf.substr(0,10));
+	    inputts = stol(stringbuf.substr(0,10));
+	  }
+	  catch(...){
+	    if( aux != ""){
+	      continue;
+//	      if( input.find(aux) != std::string::npos){
+//	        return parser_symbol(input);
+//	      }
+	    }
+	    else continue;
+	  }
 	  dictmap[inputts] = stringbuf;
 	}
 	try{
