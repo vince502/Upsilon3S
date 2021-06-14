@@ -111,7 +111,7 @@ void dbg(int x=0){
       std::cout << "-------------------------_____DEBUG"<<indx<<"_____----------------------------" << std::endl;
 };
 std::vector<std::string> parser_symbol(std::string type,std::string delim = ":"){
-  if(type.find(delim) == std::string::npos) return std::vector<std::string>{"nan","nan","nan"};
+  if(type.find(delim) == std::string::npos) return std::vector<std::string>{type.c_str()};
   std::vector<size_t> positions;
   size_t pos = type.find(delim,0);
   while(pos != std::string::npos){

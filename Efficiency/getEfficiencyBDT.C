@@ -20,7 +20,7 @@ void getEfficiencyBDT(
 //  if(kTrigSel == kTrigUps) kTrigSel_ = 1;
 //  else if(kTrigSel == kTrigL1DBOS40100) kTrigSel_ = 2; 
 
-  float muPtCut = 4.0;
+  float muPtCut = 3.5;
   float muEtaCut = 2.4;
 
   float massLow = 9.0;

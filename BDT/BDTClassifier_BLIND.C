@@ -80,8 +80,8 @@ bool BDTClassifier_BLIND_Function(double ptLow, double ptHigh, int cBinLow, int 
   Double_t backgroundWeight = 20.0;
 
   loader->AddSignalTree     (SigTree, signalWeight);
-  loader->AddBackgroundTree (BkgTreeTest, backgroundWeight, "Test");
-  loader->AddBackgroundTree (BkgTreeTrain, backgroundWeight, "Train");
+  loader->AddBackgroundTree (BkgTreeTest, backgroundWeight); //  , "Test");
+//  loader->AddBackgroundTree (BkgTreeTrain, backgroundWeight, "Train");
 
   loader->SetSignalWeightExpression("weight");
 //  loader->SetBackgroundWeightExpression("weight");
@@ -117,44 +117,51 @@ bool BDTClassifier_BLIND_Function(double ptLow, double ptHigh, int cBinLow, int 
 //Main Function
 void BDTClassifier_BLIND( ){
   ofstream log;
-  log.open("BDT_description.log", std::ios_base::out|std::ios_base::app);
-  log << "Bin by Bin training start----------------------" <<std::endl; ; 
-  log.close();
+  //log.open("BDT_description.log", std::ios_base::out|std::ios_base::app);
+  //log << "Bin by Bin training start----------------------" <<std::endl; ; 
+  //log.close();
 
   std::pair<long, long> tsrange;
+  std::vector<long > v_ts;
   std::cout << "Write down description for this run :";
   std::cin.getline(logbuf,2000);
-  bool res = BDTClassifier_BLIND_Function(0,30, 0,180);
+  bool res; 
+  res = BDTClassifier_BLIND_Function(0,30, 0,180);
   tsrange.first = _ts;
-  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
-    res = BDTClassifier_BLIND_Function(0,6, 0,180);
-  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
-    res = BDTClassifier_BLIND_Function(6,30, 0, 180);
-  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+//  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  //  res = BDTClassifier_BLIND_Function(0,6, 0,180);
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  //  res = BDTClassifier_BLIND_Function(6,30, 0, 180);
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
 
-  res = BDTClassifier_BLIND_Function(0,30, 0,40);
-  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
-    res = BDTClassifier_BLIND_Function(0,6, 0,40);
-  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
-    res = BDTClassifier_BLIND_Function(6,30,0, 40);
-  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  //res = BDTClassifier_BLIND_Function(0,30, 0,40);
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  //  res = BDTClassifier_BLIND_Function(0,6, 0,40);
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  //  res = BDTClassifier_BLIND_Function(6,30,0, 40);
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
 
-  res = BDTClassifier_BLIND_Function(0,30, 40,100);
+  //res = BDTClassifier_BLIND_Function(0,30, 40,100);
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  //  res = BDTClassifier_BLIND_Function(0,6, 40,100);
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  //  res = BDTClassifier_BLIND_Function(6,30,40, 100);
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  //
+  res = BDTClassifier_BLIND_Function(0,30, 100,180);
   if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
-    res = BDTClassifier_BLIND_Function(0,6, 40,100);
-  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
-    res = BDTClassifier_BLIND_Function(6,30,40, 100);
-  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
-  
-    res = BDTClassifier_BLIND_Function(0,30, 100,180);
-  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
-    res = BDTClassifier_BLIND_Function(0,6, 100,180);
-  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
-    res = BDTClassifier_BLIND_Function(6,30, 100, 180);
-  tsrange.second = _ts;
-  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  //  res = BDTClassifier_BLIND_Function(0,6, 100,180);
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  //  res = BDTClassifier_BLIND_Function(6,30, 100, 180);
+  //tsrange.second = _ts;
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
 
-  log.open("BDT_description.log", std::ios_base::out|std::ios_base::app);
-  log << "Bin by Bin training end::" << Form("%ld,%ld",tsrange.first,tsrange.second) << std::endl;
-  log.close();
+  //log.open("BDT_description.log", std::ios_base::out|std::ios_base::app);
+  //log << "TS coleection::{";
+  //for ( const auto ts : v_ts){ 
+  //  log << Form(" %s,",ts);
+  //} log << "}" << std::endl;
+
+  //log << "Bin by Bin training end::" << Form("%ld,%ld",tsrange.first,tsrange.second) << std::endl;
+  //log.close();
 }

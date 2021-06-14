@@ -20,14 +20,14 @@ void drawRAAplot(){
 //  c2->SaveAs(Form("%s/plots/DoubleRatio/plot_test_bdt0.2_1.0.cxx", workdir.Data() ));
 };
 RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair){
-  long ts = 1621574976; //BLIND Nominal
+  long ts = 1623391157; //BLIND Nominal
   std::pair<double, double> ptpair = {0,30};
 
   double ylim = 2.4;
   std::pair<double, double> bdtpair = {0.20,1.00}; //BLIND Nominal ?
 
   binplotter* bp ;
-  bp = new binplotter("CB2:CC2:FFDD3",ts, ylim, ptpair.first, ptpair.second, cbpair.first, cbpair.second, bdtpair.first, bdtpair.second );
+  bp = new binplotter("CB3:CC2:GC",ts, ylim, ptpair.first, ptpair.second, cbpair.first, cbpair.second, bdtpair.first, bdtpair.second );
   bp->set_params("_CC2", 0.00);
 
   RooRealVar _y3 = bp->get_yield();

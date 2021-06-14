@@ -112,7 +112,12 @@ RooRealVar binplotter::get_yield(){
   }
 
   TFile* file1 = new TFile(filename.c_str(),"read");
-  RooFitResult * res = (RooFitResult*) file1->Get("fitresult_model_reducedDS");
+  RooFitResult * res ;
+  res = (RooFitResult*) file1->Get("fitresult_model_reducedDS");
+  if(res==nullptr)
+  {
+    res = (RooFitResult*) file1->Get("fitresult_model_gc_reducedDS");
+  }
   RooRealVar Yield1S, Yield2S, Yield3S;
   RooArgList* paramList = (RooArgList*) &res->floatParsFinal();
   for( auto arg : *paramList) {
@@ -147,38 +152,38 @@ RooRealVar binplotter::yield_eff(){
   return YoverE;
 };
 
-RooRealVar binplotter::getsignificance(){
-  string fitdir;
-  TFile* file1 = new TFile(filename.c_str(),"read");
-  
-  RooWorkspace* works1 = (RooWorkspace*) file1->Get("workspace");
-  RooFitResult* Rsult = (RooFitResult*) file1->Get("fitresult_model_reducedDS");
-
-  RooDataSet* dataset = (RooDataSet*) works1->data("reducedDS");
-  RooRealVar* vmass = (RooRealVar*) works1->var("mass");
-  vmass->setRange("SigReg", 10, 10.7);
-  RooAbsPdf* pdf_sig = (RooAbsPdf*) works1->pdf("twoCB3S");
-  RooAbsPdf* pdf_bkg;
-  if(strcmp(fitfunc.c_str(),"")==0)pdf_bkg =(RooAbsPdf*) works1->pdf("bkgErf");
-  if(fitfunc.find("_CC")!=std::string::npos)pdf_bkg =(RooAbsPdf*) works1->pdf("CCBkg");
-  NS = (RooRealVar*) works1->var("nSig3S");
-  NB = (RooRealVar*) works1->var("nBkg");
-  double nSig = works1->var("nSig3S")->getVal();
-  double nBkg = works1->var("nBkg")->getVal();
-  double eSig = works1->var("nSig3S")->getError();
-  double eBkg = works1->var("nBkg")->getError();
-
-  RooAbsReal* integral_sig = pdf_sig->createIntegral(*vmass, RooFit::NormSet(*vmass), RooFit::Range("SigReg"));
-  RooAbsReal* integral_bkg = pdf_bkg->createIntegral(*vmass, RooFit::NormSet(*vmass), RooFit::Range("SigReg"));
-  double sig_sum = nSig *((double) integral_sig->getVal());
-  double sig_err = eSig *((double) integral_sig->getVal());
-  double bkg_sum = nBkg *((double) integral_bkg->getVal());
-  double bkg_err = eBkg *((double) integral_bkg->getVal());
-  double signif = sig_sum/TMath::Sqrt(sig_sum+bkg_sum);
-  double signif_err = (TMath::Power(sig_sum+bkg_sum,-1.5))*(TMath::Sqrt(TMath::Power((0.5*sig_sum+bkg_sum)*sig_err,2)+TMath::Power(0.5*sig_sum*bkg_err,2)));
-  RooRealVar significance("significance","Significance of signal",signif,0,10000);
-  significance.setError(signif_err);
-  return significance;
-};
+//RooRealVar binplotter::getsignificance(){
+//  string fitdir;
+//  TFile* file1 = new TFile(filename.c_str(),"read");
+//  
+//  RooWorkspace* works1 = (RooWorkspace*) file1->Get("workspace");
+//  RooFitResult* Rsult = (RooFitResult*) file1->Get("fitresult_model_reducedDS");
+//
+//  RooDataSet* dataset = (RooDataSet*) works1->data("reducedDS");
+//  RooRealVar* vmass = (RooRealVar*) works1->var("mass");
+//  vmass->setRange("SigReg", 10, 10.7);
+//  RooAbsPdf* pdf_sig = (RooAbsPdf*) works1->pdf("twoCB3S");
+//  RooAbsPdf* pdf_bkg;
+//  if(strcmp(fitfunc.c_str(),"")==0)pdf_bkg =(RooAbsPdf*) works1->pdf("bkgErf");
+//  if(fitfunc.find("_CC")!=std::string::npos)pdf_bkg =(RooAbsPdf*) works1->pdf("CCBkg");
+//  NS = (RooRealVar*) works1->var("nSig3S");
+//  NB = (RooRealVar*) works1->var("nBkg");
+//  double nSig = works1->var("nSig3S")->getVal();
+//  double nBkg = works1->var("nBkg")->getVal();
+//  double eSig = works1->var("nSig3S")->getError();
+//  double eBkg = works1->var("nBkg")->getError();
+//
+//  RooAbsReal* integral_sig = pdf_sig->createIntegral(*vmass, RooFit::NormSet(*vmass), RooFit::Range("SigReg"));
+//  RooAbsReal* integral_bkg = pdf_bkg->createIntegral(*vmass, RooFit::NormSet(*vmass), RooFit::Range("SigReg"));
+//  double sig_sum = nSig *((double) integral_sig->getVal());
+//  double sig_err = eSig *((double) integral_sig->getVal());
+//  double bkg_sum = nBkg *((double) integral_bkg->getVal());
+//  double bkg_err = eBkg *((double) integral_bkg->getVal());
+//  double signif = sig_sum/TMath::Sqrt(sig_sum+bkg_sum);
+//  double signif_err = (TMath::Power(sig_sum+bkg_sum,-1.5))*(TMath::Sqrt(TMath::Power((0.5*sig_sum+bkg_sum)*sig_err,2)+TMath::Power(0.5*sig_sum*bkg_err,2)));
+//  RooRealVar significance("significance","Significance of signal",signif,0,10000);
+//  significance.setError(signif_err);
+//  return significance;
+//};
 
 #endif

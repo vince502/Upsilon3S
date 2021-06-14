@@ -103,6 +103,66 @@ namespace fit_model_ups{
 
 	  };
 
-};
 
+	class CB3
+	{
+		public :
+			CB3(RooRealVar* mass, RooRealVar* mean1S, RooFormulaVar* mean2S, RooFormulaVar* mean3S, RooRealVar* sigma1S_1, RooFormulaVar* sigma2S_1,RooFormulaVar* sigma3S_1, RooFormulaVar* sigma1S_2, RooFormulaVar* sigma2S_2, RooFormulaVar* sigma3S_2, RooFormulaVar* sigma1S_3, RooFormulaVar* sigma2S_3, RooFormulaVar* sigma3S_3, RooRealVar* alpha1, RooRealVar* alpha2, RooRealVar* alpha3, RooRealVar* n1, RooRealVar* n2, RooRealVar* n3, RooRealVar* frac1_1, RooRealVar* frac2_1, RooRealVar* frac3_1, RooRealVar* frac1_2, RooRealVar* frac2_2, RooRealVar* frac3_2);
+			CB3(RooRealVar* mass, RooRealVar* mean1S, RooFormulaVar* mean2S, RooFormulaVar* mean3S, RooRealVar* sigma1S_1, RooFormulaVar* sigma2S_1,RooFormulaVar* sigma3S_1, RooFormulaVar* sigma1S_2, RooFormulaVar* sigma2S_2, RooFormulaVar* sigma3S_2, RooFormulaVar* sigma1S_3, RooFormulaVar* sigma2S_3, RooFormulaVar* sigma3S_3, RooRealVar* alpha1, RooRealVar* n1, RooRealVar* frac1_1, RooRealVar* frac1_2);
+			CB3(RooRealVar* mass, RooRealVar* mean1S, RooFormulaVar* mean2S, RooRealVar* mean3S, RooRealVar* sigma1S_1, RooFormulaVar* sigma2S_1,RooFormulaVar* sigma3S_1, RooFormulaVar* sigma1S_2, RooFormulaVar* sigma2S_2, RooFormulaVar* sigma3S_2, RooFormulaVar* sigma1S_3, RooFormulaVar* sigma2S_3, RooFormulaVar* sigma3S_3, RooRealVar* alpha1, RooRealVar* alpha2, RooRealVar* alpha3, RooRealVar* n1, RooRealVar* n2, RooRealVar* n3, RooRealVar* frac1_1, RooRealVar* frac1_2);
+			~CB3(){};
+
+			RooCBShape *CB1S_1, *CB2S_1, *CB3S_1;
+			RooCBShape *CB1S_2, *CB2S_2, *CB3S_2;
+			RooCBShape *CB1S_3, *CB2S_3, *CB3S_3;
+			RooAddPdf *threeCB1S, *threeCB2S, *threeCB3S;
+	};
+
+	CB3::CB3(RooRealVar* mass, RooRealVar* mean1S, RooFormulaVar* mean2S, RooFormulaVar* mean3S, RooRealVar* sigma1S_1, RooFormulaVar* sigma2S_1,RooFormulaVar* sigma3S_1, RooFormulaVar* sigma1S_2, RooFormulaVar* sigma2S_2, RooFormulaVar* sigma3S_2, RooFormulaVar* sigma1S_3, RooFormulaVar* sigma2S_3, RooFormulaVar* sigma3S_3, RooRealVar* alpha1, RooRealVar* n1, RooRealVar* frac1_1, RooRealVar* frac1_2){
+	  
+	  CB1S_1 = new RooCBShape("CB1S_1", "1S Crystal ball function1", *mass, *mean1S, *sigma1S_1, *alpha1, *n1);
+	  CB2S_1 = new RooCBShape("CB2S_1", "2S Crystal ball function1", *mass, *mean2S, *sigma2S_1, *alpha1, *n1);
+	  CB3S_1 = new RooCBShape("CB3S_1", "3S Crystal ball function1", *mass, *mean3S, *sigma3S_1, *alpha1, *n1);
+	  CB1S_2 = new RooCBShape("CB1S_2", "1S Crystal ball function2", *mass, *mean1S, *sigma1S_2, *alpha1, *n1);
+	  CB2S_2 = new RooCBShape("CB2S_2", "2S Crystal ball function2", *mass, *mean2S, *sigma2S_2, *alpha1, *n1);
+	  CB3S_2 = new RooCBShape("CB3S_2", "3S Crystal ball function2", *mass, *mean3S, *sigma3S_2, *alpha1, *n1);
+	  CB1S_3 = new RooCBShape("CB1S_3", "1S Crystal ball function3", *mass, *mean1S, *sigma1S_3, *alpha1, *n1);
+	  CB2S_3 = new RooCBShape("CB2S_3", "2S Crystal ball function3", *mass, *mean2S, *sigma2S_3, *alpha1, *n1);
+	  CB3S_3 = new RooCBShape("CB3S_3", "3S Crystal ball function3", *mass, *mean3S, *sigma3S_3, *alpha1, *n1);
+	  threeCB1S = new RooAddPdf("threeCB1S", "Sum of 1S Crystal ball", RooArgList(*CB1S_1, *CB1S_2, *CB1S_3), RooArgList(*frac1_1, *frac1_2));
+	  threeCB2S = new RooAddPdf("threeCB2S", "Sum of 2S Crystal ball", RooArgList(*CB2S_1, *CB2S_2, *CB2S_3), RooArgList(*frac1_1, *frac1_2));
+	  threeCB3S = new RooAddPdf("threeCB3S", "Sum of 3S Crystal ball", RooArgList(*CB3S_1, *CB3S_2, *CB3S_3), RooArgList(*frac1_1, *frac1_2));
+	};
+
+	CB3::CB3(RooRealVar* mass, RooRealVar* mean1S, RooFormulaVar* mean2S, RooFormulaVar* mean3S, RooRealVar* sigma1S_1, RooFormulaVar* sigma2S_1,RooFormulaVar* sigma3S_1, RooFormulaVar* sigma1S_2, RooFormulaVar* sigma2S_2, RooFormulaVar* sigma3S_2, RooFormulaVar* sigma1S_3, RooFormulaVar* sigma2S_3, RooFormulaVar* sigma3S_3, RooRealVar* alpha1, RooRealVar* alpha2, RooRealVar* alpha3, RooRealVar* n1, RooRealVar* n2, RooRealVar* n3, RooRealVar* frac1_1, RooRealVar* frac2_1, RooRealVar* frac3_1, RooRealVar* frac1_2, RooRealVar* frac2_2, RooRealVar* frac3_2){
+	  CB1S_1 = new RooCBShape("CB1S_1", "1S Crystal ball function1", *mass, *mean1S, *sigma1S_1, *alpha1, *n1);
+	  CB2S_1 = new RooCBShape("CB2S_1", "2S Crystal ball function1", *mass, *mean2S, *sigma2S_1, *alpha2, *n2);
+	  CB3S_1 = new RooCBShape("CB3S_1", "3S Crystal ball function1", *mass, *mean3S, *sigma3S_1, *alpha3, *n3);
+	  CB1S_2 = new RooCBShape("CB1S_2", "1S Crystal ball function2", *mass, *mean1S, *sigma1S_2, *alpha1, *n1);
+	  CB2S_2 = new RooCBShape("CB2S_2", "2S Crystal ball function2", *mass, *mean2S, *sigma2S_2, *alpha2, *n2);
+	  CB3S_2 = new RooCBShape("CB3S_2", "3S Crystal ball function2", *mass, *mean3S, *sigma3S_2, *alpha3, *n3);
+	  CB1S_3 = new RooCBShape("CB1S_2", "1S Crystal ball function3", *mass, *mean1S, *sigma1S_3, *alpha1, *n1);
+	  CB2S_3 = new RooCBShape("CB2S_2", "2S Crystal ball function3", *mass, *mean2S, *sigma2S_3, *alpha2, *n2);
+	  CB3S_3 = new RooCBShape("CB3S_2", "3S Crystal ball function3", *mass, *mean3S, *sigma3S_3, *alpha3, *n3);
+	  threeCB1S = new RooAddPdf("threeCB1S", "Sum of 1S Crystal ball", RooArgList(*CB1S_1, *CB1S_2, *CB1S_3), RooArgList(*frac1_1, *frac1_2));
+	  threeCB2S = new RooAddPdf("threeCB2S", "Sum of 2S Crystal ball", RooArgList(*CB2S_1, *CB2S_2, *CB2S_3), RooArgList(*frac2_1, *frac2_2));
+	  threeCB3S = new RooAddPdf("threeCB3S", "Sum of 3S Crystal ball", RooArgList(*CB3S_1, *CB3S_2, *CB3S_3), RooArgList(*frac3_1, *frac3_2));
+	};
+
+	CB3::CB3(RooRealVar* mass, RooRealVar* mean1S, RooFormulaVar* mean2S, RooRealVar* mean3S, RooRealVar* sigma1S_1, RooFormulaVar* sigma2S_1,RooFormulaVar* sigma3S_1, RooFormulaVar* sigma1S_2, RooFormulaVar* sigma2S_2, RooFormulaVar* sigma3S_2, RooFormulaVar* sigma1S_3, RooFormulaVar* sigma2S_3, RooFormulaVar* sigma3S_3, RooRealVar* alpha1, RooRealVar* alpha2, RooRealVar* alpha3, RooRealVar* n1, RooRealVar* n2, RooRealVar* n3, RooRealVar* frac1_1, RooRealVar* frac1_2){
+	  CB1S_1 = new RooCBShape("CB1S_1", "1S Crystal ball function1", *mass, *mean1S, *sigma1S_1, *alpha1, *n1);
+	  CB2S_1 = new RooCBShape("CB2S_1", "2S Crystal ball function1", *mass, *mean2S, *sigma2S_1, *alpha2, *n2);
+	  CB3S_1 = new RooCBShape("CB3S_1", "3S Crystal ball function1", *mass, *mean3S, *sigma3S_1, *alpha3, *n3);
+	  CB1S_2 = new RooCBShape("CB1S_2", "1S Crystal ball function2", *mass, *mean1S, *sigma1S_2, *alpha1, *n1);
+	  CB2S_2 = new RooCBShape("CB2S_2", "2S Crystal ball function2", *mass, *mean2S, *sigma2S_2, *alpha2, *n2);
+	  CB3S_2 = new RooCBShape("CB3S_2", "3S Crystal ball function2", *mass, *mean3S, *sigma3S_2, *alpha3, *n3);
+	  CB1S_3 = new RooCBShape("CB1S_2", "1S Crystal ball function3", *mass, *mean1S, *sigma1S_3, *alpha1, *n1);
+	  CB2S_3 = new RooCBShape("CB2S_2", "2S Crystal ball function3", *mass, *mean2S, *sigma2S_3, *alpha2, *n2);
+	  CB3S_3 = new RooCBShape("CB3S_2", "3S Crystal ball function3", *mass, *mean3S, *sigma3S_3, *alpha3, *n3);
+	  threeCB1S = new RooAddPdf("threeCB1S", "Sum of 1S Crystal ball", RooArgList(*CB1S_1, *CB1S_2, *CB1S_3), RooArgList(*frac1_1, *frac1_2));
+	  threeCB2S = new RooAddPdf("threeCB2S", "Sum of 2S Crystal ball", RooArgList(*CB2S_1, *CB2S_2, *CB2S_3), RooArgList(*frac1_1, *frac1_2));
+	  threeCB3S = new RooAddPdf("threeCB3S", "Sum of 3S Crystal ball", RooArgList(*CB3S_1, *CB3S_2, *CB3S_3), RooArgList(*frac1_1, *frac1_2));
+	};
+
+};
 #endif

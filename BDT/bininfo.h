@@ -4,6 +4,8 @@
 #include <map>
 #include "../.workdir.h"
 #include "../fitter.h"
+static TH1D* Get_Optimal_BDT_HIST; 
+const double interval_score = 0.03;
 
 std::map<long, std::map<int, std::vector<std::pair<double,double> > > >bdtbinsec =
 {
@@ -227,5 +229,11 @@ std::vector< std::string > info_BDT(long ts, std::string aux = "")
 	}
 
 };
+
+
+
+std::pair<double,double> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, string name_input_opt = "", string formula_significance= "S12");
+
+TH1D* func_hist_optimal_BDT();
 
 #endif
