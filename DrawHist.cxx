@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "CMS_lumi_square.C"
+#include "tdrstyle.C"
 #include "TFile.h"
 #include "RooPlot.h"
 #include "RooFit.h"
@@ -13,6 +14,7 @@ using namespace RooFit;
 void DrawHist_(long ts,double ylim, float blow, float bhigh, float vcut, TString MupT = "3p5", string Trig = "S13", TString fittype = "freefit") {};
 void DrawHist__();
 void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 180, double cutQVP = 0.01, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1., int Nmassbins=140){
+  setTDRStyle();
 
   std::string sig_func = parsed[0];
   std::string bkg_func = parsed[1];
@@ -39,6 +41,7 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
 
   std::string method_selection = (isBDT) ? "BDT" : "Data"; 
   std::string name_file_output = Form("%s/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.root" ,workdir.Data(), ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP );
+  std::cout << name_file_output << std::endl;
   if( fitdir.find("DD") !=std::string::npos)
   {
     DDiter = fitdir[4] -48;
@@ -93,7 +96,7 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
 
   TCanvas* c1 = new TCanvas("c1", "", 1100, 800);
   TPad* pad_mass = new TPad("pad_mass", "pad_mass", 0, 0.25, 0.7, 1.0);
-  TPad* pad_mass_3S = new TPad("pad_mass_3S", "pad_mass_3S", 0.53, 0.43, 0.82, 0.86);
+  TPad* pad_mass_3S = new TPad("pad_mass_3S", "pad_mass_3S", 0.60, 0.43, 0.90, 0.86);
   TPad* pad_pull = new TPad("pad_pull", "pad_pull", 0, 0.0, 0.7, 0.25);
   TPad* pad_leg = new TPad("pad_leg", "pad_leg", 0.7, 0.25, 1.0, 1.0);
   TPad* pad_mag = new TPad("pad_mag", "pad_mag", 0.7, 0.0, 1.0, 0.25);
@@ -111,7 +114,7 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
   
   CMS_lumi_square( pad_mass, 2, 11);
 
-  pad_mass_3S->SetMargin(0.14, 0.01, 0.14, 0.01);
+  pad_mass_3S->SetMargin(0.25, 0.01, 0.14, 0.01);
   pad_mass_3S->Draw();
   pad_mass_3S->cd();
   plot2->GetXaxis()->SetLabelSize(0.06);
@@ -120,8 +123,8 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
   plot2->GetXaxis()->SetTitleOffset(1.1);
   plot2->GetYaxis()->SetLabelSize(0.08);
   plot2->GetYaxis()->SetTitleSize(0.06);
-  plot2->GetYaxis()->SetTitleOffset(1.25);
-  plot2->GetYaxis()->SetRangeUser(0, plot2->GetMaximum()/2.6);
+  plot2->GetYaxis()->SetTitleOffset(1.65);
+  plot2->GetYaxis()->SetRangeUser(0, (plot1->GetMaximum()/2.0));
   plot2->Draw();
 
 
@@ -173,9 +176,9 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
    
 
   c1->Update();
-  c1->Draw();
-//  c1->SaveAs(Form("%s/FitPlot_%ld_%s_%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.pdf",massDIR.Data(), ts,fitdir.c_str(), bkg_func.c_str(), (int) (ptMin*10), (int) (ptMax*10), ylim10, ylim10, Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(),(int) swflag,(int) isBDT, cutBDTlow, cutBDThigh, cutQVP));
-//  c1->Close();
+//  c1->Draw();
+  c1->SaveAs(Form("%s/FitPlot_%ld_%s_%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.pdf",massDIR.Data(), ts,fitdir.c_str(), bkg_func.c_str(), (int) (ptMin*10), (int) (ptMax*10), ylim10, ylim10, Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(),(int) swflag,(int) isBDT, cutBDTlow, cutBDThigh, cutQVP));
+  c1->Close();
 
 };
 void DrawHist__(){

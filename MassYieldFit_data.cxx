@@ -264,17 +264,23 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
 
 // std::map<std::string, RooGaussian* > map_var_gc;
  RooArgSet list_var_gc;
+ RooArgSet list_var_for_gc;
  std::vector<RooGaussian*> map_var_gc;
+ 
 
   if(fitdir=="GC"){
     int count_var=0;
     for( std::vector<std::string>::iterator it_var= parsed.begin()+3; it_var != parsed.end(); it_var++){
       auto key_val = parser_symbol(it_var->c_str(),";");
+      for( auto val : key_val){
+	std::cout << val << std::endl;
+      }
       std::string name_dvar_gaussian = key_val[0]+"_constraint"; 
       double value_dvar_gaussian = stod(key_val[1]); 
       RooGaussian* _var_rg = new RooGaussian(name_dvar_gaussian.c_str(), name_dvar_gaussian.c_str(), *map_rrv[key_val[0].c_str()], RooConst(map_rrv[key_val[0].c_str()]->getVal()), RooConst(value_dvar_gaussian));
       map_var_gc.push_back(_var_rg);
       list_var_gc.add(*map_var_gc[count_var]);
+      list_var_for_gc.add(*map_rrv[key_val[0].c_str()]);
       count_var++;
     }
     model_gc = new RooProdPdf("model_gc","model with gauss constraint", RooArgSet(*model,list_var_gc));
@@ -296,12 +302,18 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
 
   std::cout << mf.works->pdf(use_model.c_str())->GetName() << std::endl;
 
-  RooFitResult* Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), NumCPU(2), Hesse(kTRUE), Range(mf.Range_fit_low, mf.Range_fit_high), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));
+  RooFitResult* Result;
+  if(fitdir=="GC"){
+    Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), Constrain(list_var_for_gc), NumCPU(4), Hesse(kTRUE), Range(mf.Range_fit_low, mf.Range_fit_high), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));
+  }
+  else  {Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), NumCPU(2), Hesse(kTRUE), Range(mf.Range_fit_low, mf.Range_fit_high), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));}
+dbg();
   mf.works->pdf(use_model.c_str())->plotOn(massPlot, Name("modelPlot"));
   mf.works->pdf(use_model.c_str())->plotOn(massPlot, Components(RooArgSet(*Signal1S)), LineColor(kRed), LineStyle(kDashed), MoveToBack());
   mf.works->pdf(use_model.c_str())->plotOn(massPlot, Components(RooArgSet(*Signal2S)), LineColor(kRed), LineStyle(kDashed), MoveToBack());
   mf.works->pdf(use_model.c_str())->plotOn(massPlot, Components(RooArgSet(*Signal3S)), LineColor(kRed), LineStyle(kDashed), MoveToBack());
   mf.works->pdf(use_model.c_str())->plotOn(massPlot, Components(RooArgSet(*Background)), LineColor(kBlue), LineStyle(kDashed));
+  dbg();
   massPlot->SetTitle("");
   massPlot->SetXTitle("M (GeV/c^2)");
   massPlot->SetYTitle("Counts");
