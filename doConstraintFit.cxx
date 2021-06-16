@@ -67,8 +67,7 @@ void doConstraintFit(int step = 0){
        {"x3S_2", {map_keyval["x3S_2"].first,0,1}},
        {"sigma3S_1", { mean_sigma1S1,0,-1}},
        });
-//
-//
+
 ////       MassYieldFit_BDT_MC(ts, "", fname3S, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, state, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh);
 ////       MassYieldFit_BDT_MC_GE(ts, "", fname3S, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, state, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh);
 //
@@ -76,42 +75,37 @@ void doConstraintFit(int step = 0){
 //
 ////        MassYieldFit_data(type, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {0.2, 1, 1, 0.5, 0.0,-0.1,0.1,0.1}, (Double_t[]) {0.11, 1.0, 0.7, 0.05, -0.3, -0.3, -0.3,-0.3}, (Double_t[]) {0.21, 5, 5, 0.95, 0.1, 0.1, 0.3,0.3});
 //        //MassYieldFit_data(type, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {0.2, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 7.2,5.1,1.1,0.1}, (Double_t[]) {0.11, 1.0, 1.0, 0.05, 5.3, 1.3, 0.3,-0.3}, (Double_t[]) {0.21, (map_keyval["alpha"].first+map_keyval["alpha"].second)*2, (map_keyval["n"].first+map_keyval["n"].second)*4, 0.95, 9.6, 10.1, 4.3,0.3});
-//
-////  TFile* x = new TFile("./BDT/test_OPT_BDT_method2.root","recreate");
-////  x->Write();
-// // x->Close();
-// 
 
-//         if (!isBDT) {
-//             cutBDTlow =0;
-//                 cutBDThigh=0;
-//                   }
-//             int ylim10 = (int) (rapMax*10);
-//               auto parsed = parser_symbol(type);
-//                 std::string sig_func = parsed[0];
-//                   std::string bkg_func = parsed[1];
-//                     std::string fitdir = parsed[2];
-//                       std::string name_fitmodel = "_"+bkg_func;
+//  if (!isBDT) {
+//    cutBDTlow =0;
+//    cutBDThigh=0;
+//  }
+//  int ylim10 = (int) (rapMax*10);
+//  auto parsed = parser_symbol(type);
+//  std::string sig_func = parsed[0];
+//  std::string bkg_func = parsed[1];
+//  std::string fitdir = parsed[2];
+//  std::string name_fitmodel = "_"+bkg_func;
 //
-//SetStyle();
+//  SetStyle();
 //  Int_t Nmassbins;
-//    double range_mass_low, range_mass_high;
-//      if (massrng.find(ts) == massrng.end()){
-//          range_mass_low = 8;
-//              range_mass_high = 14;
-//                  Nmassbins = 120;
-//                      if(info_BDT(ts)[0]!="nan"){
-//                            auto _pair_mass = parser_symbol(info_BDT(ts)[1],",");
-//                                  range_mass_low = stod(_pair_mass[0]);
-//                                        range_mass_high = stod(_pair_mass[1]);
-//                                              Nmassbins = (range_mass_high - range_mass_low)/0.05;
-//                                                  }
-//                                                    }
-//    else{
-//        range_mass_low = massrng[ts].first;
-//            range_mass_high = massrng[ts].second;
-//                Nmassbins = (range_mass_high - range_mass_low)/0.05;
-//                  }
+//  double range_mass_low, range_mass_high;
+//  if (massrng.find(ts) == massrng.end()){
+//  range_mass_low = 8;
+//  range_mass_high = 14;
+//  Nmassbins = 120;
+//  if(info_BDT(ts)[0]!="nan"){
+//    auto _pair_mass = parser_symbol(info_BDT(ts)[1],",");
+//    range_mass_low = stod(_pair_mass[0]);
+//    range_mass_high = stod(_pair_mass[1]);
+//    Nmassbins = (range_mass_high - range_mass_low)/0.05;
+//  }
+//  }
+//  else{
+//    range_mass_low = massrng[ts].first;
+//    range_mass_high = massrng[ts].second;
+//    Nmassbins = (range_mass_high - range_mass_low)/0.05;
+//  }
 //       //////////////////////////////////////////////////////////////////
 //       std::string name_file_data = Form("%s/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.root" ,workdir.Data(), ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP );
 //       std::cout << name_file_data << std::endl;

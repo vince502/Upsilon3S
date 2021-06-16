@@ -346,13 +346,6 @@ dbg();
   massPlot->SetXTitle("M (GeV/c^2)");
   massPlot->SetYTitle("Counts");
   massPlot->Draw();
-  TLatex* lt0 = new TLatex();
-  FormLatex(lt0, 12, 0.038);
-  lt0->DrawLatex(0.53,0.85, Form("BDT #in [%.2f, %.2f]",cutBDTlow, cutBDThigh));
-  lt0->DrawLatex(0.53,0.80, Form("p_{T}^{#mu} #geq %.1f GeV/c",MupTCut));
-  lt0->DrawLatex(0.53,0.75, Form("%d #leq p_{T}^{#mu#mu} < %d GeV/c", (int) ptMin, (int) ptMax));
-  lt0->DrawLatex(0.53,0.70, Form("Centrality %d-%d %%",(int) cBinLow/2, (int) cBinHigh/2));
-  lt0->DrawLatex(0.53,0.65, Form("Trigger# : %s", Trig.c_str()));
   Result->Print("v");
   WriteMessage("Fitting is dOnE ! ! !");
 
