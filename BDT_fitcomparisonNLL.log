@@ -1649,3 +1649,587 @@ BDT with Chebychev3  NLL : -95008.9
 BDT with Chebychev3  NLL : -3476.46
 1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
 BDT with Chebychev3  NLL : -78553
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -72551
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -88095.4
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -8542.89
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -244773
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -35006.7
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.13, 1.00 ]
+BDT with Chebychev3  NLL : -29828.7
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -1805.45
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.13, 1.00 ]
+BDT with Chebychev3  NLL : -96089.1
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -163950
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -77599.4
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.01, 1.00 ]
+BDT with Chebychev3  NLL : -12820.9
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -436076
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -62469.5
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -41506.2
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -1401.27
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -113526
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -27074.9
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -15120
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -951.318
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -48404.4
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -87606.5
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -95014.7
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -3481.53
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -78558.1
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.01, 1.00 ]
+BDT with Chebychev3  NLL : -12826
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.01, 1.00 ]
+BDT with Chebychev3  NLL : -12826
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.01, 1.00 ]
+BDT with Chebychev3  NLL : -12814.8
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.01, 1.00 ]
+BDT with Chebychev3  NLL : -12816.5
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.01, 1.00 ]
+BDT with Chebychev3  NLL : -12816.5
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.01, 1.00 ]
+BDT with Chebychev3  NLL : -12816.5
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.01, 1.00 ]
+BDT with Chebychev3  NLL : -12816.5
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -72542.6
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -88086.1
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -8533.85
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -244765
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -34997
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.13, 1.00 ]
+BDT with Chebychev3  NLL : -29818.2
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -1794.97
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.13, 1.00 ]
+BDT with Chebychev3  NLL : -96059.4
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -163948
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -77629.2
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.01, 1.00 ]
+BDT with Chebychev3  NLL : -12814.2
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -436815
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -62458.4
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -41495.1
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -1389.83
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -72552.2
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -88096.2
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -8543.49
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -244774
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -35007.6
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.13, 1.00 ]
+BDT with Chebychev3  NLL : -29789.3
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -1805.63
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.13, 1.00 ]
+BDT with Chebychev3  NLL : -96091.5
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -163952
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -77639.4
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.01, 1.00 ]
+BDT with Chebychev3  NLL : -12823.8
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -436076
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -62439.8
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -41506.1
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -1401.29
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -113521
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -27074.5
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -15120.3
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -951.218
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -48404.6
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -87606.8
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -95014.6
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -3481.67
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -78557.7
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -72551.5
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -88096
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -8543.22
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -244774
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -35007.1
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.13, 1.00 ]
+BDT with Chebychev3  NLL : -29828.9
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -1805.69
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.13, 1.00 ]
+BDT with Chebychev3  NLL : -96090.5
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -163953
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -77639.3
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.01, 1.00 ]
+BDT with Chebychev3  NLL : -12823.8
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -436074
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -62431.5
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -41506.2
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -1401.28
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -113465
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -27055.9
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -15113.3
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -951.353
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -47072.3
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -87606.7
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -95014.4
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -3481.56
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -78549
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.01, 1.00 ]
+BDT with Chebychev3  NLL : -12826.8
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.01, 1.00 ]
+BDT with Chebychev3  NLL : -12827.6
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -72553.6
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -88097.2
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -8544.33
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -244775
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -35008.1
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.13, 1.00 ]
+BDT with Chebychev3  NLL : -29760.8
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -1805.71
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.13, 1.00 ]
+BDT with Chebychev3  NLL : -95952.4
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -163957
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -77639.7
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.01, 1.00 ]
+BDT with Chebychev3  NLL : -12823.2
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -435866
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -62127
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -41506
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -1401.24
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -113528
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -27074.5
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -15114.2
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -951.238
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -48404.4
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -87606.4
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -95014
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -3481.73
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -78557.6
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -72553.6
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -88097.2
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -8544.33
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -244775
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -35008.1
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.13, 1.00 ]
+BDT with Chebychev3  NLL : -29760.8
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -1805.71
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.13, 1.00 ]
+BDT with Chebychev3  NLL : -95952.4
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -163957
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -77639.7
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.01, 1.00 ]
+BDT with Chebychev3  NLL : -12823.2
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -435866
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -62127
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -41506
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -1401.24
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -113528
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -27074.5
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -15114.2
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -72553.6
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -88097.2
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -8544.33
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -244775
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -35008.1
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.13, 1.00 ]
+BDT with Chebychev3  NLL : -29760.8
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -1805.71
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.13, 1.00 ]
+BDT with Chebychev3  NLL : -95952.4
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -163957
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -77639.7
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.01, 1.00 ]
+BDT with Chebychev3  NLL : -12823.2
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -435866
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -62127
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -41506
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -1401.24
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -113528
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -27074.5
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -15114.2
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -951.238
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -48404.4
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -87606.4
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -95014
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -3481.73
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -78557.6
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -436833
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -422823
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -422823
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -422823
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -422823
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -422823
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -414753
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -436833
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -72559.9
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -88103.2
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -8550.81
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -244782
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -35014.7
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.13, 1.00 ]
+BDT with Chebychev3  NLL : -29836.1
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -1812.4
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.13, 1.00 ]
+BDT with Chebychev3  NLL : -96099.5
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -163963
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -77646.1
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.01, 1.00 ]
+BDT with Chebychev3  NLL : -12829.7
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -62476.6
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -41512.2
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -1408.03
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -112783
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -27081.1
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -15122
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -957.962
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -48411.3
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -87613.3
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -95019.3
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -3488.58
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -75202.6
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -419084
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -419084
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -414322
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -405020
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -412614
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -412614
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -418709
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -400716
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -418202
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -418202
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -72564.5
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -86217.1
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -8554.05
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -244784
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -35019.2
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.13, 1.00 ]
+BDT with Chebychev3  NLL : -29839.6
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -1816.82
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.13, 1.00 ]
+BDT with Chebychev3  NLL : -96102.6
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -163967
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -77650.6
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.01, 1.00 ]
+BDT with Chebychev3  NLL : -12835.1
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -436837
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -62480.1
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -41514.8
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -1411.95
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -113535
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -27081.1
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -15127.5
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -961.516
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -48406.9
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -87608
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -94755.7
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -3493.21
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -77174
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -418202
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -418202
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -415853
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -436834
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -72563.3
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -88102.9
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -8552.47
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -244777
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -35019
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.13, 1.00 ]
+BDT with Chebychev3  NLL : -29840.7
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -1817.05
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.13, 1.00 ]
+BDT with Chebychev3  NLL : -96104.1
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -163967
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -77648.3
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.01, 1.00 ]
+BDT with Chebychev3  NLL : -12832.9
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -62481.2
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -41516.4
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -1410.72
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -113537
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -27084
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -15130
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -962.341
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -48412.4
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -87613.2
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -95020.8
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -3492.65
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -78569.9
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -72563.3
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -88102.9
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.02, 1.00 ]
+BDT with Chebychev3  NLL : -8552.47
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -244777
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -35019
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.13, 1.00 ]
+BDT with Chebychev3  NLL : -29840.7
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -1817.05
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.13, 1.00 ]
+BDT with Chebychev3  NLL : -96104.1
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -163967
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -77648.3
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.01, 1.00 ]
+BDT with Chebychev3  NLL : -12832.9
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -62481.2
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -41516.4
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -1410.72
+1623391157, pt eta : 0.0-6.0 |1.2|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -113537
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -27084
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -15130
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.19, 1.00 ]
+BDT with Chebychev3  NLL : -962.341
+1623391157, pt eta : 6.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -48412.4
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -87613.2
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ -0.08, 1.00 ]
+BDT with Chebychev3  NLL : -95020.8
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -3492.65
+1623391157, pt eta : 0.0-30.0 |1.2|, BDT [ 0.16, 1.00 ]
+BDT with Chebychev3  NLL : -78569.9
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ 0.21, 1.00 ]
+BDT with Chebychev3  NLL : -39676.5
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ 0.15, 1.00 ]
+BDT with Chebychev3  NLL : -72446.2
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -190254
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -244778
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ 0.15, 1.00 ]
+BDT with Chebychev3  NLL : -72441.9
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -244778
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -244778
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ -0.05, 1.00 ]
+BDT with Chebychev3  NLL : -244778
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.10, 1.00 ]
+BDT with Chebychev3  NLL : -244015
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -285208
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -162690
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.07, 1.00 ]
+BDT with Chebychev3  NLL : -92743.5
+1623391157, pt eta : 0.0-30.0 |2.4|, BDT [ 0.08, 1.00 ]
+BDT with Chebychev3  NLL : -9404.29
+1623391157, pt eta : 6.0-30.0 |2.4|, BDT [ 0.17, 1.00 ]
+BDT with Chebychev3  NLL : -74813.1
+1623391157, pt eta : 0.0-6.0 |2.4|, BDT [ 0.03, 1.00 ]
+BDT with Chebychev3  NLL : -172931

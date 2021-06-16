@@ -19,15 +19,14 @@ void drawRAAplot(){
   c2->SaveAs(Form("%s/plots/DoubleRatio/plot_test.cxx", workdir.Data() ));
 //  c2->SaveAs(Form("%s/plots/DoubleRatio/plot_test_bdt0.2_1.0.cxx", workdir.Data() ));
 };
-RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair){
+RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC"){
   long ts = 1623391157; //BLIND Nominal
-  std::pair<double, double> ptpair = {0,30};
 
   double ylim = 2.4;
   std::pair<double, double> bdtpair = {0.20,1.00}; //BLIND Nominal ?
 
   binplotter* bp ;
-  bp = new binplotter("CB3:CC2:GC",ts, ylim, ptpair.first, ptpair.second, cbpair.first, cbpair.second, bdtpair.first, bdtpair.second );
+  bp = new binplotter(type,ts, ylim, ptpair.first, ptpair.second, cbpair.first, cbpair.second, bdtpair.first, bdtpair.second );
   bp->set_params("_CC2", 0.00);
 
   RooRealVar _y3 = bp->get_yield();
@@ -75,23 +74,48 @@ TH1D getPbPbRAA(){
   Double_t* cbinthree_rev = new Double_t[4]{90,50,20,0};
   
 
-  TH1D* h1 = new TH1D("h1" , "PbPb 2 ratio cent", 3, 0,3);
+  TH1D* h1 = new TH1D("h1" , "PbPb 2 ratio cent", 35, 0, 420);
   gStyle->SetOptStat(kFALSE);
   gStyle->SetOptTitle(kFALSE);
   for(int idx =0; idx <3; ++idx){
-    RooRealVar dr_bin = getDoubleRatioValue({cbinthree_rev[idx+1]*2,cbinthree_rev[idx]*2});
+    RooRealVar dr_bin = getDoubleRatioValue({cbinthree_rev[idx+1]*2,cbinthree_rev[idx]*2},{0,30}, "CB3:CC2:FF");
     double npart = glp::Npart[{cbinthree_rev[idx+1],cbinthree_rev[idx]}].first;
-    h1->SetBinContent(idx+1, dr_bin.getVal());
-    h1->SetBinError(idx+1, dr_bin.getError());
-    h1->GetXaxis()->SetBinLabel(idx+1, Form("%.1f",npart) );
+    h1->SetBinContent(h1->FindBin(npart), dr_bin.getVal());
+    h1->SetBinError(h1->FindBin(npart), dr_bin.getError());
   }
+  h1->GetYaxis()->SetRangeUser(0,1);
   h1->SetMarkerStyle(kCircle);
   h1->SetMarkerColor(kBlue);
   h1->SetLineColor(kBlue);
-  h1->GetXaxis()->SetLabelSize(0.06);
+  h1->GetXaxis()->SetLabelSize(0.04);
   h1->GetXaxis()->SetTitle("N_{part}");
   h1->GetYaxis()->SetTitle("R_{AA}");
-  h1->GetYaxis()->SetTitleOffset(0.8);
+  h1->GetYaxis()->SetTitleOffset(1.2);
+  h1->GetYaxis()->SetTitleSize(0.05);
+  return *h1;
+};
+
+TH1D getPbPbRAA_pt(){
+  Double_t* ptbintwo = new Double_t[3]{0,6,30};
+  Double_t* ptbintwo_rev = new Double_t[3]{30,6,0};
+  
+
+  TH1D* h1 = new TH1D("h1" , "PbPb 2 ratio cent", 10, 0, 30);
+  gStyle->SetOptStat(kFALSE);
+  gStyle->SetOptTitle(kFALSE);
+  for(int idx =0; idx <2; ++idx){
+    RooRealVar dr_bin = getDoubleRatioValue({0,180},{ptbintwo[idx],ptbintwo[idx+1]}, "CB3:CC2:GC");
+    h1->SetBinContent(h1->FindBin( (ptbintwo[idx]+ptbintwo[idx+1])/2), dr_bin.getVal());
+    h1->SetBinError(h1->FindBin( (ptbintwo[idx]+ptbintwo[idx+1])/2), dr_bin.getError());
+  }
+  h1->GetYaxis()->SetRangeUser(0,1);
+  h1->SetMarkerStyle(kCircle);
+  h1->SetMarkerColor(kBlue);
+  h1->SetLineColor(kBlue);
+  h1->GetXaxis()->SetLabelSize(0.04);
+  h1->GetXaxis()->SetTitle("N_{part}");
+  h1->GetYaxis()->SetTitle("R_{AA}");
+  h1->GetYaxis()->SetTitleOffset(1.2);
   h1->GetYaxis()->SetTitleSize(0.05);
   return *h1;
 };

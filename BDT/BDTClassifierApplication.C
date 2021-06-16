@@ -28,11 +28,12 @@ void BDTClassifierApplication(long ts, int isMC = 0, bool isbbb = false){
 
   TString dfname = (isMC==2) ? "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_1S.root" : (whichtree==0) ? "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_v210416.root" : "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_v210416_ForBLIND.root";
       TString mfname =  "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_v210521.root";
+      if(isMC==2) mfname = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_1S.root";
 
   TFile* input(0);
-  input = new TFile((isMC==1) ? mfname.Data() : dfname.Data(), "open");
+  input = new TFile((isMC==1 || isMC==2) ? mfname.Data() : dfname.Data(), "open");
   TTree* tree;
-  tree = (whichtree==0|| isMC ==1 ) ? (TTree*) input->Get(Form("tree")) : (TTree*) input->Get(Form("tree%d",whichtree));
+  tree = (whichtree==0|| isMC ==1 || isMC==2 ) ? (TTree*) input->Get(Form("tree")) : (TTree*) input->Get(Form("tree%d",whichtree));
   
   std::vector<string> dnamelist;
   std::vector<string> inamelist;
@@ -116,7 +117,7 @@ void BDTClassifierApplication(long ts, int isMC = 0, bool isbbb = false){
   Double_t effS = 0.7;
   Double_t BDT;
 
-  string treename = (whichtree ==0 ||isMC ==1) ? "tree" : Form("tree%d",whichtree);
+  string treename = (whichtree ==0 ||isMC ==1 || isMC==2) ? "tree" : Form("tree%d",whichtree);
   TTreeReader newreader(treename.c_str(), input);
   TFile *target;
   if (isMC ==0) target =new TFile(Form("./BDTAppliedData/BDTApp_%ld.root",ts),"recreate");

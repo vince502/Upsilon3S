@@ -22,13 +22,18 @@ double getAccWeight(TH1D* h = 0, double pt = 0);
 double getEffWeight(TH1D* h = 0, double pt = 0);
 void GetHistSqrt(TH1D* h1 =0, TH1D* h2=0);
 
-void makeRooDataset_fromBDT(long ts, bool cutID, bool isMC){
+void makeRooDataset_fromBDT(long ts, bool cutID, bool isMC, std::string aux_opt = "nan"){
   string smc = "";
   if (isMC) smc = "_MC";
+  if ( aux_opt!="nan") smc = "_"+aux_opt;
 
   TFile* rf; 
+  if(aux_opt =="nan"){
   if(!isMC) rf = new TFile(Form("./BDTAppliedData/BDTApp_%ld.root",ts), "OPEN");
   else if(isMC) rf = new TFile(Form("./BDTAppliedData/BDTApp_%ld_MC.root",ts), "OPEN");
+  }
+  if(aux_opt !="nan") rf = new TFile(Form("./BDTAppliedData/BDTApp_%ld_%s.root",ts, aux_opt.c_str()), "OPEN");
+
   TTree* tree = (TTree*) rf->Get("tree");
 
   Int_t classID, cBin;

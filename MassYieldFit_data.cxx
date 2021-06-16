@@ -107,11 +107,14 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
   //RooRealVar mean3S("mean3S", "mean of Upsilon 1S", U3S_mass, U3S_mass-0.010, U3S_mass+0.010);
 
   RooRealVar *sigma1S_1 = new RooRealVar("sigma1S_1", "sigma1 of 1S", 0.05, paramslow[0], paramshigh[0]);
+
+
   RooFormulaVar *sigma2S_1 = new RooFormulaVar("sigma2S_1", "@0*@1", RooArgList(*sigma1S_1, *mratio2));
   RooFormulaVar *sigma3S_1 = new RooFormulaVar("sigma3S_1", "@0*@1", RooArgList(*sigma1S_1, *mratio3));
 
-  RooRealVar* x1S = new RooRealVar("x1S", "sigma ratio", 0.4, 0.01, 0.95);
+  RooRealVar* x1S = new RooRealVar("x1S", "sigma ratio", 0.1, 0.01, 0.95);
   RooRealVar* x1S_2 = new RooRealVar("x1S_2", "sigma ratio", 0.4, 0.01, 0.95);
+
 
   RooFormulaVar *sigma1S_2 = new RooFormulaVar("sigma1S_2", "@0*@1", RooArgList(*sigma1S_1, *x1S));
   RooFormulaVar *sigma2S_2 = new RooFormulaVar("sigma1S_2", "@0*@1", RooArgList(*sigma1S_2, *mratio2));
@@ -127,7 +130,28 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
 
   RooRealVar* n = new RooRealVar("n", "n of Crystal ball", 2.0, paramslow[2], paramshigh[2]);
   RooRealVar* frac = new RooRealVar("frac", "CB fraction", 0.5, paramslow[3], paramshigh[3]);
-  if(sig_func=="CB3") frac2 = new RooRealVar("frac2", "CB fraction", map_params["frac2"].val,  map_params["frac2"].low, map_params["frac2"].high);
+  if(sig_func=="CB3")
+  {
+    frac2 = new RooRealVar("frac2", "CB fraction", map_params["frac2"].val,  map_params["frac2"].low, map_params["frac2"].high);
+    if(map_params.find("x3S")!=map_params.end()){
+      x1S->setVal(map_params["x3S"].val);
+      x1S->setRange(map_params["x3S"].low, map_params["x3S"].high);
+  }
+    if(map_params.find("x3S_2")!=map_params.end()){
+      std::cout << map_params["x3S_2"].val << std::endl;
+      x1S_2->setVal(map_params["x3S_2"].val);
+      x1S_2->setRange(map_params["x3S_2"].low, map_params["x3S_2"].high);
+  }
+  }
+
+  if(paramshigh[0]==-1){ sigma1S_1->setConstant(); sigma1S_1->setRange(0,999); sigma1S_1->setVal(params[0]); }
+  if(paramshigh[1]==-1){ alpha->setConstant(); alpha->setRange(0,999); alpha->setVal(params[1]); }
+  if(paramshigh[2]==-1){ n->setConstant(); n->setRange(0,999); n->setVal(params[2]); }
+  if(paramshigh[3]==-1){ frac->setConstant(); frac->setRange(0,999); frac->setVal(params[3]); }
+  if(map_params["frac2"].high == -1){ frac2->setConstant(); frac2->setRange(0,999); frac2->setVal(map_params["frac2"].val); };
+  if(map_params["x3S"].high == -1){ x1S->setConstant(); x1S->setRange(0,999); x1S->setVal(map_params["x3S"].val); };
+  if(map_params["x3S_2"].high == -1){ x1S_2->setConstant(); x1S_2->setRange(0,999); x1S_2->setVal(map_params["x3S_2"].val); };
+
   RooRealVar *ch4_k1, *ch4_k2, *ch4_k3, *ch4_k4;
   RooRealVar *Erfmean, *Erfp0, *Erfsigma;
   std::map<std::string, RooRealVar*> map_rrv;
@@ -162,6 +186,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
 	{"frac2"		, frac2		},
 	{"x3S"		, x1S		},
 	{"x3S_2"		, x1S_2		},
+	{"sigma3S_1"		, sigma1S_1		},
     };
 
   fit_model_ups::CB2* cb2 ;
@@ -236,7 +261,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
     Background = (RooGenericPdf*) ee->bkgErf;
   }
 
-  RooRealVar* nSig1S = new RooRealVar("nSig1S", "# of 1S signal", 400, -1000, 1000000);
+  RooRealVar* nSig1S = new RooRealVar("nSig1S", "# of 1S signal", 900, -1000, 1000000);
   RooRealVar* nSig2S;
   RooRealVar* nSig3S;
 
@@ -253,8 +278,8 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
   }
 
   if((fitdir=="FF"||fitdir=="GC"||fitdir.find("DD") != std::string::npos)){
-    nSig2S = new RooRealVar("nSig2S", "# of 2S signal", 100, -1000, 300000);
-    nSig3S = new RooRealVar("nSig3S", "# of 3S signal", 30, -10, 90000);
+    nSig2S = new RooRealVar("nSig2S", "# of 2S signal", 100, -1000, 10000);
+    nSig3S = new RooRealVar("nSig3S", "# of 3S signal", 30, -10, 2000);
     std::cout << "added # of 2S, 3S signal as free parameter" << std::endl;
     model = new RooAddPdf("model", "1S+2S+3S+Bkg", RooArgList(*Signal1S, *Signal2S, *Signal3S, *Background), RooArgList(*nSig1S, *nSig2S, *nSig3S, *nBkg));
 
@@ -271,6 +296,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
   if(fitdir=="GC"){
     int count_var=0;
     for( std::vector<std::string>::iterator it_var= parsed.begin()+3; it_var != parsed.end(); it_var++){
+      if(strcmp(it_var->c_str(),"GCPEND")==0) break;
       auto key_val = parser_symbol(it_var->c_str(),";");
       for( auto val : key_val){
 	std::cout << val << std::endl;
@@ -278,6 +304,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
       std::string name_dvar_gaussian = key_val[0]+"_constraint"; 
       double value_dvar_gaussian = stod(key_val[1]); 
       RooGaussian* _var_rg = new RooGaussian(name_dvar_gaussian.c_str(), name_dvar_gaussian.c_str(), *map_rrv[key_val[0].c_str()], RooConst(map_rrv[key_val[0].c_str()]->getVal()), RooConst(value_dvar_gaussian));
+      _var_rg->Print();
       map_var_gc.push_back(_var_rg);
       list_var_gc.add(*map_var_gc[count_var]);
       list_var_for_gc.add(*map_rrv[key_val[0].c_str()]);
@@ -304,6 +331,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
 
   RooFitResult* Result;
   if(fitdir=="GC"){
+    std::cout << "Fitting with Gaussian Constraint" << std::endl;
     Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), Constrain(list_var_for_gc), NumCPU(4), Hesse(kTRUE), Range(mf.Range_fit_low, mf.Range_fit_high), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));
   }
   else  {Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), NumCPU(2), Hesse(kTRUE), Range(mf.Range_fit_low, mf.Range_fit_high), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));}

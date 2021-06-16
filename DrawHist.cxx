@@ -111,6 +111,13 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
   plot1->Draw("ALP");
   plot1->GetXaxis()->SetLabelSize(0);
   plot1->GetXaxis()->SetTitleSize(0);
+  TLatex* lt0 = new TLatex();
+  FormLatex(lt0, 12, 0.038);
+  lt0->DrawLatex(0.20,0.80, Form("BDT #in [%.2f, %.2f]",cutBDTlow, cutBDThigh));
+  lt0->DrawLatex(0.20,0.75, Form("p_{T}^{#mu} #geq %s GeV/c",MupT.Data()));
+  lt0->DrawLatex(0.20,0.70, Form("%d #leq p_{T}^{#mu#mu} < %d GeV/c", (int) ptMin, (int) ptMax));
+  lt0->DrawLatex(0.20,0.65, Form("Centrality %d-%d %%",(int) cBinLow/2, (int) cBinHigh/2));
+  lt0->DrawLatex(0.20,0.60, Form("Trigger : %s", Trig.c_str()));
   
   CMS_lumi_square( pad_mass, 2, 11);
 

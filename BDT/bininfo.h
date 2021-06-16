@@ -5,7 +5,7 @@
 #include "../.workdir.h"
 #include "../fitter.h"
 static TH1D* Get_Optimal_BDT_HIST; 
-const double interval_score = 0.03;
+const double interval_score = 0.075;
 
 std::map<long, std::map<int, std::vector<std::pair<double,double> > > >bdtbinsec =
 {
