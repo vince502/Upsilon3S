@@ -23,11 +23,12 @@ class binplotter
 	RooRealVar get_yield();
 	std::pair<double, double> get_eff();
 	RooRealVar yield_eff();
+	std::pair<RooRealVar, RooRealVar> get_frac();
 	RooRealVar getsignificance();
 	RooRealVar* NS;
 	RooRealVar* NB;
 	bool refit = false;
-	RooRealVar yield1S, yield2S, yield3S;
+	RooRealVar yield1S, yield2S, yield3S, frac2S, frac3S;
 	std::string type;
 	double ylim, blow, bhigh;
   	
@@ -101,6 +102,44 @@ void binplotter::dump(){
 };
 
 
+std::pair<RooRealVar, RooRealVar> binplotter::get_frac(){
+  std::cout << "Opening Yield file : " << filename.c_str() << std::endl;
+  if(TFile::Open(filename.c_str(), "open")==nullptr || TFile::Open(filename.c_str(),"read")->IsZombie()|| refit){
+    std::cout << "Running Fitter for new Yield" << std::endl;
+    string command;
+    if(strcmp(fitfunc.c_str(),"")==0){ command =Form("root -l -b -q \'../MassYieldFit_BDT.C(\"/home/vince402/Upsilon3S/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root\", %d, %d, %.1f, %.1f, \"3p5\", \"S13\", %d, %d, %.3f, %.2f, %.2f , (Double_t[]) {0.13, 1.54, 3.68, 0.56, 5.0, 1.8, 3.13}, (Double_t[]) {0.01, 0.5, 0.5, 0.15, 0.5, 0.1, 0.1}, (Double_t[]) {0.25, 4, 7, 0.95, 9, 4.0, 8})\'",ts, pl, ph,-1*ylim,ylim, cl, ch, vcut, blow, bhigh);}
+    if(strcmp(fitfunc.c_str(),"_CC3")==0){ command =Form("root -l -b -q \'../MassYieldFit_BDT_CC3.C(\"/home/vince402/Upsilon3S/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root\", %d, %d, %.1f, %.1f, \"3p5\", \"S13\", %d, %d, %.3f, %.2f, %.2f , (Double_t[]) {0.13, 1.54, 3.68, 0.56, -0.1, -0.1, 0.0}, (Double_t[]) {0.01, 0.5, 0.5, 0.15, -0.2, -0.2, -0.1}, (Double_t[]) {0.25, 4, 7, 0.95, 0.2,0.2,0.2})\'",ts, pl, ph,-1*ylim,ylim, cl, ch, vcut, blow, bhigh);}
+    int a = system(command.c_str());
+  }
+
+  TFile* file1 = new TFile(filename.c_str(),"read");
+  RooFitResult * res ;
+  res = (RooFitResult*) file1->Get("fitresult_model_reducedDS");
+  if(res==nullptr)
+  {
+    res = (RooFitResult*) file1->Get("fitresult_model_gc_reducedDS");
+  }
+  RooRealVar Yield1S, Frac2S, Frac3S;
+  RooArgList* paramList = (RooArgList*) &res->floatParsFinal();
+  for( auto arg : *paramList) {
+    if(strcmp(arg->GetName(),"nSig1S")==0){
+      Yield1S = (RooRealVar)*(RooRealVar*) arg;
+    }
+    if(strcmp(arg->GetName(),"frac_2sOver1s")==0){
+      Frac2S = (RooRealVar)*(RooRealVar*) arg;
+    }
+    if(strcmp(arg->GetName(),"frac_3sOver1s")==0){
+      Frac3S = (RooRealVar)*(RooRealVar*) arg;
+    }
+  }
+  yield1S = Yield1S;
+  frac2S = Frac2S;
+  frac3S = Frac3S;
+  return std::make_pair(Frac2S, Frac3S);
+
+};
+
+
 RooRealVar binplotter::get_yield(){
   std::cout << "Opening Yield file : " << filename.c_str() << std::endl;
   if(TFile::Open(filename.c_str(), "open")==nullptr || TFile::Open(filename.c_str(),"read")->IsZombie()|| refit){
@@ -137,6 +176,7 @@ RooRealVar binplotter::get_yield(){
   return Yield3S;
 
 };
+
 std::pair<double, double> binplotter::get_eff(){
   std::pair<double, double> bdteff = openEffhist((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh);  
   return bdteff;

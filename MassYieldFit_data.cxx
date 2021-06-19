@@ -45,6 +45,11 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
     range_mass_high = massrng[ts].second;
     Nmassbins = (range_mass_high - range_mass_low)/0.05;
   }
+  if( map_params.find("mass_range") != map_params.end()){
+    range_mass_low = map_params["mass_range"].low;
+    range_mass_high = map_params["mass_range"].high;
+    Nmassbins = (range_mass_high - range_mass_low)/0.05;
+  }
 
 ///////////////////////////////////////////////////////////////////////
 //Need 
@@ -61,6 +66,10 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
   mf = massfitter( name_file_input.c_str(), name_file_output.c_str() );
   mf.Range_fit_low = range_mass_low;
   mf.Range_fit_high = range_mass_high;
+  if( map_params.find("mass_range") != map_params.end()){
+    mf.Range_fit_low = map_params["mass_range"].low;
+    mf.Range_fit_high = map_params["mass_range"].high;
+  }
   Double_t MupTCut = single_LepPtCut(MupT);
   Double_t etaMax= 2.4;
   Double_t etaMin = -2.4;
@@ -152,7 +161,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
   if(map_params["x3S"].high == -1){ x1S->setConstant(); x1S->setRange(0,999); x1S->setVal(map_params["x3S"].val); };
   if(map_params["x3S_2"].high == -1){ x1S_2->setConstant(); x1S_2->setRange(0,999); x1S_2->setVal(map_params["x3S_2"].val); };
 
-  RooRealVar *ch4_k1, *ch4_k2, *ch4_k3, *ch4_k4;
+  RooRealVar *ch4_k1, *ch4_k2, *ch4_k3, *ch4_k4, *ch4_k5;
   RooRealVar *Erfmean, *Erfp0, *Erfsigma;
   std::map<std::string, RooRealVar*> map_rrv;
   if(fitdir.find("DD") != std::string::npos)
@@ -183,10 +192,10 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
 	{"alpha"	, alpha	 },	
 	{"n"		, n		},	
 	{"frac"		, frac		},
-	{"frac2"		, frac2		},
+	{"frac2"	, frac2		},
 	{"x3S"		, x1S		},
-	{"x3S_2"		, x1S_2		},
-	{"sigma3S_1"		, sigma1S_1		},
+	{"x3S_2"	, x1S_2		},
+	{"sigma3S_1"	, sigma1S_1	},
     };
 
   fit_model_ups::CB2* cb2 ;
@@ -250,6 +259,19 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
         ch4_k3->setVal(params[6]);
         ch4_k4->setVal(params[7]);
 	break;
+      case 5 :
+        ch4_k1 = new RooRealVar("ch4_k1", "ch4_k1", 0.02, paramslow[4], paramshigh[4]);
+        ch4_k2 = new RooRealVar("ch4_k2", "ch4_k2", 0.02, paramslow[5], paramshigh[5]);
+        ch4_k3 = new RooRealVar("ch4_k3", "ch4_k3", 0.02, paramslow[6], paramshigh[6]);
+        ch4_k4 = new RooRealVar("ch4_k4", "ch4_k4", 0.02, paramslow[7], paramshigh[7]);
+        ch4_k5 = new RooRealVar("ch4_k5", "ch4_k5", 0.02, paramslow[8], paramshigh[8]);
+        cc = new fit_model_ups::ChebyChev((mf.works->var("mass")), ch4_k1, ch4_k2, ch4_k3, ch4_k4, ch4_k5);
+        ch4_k1->setVal(params[4]);
+        ch4_k2->setVal(params[5]);
+        ch4_k3->setVal(params[6]);
+        ch4_k4->setVal(params[7]);
+        ch4_k5->setVal(params[8]);
+	break;
     }
     Background = (RooGenericPdf*) cc->bkg;
   }
@@ -272,12 +294,13 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
   RooAddPdf* model,* model_sig;
   std::string use_model = "model";
   RooProdPdf* model_gc;
-  if(fitdir=="DR"){
-    model_sig = new RooAddPdf("model_sig", "1S+2S+3S", RooArgList(*Signal1S, *Signal2S, *Signal3S), RooArgList(*frac2over1, *frac3over1));
+  if(fitdir.find("DR")!=std::string::npos){
+    std::cout << "Making model for fractional yield parameters" << std::endl;
+    model_sig = new RooAddPdf("model_sig", "1S+2S+3S", RooArgList(*Signal1S, *Signal2S, *Signal3S), RooArgList(RooConst(1), *frac2over1, *frac3over1));
     model = new RooAddPdf("model", "1S+2S+3S", RooArgList(*model_sig, *Background), RooArgList(*nSig1S, *nBkg));
   }
 
-  if((fitdir=="FF"||fitdir=="GC"||fitdir.find("DD") != std::string::npos)){
+  if((fitdir.find("DR")==std::string::npos)&&(fitdir.find("FF")!=std::string::npos||fitdir.find("GC")!= std::string::npos||fitdir.find("DD") != std::string::npos)){
     nSig2S = new RooRealVar("nSig2S", "# of 2S signal", 100, -1000, 10000);
     nSig3S = new RooRealVar("nSig3S", "# of 3S signal", 30, -10, 2000);
     std::cout << "added # of 2S, 3S signal as free parameter" << std::endl;
@@ -293,7 +316,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
  std::vector<RooGaussian*> map_var_gc;
  
 
-  if(fitdir=="GC"){
+  if(fitdir.find("GC")!=std::string::npos){
     int count_var=0;
     for( std::vector<std::string>::iterator it_var= parsed.begin()+3; it_var != parsed.end(); it_var++){
       if(strcmp(it_var->c_str(),"GCPEND")==0) break;
@@ -317,12 +340,12 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
 ////////////////////////////////////////////////////////////////////////////////////
 
 
-  if(fitdir=="GC"){
+  if(fitdir.find("GC")!=std::string::npos){
     mf.works->import(*model_gc);
     model_gc->Print();
     use_model = "model_gc";
   }
-  else if(fitdir!="GC"){
+  else if(fitdir.find("GC")==std::string::npos){
     mf.works->import(*model);
     mf.works->Print();
   }
@@ -330,7 +353,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
   std::cout << mf.works->pdf(use_model.c_str())->GetName() << std::endl;
 
   RooFitResult* Result;
-  if(fitdir=="GC"){
+  if(fitdir.find("GC")!=std::string::npos){
     std::cout << "Fitting with Gaussian Constraint" << std::endl;
     Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), Constrain(list_var_for_gc), NumCPU(4), Hesse(kTRUE), Range(mf.Range_fit_low, mf.Range_fit_high), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));
   }
@@ -402,14 +425,14 @@ dbg();
   Double_t Yield1S	= mf.works->var("nSig1S")->getVal();
   Double_t Yield1SErr	= mf.works->var("nSig1S")->getError();
   Double_t Yield2S, Yield3S, Yield2SErr, Yield3SErr;
-  if(fitdir !="DR"){
+  if(fitdir.find("DR")==std::string::npos){
     Yield2S 	= mf.works->var("nSig2S")->getVal();
     Yield2SErr 	= mf.works->var("nSig2S")->getError();
     Yield3S 	= mf.works->var("nSig3S")->getVal();
     Yield3SErr 	= mf.works->var("nSig3S")->getError();
 
   }
-  if(fitdir == "DR"){
+  if(fitdir.find("DR")!=std::string::npos){
     Double_t frac2to1 = mf.works->var("frac_2sOver1s")->getVal();
     Double_t frac3to1 = mf.works->var("frac_3sOver1s")->getVal();
     Yield2S 	= frac2to1 * Yield1S;

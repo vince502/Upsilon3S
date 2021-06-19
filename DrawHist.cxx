@@ -29,7 +29,8 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
     fit_param = "freefit";
     if(fitdir.find("DD") != std::string::npos) fit_param = "iterative_fix";
   }
-  if(fitdir=="GC") fit_param = "gaussconst";
+  if(fitdir.find("GC")!=std::string::npos) fit_param = "gaussconst";
+  if(fitdir.find("DR")!=std::string::npos) fit_param = fit_param + "_DoubleRatio";
   if(bkg_func=="EE") name_pdf_bkg = "bkgErf";
   if(bkg_func.find("CC")!= std::string::npos) name_pdf_bkg = "CCBkg";
 
@@ -61,7 +62,7 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
   RooWorkspace* works = (RooWorkspace*) file1->Get("workspace");
   std::string name_dataset_result = "fitresult_model_reducedDS";
   std::string name_model = "model";
-  if(fitdir=="GC"){
+  if(fitdir.find("GC")!=std::string::npos){
     name_dataset_result = "fitresult_model_gc_reducedDS";
     name_model = "model_gc";
   }
