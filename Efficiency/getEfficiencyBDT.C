@@ -12,7 +12,7 @@ using namespace std;
 void getEfficiencyBDT(
   float ptLow = 0.0, float ptHigh = 50.0,
   float yLow = 0.0, float yHigh = 2.4,
-  int cLow = 0, int cHigh = 180, bool isTnP = false, bool isPtWeight = false, long  ts = 0000000000, double bdt_tsl = 0.0, double bdt_tsh =0.0
+  int cLow = 0, int cHigh = 180, bool isTnP = false, bool isPtWeight = false, long  ts = 0000000000, double bdt_tsl = 0.0, double bdt_tsh =0.0, int state= 3
   ) {
 
   gStyle->SetOptStat(0);
@@ -37,6 +37,7 @@ void getEfficiencyBDT(
 
   //input files
   TString inputMC = Form("/home/vince402/Upsilon3S/BDT/BDTAppliedData/BDTApp_%ld_MC.root", ts);
+  if( state ==1) inputMC = Form("/home/vince402/Upsilon3S/BDT/BDTAppliedData/BDTApp_%ld_1S_MC.root", ts);
   TChain* mytree = new TChain("tree"); 
   mytree->Add(inputMC.Data());
 

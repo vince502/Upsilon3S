@@ -1,9 +1,13 @@
 #include <iostream>
 #include "bininfo.h"
 #include "../.workdir.h"
+#include "../upsilonAna.h"
+#include "yield_eff_signif.h"
 
 //static TH1D* Get_Optimal_BDT_HIST; 
-//
+
+//std::pair<std::pair< RooRealVar, RooRealVar>, std::pair<RooRealVar, RooRealVar> > get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int state1 =1, int state2 = 3);
+
 std::pair<double,double> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio= 0.16, string name_input_opt = "", string formula_significance= "S12")
 {
 
@@ -117,4 +121,21 @@ std::pair<double,double> Get_Optimal_BDT(long ts, double ptMin, double ptMax, do
 };
 TH1D* func_hist_optimal_BDT(){
   return Get_Optimal_BDT_HIST;
-  }
+};
+
+std::pair<std::pair< RooRealVar, RooRealVar>, std::pair<RooRealVar, RooRealVar> > get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int state1 =1, int state2 =2){
+  RooRealVar acc1, acc2, eff1, eff2;
+  acc1  = upsi::getacceptance(pl, ph, (-1)*ylim, ylim, 3.5, state1);
+  acc2  = upsi::getacceptance(pl, ph, (-1)*ylim, ylim, 3.5, state2);
+  binplotter bp = binplotter(type, ts, ylim,pl, ph, cl, ch, blow, bhigh);
+  bp.init(false);
+  bp.get_yield();
+  auto effp = bp.get_eff();
+  eff2= RooRealVar(Form("eff%d",state2), "", effp.first);
+  eff2.setError(effp.second);
+  eff1= RooRealVar(Form("eff%d",state1), "", effp.first);
+  eff1.setError(effp.second);
+  auto res = std::pair<std::pair< RooRealVar, RooRealVar>, std::pair<RooRealVar, RooRealVar> >{ {acc1,acc2}, {eff1, eff2}};
+  return res;
+  
+};

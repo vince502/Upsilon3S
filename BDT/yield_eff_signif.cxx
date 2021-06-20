@@ -1,48 +1,7 @@
-#ifndef YIELD_EFF_SIGNIF_H
-#define YIELD_EFF_SIGNIF_H
-
-#include <iostream>
-#include <cstdlib>
-#include "TROOT.h"
-#include "RooFit.h"
-#include "./EffCalc/openEffhist.C"
-#include "bininfo.h"
+#include "yield_eff_signif.h"
 #include "Get_Optimal_BDT.cxx"
 
-class binplotter
-{
-  public:
-	binplotter();
-  	binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh);
-	void init();
-	void set_params(double _vcut);
-	void set_params(string _fitfunc);
-	void set_params(string _fitfunc, double _vcut);
-	void dump();
-	~binplotter();
-	RooRealVar get_yield();
-	std::pair<double, double> get_eff();
-	RooRealVar yield_eff();
-	std::pair<RooRealVar, RooRealVar> get_frac();
-	RooRealVar getsignificance();
-	RooRealVar* NS;
-	RooRealVar* NB;
-	bool refit = false;
-	RooRealVar yield1S, yield2S, yield3S, frac2S, frac3S;
-	std::string type;
-	double ylim, blow, bhigh;
-  	
-  private:
-  	long ts;
-	int pl, ph,cl, ch;
-	double vcut =0.00;
-	TString MupT = "3p5";
-	string Trig ="S13";
-	TString fittype = "freefit";
-	string filename;
-	string fitfunc="";//"_CC3";
 
-};
 binplotter::binplotter(){
 };
 
@@ -51,13 +10,13 @@ binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _
 
   int nbin = 120;
   if (massrng.find(ts) != massrng.end()) { nbin = (int) ((massrng[ts].second - massrng[ts].first)/0.05); } 
-  std::cout << "--------------------Calculated nbin : " << nbin << "----------------------"<< std::endl;
   init();
+  std::cout << "--------------------Calculated nbin : " << nbin << "----------------------"<< std::endl;
 };
 
 binplotter::~binplotter(){ };
 
-void binplotter::init(){
+void binplotter::init(bool get_bdt= true){
   auto _fitdir = parser_symbol(type, ":");
   fitfunc = _fitdir[1];
   int ylim10 = (int) (ylim*10);
@@ -73,7 +32,8 @@ void binplotter::init(){
     nbin = (int) ((m_high - m_low)/0.05) ; 
   }
   fitdir = info_fit[2].c_str();
-  blow = Get_Optimal_BDT(ts, pl, ph,(double) -1*ylim, ylim, cl, ch, vcut).first;
+  
+  if(get_bdt){ blow = Get_Optimal_BDT(ts, pl, ph,(double) -1*ylim, ylim, cl, ch, vcut).first; }
   
   filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10,nbin, cl, ch, blow, bhigh, vcut);
   if(fitdir.find("DD") != std::string::npos){
@@ -191,39 +151,3 @@ RooRealVar binplotter::yield_eff(){
   YoverE.setError(Yield3S.getError()/bdteff);
   return YoverE;
 };
-
-//RooRealVar binplotter::getsignificance(){
-//  string fitdir;
-//  TFile* file1 = new TFile(filename.c_str(),"read");
-//  
-//  RooWorkspace* works1 = (RooWorkspace*) file1->Get("workspace");
-//  RooFitResult* Rsult = (RooFitResult*) file1->Get("fitresult_model_reducedDS");
-//
-//  RooDataSet* dataset = (RooDataSet*) works1->data("reducedDS");
-//  RooRealVar* vmass = (RooRealVar*) works1->var("mass");
-//  vmass->setRange("SigReg", 10, 10.7);
-//  RooAbsPdf* pdf_sig = (RooAbsPdf*) works1->pdf("twoCB3S");
-//  RooAbsPdf* pdf_bkg;
-//  if(strcmp(fitfunc.c_str(),"")==0)pdf_bkg =(RooAbsPdf*) works1->pdf("bkgErf");
-//  if(fitfunc.find("_CC")!=std::string::npos)pdf_bkg =(RooAbsPdf*) works1->pdf("CCBkg");
-//  NS = (RooRealVar*) works1->var("nSig3S");
-//  NB = (RooRealVar*) works1->var("nBkg");
-//  double nSig = works1->var("nSig3S")->getVal();
-//  double nBkg = works1->var("nBkg")->getVal();
-//  double eSig = works1->var("nSig3S")->getError();
-//  double eBkg = works1->var("nBkg")->getError();
-//
-//  RooAbsReal* integral_sig = pdf_sig->createIntegral(*vmass, RooFit::NormSet(*vmass), RooFit::Range("SigReg"));
-//  RooAbsReal* integral_bkg = pdf_bkg->createIntegral(*vmass, RooFit::NormSet(*vmass), RooFit::Range("SigReg"));
-//  double sig_sum = nSig *((double) integral_sig->getVal());
-//  double sig_err = eSig *((double) integral_sig->getVal());
-//  double bkg_sum = nBkg *((double) integral_bkg->getVal());
-//  double bkg_err = eBkg *((double) integral_bkg->getVal());
-//  double signif = sig_sum/TMath::Sqrt(sig_sum+bkg_sum);
-//  double signif_err = (TMath::Power(sig_sum+bkg_sum,-1.5))*(TMath::Sqrt(TMath::Power((0.5*sig_sum+bkg_sum)*sig_err,2)+TMath::Power(0.5*sig_sum*bkg_err,2)));
-//  RooRealVar significance("significance","Significance of signal",signif,0,10000);
-//  significance.setError(signif_err);
-//  return significance;
-//};
-
-#endif

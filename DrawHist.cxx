@@ -13,7 +13,7 @@ using namespace RooFit;
 
 void DrawHist_(long ts,double ylim, float blow, float bhigh, float vcut, TString MupT = "3p5", string Trig = "S13", TString fittype = "freefit") {};
 void DrawHist__();
-void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 180, double cutQVP = 0.01, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1., int Nmassbins=140){
+void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 180, double cutQVP = 0.01, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1., int Nmassbins=140, bool draw_mag = true){
   setTDRStyle();
 
   std::string sig_func = parsed[0];
@@ -31,7 +31,7 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
   }
   if(fitdir.find("GC")!=std::string::npos) fit_param = "gaussconst";
   if(fitdir.find("DR")!=std::string::npos) fit_param = fit_param + "_DoubleRatio";
-  if(bkg_func=="EE") name_pdf_bkg = "bkgErf";
+  if(bkg_func.find("EE")!= std::string::npos) name_pdf_bkg = "bkgErf";
   if(bkg_func.find("CC")!= std::string::npos) name_pdf_bkg = "CCBkg";
 
   int ylim10 = (int) (rapMax*10);
@@ -122,18 +122,20 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
   
   CMS_lumi_square( pad_mass, 2, 11);
 
-  pad_mass_3S->SetMargin(0.25, 0.01, 0.14, 0.01);
-  pad_mass_3S->Draw();
-  pad_mass_3S->cd();
-  plot2->GetXaxis()->SetLabelSize(0.06);
-  plot2->GetXaxis()->SetTitleSize(0.06);
-  plot2->GetXaxis()->SetTitle("mass (GeV/c^{2}) ");
-  plot2->GetXaxis()->SetTitleOffset(1.1);
-  plot2->GetYaxis()->SetLabelSize(0.08);
-  plot2->GetYaxis()->SetTitleSize(0.06);
-  plot2->GetYaxis()->SetTitleOffset(1.65);
-  plot2->GetYaxis()->SetRangeUser(0, (plot1->GetMaximum()/2.0));
-  plot2->Draw();
+  if (draw_mag){
+    pad_mass_3S->SetMargin(0.25, 0.01, 0.14, 0.01);
+    pad_mass_3S->Draw();
+    pad_mass_3S->cd();
+    plot2->GetXaxis()->SetLabelSize(0.06);
+    plot2->GetXaxis()->SetTitleSize(0.06);
+    plot2->GetXaxis()->SetTitle("mass (GeV/c^{2}) ");
+    plot2->GetXaxis()->SetTitleOffset(1.1);
+    plot2->GetYaxis()->SetLabelSize(0.08);
+    plot2->GetYaxis()->SetTitleSize(0.06);
+    plot2->GetYaxis()->SetTitleOffset(1.65);
+    plot2->GetYaxis()->SetRangeUser(0, (plot1->GetMaximum()/2.0));
+    plot2->Draw();
+  }
 
 
   pad_pull->cd();

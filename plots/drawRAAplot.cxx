@@ -1,4 +1,4 @@
-#include "../upsilonAna.h"
+#include "../upsilonAna.cxx"
 #include "../.workdir.h"
 
 RooRealVar getDoubleRatioValue(std::pair <int, int>);

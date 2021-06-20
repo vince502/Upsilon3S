@@ -7,7 +7,7 @@
 //#include "./BDT/GOBC.cxx"
 
 void doConstraintFit(int step = 0){
-  std::string type 			= "CB3:EE:FF"	;
+  std::string type 			= "CB3:CC4:FF"	;
   std::string type2 			= "CB3:CC2:FF"	;
   std::string constraints		="alpha:n:frac:frac2:x3S:x3S_2:sigma3S_1"	;
   std::string fixvars			="alpha:n:frac:frac2:x1S:x1S_2:sigma1S_1"	;
@@ -61,14 +61,15 @@ void doConstraintFit(int step = 0){
       std::cout << type << std::endl;
 
        double mean_sigma1S1 =  map_keyval["sigma3S_1"].first*(U1S_mass/U3S_mass);
-//      MassYieldFit_data(type, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 0.0,0.1,0.1,0.1, -0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, -0.3, -0.3, -0.3,-0.3, -0.3}, (Double_t[]) {0.31, (map_keyval["alpha"].first+map_keyval["alpha"].second)*2, (map_keyval["n"].first+map_keyval["n"].second)*4, 0.95, 0.1, 0.1, 0.3,0.3, 0.3}, 
+      MassYieldFit_data(type, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 0.0,0.1,0.1,0.1, -0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, -0.3, -0.3, -0.3,-0.3, -0.3}, (Double_t[]) {0.31, (map_keyval["alpha"].first+map_keyval["alpha"].second)*2, (map_keyval["n"].first+map_keyval["n"].second)*4, 0.95, 0.1, 0.1, 0.3,0.3, 0.3}, 
 //      MassYieldFit_data(type, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 5.0,5.1,2.1,0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, -0.3, -0.3, -0.3,-0.3}, (Double_t[]) {0.31, (map_keyval["alpha"].first+map_keyval["alpha"].second)*2, (map_keyval["n"].first+map_keyval["n"].second)*4, 0.95, 9.1, 10.1, 2.3,0.3}, 
-      MassYieldFit_data(type, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 5.0,5.1,2.1,0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, 5.3, 1.3, 0.3,-0.3}, (Double_t[]) {-1, -1, -1, -1, 9.1, 7.1, 2.3,0.3}, 
+//      MassYieldFit_data(type, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 5.0,5.1,2.1,0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, 5.3, 1.3, 0.3,-0.3}, (Double_t[]) {-1, -1, -1, -1, 9.1, 7.1, 2.3,0.3}, 
        (std::map<string, params_vhl>) {
        {"frac2", {map_keyval["frac2"].first, 0, -1} }, 
        {"x3S", {map_keyval["x3S"].first,0,-1}}, 
        {"x3S_2", {map_keyval["x3S_2"].first,0,-1}},
        {"sigma3S_1", { mean_sigma1S1,0,-1}},
+       {"mag", { 0, 0, 0 }},
        });
 
 ////       MassYieldFit_BDT_MC(ts, "", fname3S, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, state, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh);

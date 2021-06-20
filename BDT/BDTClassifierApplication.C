@@ -122,7 +122,7 @@ void BDTClassifierApplication(long ts, int isMC = 0, bool isbbb = false){
   TFile *target;
   if (isMC ==0) target =new TFile(Form("./BDTAppliedData/BDTApp_%ld.root",ts),"recreate");
   else if (isMC==1) target =new TFile(Form("./BDTAppliedData/BDTApp_%ld_MC.root",ts),"recreate");
-  else if (isMC==2) target = new TFile(Form("./BDTAppliedData/BDTApp_Custom.root"),"recreate");
+  else if (isMC==2) target = new TFile(Form("./BDTAppliedData/BDTApp_1S.root"),"recreate");
   TTree* outtree = tree->CloneTree(0);
   outtree->SetName("tree");
   outtree->Branch("BDT", &BDT, "BDT/D");

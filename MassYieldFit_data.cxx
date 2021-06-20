@@ -517,7 +517,8 @@ dbg();
   hfrac->Write();
   hfracdist->Write();
   mf.fout->Close();
+  int drawmag = (int) map_params["mag"].val; 
 
-  DrawHist(parsed, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, Nmassbins);
+  DrawHist(parsed, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, Nmassbins, (bool) drawmag);
  
 }
