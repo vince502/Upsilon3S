@@ -4,10 +4,6 @@
 #include "../upsilonAna.h"
 #include "yield_eff_signif.h"
 
-//static TH1D* Get_Optimal_BDT_HIST; 
-
-//std::pair<std::pair< RooRealVar, RooRealVar>, std::pair<RooRealVar, RooRealVar> > get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int state1 =1, int state2 = 3);
-
 std::pair<double,double> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio= 0.16, string name_input_opt = "", string formula_significance= "S12")
 {
 
@@ -37,7 +33,6 @@ std::pair<double,double> Get_Optimal_BDT(long ts, double ptMin, double ptMax, do
   int ent_bkg = tree_train->GetEntries("classID==1");
   std::cout << ent_sig << ", " << ent_bkg << std::endl;
   
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
   auto get_BDTcut_from_ratio = [&](double ratio)
   {
     TH1D* hist_res = new TH1D(Form("base_hist_res %ld, [%.1f,%.1f][%.1f,%.1f][%d,%d]",ts, ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh), "signifcance vs BDT", Nbins, -0.5, 1);
@@ -97,12 +92,8 @@ std::pair<double,double> Get_Optimal_BDT(long ts, double ptMin, double ptMax, do
     auto res = hist_res->GetFunction("pol5");
     double max_signif_bdt_fromfit = res->GetMaximumX(-0.3, 0.5); 
     double max_signif_val = hist_res->GetMaximum();
-//    TH1D toreturn = *hist_res;
-//    delete(hist_res);
     return std::make_pair(std::make_pair(max_signif_bdt_fromfit, max_signif_val),hist_res);
   };
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   auto bdt_res =  get_BDTcut_from_ratio(ratio);
   TH1D* hist_res = bdt_res.second;
@@ -133,6 +124,7 @@ std::pair<std::pair< RooRealVar, RooRealVar>, std::pair<RooRealVar, RooRealVar> 
   auto effp = bp.get_eff();
   eff2= RooRealVar(Form("eff%d",state2), "", effp.first);
   eff2.setError(effp.second);
+  /*NEEDED : GET YIELD 1S in that region */
   eff1= RooRealVar(Form("eff%d",state1), "", effp.first);
   eff1.setError(effp.second);
   auto res = std::pair<std::pair< RooRealVar, RooRealVar>, std::pair<RooRealVar, RooRealVar> >{ {acc1,acc2}, {eff1, eff2}};

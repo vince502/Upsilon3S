@@ -21,6 +21,7 @@ class binplotter
 	void dump();
 	~binplotter();
 	RooRealVar get_yield();
+	RooRealVar get_bkg(double mass_low, double mass_high);
 	std::pair<double, double> get_eff();
 	RooRealVar yield_eff();
 	std::pair<RooRealVar, RooRealVar> get_frac();
