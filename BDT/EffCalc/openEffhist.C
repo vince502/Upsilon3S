@@ -9,13 +9,30 @@
 //#include "../../Efficiency/getEfficiency.C"
 //
 TString histName;
+std::pair<double, double> mass_rng(int state){
+  switch (state){
+    case 1 :
+    	return std::make_pair(8.8, 10.2);
+    case 2 :
+    	return std::make_pair(9.2, 10.6);
+    case 3 :
+    	return std::make_pair(9.6, 11.0);
+    default :
+    	return std::make_pair(9.0, 11.0);
+  }
+
+};
 
 std::pair<double, double> getEffhist(float pl, float ph, float yl, float yh, int cl, int ch, bool istnp, bool wei, long ts, double bdt_low, double bdt_high, int state =3){
+  double ml, mh;
+  auto mp = mass_rng(state);
+  ml = mp.first;
+  mh = mp.second;
 
-  string fname =Form("%s/BDT/EffCalc/mc_eff_BDT_%dS_%ld_bdt_%.3f-%.3f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_ID", workdir.Data(), state, ts, bdt_low, bdt_high, pl, ph, yl, yh, 3.5, 9.0, 11.0, cl, ch, istnp, wei);
+  string fname =Form("%s/BDT/EffCalc/mc_eff_BDT_%dS_%ld_bdt_%.3f-%.3f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_ID", workdir.Data(), state, ts, bdt_low, bdt_high, pl, ph, yl, yh, 3.5, ml, mh, cl, ch, istnp, wei);
   // if(!TFile::Open(Form("%s.root",fname.c_str()),"read")){
     std::cout << "-----Calculate new Efficiency for current parameters-----" << std::endl;
-    string command = Form("root -l -b -q \'/home/vince402/Upsilon3S/Efficiency/getEfficiencyBDT.C(%.2f, %.2f, %.2f, %.2f, %d, %d, %d, %d, %ld, %.3f, %.5f)\'",pl, ph, yl, yh, cl, ch, (int) istnp, (int) wei, ts, bdt_low, bdt_high, state);
+    string command = Form("root -l -b -q \'/home/vince402/Upsilon3S/Efficiency/getEfficiencyBDT.C(%.2f, %.2f, %.2f, %.2f, %d, %d, %d, %d, %ld, %.3f, %.5f, %d)\'",pl, ph, yl, yh, cl, ch, (int) istnp, (int) wei, ts, bdt_low, bdt_high, state);
     int a = system(command.c_str());
     getEfficiencyBDT(pl, ph, yl, yh, cl, ch, istnp, wei, ts, bdt_low, bdt_high, state); 
   //}
@@ -29,6 +46,10 @@ std::pair<double, double> getEffhist(float pl, float ph, float yl, float yh, int
 };
 
 std::pair<double, double> getEffhist(float pl, float ph, float yl, float yh, int cl, int ch, bool istnp, bool wei, int sw, int num_trig, int state =3){
+  double ml, mh;
+  auto mp = mass_rng(state);
+  ml = mp.first;
+  mh = mp.second;
 
   int kTrigSel_;
   if ( num_trig == kTrigUps ) kTrigSel_=1;
@@ -37,7 +58,7 @@ std::pair<double, double> getEffhist(float pl, float ph, float yl, float yh, int
   if(sw) ftrigSel += "_UpsAndL1OS40100";
   else if (!sw) ftrigSel += Form("_%s",fTrigName[kTrigSel_].Data());
 
-  string fname =Form("%s/BDT/EffCalc/mc_eff_%dS_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_TrigSel%s", workdir.Data(), state, pl, ph, yl, yh, 3.5, 9.0, 11.0, cl, ch, istnp, wei, ftrigSel.c_str());
+  string fname =Form("%s/BDT/EffCalc/mc_eff_%dS_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_TrigSel%s", workdir.Data(), state, pl, ph, yl, yh, 3.5, ml, mh, cl, ch, istnp, wei, ftrigSel.c_str());
 
   TFile* histfile = new TFile(Form("%s.root",fname.c_str()),"read");
   TList* list1 = (TList*) histfile->GetListOfKeys();

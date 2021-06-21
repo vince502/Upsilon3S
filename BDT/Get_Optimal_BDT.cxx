@@ -120,11 +120,14 @@ RooRealVar get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, i
   RooRealVar acc1, acc2, eff1, eff2, nbkg;
   acc1  = upsi::getacceptance(pl, ph, (-1)*ylim, ylim, 3.5, state1);
   acc2  = upsi::getacceptance(pl, ph, (-1)*ylim, ylim, 3.5, state2);
-  binplotter bp = binplotter(type, ts, ylim,pl, ph, cl, ch, blow, bhigh);
-  bp.init(false);
+  binplotter bp = binplotter(type, ts, ylim,pl, ph, cl, ch, blow, bhigh, false);
   bp.get_yield();
   nbkg = bp.get_bkg();
-  auto effp1 = bp.get_eff(state1);
+  dbg();
+  RooRealVar yield3S = bp.yield3S;
+  dbg();
+  auto effp1 = bp.get_eff(state2);
+  dbg();
   auto effp2 = bp.get_eff(state2);
   eff2= RooRealVar(Form("eff%d",state2), "", effp2.first);
   eff2.setError(effp2.second);
@@ -132,11 +135,19 @@ RooRealVar get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, i
   eff1= RooRealVar(Form("eff%d",state1), "", effp1.first);
   eff1.setError(effp1.second);
 
-  double ratio_acceff = (eff2.getVal()*acc2/(eff1.getVal()*acc1));
-  double ratio_val = yield3S.getVal()/nBkg.getVal();
+  double ratio_acceff = ((eff2.getVal()*acc2.getVal())/(eff1.getVal()*acc1.getVal()));
+  double ratio_val = yield3S.getVal()/nbkg.getVal();
+  std::cout << "YIELD: " << nbkg.getVal() << ", "<< yield3S.getVal() << std::endl;
+  std::cout << "EFF: " << eff1.getVal() << ", "<< eff2.getVal() << std::endl;
+  std::cout << "ACC: " << acc1.getVal() << ", "<< acc2.getVal() << std::endl;
+  std::cout << "RESULT: " <<ratio_acceff << ", "<< ratio_val << std::endl;
+  std::cout << "ERRORS: " << "\n";
+  std::cout << "YIELD: " << nbkg.getError() << ", "<< yield3S.getError() << std::endl;
+  std::cout << "EFF: " << eff1.getError() << ", "<< eff2.getError() << std::endl;
+  std::cout << "ACC: " << acc1.getError() << ", "<< acc2.getError() << std::endl;
 
   RooRealVar res_var = RooRealVar("result","",ratio_acceff*ratio_val);
-  res_var.setError( res_var *TMath::Sqrt( TMath::Power(acc1.getError()/acc1.getVal(),2) + TMath::Power(acc2.getError()/acc2.getVal(),2) + TMath::Power(eff1.getError()/eff1.getVal(),2) + TMath::Power(eff2.getError()/eff2.getVal(),2) + TMath::Power(nBkg.getError()/nBkg.getVal(),2) + TMath::Power(yield3S.getError()/yield3S.getVal(),2) ) ); 
+  res_var.setError( res_var.getVal()*TMath::Sqrt( TMath::Power(acc1.getError()/acc1.getVal(),2) + TMath::Power(acc2.getError()/acc2.getVal(),2) + TMath::Power(eff1.getError()/eff1.getVal(),2) + TMath::Power(eff2.getError()/eff2.getVal(),2) + TMath::Power(nbkg.getError()/nbkg.getVal(),2) + TMath::Power(yield3S.getError()/yield3S.getVal(),2) ) ); 
   return res_var;
   
 };
