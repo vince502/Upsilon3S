@@ -13,7 +13,7 @@ using namespace std;
 void getEfficiency(
   float ptLow = 0.0, float ptHigh = 30.0,
   float yLow = 0.0, float yHigh = 2.4,
-  int cLow = 0, int cHigh = 180, bool isTnP = false, bool isPtWeight = false, bool isSwitch=false, int kTrigSel = kTrigUps, bool isBDT = false
+  int cLow = 0, int cHigh = 180, bool isTnP = false, bool isPtWeight = false, bool isSwitch=false, int kTrigSel = kTrigUps, bool isBDT = false, int state =3
   ) {
 
   gStyle->SetOptStat(0);
@@ -24,8 +24,19 @@ void getEfficiency(
   float muPtCut = 3.5;
   float muEtaCut = 2.4;
 
-  float massLow = 9.0;
-  float massHigh = 11.0;
+  float massLow ;
+  float massHigh;
+  switch(state){
+  	case 1:
+		massLow =8.8;
+		massHigh = 10.2;
+	case 2:
+		massLow =9.2;
+		massHigh = 10.6;
+	case 3:
+		massLow =9.6;
+		massHigh = 11.0;
+  }
 
   double xmin = ptLow;
   double xmax = ptHigh;
@@ -38,6 +49,8 @@ void getEfficiency(
 
   //input files
   TString inputMC = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/OniaTree/MC/OniaTree_MC_Ups3S_PbPb2018_HydjetDrumMB_5p02TeV_merged.root";
+  if(state ==1) inputMC = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/OniaTree/MC/OniaTree_MC_Ups1S_PbPb2018_HydjetDrumMB_5p02TeV_merged.root";
+  if(state ==2) inputMC = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/OniaTree/MC/OniaTree_MC_Ups2S_PbPb2018_HydjetDrumMB_5p02TeV_merged.root";
   TChain* mytree = new TChain("hionia/myTree"); 
   mytree->Add(inputMC.Data());
 
@@ -49,7 +62,7 @@ void getEfficiency(
   TFile *fPtW = new TFile(Form("%s/Efficiency/Func_dNdpT_2S.root",workdir.Data()),"read");
   TF1* f1 = (TF1*) fPtW->Get("fitRatio");
 
-  TString histName = Form("pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_TrigSel%s",ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight,ftrigSel.c_str());
+  TString histName = Form("%dS_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_TrigSel%s",state, ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight,ftrigSel.c_str());
 //  TH1D* hreco = new TH1D(Form("hreco"),"hreco",1,xmin,xmax);
   TH1D* hgen = new TH1D(Form("hgen"),"hgen",1,xmin,xmax);
   TH1D* hgen_bin = new TH1D(Form("hgen_bin"),"hgen",(int) (xmax-xmin),xmin,xmax);

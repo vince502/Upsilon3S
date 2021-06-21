@@ -12,11 +12,19 @@
 
 using namespace std;
 
-void getAcceptance(double ptLow = 0, double ptHigh=50, double yLow=0, double yHigh=2.4, double SiMuPtCut=3.5)
+void getAcceptance(double ptLow = 0, double ptHigh=50, double yLow=0, double yHigh=2.4, double SiMuPtCut=3.5, int state =3)
 {
   gStyle->SetOptFit(kTRUE);
 
-  TFile* f = new TFile("/home/samba.old/CMS_Files/5TeVUpsilonGENONLY/OniaTree_Ups3SMM_5p02TeV_TuneCUETP8M1_nofilter_pp502Fall15-MCRUN2_71_V1-v1_GENONLY.root","read");
+  TFile* f;
+  switch(state){
+    case 1 :
+    	f =new TFile("/home/samba.old/CMS_Files/5TeVUpsilonGENONLY/OniaTree_Ups1SMM_5p02TeV_TuneCUETP8M1_nofilter_pp502Fall15-MCRUN2_71_V1-v1_GENONLY.root","read");
+    case 2 :
+    	f =new TFile("/home/samba.old/CMS_Files/5TeVUpsilonGENONLY/OniaTree_Ups2SMM_5p02TeV_TuneCUETP8M1_nofilter_pp502Fall15-MCRUN2_71_V1-v1_GENONLY.root","read");
+    case 3 :
+    	f =new TFile("/home/samba.old/CMS_Files/5TeVUpsilonGENONLY/OniaTree_Ups3SMM_5p02TeV_TuneCUETP8M1_nofilter_pp502Fall15-MCRUN2_71_V1-v1_GENONLY.root","read");
+  }
   TTree* mytree = (TTree*) f->Get("hionia/myTree");
 
   TClonesArray* Gen_QQ_4mom;
@@ -35,7 +43,7 @@ void getAcceptance(double ptLow = 0, double ptHigh=50, double yLow=0, double yHi
 
   TString histName = Form("pt%.1f_%.1f_y%.1f_%.1f_SimuPt%.1f",ptLow,ptHigh,yLow,yHigh,SiMuPtCut);
 
-  TFile *wf = new TFile(Form("AccRes_%s.root",histName.Data()),"recreate");
+  TFile *wf = new TFile(Form("AccRes_%dS_%s.root",state,histName.Data()),"recreate");
 
   TH1D* hGen = new TH1D("hGen",";pT;",1,ptLow,ptHigh);
   TH1D* hGenAcc = new TH1D("hGenAcc",";pT;",1,ptLow,ptHigh);

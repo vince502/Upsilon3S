@@ -9,6 +9,7 @@
 #include "TMVA/MethodCuts.h"
 #include "TXMLDocument.h"
 #include "bininfo.h"
+#include "../.workdir.h"
 
 
 void BDTClassifierApplication(long ts, int isMC = 0, bool isbbb = false){
@@ -26,9 +27,9 @@ void BDTClassifierApplication(long ts, int isMC = 0, bool isbbb = false){
   XMLDocPointer_t xmldoc = xml.ParseFile(Form("./dataset/weights/TMVA_BDT_Classifier_BDT_train_%ld.weights.xml", ts));
   XMLDocPointer_t mainnode = xml.DocGetRootElement(xmldoc);
 
-  TString dfname = (isMC==2) ? "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_1S.root" : (whichtree==0) ? "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_v210416.root" : "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_v210416_ForBLIND.root";
-      TString mfname =  "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_v210521.root";
-      if(isMC==2) mfname = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_1S.root";
+  TString dfname = (isMC==2) ? Form("%s/%s", workdir.Data(), ONIABDTMC1S_LATEST.c_str()) : (whichtree==0) ? Form("%s/%s", workdir.Data(), ONIABDTDATA_LATEST.c_str())  : Form("%s/%s", workdir.Data(), ONIABDTDATAB_LATEST.c_str());
+      TString mfname = Form("%s/%s", workdir.Data(), ONIABDTMC_LATEST.c_str());
+      if(isMC==2) mfname = Form("%s/%s", workdir.Data(), ONIABDTMC1S_LATEST.c_str());
 
   TFile* input(0);
   input = new TFile((isMC==1 || isMC==2) ? mfname.Data() : dfname.Data(), "open");

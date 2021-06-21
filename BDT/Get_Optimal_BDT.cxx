@@ -95,6 +95,7 @@ std::pair<double,double> Get_Optimal_BDT(long ts, double ptMin, double ptMax, do
     return std::make_pair(std::make_pair(max_signif_bdt_fromfit, max_signif_val),hist_res);
   };
 
+  
   auto bdt_res =  get_BDTcut_from_ratio(ratio);
   TH1D* hist_res = bdt_res.second;
 
@@ -102,7 +103,6 @@ std::pair<double,double> Get_Optimal_BDT(long ts, double ptMin, double ptMax, do
   TFile* output;
   output = new TFile(Form("%s/BDT/test_OPT_BDT_method2.root",workdir.Data()),"update");
   output->cd();
-
 
   //TF1 *f1 = new TF1("poly3", "[0]*x^3+[1]*x^2+[2]*x+[3]",-0.3, 0.4);
 
@@ -114,20 +114,29 @@ TH1D* func_hist_optimal_BDT(){
   return Get_Optimal_BDT_HIST;
 };
 
-std::pair<std::pair< RooRealVar, RooRealVar>, std::pair<RooRealVar, RooRealVar> > get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int state1 =1, int state2 =2){
-  RooRealVar acc1, acc2, eff1, eff2;
+//Function to get BDT ratio //
+RooRealVar get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int state1 =1, int state2 =3){
+
+  RooRealVar acc1, acc2, eff1, eff2, nbkg;
   acc1  = upsi::getacceptance(pl, ph, (-1)*ylim, ylim, 3.5, state1);
   acc2  = upsi::getacceptance(pl, ph, (-1)*ylim, ylim, 3.5, state2);
   binplotter bp = binplotter(type, ts, ylim,pl, ph, cl, ch, blow, bhigh);
   bp.init(false);
   bp.get_yield();
-  auto effp = bp.get_eff();
-  eff2= RooRealVar(Form("eff%d",state2), "", effp.first);
-  eff2.setError(effp.second);
+  nbkg = bp.get_bkg();
+  auto effp1 = bp.get_eff(state1);
+  auto effp2 = bp.get_eff(state2);
+  eff2= RooRealVar(Form("eff%d",state2), "", effp2.first);
+  eff2.setError(effp2.second);
   /*NEEDED : GET YIELD 1S in that region */
-  eff1= RooRealVar(Form("eff%d",state1), "", effp.first);
-  eff1.setError(effp.second);
-  auto res = std::pair<std::pair< RooRealVar, RooRealVar>, std::pair<RooRealVar, RooRealVar> >{ {acc1,acc2}, {eff1, eff2}};
-  return res;
+  eff1= RooRealVar(Form("eff%d",state1), "", effp1.first);
+  eff1.setError(effp1.second);
+
+  double ratio_acceff = (eff2.getVal()*acc2/(eff1.getVal()*acc1));
+  double ratio_val = yield3S.getVal()/nBkg.getVal();
+
+  RooRealVar res_var = RooRealVar("result","",ratio_acceff*ratio_val);
+  res_var.setError( res_var *TMath::Sqrt( TMath::Power(acc1.getError()/acc1.getVal(),2) + TMath::Power(acc2.getError()/acc2.getVal(),2) + TMath::Power(eff1.getError()/eff1.getVal(),2) + TMath::Power(eff2.getError()/eff2.getVal(),2) + TMath::Power(nBkg.getError()/nBkg.getVal(),2) + TMath::Power(yield3S.getError()/yield3S.getVal(),2) ) ); 
+  return res_var;
   
 };

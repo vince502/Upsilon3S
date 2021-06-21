@@ -23,8 +23,19 @@ void getEfficiencyBDT(
   float muPtCut = 3.5;
   float muEtaCut = 2.4;
 
-  float massLow = 9.0;
-  float massHigh = 11.0;
+  float massLow ;
+  float massHigh;
+  switch(state){
+  	case 1:
+		massLow =8.8;
+		massHigh = 10.2;
+	case 2:
+		massLow =9.2;
+		massHigh = 10.6;
+	case 3:
+		massLow =9.6;
+		massHigh = 11.0;
+  }
 
   double xmin = ptLow;
   double xmax = ptHigh;
@@ -38,6 +49,7 @@ void getEfficiencyBDT(
   //input files
   TString inputMC = Form("/home/vince402/Upsilon3S/BDT/BDTAppliedData/BDTApp_%ld_MC.root", ts);
   if( state ==1) inputMC = Form("/home/vince402/Upsilon3S/BDT/BDTAppliedData/BDTApp_%ld_1S_MC.root", ts);
+  if( state ==2) inputMC = Form("/home/vince402/Upsilon3S/BDT/BDTAppliedData/BDTApp_%ld_2S_MC.root", ts);
   TChain* mytree = new TChain("tree"); 
   mytree->Add(inputMC.Data());
 
@@ -49,7 +61,7 @@ void getEfficiencyBDT(
 //  TFile *fPtW = new TFile(Form("%s/Efficiency/Func_dNdpT_2S.root",workdir.Data()),"read");
 //  TF1* f1 = (TF1*) fPtW->Get("fitRatio");
 
-  TString histName = Form("BDT_%ld_bdt_%.3f-%.3f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d", ts, bdt_tsl, bdt_tsh, ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight);
+  TString histName = Form("BDT_%dS_%ld_bdt_%.3f-%.3f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d", state, ts, bdt_tsl, bdt_tsh, ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight);
   TH1D* hreco = new TH1D(Form("hreco"),"hreco",1,xmin,xmax);
   TH1D* hreco_tnp = new TH1D(Form("hreco_tnp"),"hreco_tnp",(int) ((xmax-xmin)),xmin,xmax);
   TH1D* hreco_xtnp = new TH1D(Form("hreco_xtnp"),"hreco_xtnp",(int) ((xmax-xmin)),xmin,xmax);

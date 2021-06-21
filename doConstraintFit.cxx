@@ -1,13 +1,14 @@
-#include "./BDT/bininfo.h"
+//#include "./BDT/bininfo.h"
 //#include "MassYieldFit_BDT_MC.C"
 //#include "MassYieldFit_BDT_MC_GE.C"
 #include "MassYieldFit_BDT_MC_CB3.C"
 //#include "MassYieldFit_BDT_MC.C"
 #include "MassYieldFit_data.cxx"
+#include "./BDT/yield_eff_signif.cxx"
 //#include "./BDT/GOBC.cxx"
 
 void doConstraintFit(int step = 0){
-  std::string type 			= "CB3:CC4:FF"	;
+  std::string type 			= "CB3:CC4:DRGC"	;
   std::string type2 			= "CB3:CC2:FF"	;
   std::string constraints		="alpha:n:frac:frac2:x3S:x3S_2:sigma3S_1"	;
   std::string fixvars			="alpha:n:frac:frac2:x1S:x1S_2:sigma1S_1"	;
@@ -23,7 +24,7 @@ void doConstraintFit(int step = 0){
   bool swflag				= false		;
   int cBinLow				= 0		;
   int cBinHigh				= 180 		;
-  double cutQVP				= 0.01		;
+  double cutQVP				= 0.00		;
   bool isBDT 				= true		;
   double cutBDTlow			= -1.0		;
   double cutBDThigh			= 1.0		;
@@ -32,12 +33,12 @@ void doConstraintFit(int step = 0){
 /*
 */
 //       cutBDTlow = Get_Optimal_BDT(ts,ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP ).first;
-//      cutBDTlow = 0.20;
+      cutBDTlow = -0.30;
  //      MassYieldFit_BDT_MC_CB3(ts, "", fname3S, 0, 30, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, state, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh);
 ////       MassYieldFit_BDT_MC(ts, fname1S, "", ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, 1, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh);
 ////       MassYieldFit_BDT_MC(ts, "", fname3S, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, 3, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh);
       //new TFile(Form("%s/Yield/Yield_CB3_%dS_pt_%d-%d_rap_%d-%d_noWeight_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_%d.root",workdir.Data(), (int) state ,(int)0, (int)30, (int)(rapMin*10), (int)(rapMax*10), MupT.Data(), Trig.c_str(), cutBDTlow, cutBDThigh, cutQVP,(int) fixvar), "READ"); // Depricate this file name
-//       MassYieldFit_BDT_MC_CB3(ts, "", fname3S, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, state, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh);
+       MassYieldFit_BDT_MC_CB3(ts, "", fname3S, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, state, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh);
 
       TFile* file_MCres_input = new TFile(Form("Yield/Yield_%ld_CB3_%dS_pt_%d-%d_rap_%d-%d_cBin_%d-%d_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_%d.root", ts, (int) state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), cutBDTlow, cutBDThigh, cutQVP,(int) fixvar), "OPEN");
 

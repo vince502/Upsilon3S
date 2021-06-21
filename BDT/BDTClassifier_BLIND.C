@@ -34,8 +34,8 @@ bool BDTClassifier_BLIND_Function(double ptLow, double ptHigh, int cBinLow, int 
   else gSystem->mkdir(BDTDir.Data(),kTRUE);
   
   //INPUT & OUTPUT Call
-  TFile* inputDATA = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_v210416_ForBLIND.root","read");
-  TFile* inputMC   = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_v210521.root","read");
+  TFile* inputDATA = new TFile(Form("%s/%s", workdir.Data(), ONIABDTDATAB_LATEST.c_str()),"read");
+  TFile* inputMC   = new TFile(Form("%s/%s", workdir.Data(), ONIABDTMC1S_LATEST.c_str()),"read");
   //new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_v210416.root","read");
   TFile* output    = new TFile(Form("%s/BDTresultY3S_%ld_BLIND.root",BDTDir.Data(),(long) tstamp),"recreate");
 

@@ -39,6 +39,21 @@ void binplotter::init(bool get_bdt= true){
     filename = filename.substr(0, filename.length() -5) + Form("_DDiter%d.root",fitdir[4]-48); 
   }
 
+  std::cout << "Opening Yield file : " << filename.c_str() << std::endl;
+  if(TFile::Open(filename.c_str(), "open")==nullptr || TFile::Open(filename.c_str(),"read")->IsZombie()|| refit){
+    std::cout << "Running Fitter for new Yield" << std::endl;
+    string command;
+    if(strcmp(fitfunc.c_str(),"")==0){ command =Form("root -l -b -q \'../MassYieldFit_BDT.C(\"/home/vince402/Upsilon3S/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root\", %d, %d, %.1f, %.1f, \"3p5\", \"S13\", %d, %d, %.3f, %.2f, %.2f , (Double_t[]) {0.13, 1.54, 3.68, 0.56, 5.0, 1.8, 3.13}, (Double_t[]) {0.01, 0.5, 0.5, 0.15, 0.5, 0.1, 0.1}, (Double_t[]) {0.25, 4, 7, 0.95, 9, 4.0, 8})\'",ts, pl, ph,-1*ylim,ylim, cl, ch, vcut, blow, bhigh);}
+    if(strcmp(fitfunc.c_str(),"_CC3")==0){ command =Form("root -l -b -q \'../MassYieldFit_BDT_CC3.C(\"/home/vince402/Upsilon3S/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root\", %d, %d, %.1f, %.1f, \"3p5\", \"S13\", %d, %d, %.3f, %.2f, %.2f , (Double_t[]) {0.13, 1.54, 3.68, 0.56, -0.1, -0.1, 0.0}, (Double_t[]) {0.01, 0.5, 0.5, 0.15, -0.2, -0.2, -0.1}, (Double_t[]) {0.25, 4, 7, 0.95, 0.2,0.2,0.2})\'",ts, pl, ph,-1*ylim,ylim, cl, ch, vcut, blow, bhigh);}
+    int a = system(command.c_str());
+  res = (RooFitResult*) file1->Get("fitresult_model_reducedDS");
+  if(res==nullptr)
+  {
+    res = (RooFitResult*) file1->Get("fitresult_model_gc_reducedDS");
+  }
+  }
+
+  file1 = new TFile(filename.c_str(),"read");
 };
 
 void binplotter::set_params(double _vcut){
@@ -62,22 +77,7 @@ void binplotter::dump(){
 
 
 std::pair<RooRealVar, RooRealVar> binplotter::get_frac(){
-  std::cout << "Opening Yield file : " << filename.c_str() << std::endl;
-  if(TFile::Open(filename.c_str(), "open")==nullptr || TFile::Open(filename.c_str(),"read")->IsZombie()|| refit){
-    std::cout << "Running Fitter for new Yield" << std::endl;
-    string command;
-    if(strcmp(fitfunc.c_str(),"")==0){ command =Form("root -l -b -q \'../MassYieldFit_BDT.C(\"/home/vince402/Upsilon3S/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root\", %d, %d, %.1f, %.1f, \"3p5\", \"S13\", %d, %d, %.3f, %.2f, %.2f , (Double_t[]) {0.13, 1.54, 3.68, 0.56, 5.0, 1.8, 3.13}, (Double_t[]) {0.01, 0.5, 0.5, 0.15, 0.5, 0.1, 0.1}, (Double_t[]) {0.25, 4, 7, 0.95, 9, 4.0, 8})\'",ts, pl, ph,-1*ylim,ylim, cl, ch, vcut, blow, bhigh);}
-    if(strcmp(fitfunc.c_str(),"_CC3")==0){ command =Form("root -l -b -q \'../MassYieldFit_BDT_CC3.C(\"/home/vince402/Upsilon3S/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root\", %d, %d, %.1f, %.1f, \"3p5\", \"S13\", %d, %d, %.3f, %.2f, %.2f , (Double_t[]) {0.13, 1.54, 3.68, 0.56, -0.1, -0.1, 0.0}, (Double_t[]) {0.01, 0.5, 0.5, 0.15, -0.2, -0.2, -0.1}, (Double_t[]) {0.25, 4, 7, 0.95, 0.2,0.2,0.2})\'",ts, pl, ph,-1*ylim,ylim, cl, ch, vcut, blow, bhigh);}
-    int a = system(command.c_str());
-  }
 
-  TFile* file1 = new TFile(filename.c_str(),"read");
-  RooFitResult * res ;
-  res = (RooFitResult*) file1->Get("fitresult_model_reducedDS");
-  if(res==nullptr)
-  {
-    res = (RooFitResult*) file1->Get("fitresult_model_gc_reducedDS");
-  }
   RooRealVar Yield1S, Frac2S, Frac3S;
   RooArgList* paramList = (RooArgList*) &res->floatParsFinal();
   for( auto arg : *paramList) {
@@ -99,37 +99,25 @@ std::pair<RooRealVar, RooRealVar> binplotter::get_frac(){
 
 };
 
-RooRealVar binplotter::get_bkg(double mass_low, double mass_high)
+RooRealVar binplotter::get_bkg(int state = 3)
 {
-  std::cout << "Opening Yield file : " << filename.c_str() << std::endl;
-  if(TFile::Open(filename.c_str(), "open")==nullptr || TFile::Open(filename.c_str(),"read")->IsZombie()|| refit){
-    std::cout << "Running Fitter for new Yield" << std::endl;
-    string command;
-    if(strcmp(fitfunc.c_str(),"")==0){ command =Form("root -l -b -q \'../MassYieldFit_BDT.C(\"/home/vince402/Upsilon3S/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root\", %d, %d, %.1f, %.1f, \"3p5\", \"S13\", %d, %d, %.3f, %.2f, %.2f , (Double_t[]) {0.13, 1.54, 3.68, 0.56, 5.0, 1.8, 3.13}, (Double_t[]) {0.01, 0.5, 0.5, 0.15, 0.5, 0.1, 0.1}, (Double_t[]) {0.25, 4, 7, 0.95, 9, 4.0, 8})\'",ts, pl, ph,-1*ylim,ylim, cl, ch, vcut, blow, bhigh);}
-    if(strcmp(fitfunc.c_str(),"_CC3")==0){ command =Form("root -l -b -q \'../MassYieldFit_BDT_CC3.C(\"/home/vince402/Upsilon3S/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root\", %d, %d, %.1f, %.1f, \"3p5\", \"S13\", %d, %d, %.3f, %.2f, %.2f , (Double_t[]) {0.13, 1.54, 3.68, 0.56, -0.1, -0.1, 0.0}, (Double_t[]) {0.01, 0.5, 0.5, 0.15, -0.2, -0.2, -0.1}, (Double_t[]) {0.25, 4, 7, 0.95, 0.2,0.2,0.2})\'",ts, pl, ph,-1*ylim,ylim, cl, ch, vcut, blow, bhigh);}
-    int a = system(command.c_str());
+  TH1D* hfrac  = (TH1D*) file1->Get("hfrac");
+  double int_frac = hfrac->GetBinContent(7);
+  double int_norm = hfrac->GetBinContent(8);
+  double bkg_frac = int_frac/int_norm;
+  RooRealVar nBkg;
+  RooArgList* paramList = (RooArgList*) &res->floatParsFinal();
+  for( auto arg : *paramList) {
+    if(strcmp(arg->GetName(),"nBkg")==0){
+      nBkg = (RooRealVar)*(RooRealVar*) arg;
+    }
   }
-  TFile* file1 = new TFile(filename.c_str(),"read");
-
+  RooRealVar res_var = RooRealVar(Form("%dSBKG", state),"", bkg_frac*nBkg.getVal());
+  res_var.setError(bkg_frac*nBkg.getError());
+  return res_var;
 };
 
 RooRealVar binplotter::get_yield(){
-  std::cout << "Opening Yield file : " << filename.c_str() << std::endl;
-  if(TFile::Open(filename.c_str(), "open")==nullptr || TFile::Open(filename.c_str(),"read")->IsZombie()|| refit){
-    std::cout << "Running Fitter for new Yield" << std::endl;
-    string command;
-    if(strcmp(fitfunc.c_str(),"")==0){ command =Form("root -l -b -q \'../MassYieldFit_BDT.C(\"/home/vince402/Upsilon3S/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root\", %d, %d, %.1f, %.1f, \"3p5\", \"S13\", %d, %d, %.3f, %.2f, %.2f , (Double_t[]) {0.13, 1.54, 3.68, 0.56, 5.0, 1.8, 3.13}, (Double_t[]) {0.01, 0.5, 0.5, 0.15, 0.5, 0.1, 0.1}, (Double_t[]) {0.25, 4, 7, 0.95, 9, 4.0, 8})\'",ts, pl, ph,-1*ylim,ylim, cl, ch, vcut, blow, bhigh);}
-    if(strcmp(fitfunc.c_str(),"_CC3")==0){ command =Form("root -l -b -q \'../MassYieldFit_BDT_CC3.C(\"/home/vince402/Upsilon3S/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root\", %d, %d, %.1f, %.1f, \"3p5\", \"S13\", %d, %d, %.3f, %.2f, %.2f , (Double_t[]) {0.13, 1.54, 3.68, 0.56, -0.1, -0.1, 0.0}, (Double_t[]) {0.01, 0.5, 0.5, 0.15, -0.2, -0.2, -0.1}, (Double_t[]) {0.25, 4, 7, 0.95, 0.2,0.2,0.2})\'",ts, pl, ph,-1*ylim,ylim, cl, ch, vcut, blow, bhigh);}
-    int a = system(command.c_str());
-  }
-
-  TFile* file1 = new TFile(filename.c_str(),"read");
-  RooFitResult * res ;
-  res = (RooFitResult*) file1->Get("fitresult_model_reducedDS");
-  if(res==nullptr)
-  {
-    res = (RooFitResult*) file1->Get("fitresult_model_gc_reducedDS");
-  }
   RooRealVar Yield1S, Yield2S, Yield3S;
   RooArgList* paramList = (RooArgList*) &res->floatParsFinal();
   for( auto arg : *paramList) {
@@ -151,8 +139,8 @@ RooRealVar binplotter::get_yield(){
 
 };
 
-std::pair<double, double> binplotter::get_eff(){
-  std::pair<double, double> bdteff = openEffhist((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh);  
+std::pair<double, double> binplotter::get_eff(int state =3){
+  std::pair<double, double> bdteff = openEffhist((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, state);  
   return bdteff;
 };
 

@@ -10,14 +10,14 @@
 //
 TString histName;
 
-std::pair<double, double> getEffhist(float pl, float ph, float yl, float yh, int cl, int ch, bool istnp, bool wei, long ts, double bdt_low, double bdt_high){
+std::pair<double, double> getEffhist(float pl, float ph, float yl, float yh, int cl, int ch, bool istnp, bool wei, long ts, double bdt_low, double bdt_high, int state =3){
 
-  string fname =Form("%s/BDT/EffCalc/mc_eff_BDT_%ld_bdt_%.3f-%.3f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_ID", workdir.Data(), ts, bdt_low, bdt_high, pl, ph, yl, yh, 3.5, 9.0, 11.0, cl, ch, istnp, wei);
+  string fname =Form("%s/BDT/EffCalc/mc_eff_BDT_%dS_%ld_bdt_%.3f-%.3f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_ID", workdir.Data(), state, ts, bdt_low, bdt_high, pl, ph, yl, yh, 3.5, 9.0, 11.0, cl, ch, istnp, wei);
   // if(!TFile::Open(Form("%s.root",fname.c_str()),"read")){
     std::cout << "-----Calculate new Efficiency for current parameters-----" << std::endl;
-    string command = Form("root -l -b -q \'/home/vince402/Upsilon3S/Efficiency/getEfficiencyBDT.C(%.2f, %.2f, %.2f, %.2f, %d, %d, %d, %d, %ld, %.3f, %.5f)\'",pl, ph, yl, yh, cl, ch, (int) istnp, (int) wei, ts, bdt_low, bdt_high);
+    string command = Form("root -l -b -q \'/home/vince402/Upsilon3S/Efficiency/getEfficiencyBDT.C(%.2f, %.2f, %.2f, %.2f, %d, %d, %d, %d, %ld, %.3f, %.5f)\'",pl, ph, yl, yh, cl, ch, (int) istnp, (int) wei, ts, bdt_low, bdt_high, state);
     int a = system(command.c_str());
-    getEfficiencyBDT(pl, ph, yl, yh, cl, ch, istnp, wei, ts, bdt_low, bdt_high); 
+    getEfficiencyBDT(pl, ph, yl, yh, cl, ch, istnp, wei, ts, bdt_low, bdt_high, state); 
   //}
   TFile* histfile = new TFile(Form("%s.root",fname.c_str()),"read");
   std::cout << fname.c_str() << std::endl;
@@ -28,7 +28,7 @@ std::pair<double, double> getEffhist(float pl, float ph, float yl, float yh, int
   return std::make_pair(NumReco, ErrReco);
 };
 
-std::pair<double, double> getEffhist(float pl, float ph, float yl, float yh, int cl, int ch, bool istnp, bool wei, int sw, int num_trig){
+std::pair<double, double> getEffhist(float pl, float ph, float yl, float yh, int cl, int ch, bool istnp, bool wei, int sw, int num_trig, int state =3){
 
   int kTrigSel_;
   if ( num_trig == kTrigUps ) kTrigSel_=1;
@@ -37,7 +37,7 @@ std::pair<double, double> getEffhist(float pl, float ph, float yl, float yh, int
   if(sw) ftrigSel += "_UpsAndL1OS40100";
   else if (!sw) ftrigSel += Form("_%s",fTrigName[kTrigSel_].Data());
 
-  string fname =Form("%s/BDT/EffCalc/mc_eff_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_TrigSel%s", workdir.Data(), pl, ph, yl, yh, 3.5, 9.0, 11.0, cl, ch, istnp, wei, ftrigSel.c_str());
+  string fname =Form("%s/BDT/EffCalc/mc_eff_%dS_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_TrigSel%s", workdir.Data(), state, pl, ph, yl, yh, 3.5, 9.0, 11.0, cl, ch, istnp, wei, ftrigSel.c_str());
 
   TFile* histfile = new TFile(Form("%s.root",fname.c_str()),"read");
   TList* list1 = (TList*) histfile->GetListOfKeys();
@@ -49,9 +49,9 @@ std::pair<double, double> getEffhist(float pl, float ph, float yl, float yh, int
   return std::make_pair(NumGen,ErrGen);
 };
 
-std::pair<double, double> openEffhist(float _pl, float _ph, float _yl, float _yh, int _cl, int _ch, bool _istnp, bool wei, bool _sw, int kTrigSel, long _ts, double _bdt_tsl, double _bdt_tsh ){
-  std::pair<double, double> gen = getEffhist( _pl,  _ph, _yl, _yh, _cl, _ch, _istnp, wei, _sw, kTrigSel);
-  std::pair<double, double> reco = getEffhist( _pl,  _ph, _yl, _yh, _cl, _ch, _istnp, wei, _ts, _bdt_tsl, _bdt_tsh );
+std::pair<double, double> openEffhist(float _pl, float _ph, float _yl, float _yh, int _cl, int _ch, bool _istnp, bool wei, bool _sw, int kTrigSel, long _ts, double _bdt_tsl, double _bdt_tsh, int state =3 ){
+  std::pair<double, double> gen = getEffhist( _pl,  _ph, _yl, _yh, _cl, _ch, _istnp, wei, _sw, kTrigSel, state);
+  std::pair<double, double> reco = getEffhist( _pl,  _ph, _yl, _yh, _cl, _ch, _istnp, wei, _ts, _bdt_tsl, _bdt_tsh, state);
   double BDTratio = reco.first/gen.first;
   double BDTratioErr = BDTratio*TMath::Sqrt(TMath::Power(reco.second/reco.first,2)+TMath::Power(gen.second/gen.first,2));
   std::cout << Form("Efficiency of BDT %ld, ", _ts) << Form("Cut %f-%f : ", _bdt_tsl, _bdt_tsh) << BDTratio << ", " << BDTratioErr<< std::endl;

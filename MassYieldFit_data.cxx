@@ -437,8 +437,8 @@ dbg();
     Double_t frac3to1 = mf.works->var("frac_3sOver1s")->getVal();
     Yield2S 	= frac2to1 * Yield1S;
     Yield3S 	= frac3to1 * Yield1S;
-    Yield2SErr 	= Yield2S*Yield1SErr+Yield1S*(mf.works->var("frac_2sOver1s")->getError());
-    Yield3SErr 	= Yield3S*Yield1SErr+Yield1S*(mf.works->var("frac_3sOver1s")->getError());
+    Yield2SErr 	= TMath::Sqrt( TMath::Power(Yield2S*Yield1SErr,2)+TMath::Power(Yield1S*(mf.works->var("frac_2sOver1s")->getError()),2) );
+    Yield3SErr 	= TMath::Sqrt( TMath::Power(Yield3S*Yield1SErr,2)+TMath::Power(Yield1S*(mf.works->var("frac_3sOver1s")->getError()),2) );
     nSig2S = new RooRealVar("nSig2S", "# of 2S signal",Yield2S,-1000,300000); 
     nSig3S = new RooRealVar("nSig3S", "# of 2S signal",Yield3S,-10, 90000); 
     nSig2S->setError(Yield2SErr);
@@ -455,6 +455,9 @@ dbg();
   hYield->SetBinError(3, Yield3SErr);
 
   Double_t meanout = mf.works->var("mean1S")->getVal();
+  if(fitdir.find("DR") ==std::string::npos){
+    Double_t meanout3S = mf.works->var("mean3S")->getVal();
+  }
   Double_t sigma1out = mf.works->var("sigma1S_1")->getVal();
   Double_t sigma2out = (mf.works->var("x1S")->getVal())*sigma1out;
   Double_t fracout = mf.works->var("frac")->getVal();
@@ -484,13 +487,15 @@ dbg();
   Double_t IntgrBkg = Bkgfc->Integral(meanout-2*sigmaout, meanout+2*sigmaout);
   Double_t Significance =(Yield1S*IntgrSig/TIntgr1S/TMath::Sqrt(((Yield1S*IntgrSig/TIntgr1S)+(YieldBkg*IntgrBkg/TIntgrBkg))));
 
-  TH1D* hfrac = new TH1D("hfrac", "", 6, 0, 6);
+  TH1D* hfrac = new TH1D("hfrac", "", 7, 0, 7);
   hfrac->SetBinContent(1, Sgnfc1S->Eval(U1S_mass));
   hfrac->SetBinContent(2, Bkgfc->Eval(U1S_mass));
   hfrac->SetBinContent(3, Sgnfc1S->Integral(9.3, 9.6));
   hfrac->SetBinContent(4, Bkgfc->Integral(9.3, 9.6));
   hfrac->SetBinContent(5, Sgnfc1S->Integral(9.1, 9.8));
   hfrac->SetBinContent(6, Bkgfc->Integral(9.1, 9.8));
+  hfrac->SetBinContent(7, Bkgfc->Integral(10.0, 10.7));
+  hfrac->SetBinContent(8, Bkgfc->Integral(mf.Range_fit_low, mf.Range_fit_high));
 
   TH1D* hfracdist = new TH1D("hfracdist","",20, 9, 10);
   for(Int_t i =0; i <20; i++){

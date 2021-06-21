@@ -9,7 +9,7 @@
 namespace upsi{
 
 	RooRealVar getacceptance(double ptlow, double pthigh, double ylow, double yhigh, double sm_ptcut, int sample_state = 3){
-		TFile* accfile = TFile::Open(Form("%s/Acceptance/AccRes_pt%.1f_%.1f_y%.1f_%.1f_SimuPt%.1f.root",workdir.Data(), ptlow, pthigh, ylow, yhigh, sm_ptcut));
+		TFile* accfile = TFile::Open(Form("%s/Acceptance/AccRes%dS_pt%.1f_%.1f_y%.1f_%.1f_SimuPt%.1f.root",workdir.Data(), sample_state, ptlow, pthigh, ylow, yhigh, sm_ptcut));
 		TH1D* htmp = (TH1D*) accfile->Get("hGenRatio");
 		RooRealVar returnVal = RooRealVar("accVar","accVar", htmp->GetBinContent(1),-2,2);
 		returnVal.setError(htmp->GetBinError(1));

@@ -21,7 +21,7 @@ class binplotter
 	void dump();
 	~binplotter();
 	RooRealVar get_yield();
-	RooRealVar get_bkg(double mass_low, double mass_high);
+	RooRealVar get_bkg(int state = 3);
 	std::pair<double, double> get_eff();
 	RooRealVar yield_eff();
 	std::pair<RooRealVar, RooRealVar> get_frac();
@@ -32,6 +32,8 @@ class binplotter
 	RooRealVar yield1S, yield2S, yield3S, frac2S, frac3S;
 	std::string type;
 	double ylim, blow, bhigh;
+	TFile* file1;
+	RooFitResult* res;
   	
   private:
   	long ts;
@@ -45,5 +47,4 @@ class binplotter
 
 };
 
-//std::pair<std::pair< RooRealVar, RooRealVar>, std::pair<RooRealVar, RooRealVar> > get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int state1 =1, int state2 = 3);
 #endif

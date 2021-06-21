@@ -233,7 +233,7 @@ std::vector< std::string > info_BDT(long ts, std::string aux = "")
 
 std::pair<double,double> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio =0.16, string name_input_opt = "", string formula_significance= "S12");
 
-std::pair<std::pair< RooRealVar, RooRealVar>, std::pair<RooRealVar, RooRealVar> > get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int state1 =1, int state2 = 3);
+RooRealVar get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int state1 =1, int state2 = 3);
 
 TH1D* func_hist_optimal_BDT();
 
