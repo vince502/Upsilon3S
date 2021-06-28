@@ -8,7 +8,7 @@ struct Y1Sfitvar{
   Double_t alp=0., frac=0., x1s=0., sigma=0., n=0.;
 };
 
-void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fname = "", const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "4", const string Trig = "",int cBinLow=0, int cBinHigh = 180, int state = 1, bool fixvar = false, bool swflag = false, double cutQVP= 0.01, double bdtlow = -1., double bdthigh =1. ){
+void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fname = "", const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "4", const string Trig = "",int cBinLow=0, int cBinHigh = 181, int state = 1, bool fixvar = false, bool swflag = false, double cutQVP= 0.01, double bdtlow = -1., double bdthigh =1. ){
   Double_t etaMax= 2.4;
   Double_t etaMin = -2.4;
 
@@ -59,7 +59,7 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
   RooDataSet* initialDS = (RooDataSet*) dataset->reduce(*argRD);
   initialDS->SetName("initialDS");
   
-  RooDataSet* reducedDS = (RooDataSet*) initialDS->reduce(RooArgSet(*(works1->var("mass"))), Form("( pt >=%f && pt <=%f) && (y >= %f && y <=%f) && (cBin>=%d && cBin<=%d) &&(pt1 >= %f) && (pt2 >= %f) && (eta1 >= %f && eta1 <= %f) && ( eta2 >= %f && eta2 <= %f) && (QQVtxProb > %f) && (BDT > %f && BDT < %f)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, MupTCut, MupTCut, etaMin, etaMax, etaMin, etaMax, cutQVP, bdtlow, bdthigh));
+  RooDataSet* reducedDS = (RooDataSet*) initialDS->reduce(RooArgSet(*(works1->var("mass"))), Form("( pt >=%f && pt <=%f) && (y >= %f && y <=%f) && (cBin>=%d && cBin<%d) &&(pt1 >= %f) && (pt2 >= %f) && (eta1 >= %f && eta1 <= %f) && ( eta2 >= %f && eta2 <= %f) && (QQVtxProb > %f) && (BDT > %f && BDT < %f)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, MupTCut, MupTCut, etaMin, etaMax, etaMin, etaMax, cutQVP, bdtlow, bdthigh));
   reducedDS->SetName("reducedDS");
   works1->import(*reducedDS);
   works1->var("mass")->setRange(RangeLow, RangeHigh);
@@ -102,9 +102,9 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
 
   Double_t _tmp_x1S = Y1S->x1s;
   if( state == 3 && fixvar == true  ) x1S = new RooRealVar("x1S", "sigma ratio", _tmp_x1S);
-  else x1S = new RooRealVar("x1S", "sigma ratio", 0.75, 0, 1);
+  else x1S = new RooRealVar("x1S", "sigma ratio", 0.65, 0, 1);
   
-  RooRealVar* x3S = new RooRealVar("x3S", "sigma ratio", 0.64, 0, 1);
+  RooRealVar* x3S = new RooRealVar("x3S", "sigma ratio", 0.04, 0, 1);
   RooRealVar* x3S_2 = new RooRealVar("x3S_2", "sigma ratio", 0.44, 0.1, 1);
   works1->import(*x1S);
   works1->import(*x3S);
@@ -122,10 +122,10 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
 
   RooRealVar *alpha, *n, *frac, *frac2;
   if ( state == 1 || fixvar == false ){
-     alpha = new RooRealVar("alpha", "alpha of Crystal ball", 1.4, 0.2, 3.0);
-     n = new RooRealVar("n", "n of Crystal ball", 1.8, 0.7, 3.0);
-     frac = new RooRealVar("frac", "CB fraction", 0.4, 0.05, 0.80);
-     frac2 = new RooRealVar("frac2", "CB fraction 2", 0.2, 0.01, 0.80);
+     alpha = new RooRealVar("alpha", "alpha of Crystal ball", 1.8, 0.2, 3.0);
+     n = new RooRealVar("n", "n of Crystal ball", 1.2, 0.7, 3.0);
+     frac = new RooRealVar("frac", "CB fraction", 0.3, 0.05, 0.80);
+     frac2 = new RooRealVar("frac2", "CB fraction 2", 0.3, 0.01, 0.80);
    }
    if ( fixvar == true && state == 3 ){
      alpha = new RooRealVar("alpha", "alpha of Crystal ball", Y1S->alp);

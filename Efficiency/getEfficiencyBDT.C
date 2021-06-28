@@ -6,13 +6,14 @@
 #include "../Style_jaebeom.h"
 #include "tnp_weight_lowptPbPb.h"
 #include "BDTTreeSetting.h"
+#include "../.workdir.h"
 
 using namespace std;
 
 void getEfficiencyBDT(
   float ptLow = 0.0, float ptHigh = 50.0,
   float yLow = 0.0, float yHigh = 2.4,
-  int cLow = 0, int cHigh = 180, bool isTnP = false, bool isPtWeight = false, long  ts = 0000000000, double bdt_tsl = 0.0, double bdt_tsh =0.0, int state= 3
+  int cLow = 0, int cHigh = 181, bool isTnP = false, bool isPtWeight = false, long  ts = 0000000000, double bdt_tsl = 0.0, double bdt_tsh =0.0, int state= 3
   ) {
 
   gStyle->SetOptStat(0);
@@ -25,16 +26,17 @@ void getEfficiencyBDT(
 
   float massLow ;
   float massHigh;
-  switch(state){
-  	case 1:
-		massLow =8.8;
-		massHigh = 10.2;
-	case 2:
-		massLow =9.2;
-		massHigh = 10.6;
-	case 3:
-		massLow =9.6;
-		massHigh = 11.0;
+  if(state ==1){
+  	massLow =8.8;
+  	massHigh = 10.2;
+  }
+  if(state ==2){
+  	massLow =9.2;
+  	massHigh = 10.6;
+  }
+  if(state ==3){
+  	massLow =9.6;
+  	massHigh = 11.0;
   }
 
   double xmin = ptLow;
@@ -47,11 +49,23 @@ void getEfficiencyBDT(
 //  else if(!isSwitch) ftrigSel += Form("_%s",fTrigName[kTrigSel_].Data());
 
   //input files
-  TString inputMC = Form("/home/vince402/Upsilon3S/BDT/BDTAppliedData/BDTApp_%ld_MC.root", ts);
-  if( state ==1) inputMC = Form("/home/vince402/Upsilon3S/BDT/BDTAppliedData/BDTApp_%ld_1S_MC.root", ts);
-  if( state ==2) inputMC = Form("/home/vince402/Upsilon3S/BDT/BDTAppliedData/BDTApp_%ld_2S_MC.root", ts);
+  TFile* fPtW;
+  TString inputMC;
+  if( state ==1){
+    inputMC = Form("/home/vince402/Upsilon3S/BDT/BDTAppliedData/BDTApp_%ld_MC_1S.root", ts);
+    fPtW = new TFile(Form("%s/Func_dNdpT_1S.root", store.Data()),"read");
+  }
+  if( state ==2){
+    inputMC = Form("/home/vince402/Upsilon3S/BDT/BDTAppliedData/BDTApp_%ld_MC_2S.root", ts);
+    fPtW = new TFile(Form("%s/Func_dNdpT_2S.root", store.Data()),"read");
+  }
+  if( state ==3){
+    inputMC =Form("/home/vince402/Upsilon3S/BDT/BDTAppliedData/BDTApp_%ld_MC.root", ts);
+    fPtW = new TFile(Form("%s/Func_dNdpT_2S.root", store.Data()),"read");
+  }
   TChain* mytree = new TChain("tree"); 
   mytree->Add(inputMC.Data());
+  TF1* f1 = (TF1*) fPtW->Get("fitRatio");
 
   //SetBranchAddress
   SetTreeBDT settree_;
@@ -61,7 +75,7 @@ void getEfficiencyBDT(
 //  TFile *fPtW = new TFile(Form("%s/Efficiency/Func_dNdpT_2S.root",workdir.Data()),"read");
 //  TF1* f1 = (TF1*) fPtW->Get("fitRatio");
 
-  TString histName = Form("BDT_%dS_%ld_bdt_%.3f-%.3f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d", state, ts, bdt_tsl, bdt_tsh, ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight);
+  TString histName = Form("BDT_%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d", state, ts, bdt_tsl, bdt_tsh, ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight);
   TH1D* hreco = new TH1D(Form("hreco"),"hreco",1,xmin,xmax);
   TH1D* hreco_tnp = new TH1D(Form("hreco_tnp"),"hreco_tnp",(int) ((xmax-xmin)),xmin,xmax);
   TH1D* hreco_xtnp = new TH1D(Form("hreco_xtnp"),"hreco_xtnp",(int) ((xmax-xmin)),xmin,xmax);
@@ -106,15 +120,17 @@ void getEfficiencyBDT(
     if(!( fabs(y) < yHigh && fabs(y) > yLow && pt < ptHigh && pt >ptLow )) continue;
     if(!( pt1> muPtCut && pt2> muPtCut && fabs(eta1) < muEtaCut && fabs(eta2) < muEtaCut )) continue;
     if(!( QQVtxProb > 0.00 )) continue;
-    if(!( cBin <= cHigh && cBin >= cLow)) continue;
+    if(!( cBin < cHigh && cBin >= cLow)) continue;
     if(!( mass < massHigh && mass > massLow)) continue;
     bool checkID = true; 
     if (checkID) {
       if(!( nTrkWMea1 >5 && nTrkWMea2 >5 && nPixWMea1 > 0 && nPixWMea2 > 0 && fabs(dxy1) < 0.3 && fabs(dxy2) < 0.3 && fabs(dz1) < 20. && fabs(dz2) < 20.) ) continue;
 
-    histName = Form("BDT_%dS_%ld_bdt_%.3f-%.3f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_ID", state, ts, bdt_tsl, bdt_tsh,ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight);
+    histName = Form("BDT_%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_ID", state, ts, bdt_tsl, bdt_tsh,ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight);
     }
-    
+    double ptW =1;
+    if( isPtWeight) ptW = f1->Eval(pt);
+    weight = weight * ptW;
     
     hreco->Fill(pt,weight);
     hreco_tnp->Fill(pt,weight);

@@ -12,7 +12,7 @@ using namespace RooFit;
 
 void DrawHist_(long ts,double ylim, float blow, float bhigh, float vcut, TString MupT = "3p5", string Trig = "S13", TString fittype = "freefit") {};
 void DrawHist__();
-void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 180, double cutQVP = 0.01, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1., int Nmassbins=140, bool draw_mag = true){
+void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 180, double cutQVP = 0.01, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1., double signif_ratio = 0.02, int Nmassbins=140, bool draw_mag = true){
   setTDRStyle();
 
   std::string sig_func = parsed[0];
@@ -35,9 +35,12 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
 
   int ylim10 = (int) (rapMax*10);
   int DDiter =0;
-  auto _hist_ = Get_Optimal_BDT(ts, ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP); 
-  TH1D* signif_hist = func_hist_optimal_BDT();
-
+  std::pair<double, double> _hist_;
+  TH1D* signif_hist ;
+  if( signif_ratio != -1){
+  _hist_ = Get_Optimal_BDT(ts, ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP, signif_ratio); 
+  signif_hist = func_hist_optimal_BDT();
+  }
 
   std::string method_selection = (isBDT) ? "BDT" : "Data"; 
   std::string name_file_output = Form("%s/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.root" ,workdir.Data(), ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP );
@@ -156,7 +159,7 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
   pad_mag->SetTopMargin(0);
 
 /////////////////////////////////////////
-  int num_bin_signif = signif_hist->GetMaximumBin();
+//  int num_bin_signif = signif_hist->GetMaximumBin();
 /////////////////////////////////////////
 //  RooPlot* partplot = (RooPlot*)  plot1->Clone();
 //  partplot->GetXaxis()->SetRangeUser(9.6,10.8);
@@ -164,11 +167,15 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
 //  pad_mag->SetLogy();
   pad_mag->SetLeftMargin(0);
 
+    dbg();
+  if(signif_ratio != -1 && signif_hist != nullptr){
+    dbg();
   signif_hist->SetStats(kFALSE);
   signif_hist->DrawCopy();
   signif_hist->SetFillColor(kRed);
-  signif_hist->GetXaxis()->SetRange(num_bin_signif, num_bin_signif);
+//  signif_hist->GetXaxis()->SetRange(num_bin_signif, num_bin_signif);
   signif_hist->DrawCopy("same");
+  }
 //  partplot->Draw();
 
   pad_leg->cd();
@@ -191,5 +198,5 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
 
 };
 void DrawHist__(){
-  DrawHist({"CB3","CC2","GC"}, 6, 30, -2.4, 2.4, "3p5", "S13", false, 100 ,180, 0.00, true, 1623391157, 0.19, 1, 70);
+  DrawHist({"CB3","CC4","FF"}, 0, 30, -2.4, 2.4, "3p5", "S13", false, 0 ,180, 0.00, true, 1623391157, -1, 1, 70);
 }

@@ -10,16 +10,18 @@
 //
 TString histName;
 std::pair<double, double> mass_rng(int state){
-  switch (state){
-    case 1 :
+  if(state ==1){
     	return std::make_pair(8.8, 10.2);
-    case 2 :
-    	return std::make_pair(9.2, 10.6);
-    case 3 :
-    	return std::make_pair(9.6, 11.0);
-    default :
-    	return std::make_pair(9.0, 11.0);
   }
+    if(state ==2){
+    	return std::make_pair(9.2, 10.6);
+    }
+    if(state ==3){
+    	return std::make_pair(9.6, 11.0);
+    }
+    else{
+    	return std::make_pair(9.0, 11.0);
+    }
 
 };
 
@@ -29,14 +31,19 @@ std::pair<double, double> getEffhist(float pl, float ph, float yl, float yh, int
   ml = mp.first;
   mh = mp.second;
 
-  string fname =Form("%s/BDT/EffCalc/mc_eff_BDT_%dS_%ld_bdt_%.3f-%.3f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_ID", workdir.Data(), state, ts, bdt_low, bdt_high, pl, ph, yl, yh, 3.5, ml, mh, cl, ch, istnp, wei);
+  string fname =Form("%s/BDT/EffCalc/mc_eff_BDT_%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_ID", workdir.Data(), state, ts, bdt_low, bdt_high, pl, ph, yl, yh, 3.5, ml, mh, cl, ch, istnp, wei);
   // if(!TFile::Open(Form("%s.root",fname.c_str()),"read")){
-    std::cout << "-----Calculate new Efficiency for current parameters-----" << std::endl;
-    string command = Form("root -l -b -q \'/home/vince402/Upsilon3S/Efficiency/getEfficiencyBDT.C(%.2f, %.2f, %.2f, %.2f, %d, %d, %d, %d, %ld, %.3f, %.5f, %d)\'",pl, ph, yl, yh, cl, ch, (int) istnp, (int) wei, ts, bdt_low, bdt_high, state);
-    int a = system(command.c_str());
+//    std::cout << "-----Calculate new Efficiency for current parameters-----" << std::endl;
+//    string command = Form("root -l -b -q \'/home/vince402/Upsilon3S/Efficiency/getEfficiencyBDT.C(%.2f, %.2f, %.2f, %.2f, %d, %d, %d, %d, %ld, %.3f, %.5f, %d)\'",pl, ph, yl, yh, cl, ch, (int) istnp, (int) wei, ts, bdt_low, bdt_high, state);
+//    int a = system(command.c_str());
+  TFile* histfile = nullptr;
+  histfile = new TFile(Form("%s.root",fname.c_str()),"read");
+  if(histfile == nullptr || histfile->IsZombie()){
     getEfficiencyBDT(pl, ph, yl, yh, cl, ch, istnp, wei, ts, bdt_low, bdt_high, state); 
+    histfile = new TFile(Form("%s.root",fname.c_str()),"read");
+  }
   //}
-  TFile* histfile = new TFile(Form("%s.root",fname.c_str()),"read");
+
   std::cout << fname.c_str() << std::endl;
   TList* list1 = (TList*) histfile->GetListOfKeys();
   TH1D* rechist = (TH1D*) histfile->Get(list1->At(0)->GetName());

@@ -27,9 +27,9 @@ void BDTClassifierApplication(long ts, int isMC = 0, bool isbbb = false){
   XMLDocPointer_t xmldoc = xml.ParseFile(Form("./dataset/weights/TMVA_BDT_Classifier_BDT_train_%ld.weights.xml", ts));
   XMLDocPointer_t mainnode = xml.DocGetRootElement(xmldoc);
 
-  TString dfname = (isMC==2) ? Form("%s/%s", workdir.Data(), ONIABDTMC1S_LATEST.c_str()) : (whichtree==0) ? Form("%s/%s", workdir.Data(), ONIABDTDATA_LATEST.c_str())  : Form("%s/%s", workdir.Data(), ONIABDTDATAB_LATEST.c_str());
-      TString mfname = Form("%s/%s", workdir.Data(), ONIABDTMC_LATEST.c_str());
-      if(isMC==2) mfname = Form("%s/%s", workdir.Data(), ONIABDTMC1S_LATEST.c_str());
+  TString dfname = (isMC==2) ? Form("%s/%s", store.Data(), ONIABDTMC1S_LATEST.c_str()) : (whichtree==0) ? Form("%s/%s", store.Data(), ONIABDTDATA_LATEST.c_str())  : Form("%s/%s", store.Data(), ONIABDTDATAB_LATEST.c_str());
+      TString mfname = Form("%s/%s", store.Data(), ONIABDTMC_LATEST.c_str());
+      if(isMC==2) mfname = Form("%s/%s", store.Data(), ONIABDTMC1S_LATEST.c_str());
 
   TFile* input(0);
   input = new TFile((isMC==1 || isMC==2) ? mfname.Data() : dfname.Data(), "open");
@@ -123,7 +123,7 @@ void BDTClassifierApplication(long ts, int isMC = 0, bool isbbb = false){
   TFile *target;
   if (isMC ==0) target =new TFile(Form("./BDTAppliedData/BDTApp_%ld.root",ts),"recreate");
   else if (isMC==1) target =new TFile(Form("./BDTAppliedData/BDTApp_%ld_MC.root",ts),"recreate");
-  else if (isMC==2) target = new TFile(Form("./BDTAppliedData/BDTApp_1S.root"),"recreate");
+  else if (isMC==2) target = new TFile(Form("./BDTAppliedData/BDTApp_%ld_MC_1S.root", ts),"recreate");
   TTree* outtree = tree->CloneTree(0);
   outtree->SetName("tree");
   outtree->Branch("BDT", &BDT, "BDT/D");

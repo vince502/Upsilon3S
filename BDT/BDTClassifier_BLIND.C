@@ -34,8 +34,8 @@ bool BDTClassifier_BLIND_Function(double ptLow, double ptHigh, int cBinLow, int 
   else gSystem->mkdir(BDTDir.Data(),kTRUE);
   
   //INPUT & OUTPUT Call
-  TFile* inputDATA = new TFile(Form("%s/%s", workdir.Data(), ONIABDTDATAB_LATEST.c_str()),"read");
-  TFile* inputMC   = new TFile(Form("%s/%s", workdir.Data(), ONIABDTMC1S_LATEST.c_str()),"read");
+  TFile* inputDATA = new TFile(Form("%s/%s", store.Data(), ONIABDTDATAB_LATEST.c_str()),"read");
+  TFile* inputMC   = new TFile(Form("%s/%s", store.Data(), ONIABDTMC1S_LATEST.c_str()),"read");
   //new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_v210416.root","read");
   TFile* output    = new TFile(Form("%s/BDTresultY3S_%ld_BLIND.root",BDTDir.Data(),(long) tstamp),"recreate");
 
@@ -50,23 +50,31 @@ bool BDTClassifier_BLIND_Function(double ptLow, double ptHigh, int cBinLow, int 
   TMVA::DataLoader *loader = new TMVA::DataLoader("dataset");
   TTree* SigTree =(TTree*) inputMC->Get("tree");
   TTree* BkgTreeTest_primary =(TTree*) inputDATA->Get(Form("tree%d",testtree));
-  TTree* BkgTreeTest =(TTree*) BkgTreeTest_primary->CloneTree();
-  BkgTreeTest->SetName("tree2Clone");
+  TTree* BkgTreeTest1 =(TTree*) BkgTreeTest_primary->CloneTree();
+  TTree* BkgTreeTest2 =(TTree*) BkgTreeTest_primary->CloneTree();
+  BkgTreeTest1->SetName("tree2Clone1");
+  BkgTreeTest2->SetName("tree2Clone2");
   TTree* BkgTreeTrain_primary =(TTree*) inputDATA->Get(Form("tree%d",traintree));
-  TTree* BkgTreeTrain = BkgTreeTrain_primary->CopyTree("(mass>10.8&&mass<11.5)||(mass>8.&&mass<8.6)");
-  std::cout << "Number of Events in Trees (Sig, BkgTest, BkgTrain) : ( " << SigTree->GetEntries(cut1) << ", "<< BkgTreeTest->GetEntries(cut2) << ", " << BkgTreeTrain->GetEntries(cut2) << " )" << std::endl;
+  TTree* BkgTreeTrain1 = BkgTreeTrain_primary->CopyTree("(mass>8.&&mass<8.6)");
+  TTree* BkgTreeTrain2 = BkgTreeTrain_primary->CopyTree("(mass>10.8&&mass<11.5)");
+  std::cout << "Number of Events in Trees (Sig, BkgTest, BkgTrain) : ( " << SigTree->GetEntries(cut1) << ", "<< BkgTreeTesti1->GetEntries(cut2) << ", " << BkgTreeTrain1->GetEntries(cut2) << " )" << std::endl;
   //Factory Call
-  TMVA::Factory *factory = new TMVA::Factory("TMVA_BDT_Classifier", output, "!V:Silent:Color:DrawProgressBar:Transformations=I;D;P;G;D:AnalysisType=Classification");
+  TMVA::Factory *factory = new TMVA::Factory("TMVA_BDT_Classifier", output, "!V:Silent:Color:DrawProgressBar:Transformations=G:AnalysisType=Classification");
   loader->AddVariable("QQMassErr", "Dimu Mass error", "F");
   loader->AddVariable("ctau3D", "3 dim ctau of the dimuon","F");
   loader->AddVariable("ctau", "2 dim ctau of the dimuon","F");
   loader->AddVariable("QQVtxProb", "Vtx prob", "F");
-  loader->AddSpectator("QQVtxProb", "Vtx prob", "F");
   loader->AddVariable("QQdca", "QQdca", "F");
   loader->AddVariable("cosAlpha", "cos alpha for trajectory angle", "F");
    loader->AddVariable("cosAlpha3D", "cos alpha for trajectory angle 3D", "F");
+  //loader->AddVariable("pt1", "single muon pt1", "F");
+  //loader->AddVariable("pt2", "single muon pt2", "F");
+  loader->AddVariable("ptimb := (pt1 - pt2)/(pt1 + pt2)", "single muon pt imbalance", "F");
+  //loader->AddVariable("eta1", "single muon eta1", "F");
+  //loader->AddVariable("eta2", "single muon eta2", "F");
 
   //Spectator Call, Will NOT Use For Training
+//  loader->AddSpectator("QQVtxProb", "Vtx prob", "F");
   loader->AddSpectator("pt1","Single muon pt1",  "F");
   loader->AddSpectator("pt2","Single muon pt2",  "F");
   loader->AddSpectator("eta1","Single muon eta1",  "F");
@@ -80,8 +88,8 @@ bool BDTClassifier_BLIND_Function(double ptLow, double ptHigh, int cBinLow, int 
   Double_t backgroundWeight = 20.0;
 
   loader->AddSignalTree     (SigTree, signalWeight);
-  loader->AddBackgroundTree (BkgTreeTest, backgroundWeight); //  , "Test");
-//  loader->AddBackgroundTree (BkgTreeTrain, backgroundWeight, "Train");
+  loader->AddBackgroundTree (BkgTreeTest, backgroundWeight, "Test");
+  loader->AddBackgroundTree (BkgTreeTrain, backgroundWeight, "Train");
 
   loader->SetSignalWeightExpression("weight");
 //  loader->SetBackgroundWeightExpression("weight");
@@ -128,7 +136,7 @@ void BDTClassifier_BLIND( ){
   bool res; 
   res = BDTClassifier_BLIND_Function(0,30, 0,180);
   tsrange.first = _ts;
-//  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
   //  res = BDTClassifier_BLIND_Function(0,6, 0,180);
   //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
   //  res = BDTClassifier_BLIND_Function(6,30, 0, 180);
@@ -148,8 +156,8 @@ void BDTClassifier_BLIND( ){
   //  res = BDTClassifier_BLIND_Function(6,30,40, 100);
   //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
   //
-  res = BDTClassifier_BLIND_Function(0,30, 100,180);
-  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  //res = BDTClassifier_BLIND_Function(0,30, 100,180);
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
   //  res = BDTClassifier_BLIND_Function(0,6, 100,180);
   //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
   //  res = BDTClassifier_BLIND_Function(6,30, 100, 180);

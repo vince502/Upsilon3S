@@ -6,7 +6,7 @@
 #include "../fitter.h"
 #include "yield_eff_signif.h"
 static TH1D* Get_Optimal_BDT_HIST; 
-const double interval_score = 0.075;
+const double interval_score = 0.1;
 
 std::map<long, std::map<int, std::vector<std::pair<double,double> > > >bdtbinsec =
 {

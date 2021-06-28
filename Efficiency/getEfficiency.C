@@ -13,7 +13,7 @@ using namespace std;
 void getEfficiency(
   float ptLow = 0.0, float ptHigh = 30.0,
   float yLow = 0.0, float yHigh = 2.4,
-  int cLow = 0, int cHigh = 180, bool isTnP = false, bool isPtWeight = false, bool isSwitch=false, int kTrigSel = kTrigUps, bool isBDT = false, int state =3
+  int cLow = 0, int cHigh = 181, bool isTnP = false, bool isPtWeight = false, bool isSwitch=false, int kTrigSel = kTrigUps, bool isBDT = false, int state =3
   ) {
 
   gStyle->SetOptStat(0);
@@ -26,16 +26,17 @@ void getEfficiency(
 
   float massLow ;
   float massHigh;
-  switch(state){
-  	case 1:
-		massLow =8.8;
-		massHigh = 10.2;
-	case 2:
-		massLow =9.2;
-		massHigh = 10.6;
-	case 3:
-		massLow =9.6;
-		massHigh = 11.0;
+  if(state ==1){
+  	massLow =8.8;
+  	massHigh = 10.2;
+  }
+  if(state ==2){
+    	massLow =9.2;
+  	massHigh = 10.6;
+  }
+  if(state ==3){
+  	massLow =9.6;
+  	massHigh = 11.0;
   }
 
   double xmin = ptLow;
@@ -49,7 +50,7 @@ void getEfficiency(
 
   //input files
   TString inputMC = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/OniaTree/MC/OniaTree_MC_Ups3S_PbPb2018_HydjetDrumMB_5p02TeV_merged.root";
-  if(state ==1) inputMC = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/OniaTree/MC/OniaTree_MC_Ups1S_PbPb2018_HydjetDrumMB_5p02TeV_merged.root";
+  if(state ==1) inputMC = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/OniaTree/MC/OniaTree_Ups1SMC_HydjetDrumMB_5p02TeV_v210621.root";
   if(state ==2) inputMC = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/OniaTree/MC/OniaTree_MC_Ups2S_PbPb2018_HydjetDrumMB_5p02TeV_merged.root";
   TChain* mytree = new TChain("hionia/myTree"); 
   mytree->Add(inputMC.Data());
@@ -59,7 +60,9 @@ void getEfficiency(
   settree_.TreeSetting(mytree,1,0);
 
   //pT reweighting function
-  TFile *fPtW = new TFile(Form("%s/Efficiency/Func_dNdpT_2S.root",workdir.Data()),"read");
+  TFile *fPtW;
+  if(state==1) fPtW = new TFile(Form("%s/Func_dNdpT_1S.root",store.Data()),"read");
+  if(state==3|| state==2) fPtW = new TFile(Form("%s/Func_dNdpT_2S.root",store.Data()),"read");
   TF1* f1 = (TF1*) fPtW->Get("fitRatio");
 
   TString histName = Form("%dS_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_TrigSel%s",state, ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight,ftrigSel.c_str());
@@ -103,7 +106,7 @@ void getEfficiency(
     if(iev%100000==0) cout << ">>>>> EVENT " << iev << " / " << mytree->GetEntries() <<  " ("<<(int)(100.*iev/mytree->GetEntries()) << "%)" << endl;
 
     mytree->GetEntry(iev);
-    if(Centrality > cHigh || Centrality < cLow) continue;
+    if(Centrality >= cHigh || Centrality < cLow) continue;
     weight = findNcoll(Centrality) * Gen_weight;
     
     for(int igen = 0; igen<Gen_QQ_size; igen++){
