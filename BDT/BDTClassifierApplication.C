@@ -12,7 +12,7 @@
 #include "../.workdir.h"
 
 
-void BDTClassifierApplication(long ts, int isMC = 0, bool isbbb = false){
+void BDTClassifierApplication(long ts, int isMC = 0, bool isbbb = true){
   std::string info_blind;
   if( !isbbb) info_blind = info_BDT(ts)[2];
   if( isbbb ) info_blind = info_BDT(ts)[4];

@@ -1,10 +1,11 @@
 #include <iostream>
 #include "TROOT.h"
 #include "TFile.h"
+#include "../.workdir.h"
 
 void BlindTree(){
-  TFile* fo = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_v210416.root","READ");
-  TFile* fn = new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC0_v210416_ForBLIND.root","recreate");
+  TFile* fo = new TFile(Form("%s/%s", store.Data(), ONIABDTDATA_LATEST.c_str()),"READ");
+  TFile* fn = new TFile(Form("%s/OutputSkim_isMC0_v2100628_ForBLIND.root", store.Data()) ,"recreate");
   TTree* t0 = (TTree*) fo->Get("tree");
   TObjArray* l1 = t0->GetListOfBranches();
   int nl = l1->GetSize();
@@ -34,9 +35,13 @@ void BlindTree(){
     t0->GetEntry(i);
     if((i%1000)==0) std::cout << "Processing Event : " << i << std::endl;
     int tn = 0;
-    if(i%4==1) t1->Fill();
-    if(i%4==2) t2->Fill();
-    if(i%4==3) t3->Fill();
+//    if(i%4==1) t1->Fill();
+    if(i%4==2){
+      t1->Fill();
+      if(((i-2)/4)%2==0) t2->Fill();
+      if(((i-2)/4)%2==1) t3->Fill();
+    }
+//    if(i%4==3) t3->Fill();
     if(i%4==0) t4->Fill();
     if(i%4==tn) {t5->Fill(); (tn==0) ? tn =1 : tn++;} 
   }

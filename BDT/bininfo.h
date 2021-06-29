@@ -206,6 +206,7 @@ std::vector< std::string > info_BDT(long ts, std::string aux = "")
 	while (input.peek() != EOF){
 	  std::getline(input, stringbuf);
 	  long inputts;
+	  if(strcmp(&stringbuf[0], "#")==0) continue;
 	  try{
 	    stol( stringbuf.substr(0,10));
 	    inputts = stol(stringbuf.substr(0,10));
@@ -236,5 +237,6 @@ std::pair<double,double> Get_Optimal_BDT(long ts, double ptMin, double ptMax, do
 RooRealVar get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int state1 =1, int state2 = 3);
 
 TH1D* func_hist_optimal_BDT();
+
 
 #endif

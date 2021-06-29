@@ -72,3 +72,42 @@ Bin by Bin training end::1623349594,1623350222
 1624621605::8.00,11.50::0.00,30.00::0,180::BLIND[2,2]:: ONLY ptimb
 1624622262::8.00,11.50::0.00,30.00::0,180::BLIND[2,2]:: single muon var pt & ptimb
 1624624965::8.00,11.50::0.00,30.00::0,180::BLIND[2,2]:: nominal tree hypp, single muon var ptimb
+1624878711::8.00,11.50::0.00,30.00::0,180::BLIND[2,2]:: test mtbkg
+1624879288::8.00,11.50::0.00,30.00::0,180::BLIND[2,2]:: test with massive OS weight bkg
+1624879857::8.00,11.50::0.00,30.00::0,180::BLIND[2,2]:: also a test
+1624880225::8.00,11.50::0.00,30.00::0,180::BLIND[2,2]:: also a test, two plus weight 
+16248809561624881085::8.00,11.50::0.00,30.00::0,180::BLIND[2,2]:: multibkg test
+1624901144::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::test cross training
+1624901437::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1624901144::test cross training
+1624902896::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::test nominal proc.
+1624903207::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1624902896::test nominal proc.
+1624932471::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::test run with phi var added
+1624932836::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1624932471::test run with phi var added
+1624937475::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::test with updated PtImb
+1624937755::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1624937475::test with updated PtImb
+1624939190::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::test ptim
+1624939494::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1624939190::test ptim
+1624946552::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::Rerun Nominal with 50 50 divide
+1624946818::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1624946552::Rerun Nominal with 50 50 divide
+1624947419::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::Rerun Nominal  with fifty fifty
+1624947672::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1624947419::Rerun Nominal  with fifty fifty
+1624950212::8.00,11.50::0.00,30.00::0,180::BLIND[1,1]::test
+1624951140::8.00,11.50::0.00,30.00::0,180::BLIND[1,1]::test
+1624952493::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::test fix MC input
+1624952619::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1624952493::test fix MC input
+1624953843::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::Nominal minus single mu pt cut
+1624954004::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1624953843::Nominal minus single mu pt cut
+1624954646::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::Nominal -> Depth -1, Trees *2
+1624954816::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1624954646::Nominal -> Depth -1, Trees *2
+1624958044::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::NOMINAL 50/50 For 0629 Dilepton
+1624958172::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1624958044::NOMINAL 50/50 For 0629 Dilepton
+1624959262::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::NOMINAL 50/50 -> Depth -1, Trees*2 For 0629 Dilepton
+1624959437::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1624959262::NOMINAL 50/50 -> Depth -1, Trees*2 For 0629 Dilepton
+1624959855::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::NOMINAL 50/50 -> J/Psi acc For 0629 Dilepton
+1624960022::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1624959855::NOMINAL 50/50 -> J/Psi acc For 0629 Dilepton
+1624960267::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::NOMINAL 50/50 -> Depth -1, Trees*2, J\Psi acc For 0629 Dilepton
+1624960667::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1624960267::NOMINAL 50/50 -> Depth -1, Trees*2, J\Psi acc For 0629 Dilepton
+1624964222::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::NOMINAL 50/50 -> Depth -1, Trees*2, J\Psi acc & single mu dcos theta For 0629 Dilepton
+1624964467::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1624964222::NOMINAL 50/50 -> Depth -1, Trees*2, J\Psi acc & single mu dcos theta For 0629 Dilepton
+1624964760::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::NOMINAL 50/50 -> Depth -1, Trees*2, J\Psi acc & single mu PtImb For 0629 Dilepton
+1624965008::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1624964760::NOMINAL 50/50 -> Depth -1, Trees*2, J\Psi acc & single mu PtImb For 0629 Dilepton
