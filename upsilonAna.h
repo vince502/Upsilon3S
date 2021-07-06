@@ -20,7 +20,11 @@ namespace upsi{
 
 };
 
-std::map<int, double> bdt_tmp_val = { {1, -0.0810 }, {2, 0.1997 }, {3,0.0818 } };
-std::map<int, double> bdt_tmp_val2 = { {3, 0.2898 }, {2, 0.0808 }, {1,-0.0673 } };
+//std::map<int, double> bdt_tmp_val = { {1, -0.0810 }, {2, 0.1997 }, {3,0.0818 } };
+//std::map<int, double> bdt_tmp_val2 = { {3, 0.2898 }, {2, 0.0808 }, {1,-0.0673 } };
+std::map<int, double> bdt_tmp_val = { {1, 0.0749 }, {2, 0.1}, {3,0.0859 } };
+std::map<int, double> bdt_tmp_val2 = { {3, 0.1828 }, {2, 0.1 }, {1,0.1 } };
+std::map<int, double> bdt_tmp_val3 = { {1, 0.0749 }, {2, 0.1}, {3, -1 } };
+std::map<int, double> bdt_tmp_val4 = { {3, -1}, {2, -1 }, {1, -1 } };
 
 #endif

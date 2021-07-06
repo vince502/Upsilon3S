@@ -90,9 +90,9 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
   RooRealVar mratio3("mratio3", "mratio3", U3S_mass/U1S_mass);
 //  RooFormulaVar mean2S("mean2S", "mean1S*mratio2", RooArgSet(mean1S, mratio2));
 //  RooFormulaVar mean3S("mean3S", "mean1S*mratio3", RooArgSet(mean1S, mratio3));
-  RooRealVar sigma1S_1("sigma1S_1", "sigma1 of 1S", 0.18, 0.01, 0.35);
+  RooRealVar sigma1S_1("sigma1S_1", "sigma1 of 1S", 0.18, 0.01, 0.25);
   RooRealVar* sigma3S_1;
-  if(fixvar == false) sigma3S_1  = new RooRealVar("sigma3S_1", "sigma3 of 1S", 0.14, 0.08, 0.30);
+  if(fixvar == false) sigma3S_1  = new RooRealVar("sigma3S_1", "sigma3 of 1S", 0.20, 0.08, 0.25);
   if(fixvar == true ) sigma3S_1  = new RooRealVar("sigma3S_1", "sigma3 of 1S", (Double_t) (Y1S->sigma*(mratio3.getVal())));
 //  RooFormulaVar sigma2S_1("sigma2S_1", "@0*@1", RooArgList(sigma1S_1, mratio2));
 //  RooFormulaVar sigma3S_1("sigma3S_1", "@0*@1", RooArgList(sigma1S_1, mratio3));
@@ -122,10 +122,10 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
 
   RooRealVar *alpha, *n, *frac, *frac2;
   if ( state == 1 || fixvar == false ){
-     alpha = new RooRealVar("alpha", "alpha of Crystal ball", 1.8, 0.2, 3.0);
-     n = new RooRealVar("n", "n of Crystal ball", 1.2, 0.7, 3.0);
-     frac = new RooRealVar("frac", "CB fraction", 0.3, 0.05, 0.80);
-     frac2 = new RooRealVar("frac2", "CB fraction 2", 0.3, 0.01, 0.80);
+     alpha = new RooRealVar("alpha", "alpha of Crystal ball", 1.5, 1.2, 2.3);
+     n = new RooRealVar("n", "n of Crystal ball", 1.5, 1.1, 2.3);
+     frac = new RooRealVar("frac", "CB fraction", 0.4, 0.05, 0.80);
+     frac2 = new RooRealVar("frac2", "CB fraction 2", 0.2, 0.01, 0.80);
    }
    if ( fixvar == true && state == 3 ){
      alpha = new RooRealVar("alpha", "alpha of Crystal ball", Y1S->alp);

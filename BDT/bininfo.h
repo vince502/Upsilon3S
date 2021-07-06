@@ -8,6 +8,8 @@
 static TH1D* Get_Optimal_BDT_HIST; 
 const double interval_score = 0.1;
 
+std::string MuIDHybridSoft2018 = "nPixWMea1>0&&nPixWMea2>0&&nTrkWMea1>5&&nTrkWMea2>5&&fabs(dxy1)<0.3&&fabs(dxy2)<0.3&&fabs(dz1)<20&&fabs(dz2)<20";
+
 std::map<long, std::map<int, std::vector<std::pair<double,double> > > >bdtbinsec =
 {
 	{1618900984, 

@@ -111,3 +111,45 @@ Bin by Bin training end::1623349594,1623350222
 1624964467::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1624964222::NOMINAL 50/50 -> Depth -1, Trees*2, J\Psi acc & single mu dcos theta For 0629 Dilepton
 1624964760::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::NOMINAL 50/50 -> Depth -1, Trees*2, J\Psi acc & single mu PtImb For 0629 Dilepton
 1624965008::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1624964760::NOMINAL 50/50 -> Depth -1, Trees*2, J\Psi acc & single mu PtImb For 0629 Dilepton
+1624969113::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::NOMINAL 50/50 -> Depth -1, Trees*2, J\Psi acc & single mu pt For 0629 Dilepton
+1624969369::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1624969113::NOMINAL 50/50 -> Depth -1, Trees*2, J\Psi acc & single mu pt For 0629 Dilepton
+1624973138::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::NOMINAL 50/50 -> SnLJPa & single mu pt, PtImb, dcosT For 0629 Dilepton
+1624973418::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1624973138::NOMINAL 50/50 -> SnLJPa & single mu pt, PtImb, dcosT For 0629 Dilepton
+1624974503::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::NOMINAL 50/50 -> SnLJPa & single mu PtImb, dcosT For 0629 Dilepton
+1624974750::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1624974503::NOMINAL 50/50 -> SnLJPa & single mu PtImb, dcosT For 0629 Dilepton
+1624976326::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::NOM->SnLJPaSmu(eta,PtImb,dCos)
+1624976602::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1624976326::NOM->SnLJPaSmu(eta,PtImb,dCos)
+1625036568::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::NOM -> SnLJPa, Dimu -QQMassErr, Simu +dCos, PtImb
+1625036835::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1625036568::NOM -> SnLJPa, Dimu -QQMassErr, Simu +dCos, PtImb
+1625040045::8.00,11.50::0.00,30.00::0,180::BLIND[1,1]::test multi bkg
+1625042181::8.00,11.50::0.00,30.00::0,180::BLIND[1,1]::tset!!!
+1625044380::8.00,11.50::0.00,30.00::0,180::BLIND[1,1]::test with SnLJPa Simu dcos, PtImb, pt
+1625045514::8.00,11.50::0.00,30.00::0,180::BLIND[1,1]::test with even SnP with JPa
+1625050505::8.00,11.50::0.00,30.00::0,180::BLIND[1,1]::pre::test 
+1625051558::8.00,11.50::0.00,30.00::0,180::BLIND[2,3]::pre::test 
+1625052667::8.00,11.50::0.00,30.00::0,180::BLIND[2,3]::pre::sef
+1625053232::8.00,11.50::0.00,30.00::0,180::BLIND[2,3]::pre::test with more 
+1625054758::8.00,11.50::0.00,30.00::0,180::BLIND[2,3]::pre::test 
+1625055761::8.00,11.50::0.00,30.00::0,180::BLIND[2,3]::test
+1625106323::8.00,11.50::0.00,30.00::0,180::BLIND[2,3]::NOM -> Multi BKG
+1625107036::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::NOMINAL
+1625107177::8.00,11.50::0.00,30.00::0,181::BLIND[3,2]::Pair->1625107036::NOMINAL
+1625110119::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::NOMINAL -> JP acc, No QQMassErr, CosAlpha3D, ctau 3D
+1625114538::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::NOM -> No ctau3D
+1625114907::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::NOMINAL -> No ctau3D, Deep tree
+1625115112::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::NOMINAL
+1625115831::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::add PtImb, dCos, deep tree
+1625116683::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::add PtImb, Short tree
+1625117390::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::pt, PtImb, ptimb, dCos, shot tree
+1625118790::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::NOMINAL -> No CosAlpha3D
+1625118932::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::No cosAlpha, Add ptimb(S,V) dCos, short tree
+1625119903::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::NOMINAL -> short tree, random tree
+1625122939::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::(NEW) NOMINAL (is with RandomTree, short tree) -> MinnodeSize ^ Beta v
+1625124301::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::Last -> Separation = CrossEntropy
+1625124775::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::Last Last -> Separation -> SDivSqrtSPlusB
+1625125883::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::Last Last -> Separation -> MisclassificationError
+1625126344::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::NOMINAL -> MinNodeSize =15 %
+1625139244::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::Last ==
+1625503068::8.00,11.50::0.00,30.00::100,181::BLIND[2,3]::NOMINAL -> 100-181 cBin
+1625558168::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::Rerun without mass dep. vars
+1625558633::8.00,11.50::0.00,30.00::100,181::BLIND[2,3]::NOM Rerun without mass dep. vars, peripheral

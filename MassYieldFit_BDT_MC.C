@@ -42,7 +42,7 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
   Int_t Nmassbins = (RangeHigh - RangeLow)*30;
   if(Trig == "Ups") Nmassbins = (RangeHigh -RangeLow)*30; 
   TFile* fout;
-  fout = new TFile(Form("Yield/Yield_%dS_pt_%d-%d_rap_%d-%d_noWeight_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_%d.root",(int) state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), MupT.Data(), Trig.c_str(), bdtlow, bdthigh, cutQVP,(int) fixvar), "RECREATE");
+  fout = new TFile(Form("Yield/Yield_%ld_CB2_%dS_pt_%d-%d_rap_%d-%d_cBin_%d-%d_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_%d.root", ts, (int) state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), bdtlow, bdthigh, cutQVP,(int) fixvar), "RECREATE");
 
   Double_t MupTCut = single_LepPtCut(MupT);
 
@@ -59,7 +59,7 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
   RooDataSet* initialDS = (RooDataSet*) dataset->reduce(*argRD);
   initialDS->SetName("initialDS");
   
-  RooDataSet* reducedDS = (RooDataSet*) initialDS->reduce(RooArgSet(*(works1->var("mass"))), Form("( pt >=%f && pt <=%f) && (y >= %f && y <=%f) && (cBin>=%d && cBin<=%d) &&(pt1 >= %f) && (pt2 >= %f) && (eta1 >= %f && eta1 <= %f) && ( eta2 >= %f && eta2 <= %f) && (QQVtxProb > %f) && (BDT > %f && BDT < %f)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, MupTCut, MupTCut, etaMin, etaMax, etaMin, etaMax, cutQVP, bdtlow, bdthigh));
+  RooDataSet* reducedDS = (RooDataSet*) initialDS->reduce(RooArgSet(*(works1->var("mass"))), Form("( pt >=%f && pt <=%f) && (y >= %f && y <=%f) && (cBin>=%d && cBin<%d) &&(pt1 >= %f) && (pt2 >= %f) && (eta1 >= %f && eta1 <= %f) && ( eta2 >= %f && eta2 <= %f) && (QQVtxProb > %f) && (BDT > %f && BDT < %f)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, MupTCut, MupTCut, etaMin, etaMax, etaMin, etaMax, cutQVP, bdtlow, bdthigh));
   reducedDS->SetName("reducedDS");
   works1->import(*reducedDS);
   works1->var("mass")->setRange(RangeLow, RangeHigh);
@@ -119,7 +119,7 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
   RooRealVar *alpha, *n, *frac;
   if ( state == 1 || fixvar == false ){
      alpha = new RooRealVar("alpha", "alpha of Crystal ball", 1.6, 0.5, 2.0);
-     n = new RooRealVar("n", "n of Crystal ball", 2, 1.4, 6.0);
+     n = new RooRealVar("n", "n of Crystal ball", 2, 1.2, 6.0);
      frac = new RooRealVar("frac", "CB fraction", 0.5, 0.10, 0.90);
    }
    if ( fixvar == true && state == 3 ){
@@ -171,7 +171,7 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
   if (Trig == "Ups"){ nSig3S->setMax(10000000); nSig3S->setVal(100000); nSig1S->setMax(10000000); nSig1S->setVal(1000000); nBkg->setMax(10000000);}
   RooAddPdf* model;
 //  if( state == 1) model = new RooAddPdf("model", "1S+Bkg", RooArgList(*Signal1S,*bkg), RooArgList(*nSig1S, *nBkg));
-  if( state == 1) model = new RooAddPdf("model", "1S+Bkg", RooArgList(*Signal1S), RooArgList(*nSig1S));
+  if( state == 1) model = new RooAddPdf("model", "1S", RooArgList(*Signal1S), RooArgList(*nSig1S));
 //  if( state == 3) model = new RooAddPdf("model", "3S+Bkg", RooArgList(*Signal3S,*bkg), RooArgList(*nSig3S, *nBkg));
   if( state == 3) model = new RooAddPdf("model", "3S", RooArgList(*Signal3S), RooArgList(*nSig3S));
 
@@ -337,9 +337,11 @@ void MassYieldSingleStateMCFit( struct Y1Sfitvar *Y1S ,long ts, const string fna
   massPlot->Write();
   hYield->Write();
   hmass->Write();
-  SgnfcNS->Write();
-  hfrac->Write();
-  hfracdist->Write();
+//  SgnfcNS->Write();
+//  hfrac->Write();
+//  hfracdist->Write();
+  
+  fout->Close();
  
 };
 

@@ -107,7 +107,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
   mf.works->data("reducedDS")->plotOn(massPlot, Name("massPlot"));
 ////////////////////////////////////////////////////////////////////////////////////
 
-  RooRealVar *mean1S = new RooRealVar("mean1S", "mean of Upsilon 1S", U1S_mass, U1S_mass-0.015, U1S_mass+0.015);
+  RooRealVar *mean1S = new RooRealVar("mean1S", "mean of Upsilon 1S", U1S_mass, U1S_mass-0.05, U1S_mass+0.05);
 
   RooRealVar *mratio2 = new RooRealVar("mratio2", "mratio2", U2S_mass/U1S_mass);
   RooRealVar *mratio3 = new RooRealVar("mratio3", "mratio3", U3S_mass/U1S_mass);
@@ -494,7 +494,7 @@ dbg();
   hfrac->SetBinContent(4, Bkgfc->Integral(9.3, 9.6));
   hfrac->SetBinContent(5, Sgnfc1S->Integral(9.1, 9.8));
   hfrac->SetBinContent(6, Bkgfc->Integral(9.1, 9.8));
-  hfrac->SetBinContent(7, Bkgfc->Integral(10.0, 10.7));
+  hfrac->SetBinContent(7, Bkgfc->Integral(8.0, 8.6)+Bkgfc->Integral(10.8, 11.5));
   hfrac->SetBinContent(8, Bkgfc->Integral(mf.Range_fit_low, mf.Range_fit_high));
 
   TH1D* hfracdist = new TH1D("hfracdist","",20, 9, 10);

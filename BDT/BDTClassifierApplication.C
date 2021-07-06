@@ -12,7 +12,7 @@
 #include "../.workdir.h"
 
 
-void BDTClassifierApplication(long ts, int isMC = 0, bool isbbb = true){
+void BDTClassifierApplication(long ts, int state = 3, int isMC = 0, bool isbbb = true){
   std::string info_blind;
   if( !isbbb) info_blind = info_BDT(ts)[2];
   if( isbbb ) info_blind = info_BDT(ts)[4];
@@ -21,24 +21,41 @@ void BDTClassifierApplication(long ts, int isMC = 0, bool isbbb = true){
   if (whichtree >5) {std::cout << "if BLIND, is tree selection wrong? " << std::endl; return; }
   if (whichtree !=0 && whichtree <6) {std::cout <<"Application in BLIND tree"<<whichtree<< std::endl;}
 
+
   TMVA::Tools::Instance();
-  TMVA::Reader *reader = new TMVA::Reader("!Silent");
+  TMVA::Reader *reader1 = new TMVA::Reader("!Silent");
+  TMVA::Reader *reader2 = new TMVA::Reader("!Silent");
   TXMLEngine xml;
-  XMLDocPointer_t xmldoc = xml.ParseFile(Form("./dataset/weights/TMVA_BDT_Classifier_BDT_train_%ld.weights.xml", ts));
+  XMLDocPointer_t xmldoc = xml.ParseFile(Form("./dataset1/weights/TMVA_BDT_Classifier1_%ld_BDT.weights.xml", ts));
   XMLDocPointer_t mainnode = xml.DocGetRootElement(xmldoc);
 
-  TString dfname = (isMC==2) ? Form("%s/%s", store.Data(), ONIABDTMC1S_LATEST.c_str()) : (whichtree==0) ? Form("%s/%s", store.Data(), ONIABDTDATA_LATEST.c_str())  : Form("%s/%s", store.Data(), ONIABDTDATAB_LATEST.c_str());
-      TString mfname = Form("%s/%s", store.Data(), ONIABDTMC_LATEST.c_str());
-      if(isMC==2) mfname = Form("%s/%s", store.Data(), ONIABDTMC1S_LATEST.c_str());
+  TString fname;
+  if(isMC){
+    if(state==1) fname =Form("%s/%s", store.Data(), ONIABDTMC1S_LATEST.c_str());
+    if(state==2) fname =Form("%s/%s", store.Data(), ONIABDTMC2S_LATEST.c_str());
+    if(state==3) fname =Form("%s/%s", store.Data(), ONIABDTMC_LATEST.c_str());
+  }
+  else if(!isMC){
+    if(whichtree !=0) fname =Form("%s/%s", store.Data(), ONIABDTDATAB_LATEST.c_str() );
+    if(whichtree ==0) fname =Form("%s/%s", store.Data(), ONIABDTDATA_LATEST.c_str() );
+  }
 
   TFile* input(0);
-  input = new TFile((isMC==1 || isMC==2) ? mfname.Data() : dfname.Data(), "open");
-  TTree* tree;
-  tree = (whichtree==0|| isMC ==1 || isMC==2 ) ? (TTree*) input->Get(Form("tree")) : (TTree*) input->Get(Form("tree%d",whichtree));
+  input = new TFile(fname.Data(), "open");
+  TTree* tree1;
+  TTree* tree2;
+  if(isMC==0){
+  tree1 = (TTree*) input->Get("tree3");
+  tree2 = (TTree*) input->Get("tree2");
+  }
+  if(isMC!=0){
+  tree1 = (TTree*) input->Get("tree");
+  tree2 = (TTree*) input->Get("tree");
+  }
   
   std::vector<string> dnamelist;
   std::vector<string> inamelist;
-  TObjArray* blist = tree->GetListOfBranches();
+  TObjArray* blist = tree1->GetListOfBranches();
   for (auto content : *blist){
     string Titler = content->GetTitle();
     char datype = Titler.back();
@@ -46,8 +63,6 @@ void BDTClassifierApplication(long ts, int isMC = 0, bool isbbb = true){
     else if ( datype=='I' ){inamelist.push_back(content->GetName());}
     else continue;
   }
-//  std::vector<string> dep_dnamelist = {"mass", "pt", "y", "pt1", "pt2", "eta1", "eta2", "dxy1", "dxy2", "dz1", "dz2", "QQVtxProb", "QQMassErr" };
-//  std::vector<string> dep_inamelist = {"cBin",  "nPixWMea1", "nPixWMea2", "nTrkWMea1", "nTrkWMea2","nMuValHits1", "nMuValHits2", "StationsMatched1", "StationsMatched2"};
   Double_t *dmass = new Double_t[dnamelist.size()];
   Int_t *imass = new Int_t[inamelist.size()];
   std::map<string, Double_t*>mdouble;
@@ -86,52 +101,64 @@ void BDTClassifierApplication(long ts, int isMC = 0, bool isbbb = true){
     varname =xml.GetAttr(childvar, "Expression"); 
     std::cout << varname << std::endl;
     mvar[varname]=&varptr[i];
-    reader->AddVariable(varname, &varptr[i]);
+    reader1->AddVariable(varname, &varptr[i]);
+    reader2->AddVariable(varname, &varptr[i]);
     childvar = xml.GetNext(childvar);
   }
   for(int i=0; i < nspc; i++){
     spcname =(xml.GetAttr(childspc, "Expression"));
     mspc[spcname]=&spcptr[i];
-    reader->AddSpectator(spcname, &spcptr[i]);
+    reader1->AddSpectator(spcname, &spcptr[i]);
+    reader2->AddSpectator(spcname, &spcptr[i]);
     childspc = xml.GetNext(childspc);
   }
   
 
-  TString dir = "dataset/weights/";
-  TString prefix = "TMVA_BDT_Classifier_BDT_train_";
+  TString dir1 = "dataset1/weights/";
+  TString dir2 = "dataset2/weights/";
+  TString prefix1 = TString::Format("TMVA_BDT_Classifier1_%ld_BDT", ts);
+  TString prefix2 = TString::Format("TMVA_BDT_Classifier2_%ld_BDT", ts);
 
-  TString methodName = (Form("BDT_train_%ld",ts));
-  TString weightfile = dir+prefix + TString::Format("%ld",ts)+ TString(".weights.xml");
-  reader->BookMVA( methodName, weightfile );
-  TH1F* histBDT = new TH1F( "MVA_BDT", "MVA_BDT", 100, -1, 1);
+  TString methodName1 = (Form("BDT"));
+  TString methodName2 = (Form("BDT"));
+  TString weightfile1 = dir1+prefix1 + TString(".weights.xml");
+  TString weightfile2 = dir2+prefix2 + TString(".weights.xml");
+  reader1->BookMVA( methodName1, weightfile1);
+  reader2->BookMVA( methodName2, weightfile2 );
 
   TString outtext = input->GetName();
   std::cout << "Using file: " << outtext << std::endl;
 
   for (auto name : dnamelist){
-    tree->SetBranchAddress(name.c_str(), &*mdouble[name.c_str()]);
+    tree1->SetBranchAddress(name.c_str(), &*mdouble[name.c_str()]);
+    tree2->SetBranchAddress(name.c_str(), &*mdouble[name.c_str()]);
   }
   for (auto name : inamelist){
-    tree->SetBranchAddress(name.c_str(), &*mint[name.c_str()]);
+    tree1->SetBranchAddress(name.c_str(), &*mint[name.c_str()]);
+    tree2->SetBranchAddress(name.c_str(), &*mint[name.c_str()]);
   }
   
   Double_t effS = 0.7;
   Double_t BDT;
+  int treeID;
 
-  string treename = (whichtree ==0 ||isMC ==1 || isMC==2) ? "tree" : Form("tree%d",whichtree);
-  TTreeReader newreader(treename.c_str(), input);
   TFile *target;
   if (isMC ==0) target =new TFile(Form("./BDTAppliedData/BDTApp_%ld.root",ts),"recreate");
-  else if (isMC==1) target =new TFile(Form("./BDTAppliedData/BDTApp_%ld_MC.root",ts),"recreate");
-  else if (isMC==2) target = new TFile(Form("./BDTAppliedData/BDTApp_%ld_MC_1S.root", ts),"recreate");
-  TTree* outtree = tree->CloneTree(0);
+  else if (isMC==1)
+  {
+    if(state ==1 ) target =new TFile(Form("./BDTAppliedData/BDTApp_%ld_MC_1S.root",ts),"recreate");
+    if(state ==2 ) target =new TFile(Form("./BDTAppliedData/BDTApp_%ld_MC_2S.root",ts),"recreate");
+    if(state ==3 ) target =new TFile(Form("./BDTAppliedData/BDTApp_%ld_MC.root",ts),"recreate");
+  }
+  TTree* outtree = tree1->CloneTree(0);
   outtree->SetName("tree");
   outtree->Branch("BDT", &BDT, "BDT/D");
+  outtree->Branch("treeID", &treeID, "treeID/I");
 
-
-  for(Long64_t ievt=0; ievt< tree->GetEntries();ievt++){
-    tree->GetEntry(ievt);
-    outtree->GetEntry(ievt);
+  int count = 0;
+  for(Long64_t ievt=0; ievt< tree1->GetEntries();ievt++){
+    tree1->GetEntry(ievt);
+    outtree->GetEntry(count);
     if (ievt%10000 == 0) std::cout << "--- ... Processing event: " << ievt << "\r";
     for( string name : dnamelist ){
       if( mvar[name] !=nullptr){
@@ -149,8 +176,37 @@ void BDTClassifierApplication(long ts, int isMC = 0, bool isbbb = true){
 	if( mint[name] !=nullptr) *mspc[name] = *mint[name];
       }
     }
-  BDT=reader->EvaluateMVA( Form("BDT_train_%ld",ts));
+  BDT=reader1->EvaluateMVA( Form("BDT"));
+  treeID=1;
   outtree->Fill();
+  count ++;
+  }
+  if(isMC==0){
+    for(Long64_t ievt=0; ievt< tree2->GetEntries();ievt++){
+      tree2->GetEntry(ievt);
+      outtree->GetEntry(count);
+      if (ievt%10000 == 0) std::cout << "--- ... Processing event: " << ievt << "\r";
+      for( string name : dnamelist ){
+        if( mvar[name] !=nullptr){
+          if( mdouble[name] !=nullptr) *mvar[name] = *mdouble[name];
+        }
+        if( mspc[name] !=nullptr){
+          if( mdouble[name] !=nullptr) *mspc[name] = *mdouble[name];
+        }
+      }
+      for( string name : inamelist ){
+        if( mvar[name] !=nullptr){
+          if( mint[name] !=nullptr) *mvar[name] = *mint[name];
+        }
+        if( mspc[name] !=nullptr){
+          if( mint[name] !=nullptr) *mspc[name] = *mint[name];
+        }
+      }
+    BDT=reader2->EvaluateMVA( Form("BDT"));
+    treeID=2;
+    outtree->Fill();
+    count ++;
+    }
   }
   if(isbbb){
     std::vector<std::string> bdt_info = info_BDT(ts);

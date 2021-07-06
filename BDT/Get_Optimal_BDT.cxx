@@ -20,14 +20,16 @@ std::pair<double,double> Get_Optimal_BDT(long ts, double ptMin, double ptMax, do
 
   TFile* file_input = TFile::Open(name_input.c_str());
   TFile* file_output = new TFile("output.root","recreate");
-  TTree* tree_train_raw = (TTree*) file_input->Get("dataset/TrainTree");
+  TChain* tree_train_raw = new TChain();
+  tree_train_raw->Add(Form("%s/dataset1/TrainTree", name_input.c_str()));
+  tree_train_raw->Add(Form("%s/dataset2/TrainTree", name_input.c_str()));
   std::string theCut = Form("(mass<11.5 && mass>8.0) && (pt>%f) && (pt<%f) && (y>%f) && (y<%f) && (cBin>%d) && (cBin<%d) && (QQVtxProb>%f)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP );
-  TTree* tree_train = tree_train_raw->CopyTree(theCut.c_str());
+  TChain* tree_train = (TChain*) tree_train_raw->CopyTree(theCut.c_str());
   std::cout << tree_train_raw->GetEntries() << ", "<< tree_train->GetEntries() << Form(" cl, ch : %d, %d ",cBinLow, cBinHigh) << std::endl;
   Float_t val_bdt;
   Int_t bool_classID;
   tree_train->SetBranchAddress("classID", &bool_classID);
-  tree_train->SetBranchAddress(Form("BDT_train_%ld",ts), &val_bdt);
+  tree_train->SetBranchAddress(Form("BDT"), &val_bdt);
   std::cout << Nbins << "NBINS!!!!!" << std::endl;
   int ent_sig = tree_train->GetEntries("classID==0");
   int ent_bkg = tree_train->GetEntries("classID==1");
@@ -150,7 +152,7 @@ RooRealVar get_eff_acc(std::string type, std::string type2, long ts, double ylim
   eff21= RooRealVar(Form("eff%d",state1), "", eff2p1.first);
   eff21.setError(eff2p1.second);
 
-  double ratio_acceff = ((eff2.getVal()*eff21.getVal())/(eff1.getVal()*eff22.getVal()));
+  double ratio_acceff = ((eff1.getVal()*eff22.getVal())/(eff2.getVal()*eff21.getVal()));
   double ratio_val = yield3S.getVal()/nbkg.getVal();
   std::cout << "YIELD: " << nbkg.getVal() << ", "<< yield3S.getVal() << std::endl;
   std::cout << "EFF: " << eff1.getVal() << ", "<< eff2.getVal() << std::endl;

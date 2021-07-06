@@ -20,7 +20,7 @@ class binplotter
 	void set_params(string _fitfunc, double _vcut);
 	void dump();
 	~binplotter();
-	RooRealVar get_yield();
+	RooRealVar get_yield(int state =3);
 	RooRealVar get_bkg(int state = 3);
 	std::pair<double, double> get_eff(int state =3);
 	RooRealVar yield_eff();

@@ -49,9 +49,9 @@ void getEfficiency(
   else if(!isSwitch) ftrigSel += Form("_%s",fTrigName[kTrigSel_].Data());
 
   //input files
-  TString inputMC = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/OniaTree/MC/OniaTree_MC_Ups3S_PbPb2018_HydjetDrumMB_5p02TeV_merged.root";
+  TString inputMC =  "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/OniaTree/MC/OniaTree_MC_Ups3S_PbPb2018_HydjetDrumMB_5p02TeV_merged.root";
   if(state ==1) inputMC = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/OniaTree/MC/OniaTree_Ups1SMC_HydjetDrumMB_5p02TeV_v210621.root";
-  if(state ==2) inputMC = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/OniaTree/MC/OniaTree_MC_Ups2S_PbPb2018_HydjetDrumMB_5p02TeV_merged.root";
+  if(state ==2) inputMC = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/OniaTree/MC/OniaTree_Ups2SMC_HydjetDrumMB_5p02TeV_v210628.root";
   TChain* mytree = new TChain("hionia/myTree"); 
   mytree->Add(inputMC.Data());
 

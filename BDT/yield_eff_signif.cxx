@@ -117,7 +117,7 @@ RooRealVar binplotter::get_bkg(int state = 3)
   return res_var;
 };
 
-RooRealVar binplotter::get_yield(){
+RooRealVar binplotter::get_yield(int state =3 ){
   RooRealVar Yield1S, Yield2S, Yield3S;
   const RooArgList& paramList = res->floatParsFinal();
   Yield1S = *(RooRealVar*) worksp->var("nSig1S");
@@ -137,7 +137,9 @@ RooRealVar binplotter::get_yield(){
   yield1S = Yield1S;
   yield2S = Yield2S;
   yield3S = Yield3S;
-  return Yield3S;
+  if(state ==1) return Yield1S;
+  if(state ==2) return Yield2S;
+  else return Yield3S;
 
 };
 
