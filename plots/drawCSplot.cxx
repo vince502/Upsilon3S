@@ -3,14 +3,14 @@
 #include "TROOT.h"
 #include "../upsilonAna.cxx"
 
-void f_drawCSplot(){
-  long ts = 1623391157; // 1621574976; //2D var 1621568219 ;//1619743777;//11.0 mass up //1619742556; //11.5 mass////// 1618913300; //1619021800;
+void f_drawCSplot(int state =3){
+  long ts = 1625139244; //1623391157; // 1621574976; //2D var 1621568219 ;//1619743777;//11.0 mass up //1619742556; //11.5 mass////// 1618913300; //1619021800;
   double blow, bhigh, yhigh;
   blow =0.20;
   bhigh =1.0;
   yhigh = 2.4;
 
-  std::pair<int, int> cbinrange = {0,180}; 
+  std::pair<int, int> cbinrange = {0,181}; 
   TCanvas* c1 = new TCanvas("c1", "Cross Section plot", 900,700);
   c1->cd();
   Double_t* ptbinfour = new Double_t[5]{0,4,9,12,30};
@@ -19,9 +19,9 @@ void f_drawCSplot(){
   gStyle->SetOptStat(kFALSE);
   gStyle->SetOptTitle(kFALSE);
   for(int idx =0; idx <2; ++idx){
-    blow = Get_Optimal_BDT(ts, ptbintwo[idx], ptbintwo[idx+1], -2.4, 2.4, cbinrange.first, cbinrange.second, 0.00).first;
+    blow = bdt_tmp_val[idx+1];// Get_Optimal_BDT(ts, ptbintwo[idx], ptbintwo[idx+1], -2.4, 2.4, cbinrange.first, cbinrange.second, 0.00).first;
 //    RooRealVar cs_bin = upsi::getcrosssection("CB2:CC2:FFDD3",ts, ptbintwo[idx], ptbintwo[idx+1],0, yhigh, 3.5, (double)cbinrange.first, (double) cbinrange.second, blow, bhigh);
-    RooRealVar cs_bin = upsi::getcrosssection("CB3:CC2:GC",ts, ptbintwo[idx], ptbintwo[idx+1],0, yhigh, 3.5, (double)cbinrange.first, (double) cbinrange.second, blow, bhigh);
+    RooRealVar cs_bin = upsi::getcrosssection("CB3:CC2:GC",ts, ptbintwo[idx], ptbintwo[idx+1],-1*yhigh, yhigh, 3.5, (double)cbinrange.first, (double) cbinrange.second, blow, bhigh, state, false);
     h1->SetBinContent(idx+1, cs_bin.getVal());
     h1->SetBinError(idx+1, cs_bin.getError());
     std::cout << cs_bin.getVal() << " +- " << cs_bin.getError() << std::endl; 
@@ -41,7 +41,7 @@ void f_drawCSplot(){
   c1->Update();
 //  c1->SaveAs(Form("%s/plots/CrossSection/plot_%s_%d_%ld_cBin_%d_%d_%.2f.pdf", workdir.Data(), "GC", 2,ts, cbinrange.first, cbinrange.second, blow ));
   c1->SaveAs(Form("%s/plots/CrossSection/plot.pdf", workdir.Data() ));
-  c1->SaveAs(Form("%s/plots/CrossSection/plot_%s_%d_%ld_cBin_%d_%d_%.2f.cxx", workdir.Data(), "GC", 2,ts, cbinrange.first, cbinrange.second, blow ));
+  c1->SaveAs(Form("%s/plots/CrossSection/plotCS_%dS_%s_%d_%ld_cBin_%d_%d_%.2f.cxx", workdir.Data(), state, "GC", 2,ts, cbinrange.first, cbinrange.second, blow ));
 
 };
 

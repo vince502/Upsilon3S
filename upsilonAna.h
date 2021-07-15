@@ -16,7 +16,7 @@ namespace upsi{
 		return returnVal;
 	};
 
-	RooRealVar getcrosssection(std::string type, long ts, double ptlow, double pthigh, double ylow, double yhigh, double sm_ptcut, double clow, double chigh, double blow, double bhigh);
+	RooRealVar getcrosssection(std::string type, long ts, double ptlow, double pthigh, double ylow, double yhigh, double sm_ptcut, double clow, double chigh, double blow, double bhigh, int state =3, bool find_bdt = false);
 
 };
 

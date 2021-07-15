@@ -2,8 +2,6 @@
 #include "../commonUtility.h"
 #include "../cutsAndBinUpsilonV2.h"
 #include "../Style_jaebeom.h"
-#include "../tdrstyle.C"
-#include "../CMS_lumi_v2mass.C"
 #include "../rootFitHeaders.h"
 #include <RooGaussian.h>
 #include <RooCBShape.h>

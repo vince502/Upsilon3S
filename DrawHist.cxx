@@ -29,17 +29,22 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
     if(fitdir.find("DD") != std::string::npos) fit_param = "iterative_fix";
   }
   if(fitdir.find("GC")!=std::string::npos) fit_param = "gaussconst";
-  if(fitdir.find("DR")!=std::string::npos) fit_param = fit_param + "_DoubleRatio";
+  if(fitdir.find("DR")!=std::string::npos) {
+    if(fitdir.find("DR2")!=std::string::npos) {
+      fit_param = fit_param + "_DoubleRatio2";
+    }
+    else fit_param = fit_param + "_DoubleRatio";
+  }
   if(bkg_func.find("EE")!= std::string::npos) name_pdf_bkg = "bkgErf";
   if(bkg_func.find("CC")!= std::string::npos) name_pdf_bkg = "CCBkg";
 
   int ylim10 = (int) (rapMax*10);
   int DDiter =0;
-  std::pair<double, double> _hist_;
-  TH1D* signif_hist ;
+  std::pair<double, TH1D*> _hist_;
+  TH1D* signif_hist;
   if( signif_ratio != -1){
   _hist_ = Get_Optimal_BDT(ts, ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP, signif_ratio); 
-  signif_hist = func_hist_optimal_BDT();
+  signif_hist = _hist_.second;
   }
 
   std::string method_selection = (isBDT) ? "BDT" : "Data"; 
@@ -167,14 +172,13 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
 //  pad_mag->SetLogy();
   pad_mag->SetLeftMargin(0);
 
-    dbg();
-  if(signif_ratio != -1 && signif_hist != nullptr){
-    dbg();
+  if(signif_ratio != -1){
+
   signif_hist->SetStats(kFALSE);
-  signif_hist->DrawCopy();
   signif_hist->SetFillColor(kRed);
+  signif_hist->Draw();
+
 //  signif_hist->GetXaxis()->SetRange(num_bin_signif, num_bin_signif);
-  signif_hist->DrawCopy("same");
   }
 //  partplot->Draw();
 

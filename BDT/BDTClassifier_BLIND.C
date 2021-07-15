@@ -46,7 +46,7 @@ bool BDTClassifier_BLIND_Function(int idxBkg , int idxDat , double ptLow, double
   
   //INPUT & OUTPUT Call
   TFile* inputDATA = new TFile(Form("%s/%s", store.Data(), ONIABDTDATAB_LATEST.c_str()),"read");
-  TFile* inputMC   = new TFile(Form("%s/%s", store.Data(), ONIABDTMC_LATEST.c_str()),"read");
+  TFile* inputMC   = new TFile(Form("%s/%s", store.Data(), ONIABDTMC2S_LATEST.c_str()),"read");
   //new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_v210416.root","read");
   TFile* output    = new TFile(Form("%s/BDTresultY3S_%ld_BLIND.root",BDTDir.Data(),(long) tstamp),"recreate");
 
@@ -80,13 +80,13 @@ bool BDTClassifier_BLIND_Function(int idxBkg , int idxDat , double ptLow, double
   TMVA::Factory *factory2 = new TMVA::Factory(Form("TMVA_BDT_Classifier2_%ld",(long) tstamp),  output, "!V:Silent:Color:DrawProgressBar:Transformations=G:AnalysisType=Classification");
   for( auto loader : {loader1, loader2} ) 
   {
-//    loader->AddVariable("QQMassErr", "Dimu Mass error", "F");
+    loader->AddVariable("QQMassErr", "Dimu Mass error", "F");
     loader->AddVariable("ctau3D", "3 dim ctau of the dimuon","F");
     loader->AddVariable("ctau", "2 dim ctau of the dimuon","F");
     loader->AddVariable("QQVtxProb", "Vtx prob", "F");
     loader->AddVariable("QQdca", "QQdca", "F");
     loader->AddVariable("cosAlpha", "cos alpha for trajectory angle", "F");
-//    loader->AddVariable("cosAlpha3D", "cos alpha for trajectory angle 3D", "F");
+    loader->AddVariable("cosAlpha3D", "cos alpha for trajectory angle 3D", "F");
 //    loader->AddVariable("dcosMuTheta", "single muon angle diff", "F");
 //    loader->AddVariable("PtImb", "single muon pt imbalance", "F");
 //    loader->AddVariable("ptimb", "single muon scalar pt imbalance", "F");

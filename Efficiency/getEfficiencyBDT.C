@@ -174,6 +174,7 @@ void getEfficiencyBDT(
   hreco_xtnp->Write();
 //  hgen->Write();
   outFile->Close();
+  creco->Close();
 }
 
 

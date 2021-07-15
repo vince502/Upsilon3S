@@ -4,9 +4,20 @@
 #include "../upsilonAna.h"
 #include "yield_eff_signif.h"
 
-std::pair<double,double> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio= 0.16, string name_input_opt = "", string formula_significance= "S2")
+std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio= 0.16, string name_input_opt = "", string formula_significance= "S2")
 {
-
+  
+  std::string st_opt;
+  if(strcmp(name_input_opt.c_str(),"")!=0) st_opt = "_"+name_input_opt;
+  std::string output_fname = Form("%s/BDT/Significance_hist/HIST_%ld_pt_%d-%d_rap_%d-%d_cbin_%d-%d_vp_%.4f_ratio_%.6f_%s%s", workdir.Data(), ts, (int) ptMin, (int) ptMax, (int) (rapMin*10), (int) (rapMax*10), cBinLow, cBinHigh, cutQVP, ratio, formula_significance.c_str(), st_opt.c_str() );
+  TFile* HISTFILE = nullptr;
+  HISTFILE = TFile::Open(Form("%s.root",output_fname.c_str()) );
+  if ( !(HISTFILE == nullptr || HISTFILE->IsZombie() || HISTFILE->Get("HISTO")==nullptr )){
+    std::cout << "[INFO] Reading From HISTOFILE" << std::endl;
+    double theSig = stod(HISTFILE->Get("max_sig")->GetTitle());
+    TH1D*   theHist = (TH1D*) HISTFILE->Get("HISTO");
+    return std::make_pair(theSig, theHist);
+  }
   int Nbins = (int) (1.5/interval_score);
   std::cout<< "Nbins: " <<Nbins<< std::endl;
   std::cout << interval_score << "interval, " << Nbins << "NBINS!!!!!" << std::endl;
@@ -19,12 +30,13 @@ std::pair<double,double> Get_Optimal_BDT(long ts, double ptMin, double ptMax, do
   std::cout << name_input << std::endl;
 
   TFile* file_input = TFile::Open(name_input.c_str());
-  TFile* file_output = new TFile("output.root","recreate");
+  TFile* cache_out = new TFile(".cache.root","update");
   TChain* tree_train_raw = new TChain();
   tree_train_raw->Add(Form("%s/dataset1/TrainTree", name_input.c_str()));
   tree_train_raw->Add(Form("%s/dataset2/TrainTree", name_input.c_str()));
   std::string theCut = Form("(mass<11.5 && mass>8.0) && (pt>%f) && (pt<%f) && (y>%f) && (y<%f) && (cBin>%d) && (cBin<%d) && (QQVtxProb>%f)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP );
-  TChain* tree_train = (TChain*) tree_train_raw->CopyTree(theCut.c_str());
+  TChain* tree_train;
+  tree_train = (TChain*) tree_train_raw->CopyTree(theCut.c_str());
   std::cout << tree_train_raw->GetEntries() << ", "<< tree_train->GetEntries() << Form(" cl, ch : %d, %d ",cBinLow, cBinHigh) << std::endl;
   Float_t val_bdt;
   Int_t bool_classID;
@@ -34,43 +46,45 @@ std::pair<double,double> Get_Optimal_BDT(long ts, double ptMin, double ptMax, do
   int ent_sig = tree_train->GetEntries("classID==0");
   int ent_bkg = tree_train->GetEntries("classID==1");
   std::cout << ent_sig << ", " << ent_bkg << std::endl;
+  double sig_lim_bdt = 10;
   
+  TH1::AddDirectory(kFALSE);
   auto get_BDTcut_from_ratio = [&](double ratio)
   {
-    TH1D* hist_res = new TH1D(Form("base_hist_res %ld, [%.1f,%.1f][%.1f,%.1f][%d,%d]",ts, ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh), "signifcance vs BDT", Nbins, -0.5, 1);
+    TH1D* hist_res = new TH1D("HISTO", "signifcance vs BDT", Nbins, -0.5, 1);
     double r = ratio;
   
-    std::cout << r*(double) ent_bkg << " vs " << ent_sig << std::endl;
-    bool cmpsz = (r*(double) ent_bkg < (double) ent_sig);
+//    std::cout << r*(double) ent_bkg << " vs " << ent_sig << std::endl;
+//    bool cmpsz = (r*(double) ent_bkg < (double) ent_sig);
     int sig=0;
     int bkg=0;
-    int max_sig = (cmpsz) ? r*(double) ent_bkg : ent_sig ; 
-    int max_bkg = (cmpsz) ? ent_bkg : (1/r)*(double) ent_sig; 
+//    int max_sig = (cmpsz) ? r*(double) ent_bkg : ent_sig ; 
+//    int max_bkg = (cmpsz) ? ent_bkg : (1/r)*(double) ent_sig; 
     int tuple_pass_sig[Nbins];
     int tuple_pass_bkg[Nbins];
     for (int idx =0; idx <Nbins; idx++){ tuple_pass_sig[idx]=0; tuple_pass_bkg[idx]=0;}
     for ( int idx =0; idx < tree_train->GetEntries(); idx++){
       tree_train->GetEntry(idx);
-      if( (sig > max_sig ) && (bkg > max_bkg) ) break;
       int counts =0;
       for( double x = -0.5; x < 1; x+=interval_score){
-        if( (sig < max_sig) && (bool_classID==0)){sig+=1; if(val_bdt> x) {tuple_pass_sig[counts]+=1;}}
-        if( (bkg < max_bkg) && (bool_classID==1)){bkg+=1; if(val_bdt> x) {tuple_pass_bkg[counts]+=1;}}
+        if(bool_classID==0){sig+=1; if(val_bdt> x) {tuple_pass_sig[counts]+=1;}}
+        if(bool_classID==1){bkg+=1; if(val_bdt> x) {tuple_pass_bkg[counts]+=1;}}
         counts++;
       }
     }
-    std::cout << " Total Used sig, bkg Events: " << sig << ", " << bkg << std::endl;
     double _signif[Nbins];
     double _signif_err[Nbins];
-    int pass_sig=0;
-    int pass_bkg=0;
-    int zero_bin=0;
+    double pass_sig=0;
+    double pass_bkg=0;
+    double zero_bin=0;
+    double scale_factor = (double) ((double) ent_bkg/ (double) ent_sig)*ratio;
     for(int idx =0 ; idx <Nbins; idx++){
-      pass_sig = tuple_pass_sig[idx];
+      pass_sig = ((double) tuple_pass_sig[idx])*(scale_factor);
       pass_bkg = tuple_pass_bkg[idx];
       Double_t err_sig = TMath::Sqrt(pass_sig);
       Double_t err_bkg = TMath::Sqrt(pass_bkg);
-      std::cout << Form("passing sig, bkg : %d, %d, err: %.4f, %.4f",pass_sig, pass_bkg, err_sig, err_bkg) << std::endl;
+      std::cout << Form("passing sig, bkg : %.4f, %.4f, err: %.4f, %.4f",(double) tuple_pass_sig[idx], pass_bkg, err_sig, err_bkg) << std::endl;
+//      std::cout << Form("passing sig, bkg : %.4f, %.4f, err: %.4f, %.4f",pass_sig, pass_bkg, err_sig, err_bkg) << std::endl;
      
       if( formula_significance=="S12"){
         _signif[idx] = 2*(TMath::Sqrt(pass_sig+pass_bkg)-TMath::Sqrt(pass_bkg));
@@ -88,45 +102,56 @@ std::pair<double,double> Get_Optimal_BDT(long ts, double ptMin, double ptMax, do
         else _signif_err[idx] = ( TMath::Sqrt(TMath::Power(pass_sig,2)+ 4*pass_sig*pass_bkg)/(2*(pass_sig+ pass_bkg) ) ); 
       }
       hist_res->SetBinContent(idx+1,_signif[idx]);
-      hist_res->SetBinError(idx+1, _signif_err[idx]);
-    }
-    TF1* sig_model;
-    if( formula_significance == "S12") sig_model = new TF1("Msignif", "[0]*(TMath::Sqrt([1]*TMath::Erf((-x-[2])/[4]) +TMath::Erf((-x-[3])/[5]) +[1]+1) - TMath::Sqrt(TMath::Erf((-x-[3])/[5]) +1 ) +[6]  )");
-    if( formula_significance == "S2") sig_model = new TF1("Msignif", "[0]*([1]*(TMath::Erf((-x-[2])/[4])+1)/TMath::Sqrt([1]*(TMath::Erf((-x-[2])/[4]) +1) +TMath::Erf((-x-[3])/[5]) +1) )");
+      hist_res->SetBinError(idx+1,  _signif_err[idx]);
 
-    sig_model->SetParameter(0,5);
-    sig_model->SetParameter(2, 0.00);
-    sig_model->SetParameter(3, 0.45);
-    sig_model->SetParameter(4, 0.25);
-    sig_model->SetParameter(5, 0.35);
+      if( (((double) tuple_pass_sig[idx] / ent_sig) < 0.50)&&(sig_lim_bdt == 10 ) ){
+	sig_lim_bdt = hist_res->GetBinCenter(idx+1) - hist_res->GetBinWidth(1)/2;
+	std::cout << "\n\n\n\n\n FOUND BIN "<< sig_lim_bdt << "\n\n\n\n\n" ;
+      }
+      std::cout << "Efficiecy : " << ((double) tuple_pass_sig[idx] / ent_sig) << " sig_lim_bdt : " << sig_lim_bdt << std::endl;
+    }
+//    TF1* sig_model;
+//    if( formula_significance == "S12") sig_model = new TF1("Msignif", "[0]*(TMath::Sqrt([1]*TMath::Erf((-x-[2])/[4]) +TMath::Erf((-x-[3])/[5]) +[1]+1) - TMath::Sqrt(TMath::Erf((-x-[3])/[5]) +1 ) +[6]  )");
+//    if( formula_significance == "S2") sig_model = new TF1("Msignif", "[0]*([1]*(TMath::Erf((-x-[2])/[4])+[6])/TMath::Sqrt([1]*(TMath::Erf((-x-[2])/[4]) +[7]) +TMath::Erf((-x-[3])/[5]) +1) )");
+
+//    sig_model->SetParameter(0,(hist_res->GetSum())*0.73);
+//    sig_model->SetParameter(2, -0.34);
+//    sig_model->SetParameter(3, 0.61);
+//    sig_model->SetParameter(4, 0.18);
+//    sig_model->SetParameter(5, 0.85);
 //    sig_model->SetParameter(6, -1.0);
-    sig_model->FixParameter(1, ratio);
+//    sig_model->SetParameter(6, 0.99);
+//    sig_model->FixParameter(1, ratio);
+//    sig_model->SetParLimits(6,0.1,1.);
+//    sig_model->SetParLimits(7,0.1,1.);
     
-    hist_res->Fit("Msignif","R","",-0.5,interval_score*(zero_bin)-0.5);
+//    hist_res->Fit("Msignif","R","",-0.5,interval_score*(zero_bin)-0.5);
     hist_res->Draw();
     auto res = hist_res->GetFunction("Msignif");
-    double max_signif_bdt_fromfit = res->GetMaximumX(-0.3, 0.45); 
+    double max_signif_bdt= hist_res->GetBinCenter(hist_res->GetMaximumBin() );// res->GetMaximumX(-0.3, 0.45); 
+    max_signif_bdt = min(max_signif_bdt, sig_lim_bdt);
     double max_signif_val = hist_res->GetMaximum();
-    return std::make_pair(std::make_pair(max_signif_bdt_fromfit, max_signif_val),hist_res);
+    return std::make_pair(std::make_pair(max_signif_bdt, max_signif_val),hist_res );
   };
 
   
   auto bdt_res =  get_BDTcut_from_ratio(ratio);
   TH1D* hist_res = bdt_res.second;
+  file_input->Close();
+  HISTFILE = new TFile(Form("%s.root",output_fname.c_str()), "recreate" );
+  
+  HISTFILE->cd();
+  hist_res->Write();
+  TNamed* max_value = new TNamed("max_sig",Form("%.4f",bdt_res.first.first));
+  max_value->Write();
+  HISTFILE->Close();
 
   Get_Optimal_BDT_HIST = hist_res;
-  TFile* output;
-  output = new TFile(Form("%s/BDT/test_OPT_BDT_method2.root",workdir.Data()),"update");
-  output->cd();
 
   //TF1 *f1 = new TF1("poly3", "[0]*x^3+[1]*x^2+[2]*x+[3]",-0.3, 0.4);
 
   hist_res->Draw();
-  output->Close();
-  return bdt_res.first;
-};
-TH1D* func_hist_optimal_BDT(){
-  return Get_Optimal_BDT_HIST;
+  return std::make_pair(bdt_res.first.first, hist_res);
 };
 
 //Function to get BDT ratio //

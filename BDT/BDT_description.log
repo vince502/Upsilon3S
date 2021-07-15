@@ -153,3 +153,11 @@ Bin by Bin training end::1623349594,1623350222
 1625503068::8.00,11.50::0.00,30.00::100,181::BLIND[2,3]::NOMINAL -> 100-181 cBin
 1625558168::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::Rerun without mass dep. vars
 1625558633::8.00,11.50::0.00,30.00::100,181::BLIND[2,3]::NOM Rerun without mass dep. vars, peripheral
+1625679687::8.00,11.50::0.00,30.00::0,181::BLIND[2,3]::Nominal method without QQVtxProb
+1625736641::8.00,11.50::0.00,6.00::0,181::BLIND[2,3]::NOMINAL pT 0-6 GeV/c, integrated cent.
+1626093714::8.00,11.50::6.00,30.00::0,181::BLIND[2,3]::NOMINAL pT 6-30 GeV/c, integrated cent.
+1626100443::8.00,11.50::0.00,4.00::0,181::BLIND[2,3]::NOMINAL 2S 0-4 GeV/c. Int Cent
+1626102123::8.00,11.50::0.00,4.00::0,181::BLIND[2,3]::==Last run with no ctau
+1626102391::8.00,11.50::0.00,4.00::0,181::BLIND[2,3]::== Last Last, no QQdca
+1626102721::8.00,11.50::0.00,4.00::0,181::BLIND[2,3]::== Last Last Last, no cosAlpha's
+1626102927::8.00,11.50::0.00,4.00::0,181::BLIND[2,3]::== Last, no QQdca

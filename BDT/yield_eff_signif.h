@@ -42,7 +42,7 @@ class binplotter
 	double vcut =0.00;
 	TString MupT = "3p5";
 	string Trig ="S13";
-	TString fittype = "freefit";
+	std::string fittype = "freefit";
 	string filename;
 	string fitfunc="";//"_CC3";
 

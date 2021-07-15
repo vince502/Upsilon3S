@@ -3,10 +3,10 @@
 #include "makeRooDataset_fromBDT.C"
 void BDTNominalPostProcess(long ts);
 
-void BDTNominalProcess(int step= 0, long ts= 00000000, double ptLow = 0, double ptHigh = 30 , int cBinLow =100 , int cBinHigh =181)
+void BDTNominalProcess(int step= 0, long ts= 00000000, double ptLow = 0, double ptHigh = 4 , int cBinLow =0 , int cBinHigh =181)
 {
   ofstream log;
-  if(step ==0)
+  if(step ==0 || step < 0)
     {
     std::cout << "Write down description for this run :";
     std::cin.getline(logbuf,2000);
@@ -18,16 +18,18 @@ void BDTNominalProcess(int step= 0, long ts= 00000000, double ptLow = 0, double 
     }
     ts= _ts;
   }
-//  BDTClassifierApplication(ts, 3, 1, true);
-  BDTClassifierApplication(ts, 3, 0, true);
-  BDTNominalPostProcess(ts);
+  if(step>=0){
+    BDTClassifierApplication(ts, 3, 1, true);
+    BDTClassifierApplication(ts, 3, 0, true);
+    BDTNominalPostProcess(ts);
+  }
 
 
 }
 void BDTNominalPostProcess(long ts)
 {
-//  BDTClassifierApplication(ts, 1, 1, true);
-//  BDTClassifierApplication(ts, 2, 1, true);
+  BDTClassifierApplication(ts, 1, 1, true);
+  BDTClassifierApplication(ts, 2, 1, true);
 
   makeRooDataset_fromBDT(ts, true, 0 );
   makeRooDataset_fromBDT(ts, true, 1 );

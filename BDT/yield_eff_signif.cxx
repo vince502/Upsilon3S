@@ -16,13 +16,13 @@ binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _
 binplotter::~binplotter(){ file1->Close(); };
 
 void binplotter::init(bool get_bdt= true){
-  auto _fitdir = parser_symbol(type, ":");
-  fitfunc = _fitdir[1];
+  auto info_fit = parser_symbol(type, ":");
+  fitfunc = info_fit[1];
   int ylim10 = (int) (ylim*10);
   int nbin = 120;
   std::string fitdir, markDDiter;
   auto info_string_BDT = info_BDT(ts);
-  auto info_fit = parser_symbol(type, ":");
+
   if (massrng.find(ts) != massrng.end()) { nbin = (int) ((massrng[ts].second - massrng[ts].first)/0.05); } 
   else if (info_string_BDT[1] != "nan") {
     auto m_pair =  parser_symbol(info_string_BDT[1],",");
@@ -31,6 +31,7 @@ void binplotter::init(bool get_bdt= true){
     nbin = (int) ((m_high - m_low)/0.05) ; 
   }
   fitdir = info_fit[2].c_str();
+  fittype =fitdir;
   
   if(get_bdt){ blow = Get_Optimal_BDT(ts, pl, ph,(double) -1*ylim, ylim, cl, ch, vcut).first; }
   
@@ -72,7 +73,7 @@ void binplotter::set_params(string _fitfunc, double _vcut){
 };
 
 void binplotter::dump(){
-  std::cout << Form(" ts %ld ylim %.4f blow %.4f bhigh %.4f pl %d ph %d cl %d ch %d vcut %.4f MupT %s Trig %s fittype %s filename %s fitfunc %s",ts, ylim, blow, bhigh, pl, ph, cl, ch, vcut, MupT.Data(), Trig.c_str(), fittype.Data(), filename.c_str(), fitfunc.c_str()) << std::endl;
+  std::cout << Form(" ts %ld ylim %.4f blow %.4f bhigh %.4f pl %d ph %d cl %d ch %d vcut %.4f MupT %s Trig %s fittype %s filename %s fitfunc %s",ts, ylim, blow, bhigh, pl, ph, cl, ch, vcut, MupT.Data(), Trig.c_str(), fittype.c_str(), filename.c_str(), fitfunc.c_str()) << std::endl;
 };
 
 
@@ -87,8 +88,15 @@ std::pair<RooRealVar, RooRealVar> binplotter::get_frac(){
     if(strcmp(arg->GetName(),"frac_2sOver1s")==0){
       Frac2S = RooRealVar(*((RooRealVar*) arg));
     }
-    if(strcmp(arg->GetName(),"frac_3sOver1s")==0){
-      Frac3S = RooRealVar(*((RooRealVar*) arg));
+    if(fittype.find("DR2")==std::string::npos){
+      if(strcmp(arg->GetName(),"frac_3sOver1s")==0){
+        Frac3S = RooRealVar(*((RooRealVar*) arg));
+      }
+    }
+  if(fittype.find("DR2")!=std::string::npos){
+      if(strcmp(arg->GetName(),"frac_3sOver2s")==0){
+        Frac3S = RooRealVar(*((RooRealVar*) arg));
+      }
     }
   }
   yield1S = Yield1S;

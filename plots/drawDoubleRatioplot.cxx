@@ -1,36 +1,109 @@
 #include "../upsilonAna.cxx"
 #include "../.workdir.h"
 
-RooRealVar getDoubleRatioValue(std::pair <int, int>);
-std::pair<TH1D, TH1D> getPbPbDR();
+std::pair<RooRealVar, RooRealVar> getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC", std::pair<double, double> bdtpair = {-0.1,1.00});
+std::pair<TH1D*, TH1D*> getPbPbDR(int shift1=0, int shift2=0);
 
 void drawDoubleRatioplot(){
-  TCanvas* c2 = new TCanvas("c2","",700,800);
+  TCanvas* c2 = new TCanvas("c2","",900,700);
+  TCanvas* c3 = new TCanvas("c3","",900,700);
+  TPad *p2_1, *p2_2, *p3_1, *p3_2;
+  p2_1 = new TPad("p21", "", 0.05, 0,0.83,1);
+  p2_1->SetRightMargin(0);
+  p2_2 = new TPad("p22", "", 0.83, 0,1,1);
+  p2_2->SetLeftMargin(0);
+  p3_1 = new TPad("p31", "", 0.05, 0,0.83,1);
+  p3_1->SetRightMargin(0);
+  p3_2 = new TPad("p32", "", 0.83, 0,1,1);
+  p3_2->SetLeftMargin(0);
 
+  TH1D* y2_int = new TH1D("y2int", "", 1,0,1);
+  TH1D* y3_int = new TH1D("y3int", "", 1,0,1);
+  y2_int->GetXaxis()->SetBinLabel(1, "Integrated");// Form("%.0f",glp::Npart[{0,90}].first) );
+  y3_int->GetXaxis()->SetBinLabel(1, "Integrated"); //Form("%.0f",glp::Npart[{0,90}].first) );
+  y2_int->GetYaxis()->SetTickSize(0);
+  y2_int->GetYaxis()->SetLabelSize(0);
+  y2_int->GetXaxis()->SetLabelSize(0.17);
+  y2_int->GetYaxis()->SetLabelOffset(0);
+  y2_int->GetYaxis()->SetRangeUser(0,1.6);
+  y3_int->GetYaxis()->SetTickSize(0);
+  y3_int->GetYaxis()->SetLabelSize(0);
+  y3_int->GetXaxis()->SetLabelSize(0.17);
+  y3_int->GetYaxis()->SetLabelOffset(0);
+  y3_int->GetYaxis()->SetRangeUser(0,1.6);
+
+  auto hPbPb = getPbPbDR();
+  auto dr_int = getDoubleRatioValue({0,181}, {0,30}, "CB3:CC3:DRFF", {-0.1, 1});
+  TLatex* tl = new TLatex();
+  tl->SetTextSize(0.04);
+  tl->SetTextFont(42);
+  tl->SetNDC();
   c2->cd();
-  c2->Draw();
-  auto hPbPb = getPbPbDR().first;
-  std::cout << hPbPb.GetTitle() << std::endl;
-  std::cout << hPbPb.GetBinContent(1) << std::endl;
-  std::cout << hPbPb.GetBinContent(2) << std::endl;
-  std::cout << hPbPb.GetBinContent(3) << std::endl;
-  hPbPb.Draw("pe");
-  c2->SaveAs(Form("%s/plots/DoubleRatio/plot_test.pdf", workdir.Data() ));
-  c2->SaveAs(Form("%s/plots/DoubleRatio/plot_test.cxx", workdir.Data() ));
-//  c2->SaveAs(Form("%s/plots/DoubleRatio/plot_test_bdt0.2_1.0.cxx", workdir.Data() ));
+  p2_1->Draw();
+  p2_2->Draw();
+  auto hPbPb2S = hPbPb.first;
+  auto dr2S_int = dr_int.first;
+
+  p2_1->cd();
+  TLine* lineone = new TLine();
+  lineone->SetLineStyle(kDashed);
+  lineone->DrawLineNDC(0,0.5,1,0.5);
+  hPbPb2S->Draw();
+  tl->DrawLatex( 0.2, 0.8,"p_{T} < 30 GeV/c");
+  tl->DrawLatex( 0.2, 0.75, "|y| < 2.4");
+  tl->DrawLatex( 0.2, 0.7, "p^{#mu}_{T} < 4 GeV/c");
+
+  p2_2->cd();
+  y2_int->SetBinContent(1, dr2S_int.getVal() );
+  y2_int->SetBinError(1, dr2S_int.getError() );
+  y2_int->SetMarkerStyle(kCircle);
+  y2_int->SetMarkerColor(kBlue+2);
+  y2_int->SetLineColor(kBlue+2);
+  y2_int->Draw("");
+
+
+  c2->Modified();
+
+  c3->cd();
+  p3_1->Draw();
+  p3_2->Draw();
+  auto hPbPb3S = hPbPb.second;
+  auto dr3S_int = dr_int.second;
+
+  p3_1->cd();
+  hPbPb3S->Draw("");
+  tl->DrawLatex( 0.2, 0.8,"p_{T} < 30 GeV/c");
+  tl->DrawLatex( 0.2, 0.75, "|y| < 2.4");
+  tl->DrawLatex( 0.2, 0.7, "p^{#mu}_{T} < 4 GeV/c");
+
+  p3_2->cd();
+  y3_int->SetBinContent(1, dr3S_int.getVal() );
+  y3_int->SetBinError(1, dr3S_int.getError() );
+  y3_int->SetMarkerStyle(kCircle);
+  y3_int->SetMarkerColor(kGreen+2);
+  y3_int->SetLineColor(kGreen+2);
+  y3_int->Draw();
+
+  c3->Modified();
+
+  CMS_lumi_square(p2_1, 2, 33);
+  CMS_lumi_square(p3_1, 2, 33);
+
+  c2->SaveAs(Form("%s/plots/DoubleRatio/plot_DoubleRatio_2S.pdf", workdir.Data() ));
+  c2->SaveAs(Form("%s/plots/DoubleRatio/plot_DoubleRatio_2S.C", workdir.Data() ));
+  c3->SaveAs(Form("%s/plots/DoubleRatio/plot_DoubleRatio_3S.pdf", workdir.Data() ));
+  c3->SaveAs(Form("%s/plots/DoubleRatio/plot_DoubleRatio_3S.C", workdir.Data() ));
 };
 
 
 
-std::pair<RooRealVar, RooRealVar> getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC"){
-  long ts = 1623391157; //BLIND Nominal
+std::pair<RooRealVar, RooRealVar> getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC", std::pair<double, double> bdtpair = {-0.1,1.00}){
+  long ts = 1625139244; //BLIND Nominal
 
   double ylim = 2.4;
-  std::pair<double, double> bdtpair = {0.20,1.00}; //BLIND Nominal ?
 
   binplotter* bp ;
-  bp = new binplotter(type,ts, ylim, ptpair.first, ptpair.second, cbpair.first, cbpair.second, bdtpair.first, bdtpair.second );
-  bp->set_params("_CC2", 0.00);
+  bp = new binplotter(type,ts, ylim, ptpair.first, ptpair.second, cbpair.first, cbpair.second, bdtpair.first, bdtpair.second, false);
 
   //RooRealVar _y3 = bp->get_yield();
   const auto frac_pair = bp->get_frac();
@@ -93,50 +166,63 @@ std::pair<RooRealVar, RooRealVar> getDoubleRatioValue(std::pair <int, int> cbpai
   return std::make_pair(DRY2, DRY3);
 };
 
-std::pair<TH1D, TH1D> getPbPbDR(){
+std::pair<TH1D*, TH1D*> getPbPbDR(int shift1 = 0, int shift2 = 1){
   Double_t* cbinnine = new Double_t[10]{0,5,10,20,30,40,50,60,70,90};
   Double_t* cbinnine_rev = new Double_t[10]{90,70,60,50,40,30,20,10,5,0};
+  Double_t* centnine = new Double_t[10]{0,10,20,40,60,80,100,120,140,181};
+  Double_t* centnine_rev = new Double_t[10]{181,140,120,100,80,60,40,20,10,0};
   Double_t* cbinthree = new Double_t[4]{0,20,50,90};
   Double_t* cbinthree_rev = new Double_t[4]{90,50,20,0};
+  Double_t* centthree = new Double_t[4]{0,40,100,181};
+  Double_t* centthree_rev = new Double_t[4]{181,100,40,0};
 
-  TH1D* h1 = new TH1D("h1" , "PbPb 2S double ratio cent", 35, 0, 420);
-  TH1D* h2 = new TH1D("h2" , "PbPb 3S double ratio cent", 35, 0, 420);
-  gStyle->SetOptStat(kFALSE);
-  gStyle->SetOptTitle(kFALSE);
+  TH1D* h1 = new TH1D("h1" , "PbPb 2S double ratio cent", 70, 0, 420);
+  TH1D* h2 = new TH1D("h2" , "PbPb 3S double ratio cent", 70, 0, 420);
+  setTDRStyle();
   for(int idx =0; idx <9; ++idx){
     std::cout << cbinnine_rev[idx+1]*2 << " , " << cbinnine_rev[idx]*2 << std::endl;
-    std::pair<RooRealVar, RooRealVar> dr_bin = getDoubleRatioValue({cbinnine_rev[idx+1]*2,cbinnine_rev[idx]*2},{0,30}, "CB3:CC2:DRFF");
+    std::pair<RooRealVar, RooRealVar> dr_bin = getDoubleRatioValue({centnine_rev[idx+1],centnine_rev[idx]},{0,30}, "CB3:CC3:DRFF" );
     double npart = glp::Npart[{cbinnine_rev[idx+1],cbinnine_rev[idx]}].first;
-    h1->SetBinContent(h1->FindBin(npart), dr_bin.first.getVal());
-    h1->SetBinError(h1->FindBin(npart), dr_bin.first.getError());
+    h1->SetBinContent(h1->FindBin(npart)+ shift1, dr_bin.first.getVal());
+    h1->SetBinError(h1->FindBin(npart) + shift1, dr_bin.first.getError());
   }
   
   for(int idx =0; idx <3; ++idx){
-    std::pair<RooRealVar, RooRealVar> dr_bin = getDoubleRatioValue({cbinthree_rev[idx+1]*2,cbinthree_rev[idx]*2},{0,30}, "CB3:CC2:DRFF");
+    std::pair<RooRealVar, RooRealVar> dr_bin = getDoubleRatioValue({centthree_rev[idx+1],centthree_rev[idx]},{0,30}, "CB3:CC3:DRFF");
     double npart = glp::Npart[{cbinthree_rev[idx+1],cbinthree_rev[idx]}].first;
-    h2->SetBinContent(h2->FindBin(npart), dr_bin.second.getVal());
-    h2->SetBinError(h2->FindBin(npart), dr_bin.second.getError());
+    h2->SetBinContent(h2->FindBin(npart) + shift2, dr_bin.second.getVal());
+    h2->SetBinError(h2->FindBin(npart)+ shift2, dr_bin.second.getError());
   }
-  h1->GetYaxis()->SetRangeUser(0,1);
+  h1->GetYaxis()->SetRangeUser(0,1.6);
   h1->SetMarkerStyle(kCircle);
-  h1->SetMarkerColor(kBlue);
-  h1->SetLineColor(kBlue);
+  h1->SetMarkerColor(kBlue+2);
+  h1->SetLineColor(kBlue+2);
   h1->GetXaxis()->SetLabelSize(0.04);
+  h1->GetXaxis()->SetTitleOffset(1.1);
   h1->GetXaxis()->SetTitle("N_{part}");
-  h1->GetYaxis()->SetTitle("R_{AA}");
+  h1->GetYaxis()->SetTitle("(#Upsilon(2S)/#Upsilon(1S))_{PbPb} / #Upsilon(2S)/#Upsilon(1S))_{pp}");
+  h1->GetXaxis()->CenterTitle();
+  h1->GetYaxis()->CenterTitle();
   h1->GetYaxis()->SetTitleOffset(1.2);
-  h1->GetYaxis()->SetTitleSize(0.05);
+  h1->GetYaxis()->SetTitleSize(0.04);
 
-  h2->GetYaxis()->SetRangeUser(0,1);
+
+  h2->GetYaxis()->SetRangeUser(0,1.6);
   h2->SetMarkerStyle(kCircle);
-  h2->SetMarkerColor(kBlue);
-  h2->SetLineColor(kBlue);
+  h2->SetMarkerColor(kGreen+2);
+  h2->SetLineColor(kGreen+2);
   h2->GetXaxis()->SetLabelSize(0.04);
+  h2->GetXaxis()->SetTitleOffset(1.1);
   h2->GetXaxis()->SetTitle("N_{part}");
-  h2->GetYaxis()->SetTitle("R_{AA}");
+  h2->GetYaxis()->SetTitle("(#Upsilon(3S)/#Upsilon(1S))_{PbPb} / #Upsilon(3S)/#Upsilon(1S))_{pp}");
+  h2->GetXaxis()->CenterTitle();
+  h2->GetYaxis()->CenterTitle();
   h2->GetYaxis()->SetTitleOffset(1.2);
-  h2->GetYaxis()->SetTitleSize(0.05);
-  return std::make_pair(*h1, *h2);
+  h2->GetYaxis()->SetTitleSize(0.04);
+
+
+
+  return std::make_pair(h1, h2);
 };
 
 //TH1D getPbPbRAA_pt(){

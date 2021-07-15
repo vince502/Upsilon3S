@@ -142,14 +142,14 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
   if(sig_func=="CB3")
   {
     frac2 = new RooRealVar("frac2", "CB fraction", map_params["frac2"].val,  map_params["frac2"].low, map_params["frac2"].high);
-    if(map_params.find("x3S")!=map_params.end()){
-      x1S->setVal(map_params["x3S"].val);
-      x1S->setRange(map_params["x3S"].low, map_params["x3S"].high);
+    if(map_params.find("xNS")!=map_params.end()){
+      x1S->setVal(map_params["xNS"].val);
+      x1S->setRange(map_params["xNS"].low, map_params["xNS"].high);
   }
-    if(map_params.find("x3S_2")!=map_params.end()){
-      std::cout << map_params["x3S_2"].val << std::endl;
-      x1S_2->setVal(map_params["x3S_2"].val);
-      x1S_2->setRange(map_params["x3S_2"].low, map_params["x3S_2"].high);
+    if(map_params.find("xNS_2")!=map_params.end()){
+      std::cout << map_params["xNS_2"].val << std::endl;
+      x1S_2->setVal(map_params["xNS_2"].val);
+      x1S_2->setRange(map_params["xNS_2"].low, map_params["xNS_2"].high);
   }
   }
 
@@ -158,8 +158,8 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
   if(paramshigh[2]==-1){ n->setConstant(); n->setRange(0,999); n->setVal(params[2]); }
   if(paramshigh[3]==-1){ frac->setConstant(); frac->setRange(0,999); frac->setVal(params[3]); }
   if(map_params["frac2"].high == -1){ frac2->setConstant(); frac2->setRange(0,999); frac2->setVal(map_params["frac2"].val); };
-  if(map_params["x3S"].high == -1){ x1S->setConstant(); x1S->setRange(0,999); x1S->setVal(map_params["x3S"].val); };
-  if(map_params["x3S_2"].high == -1){ x1S_2->setConstant(); x1S_2->setRange(0,999); x1S_2->setVal(map_params["x3S_2"].val); };
+  if(map_params["xNS"].high == -1){ x1S->setConstant(); x1S->setRange(0,999); x1S->setVal(map_params["xNS"].val); };
+  if(map_params["xNS_2"].high == -1){ x1S_2->setConstant(); x1S_2->setRange(0,999); x1S_2->setVal(map_params["xNS_2"].val); };
 
   RooRealVar *ch4_k1, *ch4_k2, *ch4_k3, *ch4_k4, *ch4_k5;
   RooRealVar *Erfmean, *Erfp0, *Erfsigma;
@@ -193,9 +193,9 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
 	{"n"		, n		},	
 	{"frac"		, frac		},
 	{"frac2"	, frac2		},
-	{"x3S"		, x1S		},
-	{"x3S_2"	, x1S_2		},
-	{"sigma3S_1"	, sigma1S_1	},
+	{"xNS"		, x1S		},
+	{"xNS_2"	, x1S_2		},
+	{"sigmaNS_1"	, sigma1S_1	},
     };
 
   fit_model_ups::CB2* cb2 ;
@@ -289,20 +289,29 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
 
   RooRealVar* frac2over1 = new RooRealVar("frac_2sOver1s","2S/1S",0.3,0,1);
   RooRealVar* frac3over1 = new RooRealVar("frac_3sOver1s","3S/1S",0.1,0,1);
+  RooRealVar* frac3over2 = new RooRealVar("frac_3sOver2s","3S/2S",0.1,0,1);
   RooRealVar* nBkg = new RooRealVar("nBkg", "# of background signal", 300, -1000, 10000000);
 
-  RooAddPdf* model,* model_sig;
+  RooAddPdf* model,* model_sig, *model_sig2;
   std::string use_model = "model";
   RooProdPdf* model_gc;
   if(fitdir.find("DR")!=std::string::npos){
-    std::cout << "Making model for fractional yield parameters" << std::endl;
+    if(fitdir.find("DR2")!=std::string::npos){
+      std::cout << "Making model for fractional yield parameters" << std::endl;
+      model_sig2 = new RooAddPdf("model_sig2", "2S+3S", RooArgList(*Signal2S, *Signal3S), RooArgList(RooConst(1), *frac3over2));
+      model_sig = new RooAddPdf("model_sig", "1S+2S+3S", RooArgList(*Signal1S, *model_sig2), RooArgList(RooConst(1), *frac2over1));
+      model = new RooAddPdf("model", "1S+2S+3S", RooArgList(*model_sig, *Background), RooArgList(*nSig1S, *nBkg));
+    }
+    else {
+      std::cout << "Making model for fractional yield parameters" << std::endl;
     model_sig = new RooAddPdf("model_sig", "1S+2S+3S", RooArgList(*Signal1S, *Signal2S, *Signal3S), RooArgList(RooConst(1), *frac2over1, *frac3over1));
     model = new RooAddPdf("model", "1S+2S+3S", RooArgList(*model_sig, *Background), RooArgList(*nSig1S, *nBkg));
+    }
   }
 
   if((fitdir.find("DR")==std::string::npos)&&(fitdir.find("FF")!=std::string::npos||fitdir.find("GC")!= std::string::npos||fitdir.find("DD") != std::string::npos)){
     nSig2S = new RooRealVar("nSig2S", "# of 2S signal", 100, -1000, 10000);
-    nSig3S = new RooRealVar("nSig3S", "# of 3S signal", 30, -10, 2000);
+    nSig3S = new RooRealVar("nSig3S", "# of 3S signal", 30, -100, 2000);
     std::cout << "added # of 2S, 3S signal as free parameter" << std::endl;
     model = new RooAddPdf("model", "1S+2S+3S+Bkg", RooArgList(*Signal1S, *Signal2S, *Signal3S, *Background), RooArgList(*nSig1S, *nSig2S, *nSig3S, *nBkg));
 
@@ -396,8 +405,8 @@ dbg();
   Double_t NLL = Result->minNll();
   ofstream log;
   log.open("BDT_fitcomparisonNLL.log",std::ios_base::out|std::ios_base::app);
-  log << "\n"<<ts << Form(", pt eta : %.1f-%.1f |%.1f|, BDT [ %.2f, %.2f ]", ptMin, ptMax, rapMax, cutBDTlow, cutBDThigh) << std::endl;
-  log << "BDT with Chebychev3  NLL : " << NLL; 
+  log << "\n"<<ts << Form(", pt eta : %.1f-%.1f |%.1f|, BDT [ %.4f, %.4f ]", ptMin, ptMax, rapMax, cutBDTlow, cutBDThigh) << std::endl;
+  log << Form("BDT with %s%s  NLL : ",sig_func.c_str(), name_fitmodel.c_str() ) << NLL; 
   log.close();
   std::cout << "NLL : " << NLL << std::endl;
   Int_t ndf = Npullbin - Nfitpar;
@@ -433,18 +442,34 @@ dbg();
 
   }
   if(fitdir.find("DR")!=std::string::npos){
-    Double_t frac2to1 = mf.works->var("frac_2sOver1s")->getVal();
-    Double_t frac3to1 = mf.works->var("frac_3sOver1s")->getVal();
-    Yield2S 	= frac2to1 * Yield1S;
-    Yield3S 	= frac3to1 * Yield1S;
-    Yield2SErr 	= TMath::Sqrt( TMath::Power(frac2to1*Yield1SErr,2)+TMath::Power(Yield1S*(mf.works->var("frac_2sOver1s")->getError()),2) );
-    Yield3SErr 	= TMath::Sqrt( TMath::Power(frac3to1*Yield1SErr,2)+TMath::Power(Yield1S*(mf.works->var("frac_3sOver1s")->getError()),2) );
-    nSig2S = new RooRealVar("nSig2S", "# of 2S signal",Yield2S,-1000,300000); 
-    nSig3S = new RooRealVar("nSig3S", "# of 2S signal",Yield3S,-10, 90000); 
-    nSig2S->setError(Yield2SErr);
-    nSig3S->setError(Yield3SErr);
-    mf.works->import(RooArgList(*nSig2S,*nSig3S));
+    if(fitdir.find("DR2")!=std::string::npos){
+      Double_t frac2to1 = mf.works->var("frac_2sOver1s")->getVal();
+      Double_t frac3to2 = mf.works->var("frac_3sOver2s")->getVal();
+      Yield2S 	= frac2to1 * Yield1S;
+      Yield3S 	= frac2to1*frac3to2 * Yield1S;
+      Yield2SErr 	= TMath::Sqrt( TMath::Power(frac2to1*Yield1SErr,2)+TMath::Power(Yield1S*(mf.works->var("frac_2sOver1s")->getError()),2) );
+      Yield3SErr 	= TMath::Sqrt( TMath::Power(frac2to1*frac3to2*Yield1SErr,2)+TMath::Power(Yield2S*(mf.works->var("frac_3sOver2s")->getError()),2) +TMath::Power(Yield1S*(mf.works->var("frac_2sOver1s")->getError())*frac3to2, 2));
+      nSig2S = new RooRealVar("nSig2S", "# of 2S signal",Yield2S,-1000,300000); 
+      nSig3S = new RooRealVar("nSig3S", "# of 2S signal",Yield3S,-100, 90000); 
+      nSig2S->setError(Yield2SErr);
+      nSig3S->setError(Yield3SErr);
+      mf.works->import(RooArgList(*nSig2S,*nSig3S));
+    }
+    else {
+      Double_t frac2to1 = mf.works->var("frac_2sOver1s")->getVal();
+      Double_t frac3to1 = mf.works->var("frac_3sOver1s")->getVal();
+      Yield2S 	= frac2to1 * Yield1S;
+      Yield3S 	= frac3to1 * Yield1S;
+      Yield2SErr 	= TMath::Sqrt( TMath::Power(frac2to1*Yield1SErr,2)+TMath::Power(Yield1S*(mf.works->var("frac_2sOver1s")->getError()),2) );
+      Yield3SErr 	= TMath::Sqrt( TMath::Power(frac3to1*Yield1SErr,2)+TMath::Power(Yield1S*(mf.works->var("frac_3sOver1s")->getError()),2) );
+      nSig2S = new RooRealVar("nSig2S", "# of 2S signal",Yield2S,-1000,300000); 
+      nSig3S = new RooRealVar("nSig3S", "# of 2S signal",Yield3S,-100, 90000); 
+      nSig2S->setError(Yield2SErr);
+      nSig3S->setError(Yield3SErr);
+      mf.works->import(RooArgList(*nSig2S,*nSig3S));
+    }
   }
+
   Double_t YieldBkg 	= mf.works->var("nBkg")->getVal();
 
   hYield->SetBinContent(1, Yield1S);

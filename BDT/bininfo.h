@@ -2,11 +2,13 @@
 #define BININFO_H
 #include <vector>
 #include <map>
+#include "../tdrstyle.C"
+#include "../CMS_lumi_square.C"
 #include "../.workdir.h"
 #include "../fitter.h"
 #include "yield_eff_signif.h"
 static TH1D* Get_Optimal_BDT_HIST; 
-const double interval_score = 0.1;
+const double interval_score = 0.01;
 
 std::string MuIDHybridSoft2018 = "nPixWMea1>0&&nPixWMea2>0&&nTrkWMea1>5&&nTrkWMea2>5&&fabs(dxy1)<0.3&&fabs(dxy2)<0.3&&fabs(dz1)<20&&fabs(dz2)<20";
 
@@ -234,7 +236,7 @@ std::vector< std::string > info_BDT(long ts, std::string aux = "")
 
 };
 
-std::pair<double,double> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio =0.16, string name_input_opt = "", string formula_significance= "S12");
+std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio =0.16, string name_input_opt = "", string formula_significance= "S2");
 
 RooRealVar get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int state1 =1, int state2 = 3);
 
