@@ -12,8 +12,9 @@ using namespace RooFit;
 
 void DrawHist_(long ts,double ylim, float blow, float bhigh, float vcut, TString MupT = "3p5", string Trig = "S13", TString fittype = "freefit") {};
 void DrawHist__();
-void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 180, double cutQVP = 0.01, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1., double signif_ratio = 0.02, int Nmassbins=140, bool draw_mag = true){
+void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 180, double cutQVP = 0.01, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1., double signif_ratio = 0.02,  int train_state =3, bool draw_mag = true){
   setTDRStyle();
+  int Nmassbins = 70;
 
   std::string sig_func = parsed[0];
   std::string bkg_func = parsed[1];
@@ -43,12 +44,17 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
   std::pair<double, TH1D*> _hist_;
   TH1D* signif_hist;
   if( signif_ratio != -1){
-  _hist_ = Get_Optimal_BDT(ts, ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP, signif_ratio); 
-  signif_hist = _hist_.second;
+    _hist_ = Get_Optimal_BDT(ts, ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP, signif_ratio, train_state); 
+    signif_hist = _hist_.second;
+    if (signif_hist ==nullptr) {
+      std::cout << "[Error] Significance plot not loaded, returning with null histogram" << std::endl;
+      new(signif_hist) TH1D("NULLPATCH", "", 1,0,1);
+    }
   }
 
   std::string method_selection = (isBDT) ? "BDT" : "Data"; 
-  std::string name_file_output = Form("%s/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.root" ,workdir.Data(), ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP );
+  std::string name_file_output = Form("%s/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.root" ,workdir.Data(), ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP );
+ if(ts == 9999999999) name_file_output = Form("%s/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.root" ,workdir.Data(), train_state, ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP );
   std::cout << name_file_output << std::endl;
   if( fitdir.find("DD") !=std::string::npos)
   {
@@ -56,9 +62,10 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
     name_file_output = name_file_output.substr(0, name_file_output.length()-5) + Form("_DDiter%d.root",DDiter);
   }
   TFile* file1 = new TFile(name_file_output.c_str(),"read");
-  TString massDIR =  Form("%s/MassDist/%s/%ld/%s/%s/%.1f/cent%d-%d/pT%.1f-%.1f/FitResult", workdir.Data(), method_selection.c_str(), ts, fit_param.c_str(),Trig.c_str(),rapMax, cBinLow, cBinHigh, ptMin, ptMax);
-  TString massDIRp = Form("%s/MassDist/%s/%ld/%s/%s/%.1f/cent%d-%d/pT%.1f-%.1f/FitResult/png", workdir.Data(), method_selection.c_str(), ts, fit_param.c_str(),Trig.c_str(),rapMax, cBinLow, cBinHigh, ptMin, ptMax);
-  TString massDIR2 = Form("%s/MassDist/%s/%ld/%s/%s/%.1f/cent%d-%d/pT%.1f-%.1f/WithoutFit", workdir.Data(), method_selection.c_str(), ts, fit_param.c_str(),Trig.c_str(),rapMax, cBinLow, cBinHigh, ptMin, ptMax);
+  TString massDIR_base = Form("%s/MassDist/%s/%ld/Cent%d-%d_Pt%d-%d_y%.1f/%d/%s", workdir.Data(), method_selection.c_str(), ts, cBinLow, cBinHigh, (int) ptMin, (int) ptMax, rapMax, train_state, fit_param.c_str());
+  TString massDIR =massDIR_base;
+  TString massDIRp = Form("%s/png", massDIR_base.Data() );
+//  TString massDIR2 = Form("%s/MassDist/%s/%ld/%s/%s/%.1f/cent%d-%d/pT%.1f-%.1f/WithoutFit", workdir.Data(), method_selection.c_str(), ts, fit_param.c_str(),Trig.c_str(),rapMax, cBinLow, cBinHigh, ptMin, ptMax);
   void * dirpM = gSystem->OpenDirectory(massDIR.Data());
   if(dirpM) gSystem->FreeDirectory(dirpM);
   else{ gSystem->mkdir(massDIR.Data(), kTRUE);}
@@ -76,13 +83,15 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
   RooFitResult* Result = (RooFitResult*) file1->Get(name_dataset_result.c_str());
 
   RooDataSet* dataset = (RooDataSet*) works->data("reducedDS");
+  if( dataset->sumEntries() <= 1000) Nmassbins = 35;
   RooRealVar* vmass = (RooRealVar*) works->var("mass");
   vmass->setRange("analysis",8,11.5);
-  vmass->setRange("signal",10,10.6);
+  if(train_state ==3) vmass->setRange("signal",10,10.6);
+  if(train_state ==2) vmass->setRange("signal",9.7,10.3);
 
   gStyle->SetOptTitle(0);
   
-  RooPlot* plot1 = vmass->frame();
+  RooPlot* plot1 = vmass->frame(Nmassbins);
   RooPlot* plot2 = vmass->frame();
   plot2->SetAxisRange(10,10.6);
   works->data("reducedDS")->plotOn(plot1, Name("massPlot"), MarkerSize(0.5), LineWidth(1));
@@ -129,7 +138,7 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
   
   CMS_lumi_square( pad_mass, 2, 11);
 
-  if (draw_mag){
+  if (draw_mag && train_state ==3){
     pad_mass_3S->SetMargin(0.25, 0.01, 0.14, 0.01);
     pad_mass_3S->Draw();
     pad_mass_3S->cd();
@@ -174,6 +183,7 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
 
   if(signif_ratio != -1){
 
+  std::cout << "[INFO] Drawing significance HISTOgram" << std::endl;
   signif_hist->SetStats(kFALSE);
   signif_hist->SetFillColor(kRed);
   signif_hist->Draw();
@@ -197,7 +207,7 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
 
   c1->Update();
 //  c1->Draw();
-  c1->SaveAs(Form("%s/FitPlot_%ld_%s_%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.pdf",massDIR.Data(), ts,fitdir.c_str(), bkg_func.c_str(), (int) (ptMin*10), (int) (ptMax*10), ylim10, ylim10, Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(),(int) swflag,(int) isBDT, cutBDTlow, cutBDThigh, cutQVP));
+  c1->SaveAs(Form("%s/FitPlot_train%dS_%ld_%s_%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.pdf",massDIR.Data(), train_state, ts,fitdir.c_str(), bkg_func.c_str(), (int) (ptMin*10), (int) (ptMax*10), ylim10, ylim10, Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(),(int) swflag,(int) isBDT, cutBDTlow, cutBDThigh, cutQVP));
   c1->Close();
 
 };

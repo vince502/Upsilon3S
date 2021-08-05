@@ -73,7 +73,7 @@ class SetTreeBDT
     SetTreeBDT(){};
 
     virtual ~SetTreeBDT();
-    virtual void TreeSetting(TTree* tree);
+    virtual void TreeSetting(TTree* tree, bool NOM, int train_state, int ptLow, int ptHigh);
 };
 
 SetTreeBDT::~SetTreeBDT()
@@ -81,7 +81,7 @@ SetTreeBDT::~SetTreeBDT()
 }
 
 
-void SetTreeBDT::TreeSetting(TTree* tree)
+void SetTreeBDT::TreeSetting(TTree* tree, bool NOM ,int train_state, int ptLow, int ptHigh)
 {
   tree->SetBranchAddress("mass", &mass);
   tree->SetBranchAddress("cBin", &cBin);
@@ -96,7 +96,8 @@ void SetTreeBDT::TreeSetting(TTree* tree)
   tree->SetBranchAddress("tnp_weight", &tnp_weight);
   tree->SetBranchAddress("pt_weight", &pt_weight);
   tree->SetBranchAddress("QQVtxProb", &QQVtxProb);
-  tree->SetBranchAddress("BDT", &BDT);
+  if(!NOM)  tree->SetBranchAddress("BDT", &BDT);
+  if(NOM)tree->SetBranchAddress(Form("BDTY%dSpt%dto%d", train_state, ptLow, ptHigh), &BDT);
   tree->SetBranchAddress("nTrkWMea1", &nTrkWMea1);
   tree->SetBranchAddress("nTrkWMea2", &nTrkWMea2);
   tree->SetBranchAddress("nPixWMea2", &nPixWMea2);

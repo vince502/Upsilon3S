@@ -4,38 +4,48 @@
 #include "../upsilonAna.h"
 #include "yield_eff_signif.h"
 
-std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio= 0.16, string name_input_opt = "", string formula_significance= "S2")
+std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio= 0.16, int train_state =3, string name_input_opt = "", string formula_significance= "S2")
 {
   
   std::string st_opt;
   if(strcmp(name_input_opt.c_str(),"")!=0) st_opt = "_"+name_input_opt;
-  std::string output_fname = Form("%s/BDT/Significance_hist/HIST_%ld_pt_%d-%d_rap_%d-%d_cbin_%d-%d_vp_%.4f_ratio_%.6f_%s%s", workdir.Data(), ts, (int) ptMin, (int) ptMax, (int) (rapMin*10), (int) (rapMax*10), cBinLow, cBinHigh, cutQVP, ratio, formula_significance.c_str(), st_opt.c_str() );
+  std::string output_fname = Form("%s/BDT/Significance_hist/HIST_train%dS_%ld_pt_%d-%d_rap_%d-%d_cbin_%d-%d_vp_%.4f_%s%s", workdir.Data(), train_state, ts, (int) ptMin, (int) ptMax, (int) (rapMin*10), (int) (rapMax*10), cBinLow, cBinHigh, cutQVP, formula_significance.c_str(), st_opt.c_str() );
   TFile* HISTFILE = nullptr;
-  HISTFILE = TFile::Open(Form("%s.root",output_fname.c_str()) );
-  if ( !(HISTFILE == nullptr || HISTFILE->IsZombie() || HISTFILE->Get("HISTO")==nullptr )){
+  HISTFILE = new TFile(Form("%s.root",output_fname.c_str()), "update" );
+  std::cout << static_cast<void*>(HISTFILE) << std::endl;
+
+  TList* lok = HISTFILE->GetListOfKeys();
+  if (!(lok->FindObject(Form("r_%.6f", ratio))==nullptr) ){
     std::cout << "[INFO] Reading From HISTOFILE" << std::endl;
-    double theSig = stod(HISTFILE->Get("max_sig")->GetTitle());
-    TH1D*   theHist = (TH1D*) HISTFILE->Get("HISTO");
+    double theSig = stod(HISTFILE->Get(Form("r_%.6f/max_sig", ratio) )->GetTitle());
+    TH1D*   theHist = (TH1D*) HISTFILE->Get(Form("r_%.6f/HISTO", ratio) );
     return std::make_pair(theSig, theHist);
   }
+
   int Nbins = (int) (1.5/interval_score);
   std::cout<< "Nbins: " <<Nbins<< std::endl;
   std::cout << interval_score << "interval, " << Nbins << "NBINS!!!!!" << std::endl;
   string tag_BLIND = "";
   if(info_BDT(ts)[2].find("BLIND")!=std::string::npos) tag_BLIND = "BLIND";
   if(info_BDT(ts)[4].find("BLIND")!=std::string::npos) tag_BLIND = "BLIND";
-
   std::cout << tag_BLIND << std::endl;
-  std::string name_input = Form("%s/BDT/BDTResult/BDTresultY3S_%ld_%s%s.root", workdir.Data(), ts, name_input_opt.c_str(), tag_BLIND.c_str());
-  std::cout << name_input << std::endl;
 
+  std::string name_input = Form("%s/BDT/BDTResult/BDTresultY3S_%ld_%s%s.root", workdir.Data(), ts, name_input_opt.c_str(), tag_BLIND.c_str());
+  std::string name_input_rd = Form("%s/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root", workdir.Data(), ts);
+  std::cout << name_input << std::endl;
+  std::cout << name_input_rd << std::endl;
   TFile* file_input = TFile::Open(name_input.c_str());
-  TFile* cache_out = new TFile(".cache.root","update");
+  TFile* file_input_rd = TFile::Open(name_input_rd.c_str());
+  TFile* cache_out = new TFile(".cache.root","recreate");
   TChain* tree_train_raw = new TChain();
-  tree_train_raw->Add(Form("%s/dataset1/TrainTree", name_input.c_str()));
-  tree_train_raw->Add(Form("%s/dataset2/TrainTree", name_input.c_str()));
+  RooDataSet* rd_data = (RooDataSet*) file_input_rd->Get(Form("dataset_Y%dSpt%dto%d", train_state, (int) ptMin, (int) ptMax));
+  std::string treedir = "";
+  if(ts == 9999999999) treedir = Form("/data/Y%dSpt%dto%d", train_state, (int) ptMin, (int) ptMax);
+  tree_train_raw->Add(Form("%s%s/dataset1/TrainTree", name_input.c_str(), treedir.c_str()));
+  tree_train_raw->Add(Form("%s%s/dataset2/TrainTree", name_input.c_str(), treedir.c_str()));
   std::string theCut = Form("(mass<11.5 && mass>8.0) && (pt>%f) && (pt<%f) && (y>%f) && (y<%f) && (cBin>%d) && (cBin<%d) && (QQVtxProb>%f)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP );
   TChain* tree_train;
+  rd_data = (RooDataSet*) rd_data->reduce(theCut.c_str());
   tree_train = (TChain*) tree_train_raw->CopyTree(theCut.c_str());
   std::cout << tree_train_raw->GetEntries() << ", "<< tree_train->GetEntries() << Form(" cl, ch : %d, %d ",cBinLow, cBinHigh) << std::endl;
   Float_t val_bdt;
@@ -104,31 +114,21 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
       hist_res->SetBinContent(idx+1,_signif[idx]);
       hist_res->SetBinError(idx+1,  _signif_err[idx]);
 
-      if( (((double) tuple_pass_sig[idx] / ent_sig) < 0.50)&&(sig_lim_bdt == 10 ) ){
+      if( (rd_data->sumEntries(Form("BDT>%f", hist_res->GetBinCenter(idx+1) + hist_res->GetBinWidth(1)/2))<300) &&(sig_lim_bdt == 10 ) ){
 	sig_lim_bdt = hist_res->GetBinCenter(idx+1) - hist_res->GetBinWidth(1)/2;
 	std::cout << "\n\n\n\n\n FOUND BIN "<< sig_lim_bdt << "\n\n\n\n\n" ;
       }
       std::cout << "Efficiecy : " << ((double) tuple_pass_sig[idx] / ent_sig) << " sig_lim_bdt : " << sig_lim_bdt << std::endl;
     }
-//    TF1* sig_model;
+    TF1* sig_model;
 //    if( formula_significance == "S12") sig_model = new TF1("Msignif", "[0]*(TMath::Sqrt([1]*TMath::Erf((-x-[2])/[4]) +TMath::Erf((-x-[3])/[5]) +[1]+1) - TMath::Sqrt(TMath::Erf((-x-[3])/[5]) +1 ) +[6]  )");
 //    if( formula_significance == "S2") sig_model = new TF1("Msignif", "[0]*([1]*(TMath::Erf((-x-[2])/[4])+[6])/TMath::Sqrt([1]*(TMath::Erf((-x-[2])/[4]) +[7]) +TMath::Erf((-x-[3])/[5]) +1) )");
-
-//    sig_model->SetParameter(0,(hist_res->GetSum())*0.73);
-//    sig_model->SetParameter(2, -0.34);
-//    sig_model->SetParameter(3, 0.61);
-//    sig_model->SetParameter(4, 0.18);
-//    sig_model->SetParameter(5, 0.85);
-//    sig_model->SetParameter(6, -1.0);
-//    sig_model->SetParameter(6, 0.99);
-//    sig_model->FixParameter(1, ratio);
-//    sig_model->SetParLimits(6,0.1,1.);
-//    sig_model->SetParLimits(7,0.1,1.);
+      sig_model = new TF1("Msignif","pol6",-0.5,interval_score*(zero_bin)-0.5);
     
-//    hist_res->Fit("Msignif","R","",-0.5,interval_score*(zero_bin)-0.5);
+    hist_res->Fit("Msignif","R","",-0.5,interval_score*(zero_bin)-0.5);
     hist_res->Draw();
     auto res = hist_res->GetFunction("Msignif");
-    double max_signif_bdt= hist_res->GetBinCenter(hist_res->GetMaximumBin() );// res->GetMaximumX(-0.3, 0.45); 
+    double max_signif_bdt= res->GetMaximumX(-0.5, 0.5);//  hist_res->GetBinCenter(hist_res->GetMaximumBin() );
     max_signif_bdt = min(max_signif_bdt, sig_lim_bdt);
     double max_signif_val = hist_res->GetMaximum();
     return std::make_pair(std::make_pair(max_signif_bdt, max_signif_val),hist_res );
@@ -138,13 +138,19 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
   auto bdt_res =  get_BDTcut_from_ratio(ratio);
   TH1D* hist_res = bdt_res.second;
   file_input->Close();
-  HISTFILE = new TFile(Form("%s.root",output_fname.c_str()), "recreate" );
-  
+
+  TDirectory* dir_ratio = HISTFILE->mkdir(Form("r_%.6f", ratio), "");
   HISTFILE->cd();
+  dir_ratio->cd();
   hist_res->Write();
   TNamed* max_value = new TNamed("max_sig",Form("%.4f",bdt_res.first.first));
+
   max_value->Write();
+  HISTFILE->cd();
+  TNamed* latest = new TNamed("latest", max_value->GetTitle() );
+  latest->Write(0,TTree::kOverwrite);
   HISTFILE->Close();
+  cache_out->Close();
 
   Get_Optimal_BDT_HIST = hist_res;
 
@@ -155,12 +161,12 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
 };
 
 //Function to get BDT ratio //
-RooRealVar get_eff_acc(std::string type, std::string type2, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int state1 =1, int state2 =3){
+RooRealVar get_eff_acc(std::string type, std::string type2, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int train_state = 3, int state1 =1, int state2 =3){
 
   RooRealVar eff22, eff21, eff1, eff2, nbkg;
 
-  binplotter bp = binplotter(type, ts, ylim,pl, ph, cl, ch, blow, bhigh, false);
-  binplotter bp2 = binplotter(type2, ts, ylim,pl, ph, cl, ch, -1, bhigh, false);
+  binplotter bp = binplotter(type, ts, ylim,pl, ph, cl, ch, blow, bhigh, train_state, false);
+  binplotter bp2 = binplotter(type2, ts, ylim,pl, ph, cl, ch, -1, bhigh, train_state, false);
   bp.get_yield();
   nbkg = bp2.get_bkg();
   RooRealVar yield3S = bp.yield3S;

@@ -5,7 +5,7 @@ RooRealVar getDoubleRatioValue(std::pair <int, int>);
 TH1D* getPbPbRAA(int state =3, double bdt_fix=-2);
 
 //////////////////////////////////////////////////////////////////////////////
-RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC", double bdtlow_val = 0.2, int state =3, int getPre = 0,long ts =1625139244){
+RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC", double bdtlow_val = 0.2, int state =3, int getPre = 0,long ts =9999999999){
    // 1625503068; //1623391157; //BLIND Nominal
 
   double ylim = 2.4;

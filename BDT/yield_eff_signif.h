@@ -13,7 +13,7 @@ class binplotter
 {
   public:
 	binplotter();
-  	binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, bool find_bdt = true);
+  	binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _train_state = 3, bool find_bdt = true);
 	void init(bool get_bdt= true);
 	void set_params(double _vcut);
 	void set_params(string _fitfunc);
@@ -38,7 +38,7 @@ class binplotter
   	
   private:
   	long ts;
-	int pl, ph,cl, ch;
+	int pl, ph,cl, ch, train_state;
 	double vcut =0.00;
 	TString MupT = "3p5";
 	string Trig ="S13";

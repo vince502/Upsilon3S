@@ -9,7 +9,7 @@ struct params_vhl{
   Double_t low;
   Double_t high;
 };
-void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 181, double cutQVP = 0.01, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1. ,Double_t params[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {},Double_t paramslow[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {},Double_t paramshigh[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {}, std::map<std::string, params_vhl> map_params={}){
+void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 181, double cutQVP = 0.01, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1. ,Double_t params[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {},Double_t paramslow[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {},Double_t paramshigh[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {}, std::map<std::string, params_vhl> map_params={}){
 
   massfitter mf = massfitter();
 ////////////////////////////////////////////////////////////////////////
@@ -27,28 +27,23 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
   std::string name_fitmodel = "_"+bkg_func;
 
   SetStyle();
-  Int_t Nmassbins;
   double range_mass_low, range_mass_high;
   if (massrng.find(ts) == massrng.end()){
     range_mass_low = 8;
     range_mass_high = 14;
-    Nmassbins = 120;
     if(info_BDT(ts)[0]!="nan"){
       auto _pair_mass = parser_symbol(info_BDT(ts)[1],",");
       range_mass_low = stod(_pair_mass[0]);
       range_mass_high = stod(_pair_mass[1]);
-      Nmassbins = (range_mass_high - range_mass_low)/0.05;
     }
   }
   else{
     range_mass_low = massrng[ts].first;
     range_mass_high = massrng[ts].second;
-    Nmassbins = (range_mass_high - range_mass_low)/0.05;
   }
   if( map_params.find("mass_range") != map_params.end()){
     range_mass_low = map_params["mass_range"].low;
     range_mass_high = map_params["mass_range"].high;
-    Nmassbins = (range_mass_high - range_mass_low)/0.05;
   }
 
 ///////////////////////////////////////////////////////////////////////
@@ -58,7 +53,8 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
   name_file_input = Form("%s/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT.root",workdir.Data(),ts,Trig.c_str());
   }
   else name_file_input = Form("%s/roodatasetFiles/OniaRooDataSet_OniaSkim_Trig%s.root", workdir.Data(), Trig.c_str());
-  std::string name_file_output = Form("%s/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.root" ,workdir.Data(), ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP );
+  std::string name_file_output = Form("%s/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.root" ,workdir.Data(), ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10,  cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP );
+ if( ts == 9999999999) name_file_output = Form("%s/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.root" ,workdir.Data(), train_state, ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP );
   if(fitdir.find("DD") != std::string::npos){
     DDiter = fitdir[4]-48;
     name_file_output = name_file_output.substr(0,name_file_output.length()-5) + Form("_DDiter%d.root", DDiter);
@@ -81,11 +77,9 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
     mf.list_arg	= {"mass", "pt", "y", "cBin", "pt1", "pt2", "eta1", "eta2", "QQVtxProb", "BDT"};
     mf.dsCut	= Form("( pt >=%f && pt <=%f) && (y >= %f && y <=%f) && (cBin>%d && cBin<=%d) &&(pt1 >= %f) && (pt2 >= %f) && (eta1 >= %f && eta1 <= %f) && ( eta2 >= %f && eta2 <= %f) && (BDT>= %f && BDT < %f) && (QQVtxProb > %.f)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, MupTCut, MupTCut, etaMin, etaMax, etaMin, etaMax, cutBDTlow, cutBDThigh, cutQVP);
   }
-
-
-
-
-  mf.ws_init("dataset",mf.list_arg, "mass");
+  std::string name_dataset = "dataset";
+  if( ts == 9999999999 ) name_dataset = name_dataset + Form("_Y%dSpt%dto%d", train_state, (int) ptMin, (int) ptMax);
+  mf.ws_init(name_dataset.c_str(),mf.list_arg, "mass");
   mf.works->var("mass")->Print();
 
   TCanvas* c1 = new TCanvas("c1", "", 0, 0, 900, 600);
@@ -103,7 +97,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",const Double_t ptMin = 0, c
   TH1D* hYield = new TH1D("hYield", "", 3, 0, 3);
 
   pad_mass->cd();
-  RooPlot* massPlot = mf.works->var("mass")->frame(Nmassbins);
+  RooPlot* massPlot = mf.works->var("mass")->frame();
   mf.works->data("reducedDS")->plotOn(massPlot, Name("massPlot"));
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -392,15 +386,6 @@ dbg();
   pullPlot->GetYaxis()->SetLabelSize(0.13);
   pullPlot->Draw();
   line_pull->Draw("same");
-
-  Double_t chi2 = 0.;
-  Double_t *ypull = hpull->GetY();
-  Double_t Npullbin = 0;
-  for(Int_t ibin = 0; ibin < Nmassbins; ibin++){
-    if(ypull[ibin] ==0) continue;
-    chi2 += TMath::Power(ypull[ibin],2);
-    Npullbin++;
-  }
   Int_t Nfitpar = Result->floatParsFinal().getSize();
   Double_t NLL = Result->minNll();
   ofstream log;
@@ -409,11 +394,6 @@ dbg();
   log << Form("BDT with %s%s  NLL : ",sig_func.c_str(), name_fitmodel.c_str() ) << NLL; 
   log.close();
   std::cout << "NLL : " << NLL << std::endl;
-  Int_t ndf = Npullbin - Nfitpar;
-
-  TLatex* NormChi2tex = new TLatex();
-  FormLatex(NormChi2tex, 42, 0.13);
-  NormChi2tex->DrawLatex(0.15, 0.95, Form("#chi^{2}/ndf: %3.f/%d", chi2, ndf));
   WriteMessage("Pull distribution is dOnE !!!");
 
   pad_leg->cd();
@@ -549,6 +529,6 @@ dbg();
   mf.fout->Close();
   int drawmag = (int) map_params["mag"].val; 
 
-  DrawHist(parsed, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh,map_params["sb_ratio"].val, Nmassbins, (bool) drawmag);
+  DrawHist(parsed, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh,map_params["sb_ratio"].val, train_state, (bool) drawmag);
  
 }

@@ -112,7 +112,6 @@ void BDTClassifierApplication(long ts, int state = 3, int isMC = 0, bool isbbb =
     reader2->AddSpectator(spcname, &spcptr[i]);
     childspc = xml.GetNext(childspc);
   }
-  
 
   TString dir1 = "dataset1/weights/";
   TString dir2 = "dataset2/weights/";

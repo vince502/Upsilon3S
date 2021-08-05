@@ -1,7 +1,7 @@
 #!/bin/bash
-root -l -b -q 'getEfficiency.C(12.0, 30.0, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 1)' & 2>/dev/null
-root -l -b -q 'getEfficiency.C(12.0, 30.0, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
-root -l -b -q 'getEfficiency.C(12.0, 30.0, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 3)' & 2>/dev/null
+#root -l -b -q 'getEfficiency.C(12.0, 30.0, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 1)' & 2>/dev/null
+#root -l -b -q 'getEfficiency.C(12.0, 30.0, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
+#root -l -b -q 'getEfficiency.C(12.0, 30.0, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 3)' & 2>/dev/null
 #root -l -b -q 'getEfficiency.C(0.0, 30.0, -2.4, 2.4, 40., 100, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
 #root -l -b -q 'getEfficiency.C(0.0, 30.0, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
 #root -l -b -q 'getEfficiency.C(0.0, 30.0, -2.4, 2.4, 100., 181, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
@@ -21,3 +21,16 @@ root -l -b -q 'getEfficiency.C(12.0, 30.0, -2.4, 2.4, 0., 181, true, true, false
 #root -l -b -q 'getEfficiency.C(6.0, 30.0, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 3)' & 2>/dev/null
 #root -l -b -q 'getEfficiency.C(0.0, 6.0, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 3)' & 2>/dev/null
 
+
+#root -l -b -q 'getEfficiency.C(0.0, 30.0, -2.4, 2.4, 0., 10, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
+#root -l -b -q 'getEfficiency.C(0.0, 30.0, -2.4, 2.4, 10., 20, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
+#root -l -b -q 'getEfficiency.C(0.0, 30.0, -2.4, 2.4, 20., 40, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
+#root -l -b -q 'getEfficiency.C(0.0, 30.0, -2.4, 2.4, 40., 60, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
+#wait
+#root -l -b -q 'getEfficiency.C(0.0, 30.0, -2.4, 2.4, 60., 80, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
+#root -l -b -q 'getEfficiency.C(0.0, 30.0, -2.4, 2.4, 80., 100, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
+#root -l -b -q 'getEfficiency.C(0.0, 30.0, -2.4, 2.4, 100., 120, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
+#root -l -b -q 'getEfficiency.C(0.0, 30.0, -2.4, 2.4, 120., 140, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
+root -l -b -q 'getEfficiency.C(9.0, 30.0, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 1)' & 2>/dev/null
+root -l -b -q 'getEfficiency.C(9.0, 30.0, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
+root -l -b -q 'getEfficiency.C(9.0, 30.0, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 3)' & 2>/dev/null

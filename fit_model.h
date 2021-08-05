@@ -7,6 +7,7 @@ namespace fit_model_ups{
 	class CB2
 	{
 		public :
+			CB2(){};
 			CB2(RooRealVar* mass, RooRealVar* mean1S, RooFormulaVar* mean2S, RooFormulaVar* mean3S, RooRealVar* sigma1S_1, RooFormulaVar* sigma2S_1,RooFormulaVar* sigma3S_1, RooFormulaVar* sigma1S_2, RooFormulaVar* sigma2S_2, RooFormulaVar* sigma3S_2, RooRealVar* alpha1, RooRealVar* alpha2, RooRealVar* alpha3, RooRealVar* n1, RooRealVar* n2, RooRealVar* n3, RooRealVar* frac1, RooRealVar* frac2, RooRealVar* frac3);
 			CB2(RooRealVar* mass, RooRealVar* mean1S, RooFormulaVar* mean2S, RooRealVar* mean3S, RooRealVar* sigma1S_1, RooFormulaVar* sigma2S_1,RooFormulaVar* sigma3S_1, RooFormulaVar* sigma1S_2, RooFormulaVar* sigma2S_2, RooFormulaVar* sigma3S_2, RooRealVar* alpha1, RooRealVar* alpha2, RooRealVar* alpha3, RooRealVar* n1, RooRealVar* n2, RooRealVar* n3, RooRealVar* frac1, RooRealVar* frac2, RooRealVar* frac3);
 			~CB2(){};
@@ -38,10 +39,38 @@ namespace fit_model_ups{
 	  twoCB2S = new RooAddPdf("twoCB2S", "Sum of 2S Crystal ball", RooArgList(*CB2S_1, *CB2S_2), RooArgList(*frac2));
 	  twoCB3S = new RooAddPdf("twoCB3S", "Sum of 3S Crystal ball", RooArgList(*CB3S_1, *CB3S_2), RooArgList(*frac3));
 	};
+	
+	class CB2Gaus : public CB2
+	{
+	  	public :
+			CB2Gaus() : CB2(){};
+			CB2Gaus(RooRealVar* mass, RooRealVar* mean1S, RooFormulaVar* mean2S, RooFormulaVar* mean3S, RooRealVar* sigma1S_1, RooFormulaVar* sigma2S_1,RooFormulaVar* sigma3S_1, RooFormulaVar* sigma1S_2, RooFormulaVar* sigma2S_2, RooFormulaVar* sigma3S_2, RooFormulaVar* sigma1S_3, RooFormulaVar* sigma2S_3, RooFormulaVar* sigma3S_3, RooRealVar* alpha1, RooRealVar* alpha2, RooRealVar* alpha3, RooRealVar* n1, RooRealVar* n2, RooRealVar* n3, RooRealVar* frac1_1, RooRealVar* frac2_1, RooRealVar* frac3_1, RooRealVar* frac1_2, RooRealVar* frac2_2, RooRealVar* frac3_2) : CB2(){
+				CB2(mass, mean1S, mean2S, mean3S, sigma1S_1, sigma2S_1, sigma3S_1, sigma1S_2, sigma2S_2, sigma3S_2, alpha1, alpha2, alpha3, n1, n2, n3, frac1_1, frac2_1, frac3_1);
+				G1S = new RooGaussian("G1S", "Gaussian of 1S of CB2G", *mass, *mean1S, *sigma1S_3);
+				G2S = new RooGaussian("G2S", "Gaussian of 2S of CB2G", *mass, *mean2S, *sigma2S_3);
+				G3S = new RooGaussian("G3S", "Gaussian of 3S of CB2G", *mass, *mean3S, *sigma3S_3);
+				CBG1S = new RooAddPdf("CB2G1S", "Sum of 1S Double CB and Gaus", RooArgList(*CB1S_1, *CB1S_2, *G1S), RooArgList(*frac1_1, *frac1_2) );
+				CBG2S = new RooAddPdf("CB2G2S", "Sum of 2S Double CB and Gaus", RooArgList(*CB2S_1, *CB2S_2, *G2S), RooArgList(*frac2_1, *frac2_2) );
+				CBG3S = new RooAddPdf("CB2G3S", "Sum of 3S Double CB and Gaus", RooArgList(*CB3S_1, *CB3S_2, *G3S), RooArgList(*frac3_1, *frac3_2) );
+			};
+			CB2Gaus(RooRealVar* mass, RooRealVar* mean1S, RooFormulaVar* mean2S, RooRealVar* mean3S, RooRealVar* sigma1S_1, RooFormulaVar* sigma2S_1,RooFormulaVar* sigma3S_1, RooFormulaVar* sigma1S_2, RooFormulaVar* sigma2S_2, RooFormulaVar* sigma3S_2, RooFormulaVar* sigma1S_3, RooFormulaVar* sigma2S_3, RooFormulaVar* sigma3S_3, RooRealVar* alpha1, RooRealVar* alpha2, RooRealVar* alpha3, RooRealVar* n1, RooRealVar* n2, RooRealVar* n3, RooRealVar* frac1_1, RooRealVar* frac2_1, RooRealVar* frac3_1, RooRealVar* frac1_2, RooRealVar* frac2_2, RooRealVar* frac3_2) : CB2(){
+				CB2(mass, mean1S, mean2S, mean3S, sigma1S_1, sigma2S_1, sigma3S_1, sigma1S_2, sigma2S_2, sigma3S_2, alpha1, alpha2, alpha3, n1, n2, n3, frac1_1, frac2_1, frac3_1);
+				G1S = new RooGaussian("G1S", "Gaussian of 1S of CB2G", *mass, *mean1S, *sigma1S_3);
+				G2S = new RooGaussian("G2S", "Gaussian of 2S of CB2G", *mass, *mean2S, *sigma2S_3);
+				G3S = new RooGaussian("G3S", "Gaussian of 3S of CB2G", *mass, *mean3S, *sigma3S_3);
+				CBG1S = new RooAddPdf("CB2G1S", "Sum of 1S Double CB and Gaus", RooArgList(*CB1S_1, *CB1S_2, *G1S), RooArgList(*frac1_1, *frac1_2) );
+				CBG2S = new RooAddPdf("CB2G2S", "Sum of 2S Double CB and Gaus", RooArgList(*CB2S_1, *CB2S_2, *G2S), RooArgList(*frac2_1, *frac2_2) );
+				CBG3S = new RooAddPdf("CB2G3S", "Sum of 3S Double CB and Gaus", RooArgList(*CB3S_1, *CB3S_2, *G3S), RooArgList(*frac3_1, *frac3_2) );
+			};
+			~CB2Gaus(){};
+			RooGaussian *G1S, *G2S, *G3S;
+			RooAddPdf *CBG1S, *CBG2S, *CBG3S;
+	};
 
 	class ChebyChev
 	{
 		public :
+			ChebyChev(){};
 			ChebyChev(RooRealVar* mass, RooRealVar* cc_k1){
 				bkg = new RooChebychev("CCBkg", "Background cc1", *mass, RooArgSet(*cc_k1));
 			};
@@ -57,8 +86,20 @@ namespace fit_model_ups{
 			ChebyChev(RooRealVar* mass, RooRealVar* cc_k1, RooRealVar* cc_k2, RooRealVar* cc_k3, RooRealVar* cc_k4, RooRealVar* cc_k5){
 				bkg = new RooChebychev("CCBkg", "Background cc4", *mass, RooArgSet(*cc_k1, *cc_k2, *cc_k3, *cc_k4, *cc_k5));
 			};
-			~ChebyChev();
-			RooChebychev* bkg;
+			~ChebyChev(){};
+			RooChebychev* bkg = nullptr;
+	};
+	class ExpChebyChev : public ChebyChev
+	{
+		public :
+			ExpChebyChev(RooChebychev* _bkg) : ChebyChev() {
+				if (_bkg == nullptr) return;
+				auto tmp = new RooConstVar("ce", "coeff exponent",1);
+			  	bkgECC = (RooGenericPdf*) new RooExponential("bkgECC", "", *_bkg, *tmp );
+				delete tmp;
+			}
+			~ExpChebyChev(){};
+			RooGenericPdf* bkgECC;
 	};
 
 	class ErfExp
@@ -66,7 +107,7 @@ namespace fit_model_ups{
 	  	public :
 			ErfExp(RooRealVar* mass, RooRealVar* mean, RooRealVar* sigma, RooRealVar* p0){ bkgErf = new RooGenericPdf("bkgErf", "ErfExp background", "TMath::Exp(-@0/@1)*(TMath::Erf((@0-@2)/(TMath::Sqrt(2)*@3))+1)*0.5", RooArgList(*mass, *p0, *mean, *sigma));
 			};
-			~ErfExp();
+			~ErfExp(){};
 
 			RooGenericPdf* bkgErf;
 	};

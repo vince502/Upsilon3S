@@ -42,8 +42,6 @@ void makeRooDataset_fromBDT(long ts, bool cutID, bool isMC, std::string aux_opt 
   TBranch *b_dz1, *b_dz2, *b_dxy1, *b_dxy2, *b_nTrkWMea1, *b_nTrkWMea2, *b_nPixWMea1, *b_nPixWMea2;
   TBranch *b_classID, *b_className, *b_QQVtxProb, *b_cBin, *b_pt1, *b_pt2, *b_eta1, *b_eta2, *b_pt, *b_mass, *b_y, *b_weight, *b_BDT, *b_BDT_prob;
   
-//  tree -> SetBranchAddress("classID", &classID, &b_classID);
-//  tree -> SetBranchAddress("className", &className, &b_className);
   tree -> SetBranchAddress("QQVtxProb", &QQVtxProb, &b_QQVtxProb);
   tree -> SetBranchAddress("pt1", &pt1, &b_pt1);
   tree -> SetBranchAddress("pt2", &pt2, &b_pt2);

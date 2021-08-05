@@ -11,28 +11,21 @@
 #include <ctime>
 #include "../.workdir.h"
 long _ts;
+long _real_time;
 char logbuf[2000];
 
-bool BDTClassifier_BLIND_Function(int idxBkg , int idxDat , double ptLow, double ptHigh, int cBinLow, int cBinHigh, std::string opt = ""){
+bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptHigh, int cBinLow, int cBinHigh, std::string opt = ""){
   //Load Library
   TMVA::Tools::Instance();
   int traintree, testtree;
-  if(idxDat ==1) {
-    traintree=2;
-    testtree=3;
-  }
-  if(idxDat ==2) {
-    traintree=3;
-    testtree=2;
-  }
-  if(idxDat ==0){
     traintree=1;
     testtree=1;
-  }
 
   std::time_t tstamp = std::time(nullptr);
   _ts = (long) tstamp;
+  _real_time = (long) tstamp;
   std::cout <<"time stamp---> " <<  tstamp << std::endl;
+  if(strcmp(opt.c_str(),"NOMINAL")==0) _ts = (long) 9999999999;
   std::system(Form("cat BDTClassifier_BLIND.C >> ./.past_source/_BDTClassifier_BLIND_%ld.old",(long) tstamp));
   ofstream log;
   log.open("BDT_description.log", std::ios_base::out|std::ios_base::app);
@@ -46,9 +39,14 @@ bool BDTClassifier_BLIND_Function(int idxBkg , int idxDat , double ptLow, double
   
   //INPUT & OUTPUT Call
   TFile* inputDATA = new TFile(Form("%s/%s", store.Data(), ONIABDTDATAB_LATEST.c_str()),"read");
-  TFile* inputMC   = new TFile(Form("%s/%s", store.Data(), ONIABDTMC2S_LATEST.c_str()),"read");
+  TFile* inputMC   ;
+  if(state ==1) inputMC= new TFile(Form("%s/%s", store.Data(), ONIABDTMC1S_LATEST.c_str()),"read");
+  if(state ==2) inputMC= new TFile(Form("%s/%s", store.Data(), ONIABDTMC2S_LATEST.c_str()),"read");
+  if(state ==3) inputMC= new TFile(Form("%s/%s", store.Data(), ONIABDTMC_LATEST.c_str()),"read");
   //new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_v210416.root","read");
-  TFile* output    = new TFile(Form("%s/BDTresultY3S_%ld_BLIND.root",BDTDir.Data(),(long) tstamp),"recreate");
+  TFile* output;
+  if(strcmp(opt.c_str(), "NOMINAL") ==0 ) output = new TFile(Form("%s/BDTresultY3S_%ld_BLIND.root",BDTDir.Data(),_ts),"update");
+  else output = new TFile(Form("%s/BDTresultY3S_%ld_BLIND.root",BDTDir.Data(),_ts),"recreate");
 
   double ylim 		= 2.4;
   double massLow 	= 8;
@@ -59,8 +57,8 @@ bool BDTClassifier_BLIND_Function(int idxBkg , int idxDat , double ptLow, double
   TCut cut1 = Form("mass>%f&&mass<%f&&pt<%f&&pt>%f&&cBin>%d&&cBin<%d&&pt1>%f&&pt2>%f&&fabs(y)<%f%s%s", massLow, massHigh, ptHigh, ptLow, cBinLow, cBinHigh, Simucut, Simucut, ylim, HybSoft.c_str(),rejectNAN.c_str());
   TCut cut2 = Form("mass>%f&&mass<%f&&pt<%f&&pt>%f&&cBin>%d&&cBin<%d&&pt1>%f&&pt2>%f&&fabs(y)<%f%s%s", massLow, massHigh, ptHigh, ptLow, cBinLow, cBinHigh, Simucut, Simucut, ylim, HybSoft.c_str(),rejectNAN.c_str());
 
-  TMVA::DataLoader *loader1 = new TMVA::DataLoader("dataset1");
-  TMVA::DataLoader *loader2 = new TMVA::DataLoader("dataset2");
+  TMVA::DataLoader *loader1 = new TMVA::DataLoader(Form("data/Y%dSpt%dto%d/dataset1", state, (int) ptLow, (int) ptHigh));
+  TMVA::DataLoader *loader2 = new TMVA::DataLoader(Form("data/Y%dSpt%dto%d/dataset2", state, (int) ptLow, (int) ptHigh));
   TTree* SigTree =(TTree*) inputMC->Get("tree");
   TTree* BkgTreeTest_primary1 =(TTree*) inputDATA->Get(Form("tree3"));
   TTree* BkgTreeTest_primary2 =(TTree*) inputDATA->Get(Form("tree2"));
@@ -76,8 +74,8 @@ bool BDTClassifier_BLIND_Function(int idxBkg , int idxDat , double ptLow, double
   TTree* BkgTreeTrain2 = BkgTreeTrain_primary2->CopyTree("(mass>8.&&mass<8.6)||(mass>10.8&&mass<11.5)");
   std::cout << "Number of Events in Trees (Sig, BkgTest, BkgTrain) : ( " << SigTree->GetEntries(cut1) << ", "<< BkgTreeTest1->GetEntries(cut2) << ", " << BkgTreeTrain2->GetEntries(cut2) << " )" << std::endl;
   //Factory Call
-  TMVA::Factory *factory1 = new TMVA::Factory(Form("TMVA_BDT_Classifier1_%ld",(long) tstamp),  output, "!V:Silent:Color:DrawProgressBar:Transformations=G:AnalysisType=Classification");
-  TMVA::Factory *factory2 = new TMVA::Factory(Form("TMVA_BDT_Classifier2_%ld",(long) tstamp),  output, "!V:Silent:Color:DrawProgressBar:Transformations=G:AnalysisType=Classification");
+  TMVA::Factory *factory1 = new TMVA::Factory(Form("TMVA_BDT_Classifier1_%ld",_ts),  output, "!V:Silent:Color:DrawProgressBar:Transformations=G:AnalysisType=Classification");
+  TMVA::Factory *factory2 = new TMVA::Factory(Form("TMVA_BDT_Classifier2_%ld",_ts),  output, "!V:Silent:Color:DrawProgressBar:Transformations=G:AnalysisType=Classification");
   for( auto loader : {loader1, loader2} ) 
   {
     loader->AddVariable("QQMassErr", "Dimu Mass error", "F");
@@ -151,9 +149,11 @@ bool BDTClassifier_BLIND_Function(int idxBkg , int idxDat , double ptLow, double
   c1->Delete();
   }
   output->Close();
-  if(opt!= "") opt +="::";
+  if(opt!= "") 
+    if(strcmp(opt.c_str(),"NOMINAL")==0) opt=Form("ALIAS_TS->%ld", (long) tstamp);
+    opt +="::";
   if(opt!="NR"){
-  log << tstamp << "::"<< Form("%2.2f,%2.2f",massLow,massHigh) << "::" << Form("%2.2f,%2.2f",ptLow, ptHigh) <<"::" << Form("%d,%d",cBinLow, cBinHigh) <<  "::" << Form("BLIND[%d,%d]::%s",traintree, testtree, opt.c_str())<<logbuf << std::endl;
+  log << _ts << "::"<< Form("%2.2f,%2.2f",massLow,massHigh) << "::" << Form("%2.2f,%2.2f",ptLow, ptHigh) <<"::" << Form("%d,%d",cBinLow, cBinHigh) <<  "::" << Form("BLIND[%d,%d]::%dS::%s",traintree, testtree, state, opt.c_str())<<logbuf << std::endl;
   }
 
   log.close();
@@ -177,42 +177,52 @@ void BDTClassifier_BLIND( ){
   std::cout << "Write down description for this run :";
   std::cin.getline(logbuf,2000);
   bool res; 
-  res = BDTClassifier_BLIND_Function(0,0,0,30, 0,181);
-  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
-//  res = BDTClassifier_BLIND_Function(0,1,0,30, 0,180);
-//  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
-  tsrange.first = _ts;
-  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+//  res = BDTClassifier_BLIND_Function(3,0,0,30, 0,181, "NOMINAL");
+//  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
+//  res = BDTClassifier_BLIND_Function(3,0,0,6, 0,181, "NOMINAL");
+//  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
+//  res = BDTClassifier_BLIND_Function(3,0,6,30, 0,181, "NOMINAL");
+//  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
+//  res = BDTClassifier_BLIND_Function(2,0,0,30, 0,181, "NOMINAL");
+//  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
+//  res = BDTClassifier_BLIND_Function(2,0,0,4, 0,181, "NOMINAL");
+//  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
+//  res = BDTClassifier_BLIND_Function(2,0,4,9, 0,181, "NOMINAL");
+//  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
+  res = BDTClassifier_BLIND_Function(2,0,9,30, 0,181, "NOMINAL");
+  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
+  tsrange.first = _real_time;
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
   //  res = BDTClassifier_BLIND_Function(0,6, 0,180);
-  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
   //  res = BDTClassifier_BLIND_Function(6,30, 0, 180);
-  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
 
   //res = BDTClassifier_BLIND_Function(0,30, 0,40);
-  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
   //  res = BDTClassifier_BLIND_Function(0,6, 0,40);
-  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
   //  res = BDTClassifier_BLIND_Function(6,30,0, 40);
-  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
 
   //res = BDTClassifier_BLIND_Function(0,30, 40,100);
-  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
   //  res = BDTClassifier_BLIND_Function(0,6, 40,100);
-  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
   //  res = BDTClassifier_BLIND_Function(6,30,40, 100);
-  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
   //
   //res = BDTClassifier_BLIND_Function(0,30, 100,180);
-  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
   //  res = BDTClassifier_BLIND_Function(0,6, 100,180);
-  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
   //  res = BDTClassifier_BLIND_Function(6,30, 100, 180);
-  //tsrange.second = _ts;
-  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _ts));
+  //tsrange.second = _real_time;
+  //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
 
   //log.open("BDT_description.log", std::ios_base::out|std::ios_base::app);
   //log << "TS coleection::{";
-  //for ( const auto ts : v_ts){ 
+  //for ( const auto ts : v_real_time){ 
   //  log << Form(" %s,",ts);
   //} log << "}" << std::endl;
 
