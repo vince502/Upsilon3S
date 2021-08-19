@@ -5,16 +5,19 @@ RooRealVar getDoubleRatioValue(std::pair <int, int>);
 TH1D* getPbPbRAA(int state =3, double bdt_fix=-2);
 
 //////////////////////////////////////////////////////////////////////////////
-RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC", double bdtlow_val = 0.2, int state =3, int getPre = 0,long ts =9999999999){
+RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC", double bdtlow_val = -2, int state =3, int getPre = 0,long ts =9999999999, bool stdvcut = false){
    // 1625503068; //1623391157; //BLIND Nominal
+  double val_bdt_nom = Get_BDT(ts, state, (int) ptpair.first, (int) ptpair.second, cbpair.first, cbpair.second);
 
   double ylim = 2.4;
   std::pair<double, double> bdtpair = {0.20,1.00}; //BLIND Nominal ?
-  bdtpair.first = bdtlow_val;
-  std::cout << bdtlow_val << ", " << bdtpair.first << std::endl;
+  bdtpair.first = val_bdt_nom;
+  if(bdtlow_val > -2 ) bdtpair.first = bdtlow_val;
+  std::cout << val_bdt_nom << ", " << bdtpair.first << std::endl;
 
   binplotter* bp ;
-  bp = new binplotter(type,ts, ylim, ptpair.first, ptpair.second, cbpair.first, cbpair.second, bdtpair.first, bdtpair.second, false);
+  bp = new binplotter(type,ts, ylim, ptpair.first, ptpair.second, cbpair.first, cbpair.second, bdtpair.first, bdtpair.second, state, false);
+  if (stdvcut){ bp->set_params(0.01); }
 
   RooRealVar _y = bp->get_yield(state);
   RooRealVar _yacc = upsi::getacceptance(ptpair.first, ptpair.second, (double) -1*ylim, ylim, 3.5, state);
@@ -22,7 +25,7 @@ RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, do
   double _yeff = _yeff_pair.first;
   RooRealVar yAA, yPP ;
   yAA = RooRealVar(Form("corrY%dyield",state), Form("corrected %dS yield",state), _y.getVal()/(_yacc.getVal()*_yeff));
-  std::cout <<"##Yield "<<state<<"S Corrected y/acc eff: "<< yAA.getVal() << std::endl;
+  std::cout <<"##Yield "<<state<<"S Corrected y/acc eff: "<< yAA.getVal() << ", Efficiency: " << _yeff << ", Acceptance: " << _yacc.getVal() << std::endl;
   yAA.setError(_y.getError()/(_yacc.getVal()*_yeff ));
   if(getPre==1) return yAA;
   TFile* file_pp = TFile::Open(Form("%s/fitresults_upsilon_fixParm1_seed2_DoubleCB_PP_DATA_pt%.1f-%.1f_y0.0-2.4_muPt4.0.root",hin16023.Data(), ptpair.first, ptpair.second ));
@@ -62,29 +65,46 @@ RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, do
 
   return val_return;
 };
+//////////////////////////////////////////////////////////////////////////////
 
 TH1D* getPbPbRAA(int state =3, double bdt_fix = -2, int shift =0){
   Double_t* cbinthree = new Double_t[4]{0,40,100,181};
   Double_t* cbinthree_rev = new Double_t[4]{181,100,40,0};
   Double_t* centthree = new Double_t[4]{0,20,50,90};
   Double_t* centthree_rev = new Double_t[4]{90,50,20,0};
+
+  Double_t* centnine = new Double_t[10]{0,5,10,20,30,40,50,60,70,90};
+  Double_t* centnine_rev = new Double_t[10]{90,70,60,50,40,30,20,10,5,0};
+  Double_t* cbinnine = new Double_t[10]{0,10,20,40,60,80,100,120,140,181};
+  Double_t* cbinnine_rev = new Double_t[10]{181,140,120,100,80,60,40,20,10,0};
+
   Color_t theColor;
   theColor = kRed+2;
   if(state ==3) theColor = kGreen+2;
   if(state ==2) theColor = kBlue+2;
 
-  
-
   TH1D* h1 = new TH1D("h1" , "PbPb 2 ratio cent", 35, 0, 420);
   gStyle->SetOptStat(kFALSE);
   gStyle->SetOptTitle(kFALSE);
-  for(int idx =0; idx <3; ++idx){
-    RooRealVar dr_bin;
-    if(bdt_fix < -1) dr_bin = getDoubleRatioValue({cbinthree_rev[idx+1],cbinthree_rev[idx]},{0,30}, "CB3:CC2:FF", bdt_tmp_val2[idx+1], state );
-    else dr_bin = getDoubleRatioValue({cbinthree_rev[idx+1],cbinthree_rev[idx]},{0,30}, "CB3:CC2:FF", bdt_fix, state );
-    double npart = glp::Npart[{centthree_rev[idx+1],centthree_rev[idx]}].first;
-    h1->SetBinContent(h1->FindBin(npart) + shift, dr_bin.getVal());
-    h1->SetBinError(h1->FindBin(npart) + shift, dr_bin.getError());
+  if(state ==3){
+    for(int idx =0; idx <3; ++idx){
+      RooRealVar dr_bin;
+      if(bdt_fix != -2) dr_bin = getDoubleRatioValue({cbinthree_rev[idx+1],cbinthree_rev[idx]},{0,30}, "CB3:CC2:FF", bdt_tmp_val2[idx+1], state );
+      else dr_bin = getDoubleRatioValue({cbinthree_rev[idx+1],cbinthree_rev[idx]},{0,30}, "CB3:CC2:FF", bdt_fix, state );
+      double npart = glp::Npart[{centthree_rev[idx+1],centthree_rev[idx]}].first;
+      h1->SetBinContent(h1->FindBin(npart) + shift, dr_bin.getVal());
+      h1->SetBinError(h1->FindBin(npart) + shift, dr_bin.getError());
+    }
+  }
+  if(state ==2){
+    for(int idx =0; idx <9; ++idx){
+      RooRealVar dr_bin;
+      if(bdt_fix != -2) dr_bin = getDoubleRatioValue({cbinnine_rev[idx+1],cbinnine_rev[idx]},{0,30}, "CB3:CC2:FF", bdt_tmp_val2[idx+1], state );
+      else dr_bin = getDoubleRatioValue({cbinnine_rev[idx+1],cbinnine_rev[idx]},{0,30}, "CB3:CC2:FF", bdt_fix, state );
+      double npart = glp::Npart[{centnine_rev[idx+1],centnine_rev[idx]}].first;
+      h1->SetBinContent(h1->FindBin(npart) + shift, dr_bin.getVal());
+      h1->SetBinError(h1->FindBin(npart) + shift, dr_bin.getError());
+    }
   }
   h1->GetYaxis()->SetRangeUser(0,1.3);
   h1->SetMarkerStyle(kCircle);
@@ -102,21 +122,39 @@ TH1D* getPbPbRAA(int state =3, double bdt_fix = -2, int shift =0){
   return h1;
 };
 
+
+//////////////////////////////////////////////////////////////////////////////
 TH1D* getPbPbRAA_pt(int state =3, double bdt_fix = -2, int shift =0){
   Double_t* ptbintwo = new Double_t[3]{0,6,30};
   Double_t* ptbintwo_rev = new Double_t[3]{30,6,0};
+  Double_t* ptbinthree = new Double_t[4]{0,4,9,30};
+  Double_t* ptbinthree_rev = new Double_t[4]{30,9,4,0};
   
 
-  TH1D* h1 = new TH1D("h1" , "PbPb 2 ratio cent",2,  ptbintwo);
+  TH1D* h1;
+  if(state ==3) h1 =new TH1D("h1pt" , "PbPb 2 ratio cent",2,  ptbintwo);
+  if(state ==2) h1 =new TH1D("h1pt" , "PbPb 2 ratio cent",3,  ptbinthree);
   gStyle->SetOptStat(kFALSE);
   gStyle->SetOptTitle(kFALSE);
-  for(int idx =0; idx <2; ++idx){
-    std::cout << "take from value: " << bdt_tmp_val[idx+1] << std::endl;
-    RooRealVar dr_bin;
-    if(bdt_fix < -1) dr_bin= getDoubleRatioValue({0,181},{ptbintwo[idx],ptbintwo[idx+1]}, "CB3:CC2:GC", bdt_tmp_val[idx+1], state );
-    else dr_bin= getDoubleRatioValue({0,181},{ptbintwo[idx],ptbintwo[idx+1]}, "CB3:CC2:GC", bdt_fix, state );
-    h1->SetBinContent(h1->FindBin( (ptbintwo[idx]+ptbintwo[idx+1])/2), dr_bin.getVal());
-    h1->SetBinError(h1->FindBin( (ptbintwo[idx]+ptbintwo[idx+1])/2), dr_bin.getError());
+  if(state == 3){
+    for(int idx =0; idx <2; ++idx){
+      std::cout << "take from value: " << bdt_tmp_val[idx+1] << std::endl;
+      RooRealVar dr_bin;
+      if(bdt_fix != -2) dr_bin= getDoubleRatioValue({0,181},{ptbintwo[idx],ptbintwo[idx+1]}, "CB3:CC2:GC", bdt_tmp_val[idx+1], state );
+      else dr_bin= getDoubleRatioValue({0,181},{ptbintwo[idx],ptbintwo[idx+1]}, "CB3:CC2:GC", bdt_fix, state );
+      h1->SetBinContent(h1->FindBin( (ptbintwo[idx]+ptbintwo[idx+1])/2), dr_bin.getVal());
+      h1->SetBinError(h1->FindBin( (ptbintwo[idx]+ptbintwo[idx+1])/2), dr_bin.getError());
+    }
+  }
+  if(state == 2){
+    for(int idx =0; idx <3; ++idx){
+      std::cout << "take from value: " << bdt_tmp_val[idx+1] << std::endl;
+      RooRealVar dr_bin;
+      if(bdt_fix != -2) dr_bin= getDoubleRatioValue({0,181},{ptbinthree[idx],ptbinthree[idx+1]}, "CB3:CC2:GC", bdt_tmp_val[idx+1], state );
+      else dr_bin= getDoubleRatioValue({0,181},{ptbinthree[idx],ptbinthree[idx+1]}, "CB3:CC2:GC", bdt_fix, state );
+      h1->SetBinContent(h1->FindBin( (ptbinthree[idx]+ptbinthree[idx+1])/2), dr_bin.getVal());
+      h1->SetBinError(h1->FindBin( (ptbinthree[idx]+ptbinthree[idx+1])/2), dr_bin.getError());
+    }
   }
   h1->GetYaxis()->SetRangeUser(0,1.3);
   h1->SetMarkerStyle(kCircle);
@@ -134,6 +172,7 @@ TH1D* getPbPbRAA_pt(int state =3, double bdt_fix = -2, int shift =0){
   return h1;
 };
 
+//////////////////////////////////////////////////////////////////////////////
 void drawRAAplot(){
 //  TCanvas* c2 = new TCanvas("c2","",700,800);
 //
@@ -179,11 +218,11 @@ void drawRAAplot(){
   y3_int->GetYaxis()->SetLabelOffset(0);
   y3_int->GetYaxis()->SetRangeUser(0,1.3);
 
-  auto raa2_int = getDoubleRatioValue({0,181}, {0,30}, "CB3:CC2:GC", 0.0859, 2);
-  auto raa3_int = getDoubleRatioValue({0,181}, {0,30}, "CB3:CC2:GC", 0.0859, 3);
-  auto hPbPb1S = getPbPbRAA(1, -0.1, 2);
-  auto hPbPb2S = getPbPbRAA(2, -0.1, 1);
-  auto hPbPb3S = getPbPbRAA(3, -0.1, 0 );
+  auto raa2_int = getDoubleRatioValue({0,181}, {0,30}, "CB3:CC2:GC", -2, 2);
+  auto raa3_int = getDoubleRatioValue({0,181}, {0,30}, "CB3:CC2:GC", -2, 3);
+//  auto hPbPb1S = getPbPbRAA(1, -0.1, 2);
+  auto hPbPb2S = getPbPbRAA(2, -2, 0);
+  auto hPbPb3S = getPbPbRAA(3, -2, 0 );
   TGraphAsymmErrors* gr1S = new TGraphAsymmErrors(10); 
   gr1S->SetPoint(0,8.3000002, 0.79200000);
   gr1S->SetPoint(1,30.600000, 0.92199999);
@@ -287,6 +326,8 @@ void drawRAAplot(){
   c3->SaveAs(Form("%s/plots/DoubleRatio/plot_RAA_3S.pdf", workdir.Data() ));
   c3->SaveAs(Form("%s/plots/DoubleRatio/plot_RAA_3S.C", workdir.Data() ));
 };
+
+//////////////////////////////////////////////////////////////////////////////
 void drawRAApt_plot(){
 //  TCanvas* c2 = new TCanvas("c2","",700,800);
 //
@@ -300,8 +341,9 @@ void drawRAApt_plot(){
   TCanvas* c2 = new TCanvas("c2","",1000,700);
 
   auto hPbPb3S = getPbPbRAA_pt(3);
-  TH1D* hPbPb2S = new TH1D("hPbPb2S" , "PbPb 2 ratio cent", 1, 0, 3);
-  auto raa2S_lowpt = getDoubleRatioValue({0,181},{0,4}, "CB3:CC2:GC", -0.1, 2, 0, 1625736641);
+  auto hPbPb2S = getPbPbRAA_pt(2);
+//  TH1D* hPbPb2S = new TH1D("hPbPb2S" , "PbPb 2 ratio cent", 1, 0, 3);
+//  auto raa2S_lowpt = getDoubleRatioValue({0,181},{0,4}, "CB3:CC2:GC", -0.1, 2, 0);
   TLatex* tl = new TLatex();
   tl->SetTextSize(0.04);
   tl->SetTextFont(42);
@@ -314,8 +356,8 @@ void drawRAApt_plot(){
   lineone->SetLineStyle(kDashed);
   lineone->DrawLineNDC(0,0.5,1,0.5);
 
-  hPbPb2S->SetBinContent(hPbPb3S->FindBin(2), raa2S_lowpt.getVal());
-  hPbPb2S->SetBinError(hPbPb3S->FindBin(2), raa2S_lowpt.getError());
+//  hPbPb2S->SetBinContent(hPbPb3S->FindBin(2), raa2S_lowpt.getVal());
+//  hPbPb2S->SetBinError(hPbPb3S->FindBin(2), raa2S_lowpt.getError());
   hPbPb2S->SetMarkerStyle(kCircle);
   hPbPb2S->SetLineColor(kBlue+2);
   hPbPb2S->SetMarkerColor(kBlue+2);
