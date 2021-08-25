@@ -10,7 +10,6 @@ struct params_vhl{
   Double_t high;
 };
 void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 181, double cutQVP = 0.01, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1. ,Double_t params[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {},Double_t paramslow[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {},Double_t paramshigh[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {}, std::map<std::string, params_vhl> map_params={}){
-
   massfitter mf = massfitter();
 ////////////////////////////////////////////////////////////////////////
   int DDiter = 0;
@@ -20,11 +19,12 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
     cutBDThigh=0;
   }
   int ylim10 = (int) (rapMax*10);
+  std::cout << "[INPUT] Data Fitter type : " << type << std::endl;
   auto parsed = parser_symbol(type);
   std::string sig_func = parsed[0];
   std::string bkg_func = parsed[1];
   std::string fitdir = parsed[2];
-  std::string name_fitmodel = "_"+bkg_func;
+  std::string name_fitmodel = "_"+sig_func+"_"+bkg_func;
 
   SetStyle();
   double range_mass_low, range_mass_high;
@@ -47,14 +47,14 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
   }
 
 ///////////////////////////////////////////////////////////////////////
-//Need 
+//Need
   std::string name_file_input;
   if(isBDT){
   name_file_input = Form("%s/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT.root",workdir.Data(),ts,Trig.c_str());
   }
   else name_file_input = Form("%s/roodatasetFiles/OniaRooDataSet_OniaSkim_Trig%s.root", workdir.Data(), Trig.c_str());
   std::string name_file_output = Form("%s/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.root" ,workdir.Data(), ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10,  cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP );
- if( ts == 9999999999) name_file_output = Form("%s/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.root" ,workdir.Data(), train_state, ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP );
+ if( ts >= 9999999990) name_file_output = Form("%s/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.root" ,workdir.Data(), train_state, ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP );
   if(fitdir.find("DD") != std::string::npos){
     DDiter = fitdir[4]-48;
     name_file_output = name_file_output.substr(0,name_file_output.length()-5) + Form("_DDiter%d.root", DDiter);
@@ -78,7 +78,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
     mf.dsCut	= Form("( pt >=%f && pt <=%f) && (y >= %f && y <=%f) && (cBin>%d && cBin<=%d) &&(pt1 >= %f) && (pt2 >= %f) && (eta1 >= %f && eta1 <= %f) && ( eta2 >= %f && eta2 <= %f) && (BDT>= %f && BDT < %f) && (QQVtxProb > %.f)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, MupTCut, MupTCut, etaMin, etaMax, etaMin, etaMax, cutBDTlow, cutBDThigh, cutQVP);
   }
   std::string name_dataset = "dataset";
-  if( ts == 9999999999 ) name_dataset = name_dataset + Form("_Y%dSpt%dto%d", train_state, (int) ptMin, (int) ptMax);
+  if( ts >= 9999999990 ) name_dataset = name_dataset + Form("_Y%dSpt%dto%d", train_state, (int) ptMin, (int) ptMax);
   mf.ws_init(name_dataset.c_str(),mf.list_arg, "mass");
   mf.works->var("mass")->Print();
 
@@ -133,7 +133,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
 
   RooRealVar* n = new RooRealVar("n", "n of Crystal ball", 2.0, paramslow[2], paramshigh[2]);
   RooRealVar* frac = new RooRealVar("frac", "CB fraction", 0.5, paramslow[3], paramshigh[3]);
-  if(sig_func=="CB3")
+  if(sig_func=="CB3"|| sig_func=="CB2G" )
   {
     frac2 = new RooRealVar("frac2", "CB fraction", map_params["frac2"].val,  map_params["frac2"].low, map_params["frac2"].high);
     if(map_params.find("xNS")!=map_params.end()){
@@ -155,7 +155,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
   if(map_params["xNS"].high == -1){ x1S->setConstant(); x1S->setRange(0,999); x1S->setVal(map_params["xNS"].val); };
   if(map_params["xNS_2"].high == -1){ x1S_2->setConstant(); x1S_2->setRange(0,999); x1S_2->setVal(map_params["xNS_2"].val); };
 
-  RooRealVar *ch4_k1, *ch4_k2, *ch4_k3, *ch4_k4, *ch4_k5;
+  RooRealVar *ch4_k1, *ch4_k2, *ch4_k3, *ch4_k4, *ch4_k5, *ch4_k6;
   RooRealVar *Erfmean, *Erfp0, *Erfsigma;
   std::map<std::string, RooRealVar*> map_rrv;
   if(fitdir.find("DD") != std::string::npos)
@@ -194,7 +194,9 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
 
   fit_model_ups::CB2* cb2 ;
   fit_model_ups::CB3* cb3 ;
+  fit_model_ups::CB2Gaus* cb2g ;
   fit_model_ups::ChebyChev* cc ;
+  fit_model_ups::ExpChebyChev* ecc;
   fit_model_ups::ErfExp* ee;
   RooGenericPdf* Signal1S;
   RooGenericPdf* Signal2S;
@@ -213,6 +215,18 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
     n->setVal(params[2]);
     frac->setVal(params[3]);
   }
+
+  if (sig_func == "CB2G"){
+    name_sig_pdf="twoCBGaus";    
+    cb2g = new fit_model_ups::CB2Gaus((mf.works->var("mass")), mean1S, mean2S, mean3S, sigma1S_1, sigma2S_1, sigma3S_1, sigma1S_2, sigma2S_2, sigma3S_2, sigma1S_3, sigma2S_3, sigma3S_3, alpha, alpha, alpha, n, n, n, frac, frac, frac, frac2, frac2, frac2); 
+    Signal1S = (RooGenericPdf*) cb2g->CBG1S;
+    Signal2S = (RooGenericPdf*) cb2g->CBG2S;
+    Signal3S = (RooGenericPdf*) cb2g->CBG3S;
+    sigma1S_1->setVal(params[0]);
+    alpha->setVal(params[1]);
+    n->setVal(params[2]);
+    frac->setVal(params[3]);
+  }
   if (sig_func == "CB2"){
     cb2 = new fit_model_ups::CB2((mf.works->var("mass")), mean1S, mean2S, mean3S, sigma1S_1, sigma2S_1, sigma3S_1, sigma1S_2, sigma2S_2, sigma3S_2, alpha, alpha, alpha, n, n, n, frac, frac, frac); 
     Signal1S = (RooGenericPdf*) cb2->twoCB1S;
@@ -223,9 +237,15 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
     n->setVal(params[2]);
     frac->setVal(params[3]);
   }
+
   if (bkg_func.find("CC")!= std::string::npos){
     int order_CC = bkg_func[2]-'0';
     switch (order_CC){
+      case 1 :
+        ch4_k1 = new RooRealVar("ch4_k1", "ch4_k1", 0.02, paramslow[4], paramshigh[4]);
+        cc = new fit_model_ups::ChebyChev((mf.works->var("mass")), ch4_k1);
+        ch4_k1->setVal(params[4]);
+	break;
       case 2 :
         ch4_k1 = new RooRealVar("ch4_k1", "ch4_k1", 0.02, paramslow[4], paramshigh[4]);
         ch4_k2 = new RooRealVar("ch4_k2", "ch4_k2", 0.02, paramslow[5], paramshigh[5]);
@@ -266,8 +286,28 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
         ch4_k4->setVal(params[7]);
         ch4_k5->setVal(params[8]);
 	break;
+      case 6 :
+        ch4_k1 = new RooRealVar("ch4_k1", "ch4_k1", 0.02, paramslow[4], paramshigh[4]);
+        ch4_k2 = new RooRealVar("ch4_k2", "ch4_k2", 0.02, paramslow[5], paramshigh[5]);
+        ch4_k3 = new RooRealVar("ch4_k3", "ch4_k3", 0.02, paramslow[6], paramshigh[6]);
+        ch4_k4 = new RooRealVar("ch4_k4", "ch4_k4", 0.02, paramslow[7], paramshigh[7]);
+        ch4_k5 = new RooRealVar("ch4_k5", "ch4_k5", 0.02, paramslow[8], paramshigh[8]);
+        ch4_k6 = new RooRealVar("ch4_k6", "ch4_k6", 0.02, paramslow[9], paramshigh[9]);
+        cc = new fit_model_ups::ChebyChev((mf.works->var("mass")), ch4_k1, ch4_k2, ch4_k3, ch4_k4, ch4_k5, ch4_k6);
+        ch4_k1->setVal(params[4]);
+        ch4_k2->setVal(params[5]);
+        ch4_k3->setVal(params[6]);
+        ch4_k4->setVal(params[7]);
+        ch4_k5->setVal(params[8]);
+        ch4_k5->setVal(params[9]);
+	break;
     }
-    Background = (RooGenericPdf*) cc->bkg;
+    if( (bkg_func.find("ECC")!=std::string::npos)){
+      ecc = new fit_model_ups::ExpChebyChev(cc->bkg);
+      Background = (RooGenericPdf*) ecc->bkgECC;
+    }
+
+    if( (bkg_func.find("ECC")==std::string::npos)) Background = (RooGenericPdf*) cc->bkg;
   }
   if (bkg_func.find("EE")!=std::string::npos){
     Erfmean	= new RooRealVar("Erfmean", "Mean of Errfunction", params[4], paramslow[4], paramshigh[4]);
@@ -277,6 +317,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
     Background = (RooGenericPdf*) ee->bkgErf;
   }
 
+dbg();
   RooRealVar* nSig1S = new RooRealVar("nSig1S", "# of 1S signal", 900, -1000, 1000000);
   RooRealVar* nSig2S;
   RooRealVar* nSig3S;
@@ -321,7 +362,10 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
 
   if(fitdir.find("GC")!=std::string::npos){
     int count_var=0;
+    std::cout << "[GAUS CONSTRAIN] Initializing Paramters for Constrain Fit" << std::endl;
+    std::cout << parsed[3] << std::endl;
     for( std::vector<std::string>::iterator it_var= parsed.begin()+3; it_var != parsed.end(); it_var++){
+      std::cout << it_var->c_str() << std::endl;
       if(strcmp(it_var->c_str(),"GCPEND")==0) break;
       auto key_val = parser_symbol(it_var->c_str(),";");
       for( auto val : key_val){
@@ -358,9 +402,9 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
   RooFitResult* Result;
   if(fitdir.find("GC")!=std::string::npos){
     std::cout << "Fitting with Gaussian Constraint" << std::endl;
-    Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), Constrain(list_var_for_gc), NumCPU(4), Hesse(kTRUE), Range(mf.Range_fit_low, mf.Range_fit_high), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));
+    Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), Constrain(list_var_for_gc), NumCPU(16), Hesse(kTRUE), Range(mf.Range_fit_low, mf.Range_fit_high), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));
   }
-  else  {Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), NumCPU(2), Hesse(kTRUE), Range(mf.Range_fit_low, mf.Range_fit_high), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));}
+  else  {Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), NumCPU(16), Hesse(kTRUE), Range(mf.Range_fit_low, mf.Range_fit_high), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));}
 dbg();
   mf.works->pdf(use_model.c_str())->plotOn(massPlot, Name("modelPlot"));
   mf.works->pdf(use_model.c_str())->plotOn(massPlot, Components(RooArgSet(*Signal1S)), LineColor(kRed), LineStyle(kDashed), MoveToBack());
@@ -471,6 +515,8 @@ dbg();
   TF1* Sgnfc1S;
   TF1* Sgnfc2S;
   TF1* Sgnfc3S;
+
+  std::cout << name_sig_pdf.c_str() << std::endl;
 
   Sgnfc1S = mf.works->pdf(Form("%s1S", name_sig_pdf.c_str()))->asTF(*(mf.works->var("mass")));
   Sgnfc2S = mf.works->pdf(Form("%s2S", name_sig_pdf.c_str()))->asTF(*(mf.works->var("mass")));

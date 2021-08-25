@@ -19,10 +19,13 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
   std::string sig_func = parsed[0];
   std::string bkg_func = parsed[1];
   std::string fitdir = parsed[2];
-  std::string name_fitmodel = "_"+bkg_func;
+  std::string name_fitmodel = "_"+sig_func+"_"+bkg_func;
   std::string name_sig_pdf = "twoCB";
   if(sig_func=="CB3"){
     name_sig_pdf = "threeCB";
+  }
+  if(sig_func=="CB2G"){
+    name_sig_pdf = "twoCBGaus";
   }
   string fit_param, name_pdf_bkg, name_pdf_sig;
   if(fitdir.find("FF") != std::string::npos){
@@ -54,7 +57,7 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
 
   std::string method_selection = (isBDT) ? "BDT" : "Data"; 
   std::string name_file_output = Form("%s/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.root" ,workdir.Data(), ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP );
- if(ts == 9999999999) name_file_output = Form("%s/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.root" ,workdir.Data(), train_state, ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP );
+ if(ts >= 9999999990) name_file_output = Form("%s/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.root" ,workdir.Data(), train_state, ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP );
   std::cout << name_file_output << std::endl;
   if( fitdir.find("DD") !=std::string::npos)
   {
@@ -207,7 +210,7 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
 
   c1->Update();
 //  c1->Draw();
-  c1->SaveAs(Form("%s/FitPlot_train%dS_%ld_%s_%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.pdf",massDIR.Data(), train_state, ts,fitdir.c_str(), bkg_func.c_str(), (int) (ptMin*10), (int) (ptMax*10), ylim10, ylim10, Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(),(int) swflag,(int) isBDT, cutBDTlow, cutBDThigh, cutQVP));
+  c1->SaveAs(Form("%s/FitPlot_train%dS_%ld_%s_%s-%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.pdf",massDIR.Data(), train_state, ts,fitdir.c_str(), sig_func.c_str(), bkg_func.c_str(), (int) (ptMin*10), (int) (ptMax*10), ylim10, ylim10, Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(),(int) swflag,(int) isBDT, cutBDTlow, cutBDThigh, cutQVP));
   c1->Close();
 
 };

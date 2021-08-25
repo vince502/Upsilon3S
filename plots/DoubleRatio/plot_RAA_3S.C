@@ -1,8 +1,8 @@
 void plot_RAA_3S()
 {
 //=========Macro generated from canvas: c3/
-//=========  (Tue Aug 17 19:11:01 2021) by ROOT version 6.22/06
-   TCanvas *c3 = new TCanvas("c3", "",392,1463,1000,700);
+//=========  (Fri Aug 20 15:20:09 2021) by ROOT version 6.22/06
+   TCanvas *c3 = new TCanvas("c3", "",0,0,1000,700);
    gStyle->SetOptStat(0);
    gStyle->SetOptTitle(0);
    c3->Range(0,0,1,1);
@@ -23,42 +23,42 @@ void plot_RAA_3S()
    p31->SetFrameBorderMode(0);
    p31->SetFrameBorderMode(0);
    
-   TH1D *h1__6 = new TH1D("h1__6","PbPb 2 ratio cent",35,0,420);
-   h1__6->SetBinContent(3,0.5120743);
-   h1__6->SetBinContent(12,0.120556);
-   h1__6->SetBinContent(26,0.09793659);
-   h1__6->SetBinError(3,0.102766);
-   h1__6->SetBinError(12,0.04111626);
-   h1__6->SetBinError(26,0.03286721);
-   h1__6->SetMinimum(0);
-   h1__6->SetMaximum(1.3);
-   h1__6->SetEntries(3);
-   h1__6->SetStats(0);
+   TH1D *RAAcent_3S__6 = new TH1D("RAAcent_3S__6","PbPb 2 ratio cent",35,0,420);
+   RAAcent_3S__6->SetBinContent(3,0.4820163);
+   RAAcent_3S__6->SetBinContent(12,0.120556);
+   RAAcent_3S__6->SetBinContent(26,0.1230646);
+   RAAcent_3S__6->SetBinError(3,0.09850995);
+   RAAcent_3S__6->SetBinError(12,0.04111626);
+   RAAcent_3S__6->SetBinError(26,0.02991988);
+   RAAcent_3S__6->SetMinimum(0);
+   RAAcent_3S__6->SetMaximum(1.3);
+   RAAcent_3S__6->SetEntries(3);
+   RAAcent_3S__6->SetStats(0);
 
    Int_t ci;      // for color index setting
    TColor *color; // for color definition with alpha
    ci = TColor::GetColor("#009900");
-   h1__6->SetLineColor(ci);
+   RAAcent_3S__6->SetLineColor(ci);
 
    ci = TColor::GetColor("#009900");
-   h1__6->SetMarkerColor(ci);
-   h1__6->SetMarkerStyle(4);
-   h1__6->GetXaxis()->SetTitle("N_{part}");
-   h1__6->GetXaxis()->CenterTitle(true);
-   h1__6->GetXaxis()->SetLabelFont(42);
-   h1__6->GetXaxis()->SetLabelSize(0.04);
-   h1__6->GetXaxis()->SetTitleOffset(1.2);
-   h1__6->GetXaxis()->SetTitleFont(42);
-   h1__6->GetYaxis()->SetTitle("R_{AA}");
-   h1__6->GetYaxis()->CenterTitle(true);
-   h1__6->GetYaxis()->SetLabelFont(42);
-   h1__6->GetYaxis()->SetTitleSize(0.04);
-   h1__6->GetYaxis()->SetTitleOffset(1.1);
-   h1__6->GetYaxis()->SetTitleFont(42);
-   h1__6->GetZaxis()->SetLabelFont(42);
-   h1__6->GetZaxis()->SetTitleOffset(1);
-   h1__6->GetZaxis()->SetTitleFont(42);
-   h1__6->Draw("");
+   RAAcent_3S__6->SetMarkerColor(ci);
+   RAAcent_3S__6->SetMarkerStyle(4);
+   RAAcent_3S__6->GetXaxis()->SetTitle("N_{part}");
+   RAAcent_3S__6->GetXaxis()->CenterTitle(true);
+   RAAcent_3S__6->GetXaxis()->SetLabelFont(42);
+   RAAcent_3S__6->GetXaxis()->SetLabelSize(0.04);
+   RAAcent_3S__6->GetXaxis()->SetTitleOffset(1.2);
+   RAAcent_3S__6->GetXaxis()->SetTitleFont(42);
+   RAAcent_3S__6->GetYaxis()->SetTitle("R_{AA}");
+   RAAcent_3S__6->GetYaxis()->CenterTitle(true);
+   RAAcent_3S__6->GetYaxis()->SetLabelFont(42);
+   RAAcent_3S__6->GetYaxis()->SetTitleSize(0.04);
+   RAAcent_3S__6->GetYaxis()->SetTitleOffset(1.1);
+   RAAcent_3S__6->GetYaxis()->SetTitleFont(42);
+   RAAcent_3S__6->GetZaxis()->SetLabelFont(42);
+   RAAcent_3S__6->GetZaxis()->SetTitleOffset(1);
+   RAAcent_3S__6->GetZaxis()->SetTitleFont(42);
+   RAAcent_3S__6->Draw("");
    TLatex *   tex = new TLatex(0.2,0.8,"p^{#mu#mu}_{T} < 30 GeV/c");
 tex->SetNDC();
    tex->SetTextFont(42);
@@ -86,7 +86,7 @@ tex->SetNDC();
    leg->SetLineWidth(1);
    leg->SetFillColor(0);
    leg->SetFillStyle(1001);
-   TLegendEntry *entry=leg->AddEntry("h1","#varUpsilon(3S)","pl");
+   TLegendEntry *entry=leg->AddEntry("RAAcent_3S","#varUpsilon(3S)","pl");
 
    ci = TColor::GetColor("#009900");
    entry->SetLineColor(ci);
@@ -113,7 +113,7 @@ tex->SetNDC();
    tex->SetTextSize(0.06225);
    tex->SetLineWidth(2);
    tex->Draw();
-      tex = new TLatex(0.9495,0.793705,"Internal");
+      tex = new TLatex(0.9495,0.793705,"Preliminary");
 tex->SetNDC();
    tex->SetTextAlign(33);
    tex->SetTextFont(52);

@@ -35,6 +35,10 @@
 //#include "./BDT/bininfo.h"
 #include "fit_model.h"
 
+struct Y1Sfitvar{
+  Double_t alp=0., frac=0., x1s=0., sigma=0., n=0.;
+};
+
 class massfitter
 {
 	  public :

@@ -1,7 +1,7 @@
 void plot_RAApt_3S()
 {
 //=========Macro generated from canvas: c2/
-//=========  (Tue Aug 17 19:13:55 2021) by ROOT version 6.22/06
+//=========  (Fri Aug 20 01:43:18 2021) by ROOT version 6.22/06
    TCanvas *c2 = new TCanvas("c2", "",392,1463,1000,700);
    gStyle->SetOptStat(0);
    gStyle->SetOptTitle(0);
@@ -14,10 +14,10 @@ void plot_RAApt_3S()
    Double_t xAxis1[3] = {0, 6, 30}; 
    
    TH1D *h1pt__1 = new TH1D("h1pt__1","PbPb 2 ratio cent",2, xAxis1);
-   h1pt__1->SetBinContent(1,0.0780042);
-   h1pt__1->SetBinContent(2,0.0611494);
-   h1pt__1->SetBinError(1,0.04845395);
-   h1pt__1->SetBinError(2,0.02243193);
+   h1pt__1->SetBinContent(1,0.0877282);
+   h1pt__1->SetBinContent(2,0.07902583);
+   h1pt__1->SetBinError(1,0.05229863);
+   h1pt__1->SetBinError(2,0.02047334);
    h1pt__1->SetMinimum(0);
    h1pt__1->SetMaximum(1.3);
    h1pt__1->SetEntries(2);
@@ -49,12 +49,12 @@ void plot_RAApt_3S()
    Double_t xAxis2[4] = {0, 4, 9, 30}; 
    
    TH1D *h1pt__2 = new TH1D("h1pt__2","PbPb 2 ratio cent",3, xAxis2);
-   h1pt__2->SetBinContent(1,0.1379186);
-   h1pt__2->SetBinContent(2,0.1552063);
-   h1pt__2->SetBinContent(3,0.06550215);
-   h1pt__2->SetBinError(1,0.02997102);
-   h1pt__2->SetBinError(2,0.03404253);
-   h1pt__2->SetBinError(3,0.01343396);
+   h1pt__2->SetBinContent(1,0.07567129);
+   h1pt__2->SetBinContent(2,0.1718375);
+   h1pt__2->SetBinContent(3,0.07656519);
+   h1pt__2->SetBinError(1,0.03288872);
+   h1pt__2->SetBinError(2,0.02836988);
+   h1pt__2->SetBinError(3,0.01190895);
    h1pt__2->SetMinimum(0);
    h1pt__2->SetMaximum(1.3);
    h1pt__2->SetEntries(3);
@@ -128,7 +128,7 @@ tex->SetNDC();
    tex->SetTextSize(0.04);
    tex->SetLineWidth(2);
    tex->Draw();
-      tex = new TLatex(0.2,0.7,"p^{#mu}_{T} < 4 GeV/c");
+      tex = new TLatex(0.2,0.7,"p^{#mu}_{T} > 3.5 GeV/c");
 tex->SetNDC();
    tex->SetTextFont(42);
    tex->SetTextSize(0.04);
@@ -148,7 +148,7 @@ tex->SetNDC();
    tex->SetTextSize(0.06225);
    tex->SetLineWidth(2);
    tex->Draw();
-      tex = new TLatex(0.854,0.793705,"Internal");
+      tex = new TLatex(0.854,0.793705,"Preliminary");
 tex->SetNDC();
    tex->SetTextAlign(33);
    tex->SetTextFont(52);

@@ -185,7 +185,7 @@ auto fixfit = [&](int depth  = 5) mutable {
   std::string sig_func = parsed[0];
   std::string bkg_func = parsed[1];
   std::string fitdir = parsed[2];
-  std::string name_fitmodel = "_"+bkg_func;
+  std::string name_fitmodel = "_"+sig_func+"_"+bkg_func;
 
   SetStyle();
        //////////////////////////////////////////////////////////////////
@@ -249,9 +249,9 @@ auto fixfit = [&](int depth  = 5) mutable {
 double INTBIN_BDTLOW = 0.1825;// =0.16;
 train_state = 3;
 state =3;
-/* //Sealed
- if(step == 1){
-  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30}, {0, 6}, {6, 30}}){ 
+ //Sealed
+ if(step == 1 || step == 99 || step == 11){
+  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30}, /*{0, 6}, {6, 30}*/}){ 
     ptMin = ptpair.first;
     ptMax = ptpair.second;
     std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);
@@ -262,7 +262,7 @@ state =3;
     METHOD_MCGCDATA(2);
   }
 }
-*/
+
 
 
 //Step2, Analysis bin fit
@@ -289,11 +289,11 @@ if(step ==1 ){
 INTBIN_BDTLOW = 0.2689;
 train_state = 2;
 state =2;
-/* //Sealed
+ //Sealed
 if(step ==2){
   cBinLow = 0;
   cBinHigh = 181;
-  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30}, {0, 4}, {4, 9},{9, 30} }){ 
+  for( auto ptpair : (std::vector<std::pair<double, double> >) {/*{0, 30},*/ {0, 4}, /*{4, 9},{9, 30}*/ }){ 
     ptMin = ptpair.first;
     ptMax = ptpair.second;
     std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);
@@ -301,13 +301,13 @@ if(step ==2){
     sb_ratio = res.second;
     if(ptpair.first == 0 && ptpair.second == 30){ INTBIN_BDTLOW = res.first; }
     std::cout << "cutBDTlow, sb_ratio: " << cutBDTlow << ", "<< sb_ratio.getVal() << std::endl;
-    METHOD_MCGCDATA(2);
+    METHOD_MCGCDATA(1);
   }
 };
-*/
+
 
 //Step2, Analysis bin fit
-//Sealed
+/*//Sealed
 if(step ==2 ){
   ptMin = 0;
   ptMax = 30;
@@ -325,7 +325,7 @@ if(step ==2 ){
   type2 = "CB3:CC2:FF";
   fixfit(-1);
 }
-
+*/
 
 
 if(step ==3){

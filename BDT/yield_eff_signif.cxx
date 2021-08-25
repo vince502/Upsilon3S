@@ -1,10 +1,11 @@
+#pragma once
 #include "yield_eff_signif.h"
 #include "Get_Optimal_BDT.cxx"
 
 binplotter::binplotter(){
 };
 
-binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _train_state =3,  bool find_bdt = true){
+binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _train_state =3,  bool find_bdt = false){
   type = _type; ts = _ts; ylim = _ylim;  pl = _pl; ph = _ph; cl = _cl; ch = _ch; blow = _blow; bhigh = _bhigh, train_state = _train_state;
 
   int nbin = 120;
@@ -13,22 +14,32 @@ binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _
   std::cout << "--------------------Calculated nbin : " << nbin << "----------------------"<< std::endl;
 };
 
-binplotter::~binplotter(){ file1->Close(); };
+binplotter::~binplotter(){ 
+	file1->Close(); 
+	std::cout << "Destructor Called : " << file1->IsOpen();
+};
 
 void binplotter::init(bool get_bdt= true){
   auto info_fit = parser_symbol(type, ":");
-  fitfunc = info_fit[1];
+  fitfunc = info_fit[0]+"_"+info_fit[1];
   int ylim10 = (int) (ylim*10);
   int nbin = 120;
   std::string fitdir, markDDiter;
-  auto info_string_BDT = info_BDT(ts);
-
+  bool getfromstream = false;
   if (massrng.find(ts) != massrng.end()) { nbin = (int) ((massrng[ts].second - massrng[ts].first)/0.05); } 
-  else if (info_string_BDT[1] != "nan") {
-    auto m_pair =  parser_symbol(info_string_BDT[1],",");
-    double m_low = stod( m_pair[0].c_str()) ;
-    double m_high = stod( m_pair[1].c_str()) ;
-    nbin = (int) ((m_high - m_low)/0.05) ; 
+  if(getfromstream){
+    auto info_string_BDT = info_BDT(ts);
+    if (info_string_BDT[1] != "nan") {
+ 	auto m_pair =  parser_symbol(info_string_BDT[1],",");
+	double m_low = stod( m_pair[0].c_str()) ;
+    	double m_high = stod( m_pair[1].c_str()) ;
+  	nbin = (int) ((m_high - m_low)/0.05) ; 
+    }
+  }
+  else {
+    double m_low = 8;
+    double m_high = 11.5;
+    nbin = (int) ((m_high - m_low)/0.05);
   }
   fitdir = info_fit[2].c_str();
   fittype =fitdir;
@@ -36,35 +47,40 @@ void binplotter::init(bool get_bdt= true){
   if(get_bdt){ blow = Get_Optimal_BDT(ts, pl, ph,(double) -1*ylim, ylim, cl, ch, vcut, train_state).first; }
   
   filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10,nbin, cl, ch, blow, bhigh, vcut);
-  if(ts == 9999999999) filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", train_state, ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10, cl, ch, blow, bhigh, vcut);
+  if(ts >= 9999999990) filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", train_state, ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10, cl, ch, blow, bhigh, vcut);
   if(fitdir.find("DD") != std::string::npos){
     filename = filename.substr(0, filename.length() -5) + Form("_DDiter%d.root",fitdir[4]-48); 
   }
 
   std::cout << "Opening Yield file : " << filename.c_str() << std::endl;
-  if(TFile::Open(filename.c_str(), "open")==nullptr || TFile::Open(filename.c_str(),"read")->IsZombie()|| refit){
+  file1 =TFile::Open(filename.c_str());
+  if(file1==nullptr || file1->IsZombie()|| refit){
     std::cout << "Running Fitter for new Yield" << std::endl;
     string command;
     if(strcmp(fitfunc.c_str(),"")==0){ command =Form("root -l -b -q \'../MassYieldFit_BDT.C(\"/home/vince402/Upsilon3S/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root\", %d, %d, %.1f, %.1f, \"3p5\", \"S13\", %d, %d, %.3f, %.2f, %.2f , (Double_t[]) {0.13, 1.54, 3.68, 0.56, 5.0, 1.8, 3.13}, (Double_t[]) {0.01, 0.5, 0.5, 0.15, 0.5, 0.1, 0.1}, (Double_t[]) {0.25, 4, 7, 0.95, 9, 4.0, 8})\'",ts, pl, ph,-1*ylim,ylim, cl, ch, vcut, blow, bhigh);}
     if(strcmp(fitfunc.c_str(),"_CC3")==0){ command =Form("root -l -b -q \'../MassYieldFit_BDT_CC3.C(\"/home/vince402/Upsilon3S/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root\", %d, %d, %.1f, %.1f, \"3p5\", \"S13\", %d, %d, %.3f, %.2f, %.2f , (Double_t[]) {0.13, 1.54, 3.68, 0.56, -0.1, -0.1, 0.0}, (Double_t[]) {0.01, 0.5, 0.5, 0.15, -0.2, -0.2, -0.1}, (Double_t[]) {0.25, 4, 7, 0.95, 0.2,0.2,0.2})\'",ts, pl, ph,-1*ylim,ylim, cl, ch, vcut, blow, bhigh);}
     int a = system(command.c_str());
   }
-  file1 =TFile::Open(filename.c_str());
-  res = (RooFitResult*) file1->Get("fitresult_model_reducedDS");
-  if(res==nullptr)
+
+  RooFitResult *res_tmp;
+  res_tmp = (RooFitResult*) file1->Get("fitresult_model_reducedDS");
+  if(res_tmp==nullptr)
   {
-    res = (RooFitResult*) file1->Get("fitresult_model_gc_reducedDS");
+    res_tmp = (RooFitResult*) file1->Get("fitresult_model_gc_reducedDS");
   }
   worksp = (RooWorkspace*) file1->Get("workspace");
+  res = (RooFitResult*) res_tmp->Clone();
+//  res->SetDirectory(0);
+//  worksp->SetDirectory(0);
 };
 
 void binplotter::set_params(double _vcut){
   vcut = _vcut;
-  init();
+  init(false);
 };
 void binplotter::set_params(string _fitfunc){
   fitfunc = _fitfunc;
-  init();
+  init(false);
 };
 
 void binplotter::set_params(string _fitfunc, double _vcut){
@@ -153,7 +169,7 @@ RooRealVar binplotter::get_yield(int state =3 ){
 };
 
 std::pair<double, double> binplotter::get_eff(int state =3){
-  std::pair<double, double> bdteff = openEffhist((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, train_state, state);  
+  std::pair<double, double> bdteff = openEffhist((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, train_state, state, vcut);  
   return bdteff;
 };
 

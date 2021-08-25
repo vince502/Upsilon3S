@@ -31,6 +31,7 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
   std::cout << tag_BLIND << std::endl;
 
   std::string name_input = Form("%s/BDT/BDTResult/BDTresultY3S_%ld_%s%s.root", workdir.Data(), ts, name_input_opt.c_str(), tag_BLIND.c_str());
+  if(ts == 9999999991) name_input = Form("%s/BDT/BDTResult/BDTresultY3S_%ld_%s%s.root", workdir.Data(), 9999999999, name_input_opt.c_str(), tag_BLIND.c_str());
   std::string name_input_rd = Form("%s/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root", workdir.Data(), ts);
   std::cout << name_input << std::endl;
   std::cout << name_input_rd << std::endl;
@@ -40,7 +41,7 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
   TChain* tree_train_raw = new TChain();
   RooDataSet* rd_data = (RooDataSet*) file_input_rd->Get(Form("dataset_Y%dSpt%dto%d", train_state, (int) ptMin, (int) ptMax));
   std::string treedir = "";
-  if(ts == 9999999999) treedir = Form("/data/Y%dSpt%dto%d", train_state, (int) ptMin, (int) ptMax);
+  if(ts >= 9999999990) treedir = Form("/data/Y%dSpt%dto%d", train_state, (int) ptMin, (int) ptMax);
   tree_train_raw->Add(Form("%s%s/dataset1/TrainTree", name_input.c_str(), treedir.c_str()));
   tree_train_raw->Add(Form("%s%s/dataset2/TrainTree", name_input.c_str(), treedir.c_str()));
   std::string theCut = Form("(mass<11.5 && mass>8.0) && (pt>%f) && (pt<%f) && (y>%f) && (y<%f) && (cBin>%d) && (cBin<%d) && (QQVtxProb>%f)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP );
@@ -110,11 +111,12 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
         if ( !(pass_sig ==0 && pass_bkg ==0)){std::cout << "filling" << std::endl; _signif[idx] = pass_sig/TMath::Sqrt(pass_sig+pass_bkg); }
         if ( pass_sig ==0 && pass_bkg ==0) {_signif_err[idx] =0; if(zero_bin ==0) zero_bin=idx;} 
         else _signif_err[idx] = ( TMath::Sqrt(TMath::Power(pass_sig,2)+ 4*pass_sig*pass_bkg)/(2*(pass_sig+ pass_bkg) ) ); 
+	if (_signif_err[idx] > 5*_signif[idx]) _signif_err[idx] = 5*_signif[idx];
       }
       hist_res->SetBinContent(idx+1,_signif[idx]);
       hist_res->SetBinError(idx+1,  _signif_err[idx]);
 
-      if( (rd_data->sumEntries(Form("BDT>%f", hist_res->GetBinCenter(idx+1) + hist_res->GetBinWidth(1)/2))<300) &&(sig_lim_bdt == 10 ) ){
+      if( (rd_data->sumEntries(Form("BDT>%f", hist_res->GetBinCenter(idx+1) + hist_res->GetBinWidth(1)/2))<500) &&(sig_lim_bdt == 10 ) ){
 	sig_lim_bdt = hist_res->GetBinCenter(idx+1) - hist_res->GetBinWidth(1)/2;
 	std::cout << "\n\n\n\n\n FOUND BIN "<< sig_lim_bdt << "\n\n\n\n\n" ;
       }
@@ -169,7 +171,11 @@ RooRealVar get_eff_acc(std::string type, std::string type2, long ts, double ylim
   binplotter bp2 = binplotter(type2, ts, ylim,pl, ph, cl, ch, -1, bhigh, train_state, false);
   bp.get_yield();
   nbkg = bp2.get_bkg();
-  RooRealVar yield3S = bp.yield3S;
+  auto frac_pair = bp.get_frac();
+  RooRealVar frac_nS;
+  if(state2 ==2 ){ frac_nS = frac_pair.first;}
+  if(state2 ==3 ){ frac_nS = frac_pair.second;}
+  RooRealVar yield1S = bp2.get_yield(state1);
   auto effp1 = bp.get_eff(state1);
   auto effp2 = bp.get_eff(state2);
   auto eff2p1 = bp2.get_eff(state1);
@@ -184,18 +190,14 @@ RooRealVar get_eff_acc(std::string type, std::string type2, long ts, double ylim
   eff21.setError(eff2p1.second);
 
   double ratio_acceff = ((eff1.getVal()*eff22.getVal())/(eff2.getVal()*eff21.getVal()));
-  double ratio_val = yield3S.getVal()/nbkg.getVal();
-  std::cout << "YIELD: " << nbkg.getVal() << ", "<< yield3S.getVal() << std::endl;
+  double ratio_val = (frac_nS.getVal() * yield1S.getVal())/nbkg.getVal();
+  std::cout << "YIELD: " << nbkg.getVal() << ", "<< yield1S.getVal()*frac_nS.getVal() << std::endl;
   std::cout << "EFF: " << eff1.getVal() << ", "<< eff2.getVal() << std::endl;
   std::cout << "ACC: " << eff22.getVal() << ", "<< eff21.getVal() << std::endl;
   std::cout << "RESULT: " <<ratio_acceff << ", "<< ratio_val << std::endl;
-  std::cout << "ERRORS: " << "\n";
-  std::cout << "YIELD: " << nbkg.getError() << ", "<< yield3S.getError() << std::endl;
-  std::cout << "EFF: " << eff1.getError() << ", "<< eff2.getError() << std::endl;
-  std::cout << "ACC: " << eff22.getError() << ", "<< eff21.getError() << std::endl;
 
   RooRealVar res_var = RooRealVar("result","",ratio_acceff*ratio_val);
-  res_var.setError( res_var.getVal()*TMath::Sqrt( TMath::Power(eff22.getError()/eff22.getVal(),2) + TMath::Power(eff21.getError()/eff21.getVal(),2) + TMath::Power(eff1.getError()/eff1.getVal(),2) + TMath::Power(eff2.getError()/eff2.getVal(),2) + TMath::Power(nbkg.getError()/nbkg.getVal(),2) + TMath::Power(yield3S.getError()/yield3S.getVal(),2) ) ); 
+  res_var.setError(0);// res_var.getVal()*TMath::Sqrt( TMath::Power(eff22.getError()/eff22.getVal(),2) + TMath::Power(eff21.getError()/eff21.getVal(),2) + TMath::Power(eff1.getError()/eff1.getVal(),2) + TMath::Power(eff2.getError()/eff2.getVal(),2) + TMath::Power(nbkg.getError()/nbkg.getVal(),2) + TMath::Power(yield3S.getError()/yield3S.getVal(),2) ) ); 
   return res_var;
   
 };

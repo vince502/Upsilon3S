@@ -28,6 +28,8 @@ void BlindTree(){
   t4->SetName("tree4");t4->SetTitle("tree4");
   TTree* t5 = t0->CloneTree(0);
   t5->SetName("tree5");t5->SetTitle("tree5");
+  TTree* t6 = t0->CloneTree(0);
+  t6->SetName("tree6");t6->SetTitle("tree6");
 
   int nevt = t0->GetEntries();
 
@@ -35,15 +37,19 @@ void BlindTree(){
     t0->GetEntry(i);
     if((i%1000)==0) std::cout << "Processing Event : " << i << std::endl;
     int tn = 0;
-//    if(i%4==1) t1->Fill();
+    if(i%4==1) t1->Fill();
     if(i%4==2){
       t1->Fill();
       if(((i-2)/4)%2==0) t2->Fill();
       if(((i-2)/4)%2==1) t3->Fill();
     }
-//    if(i%4==3) t3->Fill();
-    if(i%4==0) t4->Fill();
-    if(i%4==tn) {t5->Fill(); (tn==0) ? tn =1 : tn++;} 
+    if(i%4==3){
+      t1->Fill();
+      if(((i-3)/4)%2==0) t4->Fill();
+      if(((i-3)/4)%2==1) t5->Fill();
+    }
+    if(i%4==0) t6->Fill();
+//    if(i%4==tn) {t5->Fill(); (tn==0) ? tn =1 : tn++;} 
   }
   fn->Write();
   fn->Close();

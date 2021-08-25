@@ -31,8 +31,8 @@ void getEfficiency(
   	massHigh = 10.2;
   }
   if(state ==2){
-    	massLow =9.2;
-  	massHigh = 10.6;
+    	massLow =9.3;
+  	massHigh = 10.7;
   }
   if(state ==3){
   	massLow =9.6;
@@ -254,5 +254,6 @@ void getEfficiency(
 //  hreco->Write();
   hgen->Write();
   hgen_bin->Write();
+  cgen->Close();
   outFile->Close();
 }

@@ -61,41 +61,41 @@ void BDTNominalProcess(long ts=9999999999)
 //  BDTClassifierApplication_NOM(ts, 2, 2, 1, true, 4, 9);
 //  BDTClassifierApplication_NOM(ts, 2, 1, 1, true, 4, 9);
 //
-  BDTClassifierApplication_NOM(ts, 2, 9, 0, true, 9, 30);
-  BDTClassifierApplication_NOM(ts, 2, 3, 1, true, 9, 30);
-  BDTClassifierApplication_NOM(ts, 2, 2, 1, true, 9, 30);
-  BDTClassifierApplication_NOM(ts, 2, 1, 1, true, 9, 30);
+//  BDTClassifierApplication_NOM(ts, 2, 9, 0, true, 9, 30);
+//  BDTClassifierApplication_NOM(ts, 2, 3, 1, true, 9, 30);
+//  BDTClassifierApplication_NOM(ts, 2, 2, 1, true, 9, 30);
+//  BDTClassifierApplication_NOM(ts, 2, 1, 1, true, 9, 30);
 
-//  makeRooDataset_fromBDT_NOM(ts, true, 0, 3, 0, 30 );
-//  makeRooDataset_fromBDT_NOM(ts, true, 1, 3, 0, 30 );
-//  makeRooDataset_fromBDT_NOM(ts, true, 2, 3, 0, 30, "MC_1S" );
-//  makeRooDataset_fromBDT_NOM(ts, true, 2, 3, 0, 30, "MC_2S" );
-//
-//  makeRooDataset_fromBDT_NOM(ts, true, 0, 3, 0, 6 );
-//  makeRooDataset_fromBDT_NOM(ts, true, 1, 3, 0, 6 );
-//  makeRooDataset_fromBDT_NOM(ts, true, 2, 3, 0, 6, "MC_1S" );
-//  makeRooDataset_fromBDT_NOM(ts, true, 2, 3, 0, 6, "MC_2S" );
+  makeRooDataset_fromBDT_NOM(ts, true, 0, 3, 0, 30 );
+  makeRooDataset_fromBDT_NOM(ts, true, 1, 3, 0, 30 );
+  makeRooDataset_fromBDT_NOM(ts, true, 2, 3, 0, 30, "MC_1S" );
+  makeRooDataset_fromBDT_NOM(ts, true, 2, 3, 0, 30, "MC_2S" );
 
-//  makeRooDataset_fromBDT_NOM(ts, true, 0, 3, 6, 30 );
-//  makeRooDataset_fromBDT_NOM(ts, true, 1, 3, 6, 30 );
-//  makeRooDataset_fromBDT_NOM(ts, true, 2, 3, 6, 30, "MC_1S" );
-//  makeRooDataset_fromBDT_NOM(ts, true, 2, 3, 6, 30, "MC_2S" );
-//
-//  makeRooDataset_fromBDT_NOM(ts, true, 0, 2, 0, 30 );
-//  makeRooDataset_fromBDT_NOM(ts, true, 1, 2, 0, 30 );
-//  makeRooDataset_fromBDT_NOM(ts, true, 2, 2, 0, 30, "MC_1S" );
-//  makeRooDataset_fromBDT_NOM(ts, true, 2, 2, 0, 30, "MC_2S" );
-//
-//  makeRooDataset_fromBDT_NOM(ts, true, 0, 2, 0, 4 );
-//  makeRooDataset_fromBDT_NOM(ts, true, 1, 2, 0, 4 );
-//  makeRooDataset_fromBDT_NOM(ts, true, 2, 2, 0, 4, "MC_1S" );
-//  makeRooDataset_fromBDT_NOM(ts, true, 2, 2, 0, 4, "MC_2S" );
-//
-//  makeRooDataset_fromBDT_NOM(ts, true, 0, 2, 4, 9 );
-//  makeRooDataset_fromBDT_NOM(ts, true, 1, 2, 4, 9 );
-//  makeRooDataset_fromBDT_NOM(ts, true, 2, 2, 4, 9, "MC_1S" );
-//  makeRooDataset_fromBDT_NOM(ts, true, 2, 2, 4, 9, "MC_2S" );
-//
+  makeRooDataset_fromBDT_NOM(ts, true, 0, 3, 0, 6 );
+  makeRooDataset_fromBDT_NOM(ts, true, 1, 3, 0, 6 );
+  makeRooDataset_fromBDT_NOM(ts, true, 2, 3, 0, 6, "MC_1S" );
+  makeRooDataset_fromBDT_NOM(ts, true, 2, 3, 0, 6, "MC_2S" );
+
+  makeRooDataset_fromBDT_NOM(ts, true, 0, 3, 6, 30 );
+  makeRooDataset_fromBDT_NOM(ts, true, 1, 3, 6, 30 );
+  makeRooDataset_fromBDT_NOM(ts, true, 2, 3, 6, 30, "MC_1S" );
+  makeRooDataset_fromBDT_NOM(ts, true, 2, 3, 6, 30, "MC_2S" );
+
+  makeRooDataset_fromBDT_NOM(ts, true, 0, 2, 0, 30 );
+  makeRooDataset_fromBDT_NOM(ts, true, 1, 2, 0, 30 );
+  makeRooDataset_fromBDT_NOM(ts, true, 2, 2, 0, 30, "MC_1S" );
+  makeRooDataset_fromBDT_NOM(ts, true, 2, 2, 0, 30, "MC_2S" );
+
+  makeRooDataset_fromBDT_NOM(ts, true, 0, 2, 0, 4 );
+  makeRooDataset_fromBDT_NOM(ts, true, 1, 2, 0, 4 );
+  makeRooDataset_fromBDT_NOM(ts, true, 2, 2, 0, 4, "MC_1S" );
+  makeRooDataset_fromBDT_NOM(ts, true, 2, 2, 0, 4, "MC_2S" );
+
+  makeRooDataset_fromBDT_NOM(ts, true, 0, 2, 4, 9 );
+  makeRooDataset_fromBDT_NOM(ts, true, 1, 2, 4, 9 );
+  makeRooDataset_fromBDT_NOM(ts, true, 2, 2, 4, 9, "MC_1S" );
+  makeRooDataset_fromBDT_NOM(ts, true, 2, 2, 4, 9, "MC_2S" );
+
   makeRooDataset_fromBDT_NOM(ts, true, 0, 2, 9, 30 );
   makeRooDataset_fromBDT_NOM(ts, true, 1, 2, 9, 30 );
   makeRooDataset_fromBDT_NOM(ts, true, 2, 2, 9, 30, "MC_1S" );

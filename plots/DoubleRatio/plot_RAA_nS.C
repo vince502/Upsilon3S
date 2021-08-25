@@ -1,8 +1,8 @@
 void plot_RAA_nS()
 {
 //=========Macro generated from canvas: c2/
-//=========  (Tue Aug 17 19:11:00 2021) by ROOT version 6.22/06
-   TCanvas *c2 = new TCanvas("c2", "",392,1463,1000,700);
+//=========  (Fri Aug 20 15:20:09 2021) by ROOT version 6.22/06
+   TCanvas *c2 = new TCanvas("c2", "",0,0,1000,700);
    gStyle->SetOptStat(0);
    gStyle->SetOptTitle(0);
    c2->Range(0,0,1,1);
@@ -15,7 +15,7 @@ void plot_RAA_nS()
    TPad *p21 = new TPad("p21", "",0,0,0.83,1);
    p21->Draw();
    p21->cd();
-   p21->Range(-46.97,-0.138875,422.73,1.249875);
+   p21->Range(-46.97,-0.1625,422.73,1.4625);
    p21->SetFillColor(0);
    p21->SetBorderMode(0);
    p21->SetBorderSize(2);
@@ -25,7 +25,7 @@ void plot_RAA_nS()
    p21->SetFrameBorderMode(0);
    p21->SetFrameBorderMode(0);
    
-   Double_t Graph0_fx3001[10] = {
+   Double_t RAAcent_1S_fx3001[10] = {
    8.3,
    30.6,
    53.9,
@@ -36,7 +36,7 @@ void plot_RAA_nS()
    333.3,
    384.3,
    0};
-   Double_t Graph0_fy3001[10] = {
+   Double_t RAAcent_1S_fy3001[10] = {
    0.792,
    0.922,
    0.609,
@@ -47,7 +47,7 @@ void plot_RAA_nS()
    0.321,
    0.319,
    0};
-   Double_t Graph0_felx3001[10] = {
+   Double_t RAAcent_1S_felx3001[10] = {
    0,
    0,
    0,
@@ -58,7 +58,7 @@ void plot_RAA_nS()
    0,
    0,
    0};
-   Double_t Graph0_fely3001[10] = {
+   Double_t RAAcent_1S_fely3001[10] = {
    0.131,
    0.088,
    0.053,
@@ -69,7 +69,7 @@ void plot_RAA_nS()
    0.021,
    0.019,
    0};
-   Double_t Graph0_fehx3001[10] = {
+   Double_t RAAcent_1S_fehx3001[10] = {
    0,
    0,
    0,
@@ -80,7 +80,7 @@ void plot_RAA_nS()
    0,
    0,
    0};
-   Double_t Graph0_fehy3001[10] = {
+   Double_t RAAcent_1S_fehy3001[10] = {
    0.131,
    0.088,
    0.053,
@@ -91,8 +91,8 @@ void plot_RAA_nS()
    0.021,
    0.019,
    0};
-   TGraphAsymmErrors *grae = new TGraphAsymmErrors(10,Graph0_fx3001,Graph0_fy3001,Graph0_felx3001,Graph0_fehx3001,Graph0_fely3001,Graph0_fehy3001);
-   grae->SetName("Graph0");
+   TGraphAsymmErrors *grae = new TGraphAsymmErrors(10,RAAcent_1S_fx3001,RAAcent_1S_fy3001,RAAcent_1S_felx3001,RAAcent_1S_fehx3001,RAAcent_1S_fely3001,RAAcent_1S_fehy3001);
+   grae->SetName("RAAcent_1S");
    grae->SetTitle("Graph");
    grae->SetFillStyle(1000);
 
@@ -105,107 +105,106 @@ void plot_RAA_nS()
    grae->SetMarkerColor(ci);
    grae->SetMarkerStyle(20);
    
-   TH1F *Graph_Graph03001 = new TH1F("Graph_Graph03001","Graph",100,0,422.73);
-   Graph_Graph03001->SetMinimum(0);
-   Graph_Graph03001->SetMaximum(1.111);
-   Graph_Graph03001->SetDirectory(0);
-   Graph_Graph03001->SetStats(0);
+   TH1F *Graph_RAAcent_1S3001 = new TH1F("Graph_RAAcent_1S3001","Graph",100,0,422.73);
+   Graph_RAAcent_1S3001->SetMinimum(0);
+   Graph_RAAcent_1S3001->SetMaximum(1.3);
+   Graph_RAAcent_1S3001->SetDirectory(0);
+   Graph_RAAcent_1S3001->SetStats(0);
 
    ci = TColor::GetColor("#000099");
-   Graph_Graph03001->SetLineColor(ci);
-   Graph_Graph03001->GetXaxis()->SetLabelFont(42);
-   Graph_Graph03001->GetXaxis()->SetTitleOffset(1);
-   Graph_Graph03001->GetXaxis()->SetTitleFont(42);
-   Graph_Graph03001->GetYaxis()->SetLabelFont(42);
-   Graph_Graph03001->GetYaxis()->SetTitleFont(42);
-   Graph_Graph03001->GetZaxis()->SetLabelFont(42);
-   Graph_Graph03001->GetZaxis()->SetTitleOffset(1);
-   Graph_Graph03001->GetZaxis()->SetTitleFont(42);
-   grae->SetHistogram(Graph_Graph03001);
+   Graph_RAAcent_1S3001->SetLineColor(ci);
+   Graph_RAAcent_1S3001->GetXaxis()->SetLabelFont(42);
+   Graph_RAAcent_1S3001->GetXaxis()->SetTitleOffset(1);
+   Graph_RAAcent_1S3001->GetXaxis()->SetTitleFont(42);
+   Graph_RAAcent_1S3001->GetYaxis()->SetLabelFont(42);
+   Graph_RAAcent_1S3001->GetYaxis()->SetTitleFont(42);
+   Graph_RAAcent_1S3001->GetZaxis()->SetLabelFont(42);
+   Graph_RAAcent_1S3001->GetZaxis()->SetTitleOffset(1);
+   Graph_RAAcent_1S3001->GetZaxis()->SetTitleFont(42);
+   grae->SetHistogram(Graph_RAAcent_1S3001);
    
    grae->Draw("ape");
    
-   TH1D *h1__1 = new TH1D("h1__1","PbPb 2 ratio cent",35,0,420);
-   h1__1->SetBinContent(1,0.8779844);
-   h1__1->SetBinContent(3,0.374169);
-   h1__1->SetBinContent(5,0.2698665);
-   h1__1->SetBinContent(8,0.09173393);
-   h1__1->SetBinContent(11,0.179744);
-   h1__1->SetBinContent(16,0.08986711);
-   h1__1->SetBinContent(22,0.08517675);
-   h1__1->SetBinContent(28,0.05509036);
-   h1__1->SetBinContent(32,0.04299828);
-   h1__1->SetBinError(1,0.2084878);
-   h1__1->SetBinError(3,0.1163751);
-   h1__1->SetBinError(5,0.07796373);
-   h1__1->SetBinError(8,0.05785631);
-   h1__1->SetBinError(11,0.04766733);
-   h1__1->SetBinError(16,0.03713808);
-   h1__1->SetBinError(22,0.02814233);
-   h1__1->SetBinError(28,0.0378688);
-   h1__1->SetBinError(32,0.03663671);
-   h1__1->SetMinimum(0);
-   h1__1->SetMaximum(1.3);
-   h1__1->SetEntries(9);
-   h1__1->SetStats(0);
+   TH1D *RAAcent_2S__1 = new TH1D("RAAcent_2S__1","PbPb 2 ratio cent",35,0,420);
+   RAAcent_2S__1->SetBinContent(1,0.9943104);
+   RAAcent_2S__1->SetBinContent(3,0.4189543);
+   RAAcent_2S__1->SetBinContent(5,0.2603082);
+   RAAcent_2S__1->SetBinContent(8,0.1404958);
+   RAAcent_2S__1->SetBinContent(11,0.1601277);
+   RAAcent_2S__1->SetBinContent(16,0.1123496);
+   RAAcent_2S__1->SetBinContent(22,0.06477951);
+   RAAcent_2S__1->SetBinContent(28,0.0657859);
+   RAAcent_2S__1->SetBinContent(32,0.0430294);
+   RAAcent_2S__1->SetBinError(1,0.1911924);
+   RAAcent_2S__1->SetBinError(3,0.1049347);
+   RAAcent_2S__1->SetBinError(5,0.06973471);
+   RAAcent_2S__1->SetBinError(8,0.05190161);
+   RAAcent_2S__1->SetBinError(11,0.0419261);
+   RAAcent_2S__1->SetBinError(16,0.0331518);
+   RAAcent_2S__1->SetBinError(22,0.02829131);
+   RAAcent_2S__1->SetBinError(28,0.03730349);
+   RAAcent_2S__1->SetBinError(32,0.03216127);
+   RAAcent_2S__1->SetMinimum(0);
+   RAAcent_2S__1->SetMaximum(1.3);
+   RAAcent_2S__1->SetEntries(9);
 
    ci = TColor::GetColor("#000099");
-   h1__1->SetLineColor(ci);
+   RAAcent_2S__1->SetLineColor(ci);
 
    ci = TColor::GetColor("#000099");
-   h1__1->SetMarkerColor(ci);
-   h1__1->SetMarkerStyle(4);
-   h1__1->GetXaxis()->SetTitle("N_{part}");
-   h1__1->GetXaxis()->CenterTitle(true);
-   h1__1->GetXaxis()->SetLabelFont(42);
-   h1__1->GetXaxis()->SetLabelSize(0.04);
-   h1__1->GetXaxis()->SetTitleOffset(1.2);
-   h1__1->GetXaxis()->SetTitleFont(42);
-   h1__1->GetYaxis()->SetTitle("R_{AA}");
-   h1__1->GetYaxis()->CenterTitle(true);
-   h1__1->GetYaxis()->SetLabelFont(42);
-   h1__1->GetYaxis()->SetTitleSize(0.04);
-   h1__1->GetYaxis()->SetTitleOffset(1.1);
-   h1__1->GetYaxis()->SetTitleFont(42);
-   h1__1->GetZaxis()->SetLabelFont(42);
-   h1__1->GetZaxis()->SetTitleOffset(1);
-   h1__1->GetZaxis()->SetTitleFont(42);
-   h1__1->Draw("same");
+   RAAcent_2S__1->SetMarkerColor(ci);
+   RAAcent_2S__1->SetMarkerStyle(4);
+   RAAcent_2S__1->GetXaxis()->SetTitle("N_{part}");
+   RAAcent_2S__1->GetXaxis()->CenterTitle(true);
+   RAAcent_2S__1->GetXaxis()->SetLabelFont(42);
+   RAAcent_2S__1->GetXaxis()->SetLabelSize(0.04);
+   RAAcent_2S__1->GetXaxis()->SetTitleOffset(1.2);
+   RAAcent_2S__1->GetXaxis()->SetTitleFont(42);
+   RAAcent_2S__1->GetYaxis()->SetTitle("R_{AA}");
+   RAAcent_2S__1->GetYaxis()->CenterTitle(true);
+   RAAcent_2S__1->GetYaxis()->SetLabelFont(42);
+   RAAcent_2S__1->GetYaxis()->SetTitleSize(0.04);
+   RAAcent_2S__1->GetYaxis()->SetTitleOffset(1.1);
+   RAAcent_2S__1->GetYaxis()->SetTitleFont(42);
+   RAAcent_2S__1->GetZaxis()->SetLabelFont(42);
+   RAAcent_2S__1->GetZaxis()->SetTitleOffset(1);
+   RAAcent_2S__1->GetZaxis()->SetTitleFont(42);
+   RAAcent_2S__1->Draw("same");
    
-   TH1D *h1__2 = new TH1D("h1__2","PbPb 2 ratio cent",35,0,420);
-   h1__2->SetBinContent(3,0.5120743);
-   h1__2->SetBinContent(12,0.120556);
-   h1__2->SetBinContent(26,0.09793659);
-   h1__2->SetBinError(3,0.102766);
-   h1__2->SetBinError(12,0.04111626);
-   h1__2->SetBinError(26,0.03286721);
-   h1__2->SetMinimum(0);
-   h1__2->SetMaximum(1.3);
-   h1__2->SetEntries(3);
-   h1__2->SetStats(0);
+   TH1D *RAAcent_3S__2 = new TH1D("RAAcent_3S__2","PbPb 2 ratio cent",35,0,420);
+   RAAcent_3S__2->SetBinContent(3,0.4820163);
+   RAAcent_3S__2->SetBinContent(12,0.120556);
+   RAAcent_3S__2->SetBinContent(26,0.1230646);
+   RAAcent_3S__2->SetBinError(3,0.09850995);
+   RAAcent_3S__2->SetBinError(12,0.04111626);
+   RAAcent_3S__2->SetBinError(26,0.02991988);
+   RAAcent_3S__2->SetMinimum(0);
+   RAAcent_3S__2->SetMaximum(1.3);
+   RAAcent_3S__2->SetEntries(3);
+   RAAcent_3S__2->SetStats(0);
 
    ci = TColor::GetColor("#009900");
-   h1__2->SetLineColor(ci);
+   RAAcent_3S__2->SetLineColor(ci);
 
    ci = TColor::GetColor("#009900");
-   h1__2->SetMarkerColor(ci);
-   h1__2->SetMarkerStyle(4);
-   h1__2->GetXaxis()->SetTitle("N_{part}");
-   h1__2->GetXaxis()->CenterTitle(true);
-   h1__2->GetXaxis()->SetLabelFont(42);
-   h1__2->GetXaxis()->SetLabelSize(0.04);
-   h1__2->GetXaxis()->SetTitleOffset(1.2);
-   h1__2->GetXaxis()->SetTitleFont(42);
-   h1__2->GetYaxis()->SetTitle("R_{AA}");
-   h1__2->GetYaxis()->CenterTitle(true);
-   h1__2->GetYaxis()->SetLabelFont(42);
-   h1__2->GetYaxis()->SetTitleSize(0.04);
-   h1__2->GetYaxis()->SetTitleOffset(1.1);
-   h1__2->GetYaxis()->SetTitleFont(42);
-   h1__2->GetZaxis()->SetLabelFont(42);
-   h1__2->GetZaxis()->SetTitleOffset(1);
-   h1__2->GetZaxis()->SetTitleFont(42);
-   h1__2->Draw("same");
+   RAAcent_3S__2->SetMarkerColor(ci);
+   RAAcent_3S__2->SetMarkerStyle(4);
+   RAAcent_3S__2->GetXaxis()->SetTitle("N_{part}");
+   RAAcent_3S__2->GetXaxis()->CenterTitle(true);
+   RAAcent_3S__2->GetXaxis()->SetLabelFont(42);
+   RAAcent_3S__2->GetXaxis()->SetLabelSize(0.04);
+   RAAcent_3S__2->GetXaxis()->SetTitleOffset(1.2);
+   RAAcent_3S__2->GetXaxis()->SetTitleFont(42);
+   RAAcent_3S__2->GetYaxis()->SetTitle("R_{AA}");
+   RAAcent_3S__2->GetYaxis()->CenterTitle(true);
+   RAAcent_3S__2->GetYaxis()->SetLabelFont(42);
+   RAAcent_3S__2->GetYaxis()->SetTitleSize(0.04);
+   RAAcent_3S__2->GetYaxis()->SetTitleOffset(1.1);
+   RAAcent_3S__2->GetYaxis()->SetTitleFont(42);
+   RAAcent_3S__2->GetZaxis()->SetLabelFont(42);
+   RAAcent_3S__2->GetZaxis()->SetTitleOffset(1);
+   RAAcent_3S__2->GetZaxis()->SetTitleFont(42);
+   RAAcent_3S__2->Draw("same");
    TLatex *   tex = new TLatex(0.2,0.8,"p^{#mu#mu}_{T} < 30 GeV/c");
 tex->SetNDC();
    tex->SetTextFont(42);
@@ -218,7 +217,7 @@ tex->SetNDC();
    tex->SetTextSize(0.04);
    tex->SetLineWidth(2);
    tex->Draw();
-      tex = new TLatex(0.2,0.7,"p^{#mu}_{T} < 4 GeV/c");
+      tex = new TLatex(0.2,0.7,"p^{#mu}_{T} > 3.5 GeV/c");
 tex->SetNDC();
    tex->SetTextFont(42);
    tex->SetTextSize(0.04);
@@ -233,7 +232,7 @@ tex->SetNDC();
    leg->SetLineWidth(1);
    leg->SetFillColor(0);
    leg->SetFillStyle(1001);
-   TLegendEntry *entry=leg->AddEntry("Graph0","#varUpsilon(1S) HIN-16-023","pl");
+   TLegendEntry *entry=leg->AddEntry("RAAcent_1S","#varUpsilon(1S) HIN-16-023","pl");
 
    ci = TColor::GetColor("#660000");
    entry->SetLineColor(ci);
@@ -245,7 +244,7 @@ tex->SetNDC();
    entry->SetMarkerStyle(20);
    entry->SetMarkerSize(1);
    entry->SetTextFont(42);
-   entry=leg->AddEntry("h1","#varUpsilon(2S)","pl");
+   entry=leg->AddEntry("RAAcent_2S","#varUpsilon(2S)","pl");
 
    ci = TColor::GetColor("#000099");
    entry->SetLineColor(ci);
@@ -257,7 +256,7 @@ tex->SetNDC();
    entry->SetMarkerStyle(4);
    entry->SetMarkerSize(1);
    entry->SetTextFont(42);
-   entry=leg->AddEntry("h1","#varUpsilon(3S)","pl");
+   entry=leg->AddEntry("RAAcent_3S","#varUpsilon(3S)","pl");
 
    ci = TColor::GetColor("#009900");
    entry->SetLineColor(ci);
@@ -284,7 +283,7 @@ tex->SetNDC();
    tex->SetTextSize(0.06225);
    tex->SetLineWidth(2);
    tex->Draw();
-      tex = new TLatex(0.9495,0.793705,"Internal");
+      tex = new TLatex(0.9495,0.793705,"Preliminary");
 tex->SetNDC();
    tex->SetTextAlign(33);
    tex->SetTextFont(52);
@@ -336,8 +335,8 @@ tex->SetNDC();
    y1int__3->Draw("");
    
    TH1D *y2int__4 = new TH1D("y2int__4","",3,0,1);
-   y2int__4->SetBinContent(2,0.08703838);
-   y2int__4->SetBinError(2,0.01589585);
+   y2int__4->SetBinContent(2,0.09030483);
+   y2int__4->SetBinError(2,0.01573462);
    y2int__4->SetMinimum(0);
    y2int__4->SetMaximum(1.3);
    y2int__4->SetEntries(1);

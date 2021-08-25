@@ -8,7 +8,7 @@
 #include "../fitter.h"
 #include "yield_eff_signif.h"
 static TH1D* Get_Optimal_BDT_HIST; 
-const double interval_score = 0.01;
+const double interval_score = 0.05;
 
 std::string MuIDHybridSoft2018 = "nPixWMea1>0&&nPixWMea2>0&&nTrkWMea1>5&&nTrkWMea2>5&&fabs(dxy1)<0.3&&fabs(dxy2)<0.3&&fabs(dz1)<20&&fabs(dz2)<20";
 
@@ -183,7 +183,7 @@ std::map<double ,std::map<std::pair<std::pair<int, int>, std::pair<double,double
 
 std::pair<int, int> blindpair(long ts= 1618557840){
 
-  std::fstream input;
+  fstream input;
   input.open(Form("%s/BDT/BDT_description.log",workdir.Data()));
   std::map<int, std::string> dictmap;
   std::string stringbuf;
@@ -204,7 +204,8 @@ std::pair<int, int> blindpair(long ts= 1618557840){
 std::vector< std::string > info_BDT(long ts, std::string aux = "")
 {
 	std::fstream input;
-	input.open(Form("%s/BDT/BDT_description.log",workdir.Data()));
+	input.open(Form("%s/BDT/BDT_description.log",workdir.Data()), std::fstream::in | std::fstream::app);
+	if(!input.is_open())  std::cout<< "File not open \n";
 	std::map<long, std::string> dictmap;
 	std::string stringbuf;
 	while (input.peek() != EOF){
@@ -226,6 +227,8 @@ std::vector< std::string > info_BDT(long ts, std::string aux = "")
 	  }
 	  dictmap[inputts] = stringbuf;
 	}
+	input.close();
+	if(input.is_open())  std::cout<< "File still open \n";
 	try{
 	  return parser_symbol(dictmap[ts], "::");
 	}
@@ -234,13 +237,60 @@ std::vector< std::string > info_BDT(long ts, std::string aux = "")
 	  return null_pair;
 	}
 
+
 };
+double Get_BDT(long ts, int state, int ptMin, int ptMax, int cBinLow, int cBinHigh, double vcut =0.00, double rap = 2.4, int signif_ = 2){
+  string name_file = Form("%s/BDT/Significance_hist/HIST_train%dS_%ld_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_vp_%.4f_S%d.root", workdir.Data(), state, ts, ptMin, ptMax, (int) (rap*10), (int) (rap*10), cBinLow, cBinHigh, vcut, signif_);
+  TFile* input_file = TFile::Open(name_file.c_str());
+  TNamed* key = (TNamed*) input_file->Get("latest");
+  input_file->Close();
+  return stod(key->GetTitle());
+}
 
 std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio =0.16, int train_state =3, string name_input_opt = "", string formula_significance= "S2");
 
 RooRealVar get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int state1 =1, int state2 = 3);
 
 TH1D* func_hist_optimal_BDT();
+
+struct ana_bins{
+  int pl, ph, cl, ch, state;
+};
+
+std::map<std::string, std::vector<ana_bins> > ana_bm ={
+	{"2c", 	{
+		{0, 30,  0, 10, 2},
+		{0, 30, 10, 20, 2},
+		{0, 30, 20, 40, 2},
+		{0, 30, 40, 60, 2},
+		{0, 30, 60, 80, 2},
+		{0, 30, 80, 100, 2},
+		{0, 30, 100, 120, 2},
+		{0, 30, 120, 140, 2},
+		{0, 30, 140, 181, 2},
+		{0, 30, 0, 181, 2},
+		}
+	},
+	{"3c", 	{
+		{0, 30,  0, 40, 3},
+		{0, 30, 40, 100, 3},
+		{0, 30, 100, 181, 3},
+		{0, 30, 0, 181, 3},
+		}
+	},
+	{"2p", 	{
+		{0, 4,  0, 181, 2},
+		{4, 9,  0, 181, 2},
+		{9, 30,  0, 181, 2},
+		}
+	},
+	{"3p", 	{
+		{0, 6,  0, 181, 3},
+		{6, 30,  0, 181, 3},
+		}
+	},
+
+};
 
 
 #endif

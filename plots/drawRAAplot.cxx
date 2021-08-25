@@ -1,9 +1,12 @@
 #include "../upsilonAna.cxx"
 #include "../.workdir.h"
+#include "../LLR_CCorder.h"
+
 
 RooRealVar getDoubleRatioValue(std::pair <int, int>);
 TH1D* getPbPbRAA(int state =3, double bdt_fix=-2);
 
+// Double Ratio Finding Function
 //////////////////////////////////////////////////////////////////////////////
 RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC", double bdtlow_val = -2, int state =3, int getPre = 0,long ts =9999999999, bool stdvcut = false){
    // 1625503068; //1623391157; //BLIND Nominal
@@ -65,6 +68,8 @@ RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, do
 
   return val_return;
 };
+
+// Centrality RAA function
 //////////////////////////////////////////////////////////////////////////////
 
 TH1D* getPbPbRAA(int state =3, double bdt_fix = -2, int shift =0){
@@ -83,14 +88,14 @@ TH1D* getPbPbRAA(int state =3, double bdt_fix = -2, int shift =0){
   if(state ==3) theColor = kGreen+2;
   if(state ==2) theColor = kBlue+2;
 
-  TH1D* h1 = new TH1D("h1" , "PbPb 2 ratio cent", 35, 0, 420);
+  TH1D* h1 = new TH1D(Form("RAAcent_%dS", state) , "PbPb 2 ratio cent", 35, 0, 420);
   gStyle->SetOptStat(kFALSE);
   gStyle->SetOptTitle(kFALSE);
   if(state ==3){
     for(int idx =0; idx <3; ++idx){
       RooRealVar dr_bin;
-      if(bdt_fix != -2) dr_bin = getDoubleRatioValue({cbinthree_rev[idx+1],cbinthree_rev[idx]},{0,30}, "CB3:CC2:FF", bdt_tmp_val2[idx+1], state );
-      else dr_bin = getDoubleRatioValue({cbinthree_rev[idx+1],cbinthree_rev[idx]},{0,30}, "CB3:CC2:FF", bdt_fix, state );
+      if(bdt_fix != -2) dr_bin = getDoubleRatioValue({cbinthree_rev[idx+1],cbinthree_rev[idx]},{0,30}, Form("CB3:CC%d:FF", getNomBkgO(state, 0, 30, cbinthree_rev[idx+1],cbinthree_rev[idx]) ), bdt_tmp_val2[idx+1], state );
+      else dr_bin = getDoubleRatioValue({cbinthree_rev[idx+1],cbinthree_rev[idx]},{0,30}, Form("CB3:CC%d:FF", getNomBkgO(state, 0, 30, cbinthree_rev[idx+1],cbinthree_rev[idx]) ), bdt_fix, state );
       double npart = glp::Npart[{centthree_rev[idx+1],centthree_rev[idx]}].first;
       h1->SetBinContent(h1->FindBin(npart) + shift, dr_bin.getVal());
       h1->SetBinError(h1->FindBin(npart) + shift, dr_bin.getError());
@@ -99,8 +104,8 @@ TH1D* getPbPbRAA(int state =3, double bdt_fix = -2, int shift =0){
   if(state ==2){
     for(int idx =0; idx <9; ++idx){
       RooRealVar dr_bin;
-      if(bdt_fix != -2) dr_bin = getDoubleRatioValue({cbinnine_rev[idx+1],cbinnine_rev[idx]},{0,30}, "CB3:CC2:FF", bdt_tmp_val2[idx+1], state );
-      else dr_bin = getDoubleRatioValue({cbinnine_rev[idx+1],cbinnine_rev[idx]},{0,30}, "CB3:CC2:FF", bdt_fix, state );
+      if(bdt_fix != -2) dr_bin = getDoubleRatioValue({cbinnine_rev[idx+1],cbinnine_rev[idx]},{0,30}, Form("CB3:CC%d:FF", getNomBkgO(state, 0, 30, cbinnine_rev[idx+1],cbinnine_rev[idx]) ), bdt_tmp_val2[idx+1], state );
+      else dr_bin = getDoubleRatioValue({cbinnine_rev[idx+1],cbinnine_rev[idx]},{0,30}, Form("CB3:CC%d:FF", getNomBkgO(state, 0, 30, cbinnine_rev[idx+1],cbinnine_rev[idx]) ), bdt_fix, state );
       double npart = glp::Npart[{centnine_rev[idx+1],centnine_rev[idx]}].first;
       h1->SetBinContent(h1->FindBin(npart) + shift, dr_bin.getVal());
       h1->SetBinError(h1->FindBin(npart) + shift, dr_bin.getError());
@@ -122,9 +127,10 @@ TH1D* getPbPbRAA(int state =3, double bdt_fix = -2, int shift =0){
   return h1;
 };
 
-
+// Pt RAA function
 //////////////////////////////////////////////////////////////////////////////
 TH1D* getPbPbRAA_pt(int state =3, double bdt_fix = -2, int shift =0){
+  TH1::SetDefaultSumw2();
   Double_t* ptbintwo = new Double_t[3]{0,6,30};
   Double_t* ptbintwo_rev = new Double_t[3]{30,6,0};
   Double_t* ptbinthree = new Double_t[4]{0,4,9,30};
@@ -132,16 +138,16 @@ TH1D* getPbPbRAA_pt(int state =3, double bdt_fix = -2, int shift =0){
   
 
   TH1D* h1;
-  if(state ==3) h1 =new TH1D("h1pt" , "PbPb 2 ratio cent",2,  ptbintwo);
-  if(state ==2) h1 =new TH1D("h1pt" , "PbPb 2 ratio cent",3,  ptbinthree);
+  if(state ==3) h1 =new TH1D("h3pt" , "PbPb 2 ratio cent 2S",2,  ptbintwo);
+  if(state ==2) h1 =new TH1D("h2pt" , "PbPb 2 ratio cent 3S",3,  ptbinthree);
   gStyle->SetOptStat(kFALSE);
   gStyle->SetOptTitle(kFALSE);
   if(state == 3){
     for(int idx =0; idx <2; ++idx){
       std::cout << "take from value: " << bdt_tmp_val[idx+1] << std::endl;
       RooRealVar dr_bin;
-      if(bdt_fix != -2) dr_bin= getDoubleRatioValue({0,181},{ptbintwo[idx],ptbintwo[idx+1]}, "CB3:CC2:GC", bdt_tmp_val[idx+1], state );
-      else dr_bin= getDoubleRatioValue({0,181},{ptbintwo[idx],ptbintwo[idx+1]}, "CB3:CC2:GC", bdt_fix, state );
+      if(bdt_fix != -2) dr_bin= getDoubleRatioValue({0,181},{ptbintwo[idx],ptbintwo[idx+1]}, Form("CB3:CC%d:GC", getNomBkgO(state, ptbintwo[idx], ptbintwo[idx+1],0, 181) ), bdt_tmp_val[idx+1], state );
+      else dr_bin= getDoubleRatioValue({0,181},{ptbintwo[idx],ptbintwo[idx+1]}, Form("CB3:CC%d:GC", getNomBkgO(state, ptbintwo[idx], ptbintwo[idx+1],0, 181) ), bdt_fix, state );
       h1->SetBinContent(h1->FindBin( (ptbintwo[idx]+ptbintwo[idx+1])/2), dr_bin.getVal());
       h1->SetBinError(h1->FindBin( (ptbintwo[idx]+ptbintwo[idx+1])/2), dr_bin.getError());
     }
@@ -150,8 +156,8 @@ TH1D* getPbPbRAA_pt(int state =3, double bdt_fix = -2, int shift =0){
     for(int idx =0; idx <3; ++idx){
       std::cout << "take from value: " << bdt_tmp_val[idx+1] << std::endl;
       RooRealVar dr_bin;
-      if(bdt_fix != -2) dr_bin= getDoubleRatioValue({0,181},{ptbinthree[idx],ptbinthree[idx+1]}, "CB3:CC2:GC", bdt_tmp_val[idx+1], state );
-      else dr_bin= getDoubleRatioValue({0,181},{ptbinthree[idx],ptbinthree[idx+1]}, "CB3:CC2:GC", bdt_fix, state );
+      if(bdt_fix != -2) dr_bin= getDoubleRatioValue({0,181},{ptbinthree[idx],ptbinthree[idx+1]}, Form("CB3:CC%d:GC", getNomBkgO(state, ptbinthree[idx], ptbinthree[idx+1],0, 181) ), bdt_tmp_val[idx+1], state );
+      else dr_bin= getDoubleRatioValue({0,181},{ptbinthree[idx],ptbinthree[idx+1]}, Form("CB3:CC%d:GC", getNomBkgO(state, ptbinthree[idx], ptbinthree[idx+1],0, 181) ), bdt_fix, state );
       h1->SetBinContent(h1->FindBin( (ptbinthree[idx]+ptbinthree[idx+1])/2), dr_bin.getVal());
       h1->SetBinError(h1->FindBin( (ptbinthree[idx]+ptbinthree[idx+1])/2), dr_bin.getError());
     }
@@ -172,6 +178,7 @@ TH1D* getPbPbRAA_pt(int state =3, double bdt_fix = -2, int shift =0){
   return h1;
 };
 
+// Draw Centrality & Int. RAA Plot
 //////////////////////////////////////////////////////////////////////////////
 void drawRAAplot(){
 //  TCanvas* c2 = new TCanvas("c2","",700,800);
@@ -185,6 +192,7 @@ void drawRAAplot(){
 //  c2->SaveAs(Form("%s/plots/DoubleRatio/plot_test_bdt0.2_1.0.cxx", workdir.Data() ));
   TCanvas* c2 = new TCanvas("c2","",1000,700);
   TCanvas* c3 = new TCanvas("c3","",1000,700);
+
 
   TPad *p2_1, *p2_2, *p3_1, *p3_2;
   p2_1 = new TPad("p21", "", 0.00, 0,0.83,1);
@@ -218,12 +226,13 @@ void drawRAAplot(){
   y3_int->GetYaxis()->SetLabelOffset(0);
   y3_int->GetYaxis()->SetRangeUser(0,1.3);
 
-  auto raa2_int = getDoubleRatioValue({0,181}, {0,30}, "CB3:CC2:GC", -2, 2);
-  auto raa3_int = getDoubleRatioValue({0,181}, {0,30}, "CB3:CC2:GC", -2, 3);
+  auto raa2_int = getDoubleRatioValue({0,181}, {0,30},Form("CB3:CC%d:GC", getNomBkgO(2, 0, 30,0, 181) ), -2, 2);
+  auto raa3_int = getDoubleRatioValue({0,181}, {0,30},Form("CB3:CC%d:GC", getNomBkgO(3, 0, 30,0, 181) ), -2, 3);
 //  auto hPbPb1S = getPbPbRAA(1, -0.1, 2);
   auto hPbPb2S = getPbPbRAA(2, -2, 0);
   auto hPbPb3S = getPbPbRAA(3, -2, 0 );
   TGraphAsymmErrors* gr1S = new TGraphAsymmErrors(10); 
+  gr1S->SetName("RAAcent_1S");
   gr1S->SetPoint(0,8.3000002, 0.79200000);
   gr1S->SetPoint(1,30.600000, 0.92199999);
   gr1S->SetPoint(2, 53.900002, 0.60900003);
@@ -244,6 +253,7 @@ void drawRAAplot(){
   gr1S->SetPointError(7, 0, 0, 0.021000000, 0.021000000);
   gr1S->SetPointError(8, 0, 0, 0.018999999, 0.018999999);
   gr1S->SetMarkerStyle(kFullCircle);
+  gr1S->GetYaxis()->SetRangeUser(0, 1.3);
   gr1S->SetMarkerSize(1);
   gr1S->SetLineColor(kRed+3);
   gr1S->SetMarkerColor(kRed+3);
@@ -260,7 +270,6 @@ void drawRAAplot(){
   leg2->SetBorderSize(0);
   leg2->SetTextFont(42);
   leg2->SetTextSize(0.04);
-  gStyle->SetErrorX(0.);
   gStyle->SetEndErrorSize(0);
 
   y1_int->SetBinContent(1, 0.376 );
@@ -295,7 +304,7 @@ void drawRAAplot(){
   hPbPb3S->Draw("same");
   tl->DrawLatex( 0.2, 0.8,"p^{#mu#mu}_{T} < 30 GeV/c");
   tl->DrawLatex( 0.2, 0.75, "|y| < 2.4");
-  tl->DrawLatex( 0.2, 0.7, "p^{#mu}_{T} < 4 GeV/c");
+  tl->DrawLatex( 0.2, 0.7, "p^{#mu}_{T} > 3.5 GeV/c");
   leg->Draw();
 
   p2_2->cd();
@@ -325,10 +334,24 @@ void drawRAAplot(){
   c2->SaveAs(Form("%s/plots/DoubleRatio/plot_RAA_nS.C", workdir.Data() ));
   c3->SaveAs(Form("%s/plots/DoubleRatio/plot_RAA_3S.pdf", workdir.Data() ));
   c3->SaveAs(Form("%s/plots/DoubleRatio/plot_RAA_3S.C", workdir.Data() ));
+  
+  TFile* output = new TFile("resultRAA_nS_centrality.root", "recreate");
+  output->cd();
+  y1_int->Write();
+  y2_int->Write();
+  y3_int->Write();
+  hPbPb2S->Write();
+  hPbPb3S->Write();
+  gr1S->Write();
+  output->Close();
+
+
 };
 
+// Draw Pt RAA Plot
 //////////////////////////////////////////////////////////////////////////////
 void drawRAApt_plot(){
+  gStyle->SetErrorX(0.);
 //  TCanvas* c2 = new TCanvas("c2","",700,800);
 //
 //  c2->cd();
@@ -339,7 +362,6 @@ void drawRAApt_plot(){
 //  c2->SaveAs(Form("%s/plots/DoubleRatio/plot_test.cxx", workdir.Data() ));
 //  c2->SaveAs(Form("%s/plots/DoubleRatio/plot_test_bdt0.2_1.0.cxx", workdir.Data() ));
   TCanvas* c2 = new TCanvas("c2","",1000,700);
-
   auto hPbPb3S = getPbPbRAA_pt(3);
   auto hPbPb2S = getPbPbRAA_pt(2);
 //  TH1D* hPbPb2S = new TH1D("hPbPb2S" , "PbPb 2 ratio cent", 1, 0, 3);
@@ -371,13 +393,18 @@ void drawRAApt_plot(){
   leg->Draw();
   tl->DrawLatex( 0.2, 0.8,"p^{#mu#mu}_{T} < 30 GeV/c");
   tl->DrawLatex( 0.2, 0.75, "|y| < 2.4");
-  tl->DrawLatex( 0.2, 0.7, "p^{#mu}_{T} < 4 GeV/c");
+  tl->DrawLatex( 0.2, 0.7, "p^{#mu}_{T} > 3.5 GeV/c");
 
 
   CMS_lumi_square(c2, 2, 33);
   c2->Modified();
   c2->Update();
 
-  c2->SaveAs(Form("%s/plots/DoubleRatio/plot_RAApt_3S.pdf", workdir.Data() ));
-  c2->SaveAs(Form("%s/plots/DoubleRatio/plot_RAApt_3S.C", workdir.Data() ));
+  c2->SaveAs(Form("%s/plots/DoubleRatio/plot_RAApt_nS.pdf", workdir.Data() ));
+  c2->SaveAs(Form("%s/plots/DoubleRatio/plot_RAApt_nS.C", workdir.Data() ));
+  TFile* output = new TFile("resultRAA_nS_pt.root", "recreate");
+  output->cd();
+  hPbPb2S->Write();
+  hPbPb3S->Write();
+  output->Close();
 };

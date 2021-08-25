@@ -5,8 +5,7 @@
 RooRealVar upsi::getcrosssection(std::string type, long ts, double ptlow, double pthigh, double ylow, double yhigh, double sm_ptcut, double clow, double chigh, double blow, double bhigh, int state =3, bool find_bdt= false)
 {
 		RooRealVar yield, acc, eff, Lum;
-		binplotter bp = binplotter(type, ts, yhigh, ptlow, pthigh, (int) clow, (int) chigh, blow, bhigh, false);
-		bp.refit = false;
+		binplotter bp = binplotter(type, ts, yhigh, ptlow, pthigh, (int) clow, (int) chigh, blow, bhigh, state, find_bdt);
 		yield = bp.get_yield(state);
 		auto eff_pair = bp.get_eff(state);
 		eff= RooRealVar("eff", "efficiency" ,eff_pair.first);
