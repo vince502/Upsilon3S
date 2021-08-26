@@ -6,10 +6,10 @@
 #include "MassYieldFit_data.cxx"
 #include "./BDT/yield_eff_signif.cxx"
 
-void doConstraintFit_SYSBKGPDF(int cc_order, int step = 0){
-  std::string type 			= Form("CB2G:CC%d:GC", cc_order)	;
-  std::string type2 			= Form("CB2G:CC%d:DR2FF", cc_order)	;
-  std::string type_r 			= Form("CB2G:CC%d:DRGC", cc_order)	;
+void doConstraintFit_SYSBKGODR(int cc_order, int step = 0){
+  std::string type 			= Form("CB3:CC%d:GC", cc_order)	;
+  std::string type2 			= Form("CB3:CC%d:DR2FF", cc_order)	;
+  std::string type_r 			= Form("CB3:CC%d:DRGC", cc_order)	;
 //  std::string typenobdt 		= "CB3:CC4:FF"	;
   std::string constraints		="alpha:n:frac:frac2:xNS:xNS_2:sigmaNS_1"	;
   std::string fixvars			="alpha:n:frac:frac2:x1S:x1S_2:sigma1S_1"	;

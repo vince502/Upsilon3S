@@ -186,6 +186,8 @@ auto fixfit = [&](int depth  = 5) mutable {
     cutBDTlow =0;
     cutBDThigh=0;
   }
+       type = Form("%s:CC%d:%s", parser_symbol(type)[0].c_str(), getNomBkgO(state, (int) ptMin, (int) ptMax, cBinLow, cBinHigh), parser_symbol(type)[2].c_str());
+
   int ylim10 = (int) (rapMax*10);
   auto parsed = parser_symbol(type);
   std::string sig_func = parsed[0];

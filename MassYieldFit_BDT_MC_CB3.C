@@ -123,6 +123,15 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   frac = new RooRealVar("frac", "CB fraction", 0.13, 0.01, 0.90);
   frac2 = new RooRealVar("frac2", "CB fraction 2", 0.25, 0.01, 0.90);
 //  if(bdtlow == -1.){
+//  PARAMSET FOR 2,3S
+//    alpha->setVal(1.866);
+//    n->setVal(1.40);
+//    sigmaNS_1->setVal(0.217);
+//    frac->setVal(0.1);
+//    frac2->setVal(0.52);
+//    xNS->setVal(0.54);
+//    xNS_2->setVal(0.30);
+//    PARAMSET FOR 1S
     alpha->setVal(1.866);
     n->setVal(1.40);
     sigmaNS_1->setVal(0.217);
