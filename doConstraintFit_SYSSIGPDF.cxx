@@ -260,7 +260,7 @@ train_state = 3;
 state =3;
  //Sealed
  if(step == 1 || step == 99 || step == 11){
-  for( auto ptpair : (std::vector<std::pair<double, double> >) {/*{0, 30},*/ {0, 6},/* {6, 30}*/}){ 
+  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30},{0, 6}, {6, 30}}){ 
     ptMin = ptpair.first;
     ptMax = ptpair.second;
 //    std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);
@@ -301,10 +301,10 @@ INTBIN_BDTLOW = 0.2689;
 train_state = 2;
 state =2;
  //Sealed
-if(step ==2 || step == 99 || step ==21){
+if(step ==2 || step == 99 || step ==11){
   cBinLow = 0;
   cBinHigh = 181;
-  for( auto ptpair : (std::vector<std::pair<double, double> >) {/*{0, 30},*/ {0, 4}, {4, 9},{9, 30} }){ 
+  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30},  {0, 4}, {4, 9},{9, 30} }){ 
     ptMin = ptpair.first;
     ptMax = ptpair.second;
 //    std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);

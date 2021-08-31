@@ -163,7 +163,7 @@ void doConstraintFit_SYSBKGECC(int step = 0){
        if(state ==2) mean_sigma1S1 = map_keyval["sigmaNS_1"].first*(U1S_mass/U2S_mass);
        if(state ==1) mean_sigma1S1 = map_keyval["sigmaNS_1"].first*(U1S_mass/U1S_mass);
 
-      MassYieldFit_data(type, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, -0.05,0.00,0.01,0.00, -0.03}, (Double_t[]) {0.11, 0.5, 0.4, 0.01, -0.1, -0.1, -0.1,-0.1, -0.1}, (Double_t[]) {0.41, (map_keyval["alpha"].first+map_keyval["alpha"].second)*2, (map_keyval["n"].first+map_keyval["n"].second)*4, 0.95, 0.10, 0.10, 0.1,0.1, 0.1}, 
+      MassYieldFit_data(type, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, -0.01,-0.001,0.01,0.00, -0.0, 0.}, (Double_t[]) {0.11, 0.5, 0.4, 0.01, -0.1, -0.1, -0.1,-0.1, -0.1, -0.1}, (Double_t[]) {0.41, (map_keyval["alpha"].first+map_keyval["alpha"].second)*2, (map_keyval["n"].first+map_keyval["n"].second)*4, 0.95, 0.10, 0.10, 0.1,0.1, 0.1, 0.1}, 
  //     MassYieldFit_data(type, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 5.0,5.1,2.1,0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, -0.3, -0.3, -0.3,-0.3}, (Double_t[]) {0.31, (map_keyval["alpha"].first+map_keyval["alpha"].second)*2, (map_keyval["n"].first+map_keyval["n"].second)*4, 0.95, 9.1, 10.1, 2.3,0.3}, 
 //      MassYieldFit_data(type2, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 0.0,0.1,0.1,0.1, -0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, -0.3, -0.3, -0.3,-0.3, -0.3}, (Double_t[]) {-1, -1, -1, -1, 0.1, 0.1, 0.3,0.3, 0.3}, 
 //      MassYieldFit_data(type2, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 5.0,5.1,2.1,0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, 5.3, 1.3, 0.3,-0.3}, (Double_t[]) {-1, -1, -1, -1, 9.1, 7.1, 2.3,0.3}, 
@@ -224,6 +224,7 @@ auto fixfit = [&](int depth  = 5) mutable {
       for (auto keys : list_var_forfix){
       std::cout << keys << std::endl;
         RooRealVar* _var = (RooRealVar*) list_fit_final_2.find(keys.c_str());
+	std::cout << _var->getVal() << std::endl;
         map_keyval_2[keys.c_str()] = {_var->getVal(), _var->getError()};
       }
       long xts = ts;
@@ -235,7 +236,7 @@ auto fixfit = [&](int depth  = 5) mutable {
 //    for( int i = 11; i < 12; i++){
 //         cutBDTlow = -1.0 + 0.1*i;
        type2 = Form("%s:ECC%d:%s", parser_symbol(type2)[0].c_str(), getNomBkgO(state, (int) ptMin, (int) ptMax, cBinLow, cBinHigh), parser_symbol(type2)[2].c_str());
-         MassYieldFit_data(type2, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, xts, cutBDTlow, cutBDThigh, (Double_t[]) {map_keyval_2["sigma1S_1"].first, map_keyval_2["alpha"].first, map_keyval_2["n"].first, map_keyval_2["frac"].first, 0.0,-0.0,0.0,0.0}, (Double_t[]) {0.05, 0.5, 0.4, 0.05, -0.1, -0.1, -0.1,-0.1}, (Double_t[]) {-1, -1, -1, -1, 0.1, 0.1, 0.1,0.1}, 
+         MassYieldFit_data(type2, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, xts, cutBDTlow, cutBDThigh, (Double_t[]) {map_keyval_2["sigma1S_1"].first, map_keyval_2["alpha"].first, map_keyval_2["n"].first, map_keyval_2["frac"].first, 0.0,-0.0,0.0,0.0, 0.0, 0.0}, (Double_t[]) {0.05, 0.5, 0.4, 0.05, -0.1, -0.1, -0.14,-0.13, -0.13}, (Double_t[]) {-1, -1, -1, -1, 0.1, 0.1, 0.15,0.13, 0.13}, 
          (std::map<string, params_vhl>) {
          {"frac2", {map_keyval_2["frac2"].first, 0, -1} }, 
          {"xNS", {map_keyval_2["x1S"].first,0,-1}}, 
@@ -259,7 +260,7 @@ train_state = 3;
 state =3;
  //Sealed
  if(step == 1 || step == 99 || step == 11){
-  for( auto ptpair : (std::vector<std::pair<double, double> >) {/*{0, 30},*/ {0, 6},/* {6, 30}*/}){ 
+  for( auto ptpair : (std::vector<std::pair<double, double> >) {/*{0, 30},*/ {0, 6}, /*{6, 30}*/}){ 
     ptMin = ptpair.first;
     ptMax = ptpair.second;
 //    std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);
@@ -303,7 +304,7 @@ state =2;
 if(step ==2 || step == 99 || step ==21){
   cBinLow = 0;
   cBinHigh = 181;
-  for( auto ptpair : (std::vector<std::pair<double, double> >) {/*{0, 30},*/ {0, 4}, {4, 9},{9, 30} }){ 
+  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30}, {0, 4},/* {4, 9},{9, 30}*/ }){ 
     ptMin = ptpair.first;
     ptMax = ptpair.second;
 //    std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);
@@ -312,7 +313,7 @@ if(step ==2 || step == 99 || step ==21){
     sb_ratio = RooRealVar("ratio","",-1);
     if(ptpair.first == 0 && ptpair.second == 30){ INTBIN_BDTLOW = cutBDTlow; }
     std::cout << "cutBDTlow, sb_ratio: " << cutBDTlow << ", "<< sb_ratio.getVal() << std::endl;
-    METHOD_MCGCDATA(1);
+    METHOD_MCGCDATA(2);
   }
 };
 

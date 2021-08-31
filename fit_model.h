@@ -103,7 +103,7 @@ namespace fit_model_ups{
 	class ExpChebyChev : public ChebyChev
 	{
 		public :
-			ExpChebyChev(RooChebychev* _bkg) : ChebyChev() {
+			ExpChebyChev(RooChebychev* _bkg)  {
 				if (_bkg == nullptr) return;
 				auto tmp = new RooConstVar("ce", "coeff exponent",1);
 			  	bkgECC = (RooGenericPdf*) new RooExponential("bkgECC", "", *_bkg, *tmp );

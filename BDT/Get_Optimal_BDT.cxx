@@ -3,8 +3,9 @@
 #include "../.workdir.h"
 #include "../upsilonAna.h"
 #include "yield_eff_signif.h"
+#include "TApplication.h"
 
-std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio= 0.16, int train_state =3, string name_input_opt = "", string formula_significance= "S2")
+std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio =0.16 , int train_state =3, string name_input_opt = "", string formula_significance= "S2", string the_opt="")
 {
   
   std::string st_opt;
@@ -14,12 +15,19 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
   HISTFILE = new TFile(Form("%s.root",output_fname.c_str()), "update" );
   std::cout << static_cast<void*>(HISTFILE) << std::endl;
 
-  TList* lok = HISTFILE->GetListOfKeys();
-  if (!(lok->FindObject(Form("r_%.6f", ratio))==nullptr) ){
+  TList* lok =nullptr;
+  lok= HISTFILE->GetListOfKeys();
+  if (!(lok->FindObject(Form("r_%.6f", ratio))==nullptr) || !(lok->FindObject(Form("r_%.6f%s", ratio, the_opt.c_str()))==nullptr) ){
     std::cout << "[INFO] Reading From HISTOFILE" << std::endl;
-    double theSig = stod(HISTFILE->Get(Form("r_%.6f/max_sig", ratio) )->GetTitle());
-    TH1D*   theHist = (TH1D*) HISTFILE->Get(Form("r_%.6f/HISTO", ratio) );
-    return std::make_pair(theSig, theHist);
+    string dirname = Form("r_%.6f", ratio);
+    if ( the_opt.find("SYS") != std::string::npos) { dirname = dirname+""+ the_opt; }
+    std::cout << dirname.c_str() << std::endl;
+    double theSig = stod(HISTFILE->Get(Form("%s/max_sig", dirname.c_str()) )->GetTitle());
+    TH1D*   theHist = (TH1D*) HISTFILE->Get(Form("%s/HISTO", dirname.c_str()) );
+    TH1D* cloneHist = (TH1D*)  theHist->Clone();
+    cloneHist->SetDirectory(0);
+    HISTFILE->Close();
+    return std::make_pair(theSig, cloneHist);
   }
 
   int Nbins = (int) (1.5/interval_score);
@@ -44,7 +52,7 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
   if(ts >= 9999999990) treedir = Form("/data/Y%dSpt%dto%d", train_state, (int) ptMin, (int) ptMax);
   tree_train_raw->Add(Form("%s%s/dataset1/TrainTree", name_input.c_str(), treedir.c_str()));
   tree_train_raw->Add(Form("%s%s/dataset2/TrainTree", name_input.c_str(), treedir.c_str()));
-  std::string theCut = Form("(mass<11.5 && mass>8.0) && (pt>%f) && (pt<%f) && (y>%f) && (y<%f) && (cBin>%d) && (cBin<%d) && (QQVtxProb>%f)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP );
+  std::string theCut = Form("(mass<11.5 && mass>8.0) && (pt>%f) && (pt<%f) && (y>%f) && (y<%f) && (cBin>=%d) && (cBin<%d) && (QQVtxProb>%f)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP );
   TChain* tree_train;
   rd_data = (RooDataSet*) rd_data->reduce(theCut.c_str());
   tree_train = (TChain*) tree_train_raw->CopyTree(theCut.c_str());
@@ -94,7 +102,7 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
       pass_bkg = tuple_pass_bkg[idx];
       Double_t err_sig = TMath::Sqrt(pass_sig);
       Double_t err_bkg = TMath::Sqrt(pass_bkg);
-      std::cout << Form("passing sig, bkg : %.4f, %.4f, err: %.4f, %.4f",(double) tuple_pass_sig[idx], pass_bkg, err_sig, err_bkg) << std::endl;
+ //     std::cout << Form("passing sig, bkg : %.4f, %.4f, err: %.4f, %.4f",(double) tuple_pass_sig[idx], pass_bkg, err_sig, err_bkg) << std::endl;
 //      std::cout << Form("passing sig, bkg : %.4f, %.4f, err: %.4f, %.4f",pass_sig, pass_bkg, err_sig, err_bkg) << std::endl;
      
       if( formula_significance=="S12"){
@@ -141,16 +149,25 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
   TH1D* hist_res = bdt_res.second;
   file_input->Close();
 
-  TDirectory* dir_ratio = HISTFILE->mkdir(Form("r_%.6f", ratio), "");
+  TDirectory* dir_ratio;
+
+  if(the_opt.find("SYS") != std::string::npos){
+  dir_ratio = HISTFILE->mkdir(Form("r_%.6f%s", ratio,the_opt.c_str()), "");
+  }
+  else {
+    dir_ratio = HISTFILE->mkdir(Form("r_%.6f", ratio), "");
+  }
   HISTFILE->cd();
   dir_ratio->cd();
   hist_res->Write();
   TNamed* max_value = new TNamed("max_sig",Form("%.4f",bdt_res.first.first));
-
   max_value->Write();
-  HISTFILE->cd();
-  TNamed* latest = new TNamed("latest", max_value->GetTitle() );
-  latest->Write(0,TTree::kOverwrite);
+
+  if(the_opt.find("SYS") == std::string::npos){
+    HISTFILE->cd();
+    TNamed* latest = new TNamed("latest", max_value->GetTitle() );
+    latest->Write(0,TTree::kOverwrite);
+  }
   HISTFILE->Close();
   cache_out->Close();
 
@@ -191,13 +208,14 @@ RooRealVar get_eff_acc(std::string type, std::string type2, long ts, double ylim
 
   double ratio_acceff = ((eff1.getVal()*eff22.getVal())/(eff2.getVal()*eff21.getVal()));
   double ratio_val = (frac_nS.getVal() * yield1S.getVal())/nbkg.getVal();
+  double ratio_err = ratio_val * TMath::Sqrt( TMath::Power( frac_nS.getError()/ frac_nS.getVal(),2) + TMath::Power( yield1S.getError()/ yield1S.getVal(),2) + TMath::Power( nbkg.getError()/ nbkg.getVal(), 2) );
   std::cout << "YIELD: " << nbkg.getVal() << ", "<< yield1S.getVal()*frac_nS.getVal() << std::endl;
   std::cout << "EFF: " << eff1.getVal() << ", "<< eff2.getVal() << std::endl;
   std::cout << "ACC: " << eff22.getVal() << ", "<< eff21.getVal() << std::endl;
   std::cout << "RESULT: " <<ratio_acceff << ", "<< ratio_val << std::endl;
 
   RooRealVar res_var = RooRealVar("result","",ratio_acceff*ratio_val);
-  res_var.setError(0);// res_var.getVal()*TMath::Sqrt( TMath::Power(eff22.getError()/eff22.getVal(),2) + TMath::Power(eff21.getError()/eff21.getVal(),2) + TMath::Power(eff1.getError()/eff1.getVal(),2) + TMath::Power(eff2.getError()/eff2.getVal(),2) + TMath::Power(nbkg.getError()/nbkg.getVal(),2) + TMath::Power(yield3S.getError()/yield3S.getVal(),2) ) ); 
+  res_var.setError(ratio_err);// res_var.getVal()*TMath::Sqrt( TMath::Power(eff22.getError()/eff22.getVal(),2) + TMath::Power(eff21.getError()/eff21.getVal(),2) + TMath::Power(eff1.getError()/eff1.getVal(),2) + TMath::Power(eff2.getError()/eff2.getVal(),2) + TMath::Power(nbkg.getError()/nbkg.getVal(),2) + TMath::Power(yield3S.getError()/yield3S.getVal(),2) ) ); 
   return res_var;
   
 };

@@ -239,7 +239,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
   }
 
   if (bkg_func.find("CC")!= std::string::npos){
-    int order_CC = bkg_func[2]-'0';
+    int order_CC = bkg_func[bkg_func.find_last_of("CC")+1] - 48;
     switch (order_CC){
       case 1 :
         ch4_k1 = new RooRealVar("ch4_k1", "ch4_k1", 0.02, paramslow[4], paramshigh[4]);
@@ -304,6 +304,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
     }
     if( (bkg_func.find("ECC")!=std::string::npos)){
       ecc = new fit_model_ups::ExpChebyChev(cc->bkg);
+      std::cout << ecc->bkgECC->GetName() << std::endl;
       Background = (RooGenericPdf*) ecc->bkgECC;
     }
 
@@ -317,16 +318,18 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
     Background = (RooGenericPdf*) ee->bkgErf;
   }
 
-dbg();
+dbg(1000);
   RooRealVar* nSig1S = new RooRealVar("nSig1S", "# of 1S signal", 900, -1000, 1000000);
   RooRealVar* nSig2S;
   RooRealVar* nSig3S;
 
+dbg(1000);
   RooRealVar* frac2over1 = new RooRealVar("frac_2sOver1s","2S/1S",0.3,0,1);
   RooRealVar* frac3over1 = new RooRealVar("frac_3sOver1s","3S/1S",0.1,0,1);
   RooRealVar* frac3over2 = new RooRealVar("frac_3sOver2s","3S/2S",0.1,0,1);
   RooRealVar* nBkg = new RooRealVar("nBkg", "# of background signal", 300, -1000, 10000000);
 
+dbg(1000);
   RooAddPdf* model,* model_sig, *model_sig2;
   std::string use_model = "model";
   RooProdPdf* model_gc;
@@ -343,6 +346,7 @@ dbg();
     model = new RooAddPdf("model", "1S+2S+3S", RooArgList(*model_sig, *Background), RooArgList(*nSig1S, *nBkg));
     }
   }
+dbg(1000);
 
   if((fitdir.find("DR")==std::string::npos)&&(fitdir.find("FF")!=std::string::npos||fitdir.find("GC")!= std::string::npos||fitdir.find("DD") != std::string::npos)){
     nSig2S = new RooRealVar("nSig2S", "# of 2S signal", 100, -1000, 10000);
@@ -396,6 +400,7 @@ dbg();
     mf.works->import(*model);
     mf.works->Print();
   }
+  dbg(1000);
 
   std::cout << mf.works->pdf(use_model.c_str())->GetName() << std::endl;
 
@@ -411,7 +416,7 @@ dbg();
   mf.works->pdf(use_model.c_str())->plotOn(massPlot, Components(RooArgSet(*Signal2S)), LineColor(kRed), LineStyle(kDashed), MoveToBack());
   mf.works->pdf(use_model.c_str())->plotOn(massPlot, Components(RooArgSet(*Signal3S)), LineColor(kRed), LineStyle(kDashed), MoveToBack());
   mf.works->pdf(use_model.c_str())->plotOn(massPlot, Components(RooArgSet(*Background)), LineColor(kBlue), LineStyle(kDashed));
-  dbg();
+  dbg(1000);
   massPlot->SetTitle("");
   massPlot->SetXTitle("M (GeV/c^2)");
   massPlot->SetYTitle("Counts");

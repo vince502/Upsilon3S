@@ -40,7 +40,12 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
     else fit_param = fit_param + "_DoubleRatio";
   }
   if(bkg_func.find("EE")!= std::string::npos) name_pdf_bkg = "bkgErf";
-  if(bkg_func.find("CC")!= std::string::npos) name_pdf_bkg = "CCBkg";
+  if(bkg_func.find("CC")!= std::string::npos){
+    name_pdf_bkg = "CCBkg";
+    if(bkg_func.find("ECC")!= std::string::npos){
+      name_pdf_bkg = "bkgECC";
+      }
+  }
 
   int ylim10 = (int) (rapMax*10);
   int DDiter =0;

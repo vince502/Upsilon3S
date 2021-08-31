@@ -7,28 +7,25 @@ std::string findtype(int pl, int ph, int cl, int ch){
 	return fittype;
 };
 
-double getBkgVariUnc(int pl, int ph, int cl, int ch, int state){
+double getSigParVariUnc(int pl, int ph, int cl, int ch, int state){
 	long ts = 9999999999;
-
 	std::string type_nom = Form("CB3:CC%d:%s",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str());
-	std::string type_sys = Form("CB3:CC%d:%s",getNomBkgO(state, pl, ph, cl, ch)+1, findtype(pl, ph, cl, ch).c_str());
-	std::string type_sys2 = Form("CB3:ECC%d:%s",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str());
+	std::string type_sys = Form("CB3:CC%d:%sXMC1P",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str());
+
 	RooRealVar raa_nom, raa_sys, raa_sys2;
 	raa_nom = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_nom, -2, state, 0, ts);
 	raa_sys = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_sys, -2, state, 0, ts);
-	raa_sys2 = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_sys2, -2, state, 0, ts);
 
 	double unc_sys =  (raa_sys.getVal() - raa_nom.getVal())/(raa_nom.getVal());
-	double unc_sys2 =  (raa_sys.getVal() - raa_nom.getVal())/(raa_nom.getVal());
-	return max(fabs(unc_sys), fabs(unc_sys2));
+	return unc_sys;
 };
-double getBkgVariUnc(ana_bins k){
-	double unc_sys = getBkgVariUnc(k.pl, k.ph, k.cl, k.ch, k.state);
+double getSigParVariUnc(ana_bins k){
+	double unc_sys = getSigParVariUnc(k.pl, k.ph, k.cl, k.ch, k.state);
 	return unc_sys;
 };
 
-void BkgVariUnc(){
-	TFile* output = new TFile("bkgPDFunc.root","recreate");
+void SigParVariUnc(){
+	TFile* output = new TFile("sigPAR_unc.root","recreate");
 	TH1D *rc2s, *rc3s, *rp2s, *rp3s;
 	rc2s = new TH1D("rc2S","",10,0,9); //include int. bin
 	rc3s = new TH1D("rc3S","",4,0,3);  //include int. bin
@@ -43,24 +40,24 @@ void BkgVariUnc(){
 
 	int counter =1;
 	for( auto item : vc2){
-		rc2s->SetBinContent(counter, getBkgVariUnc(item));
+		rc2s->SetBinContent(counter, getSigParVariUnc(item));
 		counter++;
 	}
 	counter =1;
 	for( auto item : vc3){
-		rc3s->SetBinContent(counter, getBkgVariUnc(item));
+		rc3s->SetBinContent(counter, getSigParVariUnc(item));
 		counter++;
 	}
 	counter =1;
 
 	for( auto item : vp2){
-		rp2s->SetBinContent(counter, getBkgVariUnc(item));
+		rp2s->SetBinContent(counter, getSigParVariUnc(item));
 		counter++;
 	}
 	counter =1;
 	
 	for( auto item : vp3){
-		rp3s->SetBinContent(counter, getBkgVariUnc(item));
+		rp3s->SetBinContent(counter, getSigParVariUnc(item));
 		counter++;
 	}
 	output->cd();
