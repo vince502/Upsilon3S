@@ -13,26 +13,34 @@
 
 using namespace std;
 
-void getAcceptance(double ptLow = 0, double ptHigh=50, double yLow=0, double yHigh=2.4, double SiMuPtCut=3.5, bool isPtWeight= true,  int state =3)
+void getAcceptance(double ptLow = 0, double ptHigh=50, double yLow=0, double yHigh=2.4, double SiMuPtCut=3.5, bool isPtWeight= true,  int state =3, int IsSys = 0)
 {
   gStyle->SetOptFit(kTRUE);
 
   TFile* f, *fPtW;
     if(state ==1){	f =new TFile("/home/samba.old/CMS_Files/5TeVUpsilonGENONLY/OniaTree_Ups1SMM_5p02TeV_TuneCUETP8M1_nofilter_pp502Fall15-MCRUN2_71_V1-v1_GENONLY.root","read");
-	fPtW = new TFile(Form("%s/Func_dNdpT_1S.root",store.Data()),"read");
+	fPtW = new TFile(Form("%s/WeightedFunction/Func_dNdpT_1S.root",store.Data()),"read");
     }
     if(state ==2){	f =new TFile("/home/samba.old/CMS_Files/5TeVUpsilonGENONLY/OniaTree_Ups2SMM_5p02TeV_TuneCUETP8M1_nofilter_pp502Fall15-MCRUN2_71_V1-v1_GENONLY.root","read");
-	fPtW = new TFile(Form("%s/Func_dNdpT_2S.root",store.Data()),"read");
+	fPtW = new TFile(Form("%s/WeightedFunction/Func_dNdpT_2S.root",store.Data()),"read");
     }
     if(state ==3){
     	f =new TFile("/home/samba.old/CMS_Files/5TeVUpsilonGENONLY/OniaTree_Ups3SMM_5p02TeV_TuneCUETP8M1_nofilter_pp502Fall15-MCRUN2_71_V1-v1_GENONLY.root","read");
-	fPtW = new TFile(Form("%s/Func_dNdpT_2S.root",store.Data()),"read"); // Yes, it is 2S
+	fPtW = new TFile(Form("%s/WeightedFunction/Func_dNdpT_3S.root",store.Data()),"read"); // Yes, it is 2S
     }
   
 
   std::cout << Form("%s \n %s", f->GetName(), fPtW->GetName()) <<std::endl;
   TTree* mytree = (TTree*) f->Get("hionia/myTree");
   TF1* f1 = (TF1*) fPtW->Get("fitRatio");
+  TF1 *f1_up, *f1_down;
+  if(IsSys !=0){
+    f1_up = (TF1*) f1->Clone();
+    f1_down = (TF1*) f1->Clone();
+    f1_up->SetParameters(f1->GetParameter(0) + f1->GetParError(0),f1->GetParameter(1) + f1->GetParError(1));
+    f1_down->SetParameters(f1->GetParameter(0) - f1->GetParError(0),f1->GetParameter(1) - f1->GetParError(1));
+  }
+
 
   TClonesArray* Gen_QQ_4mom;
   TClonesArray* Gen_QQ_mupl_4mom;
@@ -49,6 +57,7 @@ void getAcceptance(double ptLow = 0, double ptHigh=50, double yLow=0, double yHi
   mytree->SetBranchAddress("Gen_QQ_size",&Gen_QQ_size);
 
   TString histName = Form("pt%.1f_%.1f_y%.1f_%.1f_SimuPt%.1f_ptW%d",ptLow,ptHigh,yLow,yHigh,SiMuPtCut, (int) isPtWeight);
+  if( IsSys != 0) histName = histName +"_SYSPT"; 
 
   TFile *wf = new TFile(Form("AccRes_%dS_%s.root",state,histName.Data()),"recreate");
 
@@ -70,6 +79,8 @@ void getAcceptance(double ptLow = 0, double ptHigh=50, double yLow=0, double yHi
 
     for(int igen=0; igen<Gen_QQ_size; igen++){
       double ptWeight =1.;
+      double ptWeight_up =1.;
+      double ptWeight_down =1.;
 
       DimuV = (TLorentzVector*) Gen_QQ_4mom->At(igen);
       SimuMuPlV = (TLorentzVector*) Gen_QQ_mupl_4mom->At(igen);
@@ -82,7 +93,14 @@ void getAcceptance(double ptLow = 0, double ptHigh=50, double yLow=0, double yHi
       pt2 = SimuMuMiV->Pt();
       eta1 = SimuMuPlV->Eta();
       eta2 = SimuMuMiV->Eta();
-      if(isPtWeight) ptWeight = f1->Eval(pt);
+      if(isPtWeight){
+        ptWeight = f1->Eval(pt);
+	if(IsSys){
+	  ptWeight_up = f1_up->Eval(pt);
+	  ptWeight_down = f1_down->Eval(pt);
+	  ptWeight = ( fabs(ptWeight_up-ptWeight) > fabs(ptWeight_down - ptWeight) ) ? ptWeight_up : ptWeight_down; 
+	}
+      }
 
       if(abs(y)>yHigh || abs(y)<yLow) continue;
       if(pt<ptLow || pt>ptHigh) continue;

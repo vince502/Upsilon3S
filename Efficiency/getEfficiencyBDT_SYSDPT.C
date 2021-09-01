@@ -50,32 +50,28 @@ void getEfficiencyBDT(
 
   //input files
   TFile* fPtW;
-  TString inputMC;
+  TString inputMC_ref, inputMC_up _inputMC_down;
   if( state ==1){
-    inputMC = Form("/home/vince402/Upsilon3S/BDT/BDTAppliedData/BDTApp_%ld_MC_1S.root", ts);
-    fPtW = new TFile(Form("%s/WeightedFunction/Func_dNdpT_1S.root", store.Data()),"read");
+    inputMC_ref ="";// Form("/home/vince402/Upsilon3S/BDT/BDTAppliedData/BDTApp_%ld_MC_1S.root", ts);
   }
   if( state ==2){
-    inputMC = Form("/home/vince402/Upsilon3S/BDT/BDTAppliedData/BDTApp_%ld_MC_2S.root", ts);
-    fPtW = new TFile(Form("%s/WeightedFunction/Func_dNdpT_2S.root", store.Data()),"read");
+    inputMC_ref = Form("/home/vince402/Upsilon3S/BDT/BDTAppliedData/BDTApp_%ld_MC_2S.root", ts);
   }
   if( state ==3){
-    inputMC =Form("/home/vince402/Upsilon3S/BDT/BDTAppliedData/BDTApp_%ld_MC.root", ts);
-    fPtW = new TFile(Form("%s/WeightedFunction/Func_dNdpT_3S.root", store.Data()),"read");
+    inputMC_ref =Form("/home/vince402/Upsilon3S/BDT/BDTAppliedData/BDTApp_%ld_MC.root", ts);
   }
   TChain* mytree = new TChain("tree"); 
   mytree->Add(inputMC.Data());
-  TF1* f1 = (TF1*) fPtW->Get("fitRatio");
+
 
   //SetBranchAddress
   SetTreeBDT settree_;
   settree_.TreeSetting(mytree, (ts >=9999999990), train_state,(int) ptLow, (int) ptHigh);
 
   //pT reweighting function
-//  TFile *fPtW = new TFile(Form("%s/Efficiency/Func_dNdpT_2S.root",workdir.Data()),"read");
-//  TF1* f1 = (TF1*) fPtW->Get("fitRatio");
 
   TString histName = Form("BDT_%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d", state, ts, bdt_tsl, bdt_tsh, ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight);
+  if( IsSys != 0 ) histName = histName + "_SYSPT";
   TH1D* hreco = new TH1D(Form("hreco"),"hreco",1,xmin,xmax);
   TH1D* hreco_tnp = new TH1D(Form("hreco_tnp"),"hreco_tnp",(int) ((xmax-xmin)),xmin,xmax);
   TH1D* hreco_xtnp = new TH1D(Form("hreco_xtnp"),"hreco_xtnp",(int) ((xmax-xmin)),xmin,xmax);
@@ -127,11 +123,10 @@ void getEfficiencyBDT(
       if(!( nTrkWMea1 >5 && nTrkWMea2 >5 && nPixWMea1 > 0 && nPixWMea2 > 0 && fabs(dxy1) < 0.3 && fabs(dxy2) < 0.3 && fabs(dz1) < 20. && fabs(dz2) < 20.) ) continue;
 
     histName = Form("BDT_%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID", state, ts, bdt_tsl, bdt_tsh,ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,vcut,isTnP,isPtWeight);
-    if(ts >= 9999999990) histName = Form("BDT_%dS_train%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID_fix", state, train_state, ts, bdt_tsl, bdt_tsh,ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,vcut,isTnP,isPtWeight);
+    if(ts >= 9999999990) histName = Form("BDT_%dS_train%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID_SYSPT", state, train_state, ts, bdt_tsl, bdt_tsh,ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,vcut,isTnP,isPtWeight);
     }
     double ptW =1;
-    if( isPtWeight) ptW = f1->Eval(pt);
-    weight = weight ;//* ptW;
+    weight = weight ;
     
     hreco->Fill(pt,weight);
     hreco_tnp->Fill(pt,weight);

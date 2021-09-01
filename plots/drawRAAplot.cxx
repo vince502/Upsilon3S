@@ -23,6 +23,7 @@ RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, do
   if (stdvcut){ bp->set_params(0.01); }
 
   RooRealVar _y = bp->get_yield(state);
+  if(getPre==2) return _y;
   RooRealVar _yacc = upsi::getacceptance(ptpair.first, ptpair.second, (double) -1*ylim, ylim, 3.5, state);
   auto _yeff_pair = bp->get_eff(state);
   double _yeff = _yeff_pair.first;

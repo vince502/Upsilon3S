@@ -271,4 +271,22 @@ TString getKineLabel(float ptLow, float ptHigh, float yLow, float yHigh, float m
   return kineLabel;
 }
 
+enum mode
+{
+  TAG,
+  STATUP,
+  STATDOWN,
+  SYSUP,
+  SYSDOWN
+};
+std::map<int, std::string> mode_str = 
+{
+  {TAG, "TagChange"},
+  {STATUP, "statUp"},
+  {STATDOWN, "statDo"},
+  {SYSUP, "sysUp"},
+  {SYSDOWN, "sysDo"}
+};
+
+
 #endif

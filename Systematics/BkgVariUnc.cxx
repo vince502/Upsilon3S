@@ -14,9 +14,9 @@ double getBkgVariUnc(int pl, int ph, int cl, int ch, int state){
 	std::string type_sys = Form("CB3:CC%d:%s",getNomBkgO(state, pl, ph, cl, ch)+1, findtype(pl, ph, cl, ch).c_str());
 	std::string type_sys2 = Form("CB3:ECC%d:%s",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str());
 	RooRealVar raa_nom, raa_sys, raa_sys2;
-	raa_nom = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_nom, -2, state, 0, ts);
-	raa_sys = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_sys, -2, state, 0, ts);
-	raa_sys2 = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_sys2, -2, state, 0, ts);
+	raa_nom = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_nom, -2, state, 2, ts);
+	raa_sys = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_sys, -2, state, 2, ts);
+	raa_sys2 = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_sys2, -2, state, 2, ts);
 
 	double unc_sys =  (raa_sys.getVal() - raa_nom.getVal())/(raa_nom.getVal());
 	double unc_sys2 =  (raa_sys.getVal() - raa_nom.getVal())/(raa_nom.getVal());

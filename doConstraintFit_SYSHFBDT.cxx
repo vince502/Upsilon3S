@@ -7,12 +7,12 @@
 #include "MassYieldFit_data.cxx"
 #include "./BDT/yield_eff_signif.cxx"
 
-void doConstraintFit_SYSSIGPAR(int step = 0){
+void doConstraintFit_SYSHFBDT(int sys_step, int step = 0){
 
-  std::string type 			= "CB3:CC2:GCXMC1P"	;
-  std::string type2 			= "CB3:CC2:DR2FFXMC1P"	;
-  std::string type_r 			= "CB3:CC2:DRGCXMC1P"	;
-//  std::string typenobdt 		= "CB3:CC4:FFXMC1P"	;
+  std::string type 			= "CB3:CC2:GC"	;
+  std::string type2 			= "CB3:CC2:DR2FF"	;
+  std::string type_r 			= "CB3:CC2:DRGC"	;
+//  std::string typenobdt 		= "CB3:CC4:FF"	;
   std::string constraints		="alpha:n:frac:frac2:xNS:xNS_2:sigmaNS_1"	;
   std::string fixvars			="alpha:n:frac:frac2:x1S:x1S_2:sigma1S_1"	;
   long ts				= 9999999999	; 
@@ -34,9 +34,11 @@ void doConstraintFit_SYSSIGPAR(int step = 0){
   double cutBDTlow			= 0.0859	;
   double cutBDThigh			= 1.0		;
   RooRealVar sb_ratio					;
-  const std::string fname3S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC.root", ts, Trig.c_str());
-  const std::string fname2S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC_2S.root", ts, Trig.c_str());
-  const std::string fname1S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC_1S.root", ts, Trig.c_str());
+//  const std::string fname3S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC.root", ts, Trig.c_str());
+//  const std::string fname2S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC_2S.root", ts, Trig.c_str());
+//  const std::string fname1S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC_1S.root", ts, Trig.c_str());
+  if(sys_step ==  1) ts = 9999999998;
+  if(sys_step == -1) ts = 9999999997;
 
 //////////////////////////////////////////STEP : BDT VALUE DECISION/////////////////////////////////////////
 //auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0) mutable {
@@ -67,7 +69,7 @@ void doConstraintFit_SYSSIGPAR(int step = 0){
 //        opt_params_gc+=Form(":%s;%.6f",keys.c_str(), _var->getError());
 //      std::cout << keys <<": "<< _var->getVal() << ", "<< _var->getError() << std::endl;
 //      }
-//      opt_params_gc+=":GCXMC1PPEND";
+//      opt_params_gc+=":GCPEND";
 //      type_ = type_+opt_params_gc; 
 //      std::cout << type_ << std::endl;
 //
@@ -76,7 +78,7 @@ void doConstraintFit_SYSSIGPAR(int step = 0){
 //       if(state ==2) mean_sigma1S1 = map_keyval["sigmaNS_1"].first*(U1S_mass/U2S_mass);
 //       if(state ==1) mean_sigma1S1 = map_keyval["sigmaNS_1"].first*(U1S_mass/U1S_mass);
 //      auto parsed = parser_symbol(type_,":");
-//      if(parsed[2].find("FFXMC1P") ==std::string::npos){
+//      if(parsed[2].find("FF") ==std::string::npos){
 //      MassYieldFit_data(type_, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, bl, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, -0.02,0.0,0.1,0.1, -0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, -0.4, -0.5, -0.5,-0.3, -0.3}, (Double_t[]) {0.41, (map_keyval["alpha"].first+map_keyval["alpha"].second)*2, (map_keyval["n"].first+map_keyval["n"].second)*4, 0.95, 0.1, 0.2, 0.3,0.3, 0.3}, 
 //       (std::map<string, params_vhl>) {
 //       {"frac2", {map_keyval["frac2"].first, 0.01, 0.99} }, 
@@ -87,7 +89,7 @@ void doConstraintFit_SYSSIGPAR(int step = 0){
 //      {"sb_ratio", { -1, 0, 0}},
 //       });
 //      }
-//      if(parsed[2].find("FFXMC1P") !=std::string::npos){
+//      if(parsed[2].find("FF") !=std::string::npos){
 //      MassYieldFit_data(type_, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, bl, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 0.0,0.1,0.1,0.1, -0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, -0.3, -0.3, -0.3,-0.2, -0.1}, (Double_t[]) {-1, -1, -1, -1, 0.1, 0.1, 0.3,0.2, 0.1}, 
 //       (std::map<string, params_vhl>) {
 //       {"frac2", {map_keyval["frac2"].first, 0, -1} }, 
@@ -126,17 +128,17 @@ void doConstraintFit_SYSSIGPAR(int step = 0){
 //};
 
 //////////////////////////////////////////STEP : GAUS CONSTRAIN FITTING/////////////////////////////////////////
-  auto METHOD_MCGCXMC1PDATA = [&](int mode = 1) mutable {
+  auto METHOD_MCGCDATA = [&](int mode = 1) mutable {
   std::cout << "cutBDTlow, sb_ratio in functoin : " << cutBDTlow << ", " << sb_ratio.getVal() << std::endl;
-    std::string fname;
-    if(state ==1) fname = fname1S;
-    if(state ==2) fname = fname2S;
-    if(state ==3) fname = fname3S;
-    if(mode ==1 || mode ==0){
-       MassYieldFit_BDT_MC_CB3(ts, "", fname1S, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, train_state, /****/ 1 /****/ , fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh);
-    }
+//    std::string fname;
+//    if(state ==1) fname = fname1S;
+//    if(state ==2) fname = fname2S;
+//    if(state ==3) fname = fname3S;
+//    if(mode ==1 || mode ==0){
+//       MassYieldFit_BDT_MC_CB3(ts, "", fname, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, train_state, state, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh);
+//    }
     if(mode ==1 || mode ==2){
-      TFile* file_MCres_input = new TFile(Form("Yield/Yield_%ld_CB3_%dS_train%dS_pt_%d-%d_rap_%d-%d_cBin_%d-%d_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_%d.root", ts, /****/ 1 /****/ , train_state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), cutBDTlow, cutBDThigh, cutQVP,(int) fixvar), "OPEN");
+      TFile* file_MCres_input = new TFile(Form("Yield/Yield_%ld_CB3_%dS_train%dS_pt_%d-%d_rap_%d-%d_cBin_%d-%d_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_%d.root", 9999999999, (int) state, train_state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), cutBDTlow, cutBDThigh, cutQVP,(int) fixvar), "OPEN");
    
       RooFitResult* result_MC = (RooFitResult*) file_MCres_input->Get("fitresult_model_reducedDS");
       std::cout << file_MCres_input->GetName() << std::endl;
@@ -163,7 +165,7 @@ void doConstraintFit_SYSSIGPAR(int step = 0){
        if(state ==2) mean_sigma1S1 = map_keyval["sigmaNS_1"].first*(U1S_mass/U2S_mass);
        if(state ==1) mean_sigma1S1 = map_keyval["sigmaNS_1"].first*(U1S_mass/U1S_mass);
 
-      MassYieldFit_data(type, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, -0.05,0.00,0.01,0.00, -0.03}, (Double_t[]) {0.11, 0.5, 0.4, 0.01, -0.2, -0.2, -0.2,-0.1, -0.1}, (Double_t[]) {0.41, (map_keyval["alpha"].first+map_keyval["alpha"].second)*2, (map_keyval["n"].first+map_keyval["n"].second)*4, 0.95, 0.10, 0.05, 0.2,0.2, 0.2, 0.1}, 
+      MassYieldFit_data(type, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, -0.05,0.00,0.01,0.00, -0.03}, (Double_t[]) {0.11, 0.5, 0.4, 0.01, -0.6, -0.6, -0.3,-0.3, -0.2}, (Double_t[]) {0.41, (map_keyval["alpha"].first+map_keyval["alpha"].second)*2, (map_keyval["n"].first+map_keyval["n"].second)*4, 0.95, 0.60, 0.60, 0.3,0.3, 0.3}, 
  //     MassYieldFit_data(type, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 5.0,5.1,2.1,0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, -0.3, -0.3, -0.3,-0.3}, (Double_t[]) {0.31, (map_keyval["alpha"].first+map_keyval["alpha"].second)*2, (map_keyval["n"].first+map_keyval["n"].second)*4, 0.95, 9.1, 10.1, 2.3,0.3}, 
 //      MassYieldFit_data(type2, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 0.0,0.1,0.1,0.1, -0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, -0.3, -0.3, -0.3,-0.3, -0.3}, (Double_t[]) {-1, -1, -1, -1, 0.1, 0.1, 0.3,0.3, 0.3}, 
 //      MassYieldFit_data(type2, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 5.0,5.1,2.1,0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, 5.3, 1.3, 0.3,-0.3}, (Double_t[]) {-1, -1, -1, -1, 9.1, 7.1, 2.3,0.3}, 
@@ -173,7 +175,8 @@ void doConstraintFit_SYSSIGPAR(int step = 0){
        {"xNS_2", {map_keyval["xNS_2"].first,0.01,1}},
        {"sigmaNS_1", { mean_sigma1S1,0,1}},
        {"mag", { 1, 0, 0 }},
-      {"sb_ratio", { sb_ratio.getVal(), 0, 0}},
+       {"sb_ratio", { sb_ratio.getVal(), 0, 0}},
+       {"SYSHF", {1,0,0} }
        });
     }
 
@@ -201,7 +204,7 @@ auto fixfit = [&](int depth  = 5) mutable {
       TFile* file_DATAres_input = new TFile(name_file_data.c_str(), "OPEN");
  std::vector<std::pair<int, int> > cBinPair;
  cBinPair =	{{0,40}, {40, 100},  {100,181}, /*{0, 181} ,*/  }; 
- if(train_state==2) cBinPair = { /*{0,10}, {10,20}, {20,40}, {40,60}, {60,80},*/ {80,100},/* {100,120}, {120, 140}, {140, 181}*//* {0,181} */};	
+ if(train_state==2) cBinPair = { {0,10}, {10,20}, {20,40}, {40,60}, {60,80}, {80,100}, {100,120}, {120, 140}, {140, 181}/* {0,181} */};	
  std::vector<std::pair<double, double> > ptPair = {{0, 30}};	//{ {0, 6}, {6, 30}, {0, 30}};
  std::vector<std::pair<double, double> > rapPair = {{-2.4, 2.4}};	//{ {-2.4, 2.4}, {-1.2, 1.2} };
  for( auto rp : rapPair ) {
@@ -228,21 +231,22 @@ auto fixfit = [&](int depth  = 5) mutable {
       }
       long xts = ts;
 //    std::pair<double, RooRealVar> res = prep_bdtval(-0.1, depth);
-    cutBDTlow = Get_BDT(ts, train_state, ptMin, ptMax, cBinLow, cBinHigh);
+    cutBDTlow = Get_BDT(9999999999, train_state, ptMin, ptMax, cBinLow, cBinHigh);
     cutQVP= 0.00; //(!!! JUST FOR No BDT CONFIG !!!)
     sb_ratio = RooRealVar("ratio","",-1);
 //    sb_ratio = RooRealVar("ratio","",-1);
 //    for( int i = 11; i < 12; i++){
 //         cutBDTlow = -1.0 + 0.1*i;
        type2 = Form("%s:CC%d:%s", parser_symbol(type2)[0].c_str(), getNomBkgO(state, (int) ptMin, (int) ptMax, cBinLow, cBinHigh), parser_symbol(type2)[2].c_str());
-         MassYieldFit_data(type2, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, xts, cutBDTlow, cutBDThigh, (Double_t[]) {map_keyval_2["sigma1S_1"].first, map_keyval_2["alpha"].first, map_keyval_2["n"].first, map_keyval_2["frac"].first, -0.15,-0.1,0.1,0.1}, (Double_t[]) {0.05, 0.5, 0.4, 0.05, -0.3, -0.3, -0.3,-0.3}, (Double_t[]) {-1, -1, -1, -1, 0.2, 0.2, 0.3,0.3}, 
+         MassYieldFit_data(type2, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, xts, cutBDTlow, cutBDThigh, (Double_t[]) {map_keyval_2["sigma1S_1"].first, map_keyval_2["alpha"].first, map_keyval_2["n"].first, map_keyval_2["frac"].first, -0.15,-0.1,0.1,0.1}, (Double_t[]) {0.05, 0.5, 0.4, 0.05, -0.6, -0.6, -0.6,-0.6}, (Double_t[]) {-1, -1, -1, -1, 0.6, 0.6, 0.6,0.6}, 
          (std::map<string, params_vhl>) {
          {"frac2", {map_keyval_2["frac2"].first, 0, -1} }, 
          {"xNS", {map_keyval_2["x1S"].first,0,-1}}, 
          {"xNS_2", {map_keyval_2["x1S_2"].first,0,-1}},
          {"sigmaNS_1", { map_keyval_2["sigma1S_1"].first,0,-1}},
          {"mag", { 1, 0, 0 }},
-        {"sb_ratio", { sb_ratio.getVal(), 0, 0}},
+         {"sb_ratio", { sb_ratio.getVal(), 0, 0}},
+   	 {"SYSHF", {1,0,0} }
          });
 //    }
 
@@ -259,17 +263,17 @@ train_state = 3;
 state =3;
  //Sealed
  if(step == 1 || step == 99 || step == 11){
-  for( auto ptpair : (std::vector<std::pair<double, double> >) {/*{0, 30}, {0, 6}, */{6, 30}}){ 
+  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30},{0, 6}, {6, 30}}){ 
     ptMin = ptpair.first;
     ptMax = ptpair.second;
 //    std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);
 //    cutBDTlow = res.first;
-    cutBDTlow = Get_BDT(ts, train_state, ptMin, ptMax, cBinLow, cBinHigh);
+    cutBDTlow = Get_BDT(9999999999, train_state, ptMin, ptMax, cBinLow, cBinHigh);
     sb_ratio = RooRealVar("ratio","",-1);
     if(ptpair.first == 0 && ptpair.second == 30){ INTBIN_BDTLOW = cutBDTlow; }
     std::cout << "cutBDTlow, sb_ratio: " << cutBDTlow << ", "<< sb_ratio.getVal() << std::endl;
     std::cout << type << std::endl;
-    METHOD_MCGCXMC1PDATA(2);
+    METHOD_MCGCDATA(2);
   }
 }
 
@@ -281,17 +285,17 @@ if(step ==1 || step == 99 || step ==12){
   ptMin = 0;
   ptMax = 30;
   cutBDTlow = INTBIN_BDTLOW;
-  type2 = "CB3:CC2:DRFFXMC1P";
+  type2 = "CB3:CC2:DRFF";
   fixfit(-1);
   cutBDTlow = INTBIN_BDTLOW;
   cBinLow = 0;
   cBinHigh = 181;
-  type2 = "CB3:CC2:DR2FFXMC1P";
+  type2 = "CB3:CC2:DR2FF";
   fixfit(-1);
   cutBDTlow = INTBIN_BDTLOW;
   cBinLow = 0;
   cBinHigh = 181;
-  type2 = "CB3:CC2:FFXMC1P";
+  type2 = "CB3:CC2:FF";
   fixfit(-1);
 }
 
@@ -303,16 +307,16 @@ state =2;
 if(step ==2 || step == 99 || step ==21){
   cBinLow = 0;
   cBinHigh = 181;
-  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30}, {0, 4}, {4, 9},{9, 30} }){ 
+  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30},  {0, 4}, {4, 9},{9, 30} }){ 
     ptMin = ptpair.first;
     ptMax = ptpair.second;
 //    std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);
 //    cutBDTlow = res.first;
-    cutBDTlow = Get_BDT(ts, train_state, ptMin, ptMax, cBinLow, cBinHigh);
+    cutBDTlow = Get_BDT(9999999999, train_state, ptMin, ptMax, cBinLow, cBinHigh);
     sb_ratio = RooRealVar("ratio","",-1);
     if(ptpair.first == 0 && ptpair.second == 30){ INTBIN_BDTLOW = cutBDTlow; }
     std::cout << "cutBDTlow, sb_ratio: " << cutBDTlow << ", "<< sb_ratio.getVal() << std::endl;
-    METHOD_MCGCXMC1PDATA(2);
+    METHOD_MCGCDATA(1);
   }
 };
 
@@ -323,17 +327,17 @@ if(step ==2 || step ==99 || step == 22){
   ptMin = 0;
   ptMax = 30;
   cutBDTlow = INTBIN_BDTLOW;
-  type2 = "CB3:CC2:DRFFXMC1P";
+  type2 = "CB3:CC2:DRFF";
   fixfit(-1);
   cutBDTlow = INTBIN_BDTLOW;
   cBinLow = 0;
   cBinHigh = 181;
-  type2 = "CB3:CC2:DR2FFXMC1P";
+  type2 = "CB3:CC2:DR2FF";
   fixfit(-1);
   cutBDTlow = INTBIN_BDTLOW;
   cBinLow = 0;
   cBinHigh = 181;
-  type2 = "CB3:CC2:FFXMC1P";
+  type2 = "CB3:CC2:FF";
   fixfit(-1);
 }
 
@@ -347,65 +351,65 @@ if(step ==3){
   ptMax = 30;
   cBinLow = 0;
   cBinHigh = 181;
-  type2 = "CB3:CC4:FFXMC1P";
+  type2 = "CB3:CC4:FF";
   fixfit(5);
 //  std::pair<double, RooRealVar> res = prep_bdtval(-0.1, 999);
 //  res = prep_bdtval(-0.1, -103);
   
 };
 
-if(step == 4){
-  std::string type_ = "CB3:CC4:FFXMC1P";
-       type_ = Form("%s:CC%d:%s", parser_symbol(type_)[0].c_str(), getNomBkgO(state, (int) ptMin, (int) ptMax, cBinLow, cBinHigh), parser_symbol(type_)[2].c_str());
-  train_state =2;
-  state =2;
-  ptMin = 0;
-  ptMax = 30;
-  cBinLow = 0;
-  cBinHigh = 181; 
-  cutQVP = 0.01;
-  cutBDTlow = -1;
-  cutBDThigh =1;
-  std::string fname;
-  if(state ==1) fname = fname1S;
-  if(state ==2) fname = fname2S;
-  if(state ==3) fname = fname3S;
-  MassYieldFit_BDT_MC_CB3(ts, "", fname, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, train_state, state, fixvar, swflag, cutQVP, -1, cutBDThigh);
-  string _tpye = type_;
-  double bl = cutBDTlow;
-    TFile* file_MCres_input = new TFile(Form("Yield/Yield_%ld_CB3_%dS_train%dS_pt_%d-%d_rap_%d-%d_cBin_%d-%d_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_%d.root", ts, (int) state ,train_state,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), bl, cutBDThigh, cutQVP,(int) fixvar), "OPEN");
-    RooFitResult* result_MC = (RooFitResult*) file_MCres_input->Get("fitresult_model_reducedDS");
-    std::cout << file_MCres_input->GetName() << std::endl;
-    auto list_fit_initial = result_MC->floatParsInit();
-    auto list_fit_final = result_MC->floatParsFinal();
-    auto list_var_toConst = parser_symbol(constraints);
-    std::map< std::string,std::pair< double, double> > map_keyval;
-    std::string opt_params_gc;
-    for (auto keys : list_var_toConst){
-    std::cout << keys << std::endl;
-      RooRealVar* _var = (RooRealVar*) list_fit_final.find(keys.c_str());
-      map_keyval[keys.c_str()] = {_var->getVal(), _var->getError()};
-      opt_params_gc+=Form(":%s;%.6f",keys.c_str(), _var->getError());
-    std::cout << keys <<": "<< _var->getVal() << ", "<< _var->getError() << std::endl;
-    }
-    opt_params_gc+=":GCPEND";
-    type_ = type_+opt_params_gc; 
-    std::cout << type_ << std::endl;
-
-     double mean_sigma1S1;
-     if(state ==3) mean_sigma1S1 = map_keyval["sigmaNS_1"].first*(U1S_mass/U3S_mass);
-     if(state ==2) mean_sigma1S1 = map_keyval["sigmaNS_1"].first*(U1S_mass/U2S_mass);
-     if(state ==1) mean_sigma1S1 = map_keyval["sigmaNS_1"].first*(U1S_mass/U1S_mass);
-
-     MassYieldFit_data(type_, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, bl, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, -0.02,0.0,0.1,0.1, -0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, -0.4, -0.5, -0.5,-0.3, -0.3}, (Double_t[]) {-1,-1,-1,-1, 0.1, 0.2, 0.3,0.3, 0.3}, 
-       (std::map<string, params_vhl>) {
-       {"frac2", {0.3, 0, -1} }, 
-       {"xNS", {0.3,0,-1}}, 
-       {"xNS_2", {0.5,0,-1}},
-       {"sigmaNS_1", { 0.21 ,0,-1}},
-       {"mag", { 0, 0, 0 }},
-       {"sb_ratio", { -1, 0, 0}},
-       });
-}
+//if(step == 4){
+//  std::string type_ = "CB3:CC4:FF";
+//       type_ = Form("%s:CC%d:%s", parser_symbol(type_)[0].c_str(), getNomBkgO(state, (int) ptMin, (int) ptMax, cBinLow, cBinHigh), parser_symbol(type_)[2].c_str());
+//  train_state =2;
+//  state =2;
+//  ptMin = 0;
+//  ptMax = 30;
+//  cBinLow = 0;
+//  cBinHigh = 181; 
+//  cutQVP = 0.01;
+//  cutBDTlow = -1;
+//  cutBDThigh =1;
+//  std::string fname;
+//  if(state ==1) fname = fname1S;
+//  if(state ==2) fname = fname2S;
+//  if(state ==3) fname = fname3S;
+//  MassYieldFit_BDT_MC_CB3(ts, "", fname, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, train_state, state, fixvar, swflag, cutQVP, -1, cutBDThigh);
+//  string _tpye = type_;
+//  double bl = cutBDTlow;
+//    TFile* file_MCres_input = new TFile(Form("Yield/Yield_%ld_CB3_%dS_train%dS_pt_%d-%d_rap_%d-%d_cBin_%d-%d_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_%d.root", ts, (int) state ,train_state,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), bl, cutBDThigh, cutQVP,(int) fixvar), "OPEN");
+//    RooFitResult* result_MC = (RooFitResult*) file_MCres_input->Get("fitresult_model_reducedDS");
+//    std::cout << file_MCres_input->GetName() << std::endl;
+//    auto list_fit_initial = result_MC->floatParsInit();
+//    auto list_fit_final = result_MC->floatParsFinal();
+//    auto list_var_toConst = parser_symbol(constraints);
+//    std::map< std::string,std::pair< double, double> > map_keyval;
+//    std::string opt_params_gc;
+//    for (auto keys : list_var_toConst){
+//    std::cout << keys << std::endl;
+//      RooRealVar* _var = (RooRealVar*) list_fit_final.find(keys.c_str());
+//      map_keyval[keys.c_str()] = {_var->getVal(), _var->getError()};
+//      opt_params_gc+=Form(":%s;%.6f",keys.c_str(), _var->getError());
+//    std::cout << keys <<": "<< _var->getVal() << ", "<< _var->getError() << std::endl;
+//    }
+//    opt_params_gc+=":GCPEND";
+//    type_ = type_+opt_params_gc; 
+//    std::cout << type_ << std::endl;
+//
+//     double mean_sigma1S1;
+//     if(state ==3) mean_sigma1S1 = map_keyval["sigmaNS_1"].first*(U1S_mass/U3S_mass);
+//     if(state ==2) mean_sigma1S1 = map_keyval["sigmaNS_1"].first*(U1S_mass/U2S_mass);
+//     if(state ==1) mean_sigma1S1 = map_keyval["sigmaNS_1"].first*(U1S_mass/U1S_mass);
+//
+//     MassYieldFit_data(type_, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, bl, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, -0.02,0.0,0.1,0.1, -0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, -0.4, -0.5, -0.5,-0.3, -0.3}, (Double_t[]) {-1,-1,-1,-1, 0.1, 0.2, 0.3,0.3, 0.3}, 
+//       (std::map<string, params_vhl>) {
+//       {"frac2", {0.3, 0, -1} }, 
+//       {"xNS", {0.3,0,-1}}, 
+//       {"xNS_2", {0.5,0,-1}},
+//       {"sigmaNS_1", { 0.21 ,0,-1}},
+//       {"mag", { 0, 0, 0 }},
+//       {"sb_ratio", { -1, 0, 0}},
+//       });
+//}
 };
 

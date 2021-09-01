@@ -57,10 +57,10 @@ double getBDTVariUnc(int pl, int ph, int cl, int ch, int state){
 	std::string type_sys  = Form("CB3:CC%d:%sbdtup",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str());
 	std::string type_sys2 = Form("CB3:CC%d:%sbdtdown",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str());
 	RooRealVar raa_nom, raa_sys, raa_sys2;
-	raa_nom = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_nom, -2, state, 0, ts);
+	raa_nom = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_nom, -2, state, 1, ts);
 	std::cout << "CHECK" <<  prep_bdtval(1) << std::endl;
-	raa_sys = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_sys, prep_bdtval(1), state, 0, ts);
-	raa_sys2 = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_sys2, prep_bdtval(-1), state, 0, ts);
+	raa_sys = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_sys, prep_bdtval(1), state, 1, ts);
+	raa_sys2 = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_sys2, prep_bdtval(-1), state, 1, ts);
 
 	double unc_sys =  (raa_sys.getVal() - raa_nom.getVal())/(raa_nom.getVal());
 	double unc_sys2 =  (raa_sys.getVal() - raa_nom.getVal())/(raa_nom.getVal());

@@ -118,7 +118,7 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0) mutable {
     if(_step == -1 ) systype = "SYSDOWN";
     else std::cout << " !!! " << std::endl;
    auto res_GOB = Get_Optimal_BDT(ts,ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP , ratio, train_state, "", "S2", systype.c_str());
-   auto res_GOB_ref = Get_Optimal_BDT(ts,ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP , sb_ratio.getVal(), train_state, "", "S2");
+   auto res_GOB_ref = Get_Optimal_BDT(ts,ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP , sb_ratio.getVal(), train_state, "", "S2", "SX");
    double res_blow = res_GOB.first;
    double res_blow_ref = res_GOB_ref.first;
    if (res_blow == res_blow_ref){
@@ -224,7 +224,7 @@ auto fixfit = [&](int depth  = 5) mutable {
       TFile* file_DATAres_input = new TFile(name_file_data.c_str(), "OPEN");
  std::vector<std::pair<int, int> > cBinPair;
  cBinPair =	{{0,40}, {40, 100},  {100,181}, /*{0, 181} ,*/  }; 
- if(train_state==2) cBinPair = { {0,10}, {10,20}, {20,40}, {40,60}, {60,80}, {80,100}, {100,120}, {120, 140}, {140, 181} /*{0,181} */};	
+ if(train_state==2) cBinPair = {/* {0,10}, {10,20}, {20,40}, {40,60}, {60,80},*/ {80,100},/* {100,120}, {120, 140}, {140, 181}*/ /*{0,181} */};	
  std::vector<std::pair<double, double> > ptPair = {{0, 30}};	//{ {0, 6}, {6, 30}, {0, 30}};
  std::vector<std::pair<double, double> > rapPair = {{-2.4, 2.4}};	//{ {-2.4, 2.4}, {-1.2, 1.2} };
  for( auto rp : rapPair ) {
@@ -281,7 +281,7 @@ train_state = 3;
 state =3;
  //Sealed
  if(step == 1 || step == 99 || step == 11 || step == 31){
-  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30}/*,{0, 6}, {6, 30}*/}){ 
+  for( auto ptpair : (std::vector<std::pair<double, double> >) {/*{0, 30},*/{0, 6}, {6, 30}}){ 
     ptMin = ptpair.first;
     ptMax = ptpair.second;
     std::pair<double, double> res = prep_bdtval(-0.0, global_step);
@@ -331,7 +331,7 @@ if(step ==2 || step ==99 || step == 21 || step == 31){
     sb_ratio = res.second;
     if(ptpair.first == 0 && ptpair.second == 30){ INTBIN_BDTLOW = res.first; }
     std::cout << "cutBDTlow, sb_ratio: " << cutBDTlow << ", "<< sb_ratio.getVal() << std::endl;
-    METHOD_MCGCDATA(1);
+//    METHOD_MCGCDATA(1);
   }
 };
 

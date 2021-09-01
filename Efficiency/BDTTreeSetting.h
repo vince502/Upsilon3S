@@ -109,5 +109,73 @@ void SetTreeBDT::TreeSetting(TTree* tree, bool NOM ,int train_state, int ptLow, 
 
 };
 
+class SetTreeBDT_SYSREF
+{
+  public:
+    SetTreeBDT_SYSREF(){};
+
+    virtual ~SetTreeBDT_SYSREF();
+    virtual void TreeSetting(TTree* tree, bool NOM, int train_state, int ptLow, int ptHigh);
+};
+
+SetTreeBDT_SYSREF::~SetTreeBDT_SYSREF()
+{
+}
+
+
+void SetTreeBDT_SYSREF::TreeSetting(TTree* tree, bool NOM ,int train_state, int ptLow, int ptHigh)
+{
+  tree->SetBranchStatus("weight", 0);
+  tree->SetBranchStatus("tnp_weight", 0);
+  tree->SetBranchStatus("pt_weight", 0);
+  tree->SetBranchAddress("mass", &mass);
+  tree->SetBranchAddress("cBin", &cBin);
+  tree->SetBranchAddress("pt", &pt);
+  tree->SetBranchAddress("y", &y);
+  tree->SetBranchAddress("pt1", &pt1);
+  tree->SetBranchAddress("pt2", &pt2);
+  tree->SetBranchAddress("eta1", &eta1);
+  tree->SetBranchAddress("eta2", &eta2);
+  tree->SetBranchAddress("eta", &eta);
+  if(!NOM)  tree->SetBranchAddress("BDT", &BDT);
+  if(NOM)tree->SetBranchAddress(Form("BDTY%dSpt%dto%d", train_state, ptLow, ptHigh), &BDT);
+  tree->SetBranchAddress("QQVtxProb", &QQVtxProb);
+  tree->SetBranchAddress("nTrkWMea1", &nTrkWMea1);
+  tree->SetBranchAddress("nTrkWMea2", &nTrkWMea2);
+  tree->SetBranchAddress("nPixWMea2", &nPixWMea2);
+  tree->SetBranchAddress("nPixWMea1", &nPixWMea1);
+  tree->SetBranchAddress("dxy1", &dxy1);
+  tree->SetBranchAddress("dxy2", &dxy2);
+  tree->SetBranchAddress("dz1", &dz1);
+  tree->SetBranchAddress("dz2", &dz2);
+};
+
+class SetTreeSYS
+{
+  public:
+    SetTreeSYS(){};
+
+    virtual ~SetTreeSYS();
+    virtual void TreeSetting(TTree* tree, bool NOM, int train_state, int ptLow, int ptHigh);
+    double i_weight, i_tnp_weight, i_pt_weight;
+};
+
+SetTreeSYS::~SetTreeSYS()
+{
+}
+
+
+void SetTreeSYS::TreeSetting(TTree* tree, bool NOM ,int train_state, int ptLow, int ptHigh)
+{
+  tree->SetBranchStatus("*", 0);
+  tree->SetBranchStatus("weight", 1);
+  tree->SetBranchStatus("tnp_weight", 1);
+  tree->SetBranchStatus("pt_weight", 1);
+  tree->SetBranchAddress("weight", &i_weight);
+  tree->SetBranchAddress("tnp_weight", &i_tnp_weight);
+  tree->SetBranchAddress("pt_weight", &i_pt_weight);
+
+};
+
 
 #endif 

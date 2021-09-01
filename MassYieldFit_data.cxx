@@ -51,6 +51,11 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
   std::string name_file_input;
   if(isBDT){
   name_file_input = Form("%s/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT.root",workdir.Data(),ts,Trig.c_str());
+    if(map_params.find("SYSHF") != map_params.end() ){
+      if( ts==9999999998 && map_params["SYSHF"].val ==  1){ name_file_input =Form("%s/BDT/roodatasets/OniaRooDataset_BDT9999999998_OniaSkim_Trig%s_BDT_SYSHFUP.root",workdir.Data(),Trig.c_str());}
+      if( ts==9999999997 && map_params["SYSHF"].val ==  1){ name_file_input =Form("%s/BDT/roodatasets/OniaRooDataset_BDT9999999997_OniaSkim_Trig%s_BDT_SYSHFDOWN.root",workdir.Data(),Trig.c_str());}
+
+    }
   }
   else name_file_input = Form("%s/roodatasetFiles/OniaRooDataSet_OniaSkim_Trig%s.root", workdir.Data(), Trig.c_str());
   std::string name_file_output = Form("%s/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f.root" ,workdir.Data(), ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10,  cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP );

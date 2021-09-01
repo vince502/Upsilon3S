@@ -10,10 +10,10 @@
 
 using namespace std;
 
-void getEfficiencyBDT(
+void getEfficiencyBDT_SYSTNP(
   float ptLow = 0.0, float ptHigh = 30.0,
   float yLow = 0.0, float yHigh = 2.4,
-  int cLow = 0, int cHigh = 181, bool isTnP = false, bool isPtWeight = false, long  ts = 9999999999, double bdt_tsl = 0.0, double bdt_tsh =0.0, int train_state = 3, int state= 3, double vcut = 0.00
+  int cLow = 0, int cHigh = 181, bool isTnP = true, bool isPtWeight = true, long  ts = 9999999999, double bdt_tsl = 0.0, double bdt_tsh =0.0, int train_state = 3, int state= 3, double vcut = 0.00
   ) {
 
   gStyle->SetOptStat(0);
@@ -49,44 +49,87 @@ void getEfficiencyBDT(
 //  else if(!isSwitch) ftrigSel += Form("_%s",fTrigName[kTrigSel_].Data());
 
   //input files
+  TString inputMC_base, inputMC_ref, inputMC, idstr, trkstr, trgstr;
+
+  if(state == 3) inputMC_base = Form("%s/OutputSkim_isMC1_3S_fitVarNom_tnp_", tnpdir.Data() ); 
+  if(state == 2) inputMC_base = Form("%s/OutputSkim_isMC1_2S_fitVarNom_tnp_", tnpdir.Data() ); 
+  if(state == 3) inputMC_ref = Form("%s/OutputSkim_isMC1_3S_fitVarNom_tnp_idNom_trkNom_trgTagChange_BDT.root", tnpdir.Data() ); 
+  if(state == 2) inputMC_ref = Form("%s/OutputSkim_isMC1_2S_fitVarNom_tnp_idNom_trkNom_trgTagChange_BDT.root", tnpdir.Data() ); 
+  auto get_input_config = [&] (int cvr, int mod)
+  {
+    TString _input_config, _idstr, _trkstr, _trgstr;
+    std::cout << "Mode str : " <<mode_str[mod-1].c_str() << std::endl;
+    if( cvr == 1 ){ _trkstr = "Nom"; _trgstr = "Nom"; _idstr = Form("%s",mode_str[mod-1].c_str()); }
+    if( cvr == 2 ){ _idstr = "Nom"; _trgstr = "Nom"; _trkstr = Form("%s",mode_str[mod-1].c_str()); }
+    if( cvr == 3 ){ _idstr = "Nom"; _trkstr = "Nom"; _trgstr = Form("%s",mode_str[mod-1].c_str()); }
+    _input_config = Form("id%s_trk%s_trg%s",_idstr.Data(), _trkstr.Data(), _trgstr.Data()); 
+    return _input_config;
+  };
+
+  TString inputMCs[15];
+  int counter =0;
+  for( int _cv : {1,2,3}){
+    for( int _md : {1,2,3,4,5}){
+      inputMCs[counter] = inputMC_base + get_input_config(_cv, _md) + ".root"; 
+//      std::cout << "Input MC file["<< _cv*_md -1 << "] = " << inputMCs[_cv*_md -1].Data() << std::endl;
+      counter++;
+    }
+  }
+
   TFile* fPtW;
-  TString inputMC;
   if( state ==1){
-    inputMC = Form("/home/vince402/Upsilon3S/BDT/BDTAppliedData/BDTApp_%ld_MC_1S.root", ts);
     fPtW = new TFile(Form("%s/WeightedFunction/Func_dNdpT_1S.root", store.Data()),"read");
   }
   if( state ==2){
-    inputMC = Form("/home/vince402/Upsilon3S/BDT/BDTAppliedData/BDTApp_%ld_MC_2S.root", ts);
     fPtW = new TFile(Form("%s/WeightedFunction/Func_dNdpT_2S.root", store.Data()),"read");
   }
   if( state ==3){
-    inputMC =Form("/home/vince402/Upsilon3S/BDT/BDTAppliedData/BDTApp_%ld_MC.root", ts);
     fPtW = new TFile(Form("%s/WeightedFunction/Func_dNdpT_3S.root", store.Data()),"read");
   }
-  TChain* mytree = new TChain("tree"); 
-  mytree->Add(inputMC.Data());
+  TChain* mytree[15];
+  for (int i = 0 ; i < 15; i ++){
+    mytree[i]= new TChain("tree"); 
+    std::cout << "Expecting input MC file["<< i << "] = " << inputMCs[i].Data() << std::endl;
+    mytree[i]->Add(inputMCs[i].Data());
+  }
+  TChain* bdtreftree = new TChain("tree");
+
+  bdtreftree->Add(inputMC_ref.Data());
   TF1* f1 = (TF1*) fPtW->Get("fitRatio");
 
   //SetBranchAddress
-  SetTreeBDT settree_;
-  settree_.TreeSetting(mytree, (ts >=9999999990), train_state,(int) ptLow, (int) ptHigh);
+  SetTreeBDT_SYSREF settree_;
+  settree_.TreeSetting(bdtreftree, (ts >=9999999990), train_state,(int) ptLow, (int) ptHigh);
+  SetTreeSYS systree[15];
+  for (int i = 0 ; i < 15; i ++){
+    systree[i].TreeSetting(mytree[i], (ts >=9999999990), train_state,(int) ptLow, (int) ptHigh);
+  }
 
   //pT reweighting function
 //  TFile *fPtW = new TFile(Form("%s/Efficiency/Func_dNdpT_2S.root",workdir.Data()),"read");
 //  TF1* f1 = (TF1*) fPtW->Get("fitRatio");
 
-  TString histName = Form("BDT_%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d", state, ts, bdt_tsl, bdt_tsh, ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight);
-  TH1D* hreco = new TH1D(Form("hreco"),"hreco",1,xmin,xmax);
-  TH1D* hreco_tnp = new TH1D(Form("hreco_tnp"),"hreco_tnp",(int) ((xmax-xmin)),xmin,xmax);
-  TH1D* hreco_xtnp = new TH1D(Form("hreco_xtnp"),"hreco_xtnp",(int) ((xmax-xmin)),xmin,xmax);
+  TString histName = Form("BDT_%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_%s", state, ts, bdt_tsl, bdt_tsh, ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight, "SYSTNP");
+  TH1D *hreco[15], *hreco_tnp[15], *hreco_xtnp[15];
+  counter =0;
+  for( int _cv : {1,2,3}){
+    for( int _md : {1,2,3,4,5}){
+      TString typestr = "_" + get_input_config(_cv, _md); 
+      hreco[counter] = new TH1D(Form("hreco%s",typestr.Data()),"hreco",1,xmin,xmax);
+      hreco_tnp[counter] = new TH1D(Form("hreco_tnp%s"  ,typestr.Data() ),"hreco_tnp",(int) ((xmax-xmin)),xmin,xmax);
+      hreco_xtnp[counter] = new TH1D(Form("hreco_xtnp%s",typestr.Data() ),"hreco_xtnp",(int) ((xmax-xmin)),xmin,xmax);
+      hreco[counter]->Sumw2();
+      hreco_tnp[counter]->Sumw2();
+      hreco_xtnp[counter]->Sumw2();
 
-  hreco->Sumw2();
-  hreco_tnp->Sumw2();
-  hreco_xtnp->Sumw2();
+      hreco[counter]->SetTitle("Reco");
+      hreco_xtnp[counter]->SetTitle("Reco no tnp");
+      hreco_tnp[counter]->SetTitle("Reco with tnp");
+      counter++;
+    }
+  }
 
-  hreco->SetTitle("Reco");
-  hreco_xtnp->SetTitle("Reco no tnp");
-  hreco_tnp->SetTitle("Reco with tnp");
+
 
 // -------NO GEN info in BDT DS--------
 //  TLorentzVector* JP_Gen= new TLorentzVector;
@@ -109,13 +152,17 @@ void getEfficiencyBDT(
 
   int count =0;
   int counttnp =0;
-  const int nevt =mytree->GetEntries();
+  const int nevt =bdtreftree->GetEntries();
   cout << "Total Events : " << nevt << endl;
   for(int iev=0; iev<nevt ; ++iev)
   {
-    if(iev%100000==0) cout << ">>>>> EVENT " << iev << " / " << mytree->GetEntries() <<  " ("<<(int)(100.*iev/mytree->GetEntries()) << "%)" << endl;
+    if(iev%100000==0) cout << ">>>>> EVENT " << iev << " / " << bdtreftree->GetEntries() <<  " ("<<(int)(100.*iev/bdtreftree->GetEntries()) << "%)" << endl;
 
-    mytree->GetEntry(iev);
+    for (int i = 0 ; i < 15; i ++){
+      mytree[i]->GetEntry(iev);
+    }
+    bdtreftree->GetEntry(iev);
+
     if(BDT< bdt_tsl || BDT> bdt_tsh) continue;
     if(!( fabs(y) < yHigh && fabs(y) > yLow && pt < ptHigh && pt >ptLow )) continue;
     if(!( pt1> muPtCut && pt2> muPtCut && fabs(eta1) < muEtaCut && fabs(eta2) < muEtaCut )) continue;
@@ -127,15 +174,16 @@ void getEfficiencyBDT(
       if(!( nTrkWMea1 >5 && nTrkWMea2 >5 && nPixWMea1 > 0 && nPixWMea2 > 0 && fabs(dxy1) < 0.3 && fabs(dxy2) < 0.3 && fabs(dz1) < 20. && fabs(dz2) < 20.) ) continue;
 
     histName = Form("BDT_%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID", state, ts, bdt_tsl, bdt_tsh,ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,vcut,isTnP,isPtWeight);
-    if(ts >= 9999999990) histName = Form("BDT_%dS_train%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID_fix", state, train_state, ts, bdt_tsl, bdt_tsh,ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,vcut,isTnP,isPtWeight);
+    if(ts >= 9999999990) histName = Form("BDT_%dS_train%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID_%s", state, train_state, ts, bdt_tsl, bdt_tsh,ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,vcut,isTnP,isPtWeight, "SYSTNP");
     }
     double ptW =1;
     if( isPtWeight) ptW = f1->Eval(pt);
-    weight = weight ;//* ptW;
-    
-    hreco->Fill(pt,weight);
-    hreco_tnp->Fill(pt,weight);
-    hreco_xtnp->Fill(pt, weight/tnp_weight);
+    for (int i = 0 ; i < 15; i ++){
+      hreco[i]->Fill(pt,systree[i].i_weight);
+      hreco_tnp[i]->Fill(pt,systree[i].i_weight);
+      hreco_xtnp[i]->Fill(pt, (systree[i].i_weight)/(systree[i].i_tnp_weight));
+    }
+
     count++;
 
   }
@@ -143,18 +191,18 @@ void getEfficiencyBDT(
 
   //Draw
   //RECO
-  TCanvas * creco = new TCanvas(Form("creco_%s",histName.Data()),"creco",0,0,400,400);
-  creco->cd();
-  hreco->Draw();
+  //TCanvas * creco = new TCanvas(Form("creco_%s",histName.Data()),"creco",0,0,400,400);
+  //creco->cd();
+  //hreco->Draw();
 
   //RECO TnP
-  TCanvas * creco_tnp = new TCanvas(Form("creco_tnp_%s",histName.Data()),"creco with tnp",0,0,400,400);
-  creco_tnp->cd();
-  hreco_tnp->Draw("pe");
+  //TCanvas * creco_tnp = new TCanvas(Form("creco_tnp_%s",histName.Data()),"creco with tnp",0,0,400,400);
+  //creco_tnp->cd();
+  //hreco_tnp->Draw("pe");
   
   //RECO xTnP
 //  TCanvas * creco_xtnp = new TCanvas(Form("creco_xtnp_%s",histName.Data()),"creco no tnp",0,0,400,400);
-  hreco_xtnp->Draw("same,pe");
+  //hreco_xtnp->Draw("same,pe");
 
   //Divide
 //  TH1D* heff;
@@ -167,15 +215,17 @@ void getEfficiencyBDT(
 
   //Save efficiency files for later use.
 //  heff->SetName(Form("mc_eff_vs_pt_TnP%d_dNdPt%d_Cent%d%d",isTnP, isPtWeight, cLow, cHigh));
-  TString outFileName = Form("/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_%s.root",histName.Data());
+  TString outFileName = Form("/home/vince402/Upsilon3S/BDT/EffCalc/TNP/mc_eff_%s.root",histName.Data());
   TFile* outFile = new TFile(outFileName,"RECREATE");
 //  heff->Write();
-  hreco->Write();
-  hreco_tnp->Write();
-  hreco_xtnp->Write();
+  for (int i = 0 ; i < 15; i ++){
+    hreco[i]->Write();
+    hreco_tnp[i]->Write();
+    hreco_xtnp[i]->Write();
+  }
 //  hgen->Write();
-  creco->Close();
-  creco_tnp->Close();
+  //creco->Close();
+  //creco_tnp->Close();
   outFile->Close();
 
 }

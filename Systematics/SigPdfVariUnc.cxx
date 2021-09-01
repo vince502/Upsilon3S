@@ -13,8 +13,8 @@ double getSigPdfVariUnc(int pl, int ph, int cl, int ch, int state){
 	std::string type_sys = Form("CB2G:CC%d:%s",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str());
 
 	RooRealVar raa_nom, raa_sys, raa_sys2;
-	raa_nom = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_nom, -2, state, 0, ts);
-	raa_sys = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_sys, -2, state, 0, ts);
+	raa_nom = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_nom, -2, state, 2, ts);
+	raa_sys = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_sys, -2, state, 2, ts);
 
 	double unc_sys =  (raa_sys.getVal() - raa_nom.getVal())/(raa_nom.getVal());
 	return unc_sys;
