@@ -36,7 +36,11 @@ void BDTClassifierApplication_NOM(long ts= 9999999999, int train_state =2, int t
     if(target_state==3) fname =Form("%s/%s", store.Data(), ONIABDTMC_LATEST.c_str());
   }
   else if(!isMC){
-    if(whichtree !=0) fname =Form("%s/%s", store.Data(), ONIABDTDATAB_LATEST.c_str() );
+    if(whichtree !=0){
+      fname =Form("%s/%s", store.Data(), ONIABDTDATAB_LATEST.c_str() );
+      if( ts == 9999999996) fname = Form("%s/%s", hfdir.Data(), SYS_HFUPDATA.c_str() );
+      if( ts == 9999999995) fname = Form("%s/%s", hfdir.Data(), SYS_HFDOWNDATA.c_str() );
+    }
     if(whichtree ==0) fname =Form("%s/%s", store.Data(), ONIABDTDATA_LATEST.c_str() );
   }
 

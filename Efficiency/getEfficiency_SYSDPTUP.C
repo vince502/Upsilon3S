@@ -10,10 +10,10 @@
 
 using namespace std;
 
-void getEfficiency(
+void getEfficiency_SYSDPTUP(
   float ptLow = 0.0, float ptHigh = 30.0,
   float yLow = 0.0, float yHigh = 2.4,
-  int cLow = 0, int cHigh = 181, bool isTnP = false, bool isPtWeight = false, bool isSwitch=false, int kTrigSel = kTrigUps, bool isBDT = false, int state =3
+  int cLow = 0, int cHigh = 181, bool isTnP = false, bool isPtWeight = false, bool isSwitch=false, int kTrigSel = kTrigUps, bool isBDT = false, int state =3, int IsSys =1
   ) {
 
   gStyle->SetOptStat(0);
@@ -65,8 +65,15 @@ void getEfficiency(
   if(state==2) fPtW = new TFile(Form("%s/WeightedFunction/Func_dNdpT_2S.root",store.Data()),"read");
   if(state==3) fPtW = new TFile(Form("%s/WeightedFunction/Func_dNdpT_3S.root",store.Data()),"read");
   TF1* f1 = (TF1*) fPtW->Get("fitRatio");
+  TF1 *f1_up, *f1_down;
+  if(IsSys !=0){
+    f1_up = (TF1*) f1->Clone();
+    f1_down = (TF1*) f1->Clone();
+    f1_up->SetParameters(f1->GetParameter(0) + f1->GetParError(0),f1->GetParameter(1) + f1->GetParError(1));
+    f1_down->SetParameters(f1->GetParameter(0) - f1->GetParError(0),f1->GetParameter(1) - f1->GetParError(1));
+  }
 
-  TString histName = Form("%dS_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_TrigSel%s",state, ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight,ftrigSel.c_str());
+  TString histName = Form("%dS_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_TrigSel%s_SYSPTUP",state, ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight,ftrigSel.c_str());
 //  TH1D* hreco = new TH1D(Form("hreco"),"hreco",1,xmin,xmax);
   TH1D* hgen = new TH1D(Form("hgen"),"hgen",1,xmin,xmax);
   TH1D* hgen_bin = new TH1D(Form("hgen_bin"),"hgen",(int) (xmax-xmin),xmin,xmax);
@@ -92,6 +99,7 @@ void getEfficiency(
   double tnp_trig_weight_mupl = -1;
   double tnp_trig_weight_mumi = -1;
   double pt_weight = 1;
+  double ptWeight_up, ptWeight_down;
   
   double tnp_trig_dimu=-1;
 
@@ -121,7 +129,14 @@ void getEfficiency(
       if(Gen_mu_charge[Gen_QQ_mupl_idx[igen]]*Gen_mu_charge[Gen_QQ_mumi_idx[igen]]>0) continue;
 
       pt_weight = 1;
-      if(isPtWeight) pt_weight = f1->Eval(JP_Gen->Pt()); 
+      if(isPtWeight){
+	pt_weight = f1->Eval(JP_Gen->Pt()); 
+	if( IsSys){
+	  ptWeight_up = f1_up->Eval(JP_Gen->Pt());
+	  ptWeight_down = f1_down->Eval(JP_Gen->Pt());
+	  pt_weight =  ptWeight_up ;
+	}
+      }
 
       hgen->Fill(JP_Gen->Pt(),weight*pt_weight);
       hgen_bin->Fill(JP_Gen->Pt(),weight*pt_weight);
@@ -249,7 +264,7 @@ void getEfficiency(
   //Save efficiency files for later use.
 //  heff->SetName(Form("mc_eff_vs_pt_TnP%d_dNdPt%d_Cent%d%d",isTnP, isPtWeight, cLow, cHigh));
   TString outFileName = Form("mc_eff_%s.root",histName.Data());
-  if(isBDT){ outFileName = Form("/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_%s.root",histName.Data());}
+  if(isBDT){ outFileName = Form("/home/vince402/Upsilon3S/BDT/EffCalc/DNDPT/mc_eff_%s.root",histName.Data());}
   TFile* outFile = new TFile(outFileName,"RECREATE");
 //  heff->Write();
 //  hreco->Write();

@@ -180,12 +180,12 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
 };
 
 //Function to get BDT ratio //
-RooRealVar get_eff_acc(std::string type, std::string type2, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int train_state = 3, int state1 =1, int state2 =3){
+RooRealVar get_eff_acc(std::string type, std::string type2, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int train_state = 3, int state1 =1, int state2 =3, bool eff_old = true){
 
   RooRealVar eff22, eff21, eff1, eff2, nbkg;
 
-  binplotter bp = binplotter(type, ts, ylim,pl, ph, cl, ch, blow, bhigh, train_state, false);
-  binplotter bp2 = binplotter(type2, ts, ylim,pl, ph, cl, ch, -1, bhigh, train_state, false);
+  binplotter bp = binplotter(type, ts, ylim,pl, ph, cl, ch, blow, bhigh, train_state, false, eff_old);
+  binplotter bp2 = binplotter(type2, ts, ylim,pl, ph, cl, ch, -1, bhigh, train_state, false, eff_old);
   bp.get_yield();
   nbkg = bp2.get_bkg();
   auto frac_pair = bp.get_frac();

@@ -13,8 +13,8 @@ std::string ONIABDTMC2S_LATEST = "OutputSkim_isMC1_2S_v210628_bkup.root";
 std::string ONIABDTDATA_LATEST = "OutputSkim_isMC0_v210628_bkup.root";
 std::string ONIABDTDATAB_LATEST = "OutputSkim_isMC0_v210628_ForBLIND.root";
 
-std::string SYS_HFUPDATA_RAW = "OutputSkim_isMC0_HFUp.root";
-std::string SYS_HFDOWNDATA_RAW = "OutputSkim_isMC0_HFDo.root";
+std::string SYS_HFUPDATA_RAW = "OutputSkim_isMC0_HFUp_CutOnHFNom.root";
+std::string SYS_HFDOWNDATA_RAW = "OutputSkim_isMC0_HFDo_CutOnHFNom.root";
 std::string SYS_HFUPDATA = "OutputSkim_isMC0_HFUpBLIND.root";
 std::string SYS_HFDOWNDATA = "OutputSkim_isMC0_HFDoBLIND.root";
 

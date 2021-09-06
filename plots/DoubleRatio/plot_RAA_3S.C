@@ -1,7 +1,7 @@
 void plot_RAA_3S()
 {
 //=========Macro generated from canvas: c3/
-//=========  (Fri Aug 20 15:20:09 2021) by ROOT version 6.22/06
+//=========  (Mon Sep  6 15:33:08 2021) by ROOT version 6.22/06
    TCanvas *c3 = new TCanvas("c3", "",0,0,1000,700);
    gStyle->SetOptStat(0);
    gStyle->SetOptTitle(0);
@@ -24,12 +24,12 @@ void plot_RAA_3S()
    p31->SetFrameBorderMode(0);
    
    TH1D *RAAcent_3S__6 = new TH1D("RAAcent_3S__6","PbPb 2 ratio cent",35,0,420);
-   RAAcent_3S__6->SetBinContent(3,0.4820163);
-   RAAcent_3S__6->SetBinContent(12,0.120556);
-   RAAcent_3S__6->SetBinContent(26,0.1230646);
-   RAAcent_3S__6->SetBinError(3,0.09850995);
-   RAAcent_3S__6->SetBinError(12,0.04111626);
-   RAAcent_3S__6->SetBinError(26,0.02991988);
+   RAAcent_3S__6->SetBinContent(3,0.5134596);
+   RAAcent_3S__6->SetBinContent(12,0.1292691);
+   RAAcent_3S__6->SetBinContent(26,0.1274464);
+   RAAcent_3S__6->SetBinError(3,0.1038328);
+   RAAcent_3S__6->SetBinError(12,0.04274275);
+   RAAcent_3S__6->SetBinError(26,0.03117786);
    RAAcent_3S__6->SetMinimum(0);
    RAAcent_3S__6->SetMaximum(1.3);
    RAAcent_3S__6->SetEntries(3);
@@ -136,8 +136,8 @@ tex->SetNDC();
    p32->SetFrameBorderMode(0);
    
    TH1D *y3int__7 = new TH1D("y3int__7","",3,0,1);
-   y3int__7->SetBinContent(3,0.1053957);
-   y3int__7->SetBinError(3,0.0247411);
+   y3int__7->SetBinContent(3,0.1104473);
+   y3int__7->SetBinError(3,0.02608092);
    y3int__7->SetMinimum(0);
    y3int__7->SetMaximum(1.3);
    y3int__7->SetEntries(1);

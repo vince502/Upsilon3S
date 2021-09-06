@@ -250,7 +250,7 @@ double Get_BDT(long ts, int state, int ptMin, int ptMax, int cBinLow, int cBinHi
 std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio =0.16, int train_state =3, string name_input_opt = "", string formula_significance= "S2", string the_opt ="");
 std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, RooRealVar r_ratio, int train_state =3, string name_input_opt = "", string formula_significance= "S2");
 
-RooRealVar get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int state1 =1, int state2 = 3);
+RooRealVar get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int state1 =1, int state2 = 3, bool eff_old = false);
 
 TH1D* func_hist_optimal_BDT();
 

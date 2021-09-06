@@ -7,7 +7,7 @@ std::string findtype(int pl, int ph, int cl, int ch){
 	return fittype;
 };
 
-double getSigPdfVariUnc(int pl, int ph, int cl, int ch, int state){
+double getSysPdfVariUnc(int pl, int ph, int cl, int ch, int state){
 	long ts = 9999999999;
 	std::string type_nom = Form("CB3:CC%d:%s",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str());
 	std::string type_sys = Form("CB2G:CC%d:%s",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str());
@@ -19,8 +19,8 @@ double getSigPdfVariUnc(int pl, int ph, int cl, int ch, int state){
 	double unc_sys =  (raa_sys.getVal() - raa_nom.getVal())/(raa_nom.getVal());
 	return unc_sys;
 };
-double getSigPdfVariUnc(ana_bins k){
-	double unc_sys = getSigPdfVariUnc(k.pl, k.ph, k.cl, k.ch, k.state);
+double getSysPdfVariUnc(ana_bins k){
+	double unc_sys = getSysPdfVariUnc(k.pl, k.ph, k.cl, k.ch, k.state);
 	return unc_sys;
 };
 
@@ -40,24 +40,24 @@ void SigPdfVariUnc(){
 
 	int counter =1;
 	for( auto item : vc2){
-		rc2s->SetBinContent(counter, getSigPdfVariUnc(item));
+		rc2s->SetBinContent(counter, getSysPdfVariUnc(item));
 		counter++;
 	}
 	counter =1;
 	for( auto item : vc3){
-		rc3s->SetBinContent(counter, getSigPdfVariUnc(item));
+		rc3s->SetBinContent(counter, getSysPdfVariUnc(item));
 		counter++;
 	}
 	counter =1;
 
 	for( auto item : vp2){
-		rp2s->SetBinContent(counter, getSigPdfVariUnc(item));
+		rp2s->SetBinContent(counter, getSysPdfVariUnc(item));
 		counter++;
 	}
 	counter =1;
 	
 	for( auto item : vp3){
-		rp3s->SetBinContent(counter, getSigPdfVariUnc(item));
+		rp3s->SetBinContent(counter, getSysPdfVariUnc(item));
 		counter++;
 	}
 	output->cd();

@@ -11,7 +11,10 @@
 
 using namespace std;
 
+
+#if !defined(TreeSetting_h)
 extern const long int maxBranchSize = 100000;
+#endif
 
 // import the tree to the RooDataSet
 int		 cBin;

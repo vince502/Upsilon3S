@@ -28,7 +28,7 @@ double getBkgVariUnc(ana_bins k){
 };
 
 void BkgVariUnc(){
-	TFile* output = new TFile("bkgPDFunc.root","recreate");
+	TFile* output = new TFile("bkgPDF_unc.root","recreate");
 	TH1D *rc2s, *rc3s, *rp2s, *rp3s;
 	rc2s = new TH1D("rc2S","",10,0,9); //include int. bin
 	rc3s = new TH1D("rc3S","",4,0,3);  //include int. bin

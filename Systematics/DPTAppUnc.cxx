@@ -13,10 +13,9 @@ double getDPTVariUnc(int pl, int ph, int cl, int ch, int state){
 	binplotter* bp = new binplotter(Form("CB3:CC%d:%s",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str()), 9999999999, 2.4, pl, ph, cl, ch, bl, 1, state);
 	dbg();
 	double eff_nom = bp->get_eff(state).first;
-	double eff_sys_up = bp->get_eff_sysdpt(state, "UP").first;
-	double eff_sys_down = bp->get_eff_sysdpt(state, "DOWN").first;
-	std::cout << "[SYSTEMATIC] Efficiency nom, up, down: " <<Form(" %.4f, %.4f, %.4f %%",eff_nom, eff_sys_up, eff_sys_down )<< std::endl; 
-	double dpt_unc = ( fabs(eff_sys_up - eff_nom ) - fabs(eff_sys_down - eff_nom) > 0 ) ? eff_sys_up : eff_sys_down;
+	double eff_sys_no = bp->get_eff_sysdpt(state, "NO").first;
+	std::cout << "[SYSTEMATIC] Efficiency nom, no: " <<Form(" %.4f, %.4f%%",eff_nom, eff_sys_no )<< std::endl; 
+	double dpt_unc = eff_sys_no;
 	dpt_unc = ( dpt_unc - eff_nom ) / eff_nom;
 
 	return dpt_unc;
@@ -26,8 +25,8 @@ double getDPTVariUnc(ana_bins k){
 	return unc_sys;
 };
 
-void DPTVariUnc(){
-	TFile* output = new TFile("effDPT_unc.root","recreate");
+void DPTAppUnc(){
+	TFile* output = new TFile("effNODPT_unc.root","recreate");
 	TH1D *rc2s, *rc3s, *rp2s, *rp3s;
 	rc2s = new TH1D("rc2S","",10,0,9); //include int. bin
 	rc3s = new TH1D("rc3S","",4,0,3);  //include int. bin

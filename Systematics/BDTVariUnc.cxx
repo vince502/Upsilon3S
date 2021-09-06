@@ -19,7 +19,7 @@ double getBDTVariUnc(int pl, int ph, int cl, int ch, int state){
 	else if( findtype (pl, ph, cl, ch) != "GC") blow_ref = -0.1;
 	///////////////////////////////////////////////////
 	auto prep_bdtval = [&]  (int _step =0 ) mutable {
-	    auto sb_ratio = get_eff_acc(type_r, typenobdt, ts, rapMax, pl, ph, cl, ch, blow_ref, 1.0, state, 1, state);
+	    auto sb_ratio = get_eff_acc(type_r, typenobdt, ts, rapMax, pl, ph, cl, ch, blow_ref, 1.0, state, 1, state, true);
 	    std::cout << Form("pl, ph, cl, ch, blow_ref, ratio: %d, %d, %d, %d, %.4f, %.6f", pl, ph, cl, ch, blow_ref,  sb_ratio.getVal() ) << std::endl;
 	    if( _step == 1) ratio = sb_ratio.getVal() + sb_ratio.getError();
 	    if( _step == -1) ratio = sb_ratio.getVal() - sb_ratio.getError();
@@ -35,7 +35,7 @@ double getBDTVariUnc(int pl, int ph, int cl, int ch, int state){
 	   double res_blow_ref = res_GOB_ref.first;
 	   if (res_blow == res_blow_ref){
 	       std::cout << "[BDT val Getter] Referencing BDT ratio from Integrated Bin" << std::endl;
-	       auto sb_ratio_INT = get_eff_acc(type_r, typenobdt, ts, rapMax, 0, 30, 0, 181, -0.0, 1.0, state, 1, state);
+	       auto sb_ratio_INT = get_eff_acc(type_r, typenobdt, ts, rapMax, 0, 30, 0, 181, -0.0, 1.0, state, 1, state, true);
 	       std::cout << "\n\n\n\n DEBUG REPORT: SB_RATIO_INT="<< sb_ratio_INT.getVal() << ", SB_RATIO="<<sb_ratio.getVal() << "\n\n\n\n";
 	       double ratio_INT_ref = sb_ratio_INT.getVal();
 	       double ratio_INT = ratio_INT_ref + ((double) _step * sb_ratio.getError() ); 
@@ -57,10 +57,10 @@ double getBDTVariUnc(int pl, int ph, int cl, int ch, int state){
 	std::string type_sys  = Form("CB3:CC%d:%sbdtup",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str());
 	std::string type_sys2 = Form("CB3:CC%d:%sbdtdown",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str());
 	RooRealVar raa_nom, raa_sys, raa_sys2;
-	raa_nom = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_nom, -2, state, 1, ts);
+	raa_nom = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_nom, -2, state, 1, ts, false, true);
 	std::cout << "CHECK" <<  prep_bdtval(1) << std::endl;
-	raa_sys = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_sys, prep_bdtval(1), state, 1, ts);
-	raa_sys2 = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_sys2, prep_bdtval(-1), state, 1, ts);
+	raa_sys = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_sys, prep_bdtval(1), state, 1, ts, false, true);
+	raa_sys2 = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_sys2, prep_bdtval(-1), state, 1, ts, false, true);
 
 	double unc_sys =  (raa_sys.getVal() - raa_nom.getVal())/(raa_nom.getVal());
 	double unc_sys2 =  (raa_sys.getVal() - raa_nom.getVal())/(raa_nom.getVal());

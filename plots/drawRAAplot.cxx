@@ -8,7 +8,7 @@ TH1D* getPbPbRAA(int state =3, double bdt_fix=-2);
 
 // Double Ratio Finding Function
 //////////////////////////////////////////////////////////////////////////////
-RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC", double bdtlow_val = -2, int state =3, int getPre = 0,long ts =9999999999, bool stdvcut = false){
+RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC", double bdtlow_val = -2, int state =3, int getPre = 0,long ts =9999999999, bool stdvcut = false, bool eff_old = false){
    // 1625503068; //1623391157; //BLIND Nominal
   double val_bdt_nom = Get_BDT(ts, state, (int) ptpair.first, (int) ptpair.second, cbpair.first, cbpair.second);
 
@@ -19,7 +19,7 @@ RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, do
   std::cout << val_bdt_nom << ", " << bdtpair.first << std::endl;
 
   binplotter* bp ;
-  bp = new binplotter(type,ts, ylim, ptpair.first, ptpair.second, cbpair.first, cbpair.second, bdtpair.first, bdtpair.second, state, false);
+  bp = new binplotter(type,ts, ylim, ptpair.first, ptpair.second, cbpair.first, cbpair.second, bdtpair.first, bdtpair.second, state, false, eff_old);
   if (stdvcut){ bp->set_params(0.01); }
 
   RooRealVar _y = bp->get_yield(state);

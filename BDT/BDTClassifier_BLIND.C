@@ -25,7 +25,7 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
   _ts = (long) tstamp;
   _real_time = (long) tstamp;
   std::cout <<"time stamp---> " <<  tstamp << std::endl;
-  if(strcmp(opt.c_str(),"NOMINAL")==0) _ts = (long) 9999999991;
+  if(strcmp(opt.c_str(),"NOMINAL")==0) _ts = (long) 9999999995;
   std::system(Form("cat BDTClassifier_BLIND.C >> ./.past_source/_BDTClassifier_BLIND_%ld.old",(long) tstamp));
   ofstream log;
   log.open("BDT_description.log", std::ios_base::out|std::ios_base::app);
@@ -38,7 +38,8 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
   else gSystem->mkdir(BDTDir.Data(),kTRUE);
   
   //INPUT & OUTPUT Call
-  TFile* inputDATA = new TFile(Form("%s/%s", store.Data(), ONIABDTDATAB_LATEST.c_str()),"read");
+//  TFile* inputDATA = new TFile(Form("%s/%s", store.Data(), ONIABDTDATAB_LATEST.c_str()),"read");
+  TFile* inputDATA = new TFile(Form("%s/%s", hfdir.Data(), SYS_HFDOWNDATA.c_str()),"read");
   TFile* inputMC   ;
   if(state ==1) inputMC= new TFile(Form("%s/%s", store.Data(), ONIABDTMC1S_LATEST.c_str()),"read");
   if(state ==2) inputMC= new TFile(Form("%s/%s", store.Data(), ONIABDTMC2S_LATEST.c_str()),"read");
@@ -177,21 +178,21 @@ void BDTClassifier_BLIND( ){
   std::cout << "Write down description for this run :";
   std::cin.getline(logbuf,2000);
   bool res; 
-  res = BDTClassifier_BLIND_Function(3,0,0,30, 0,181, "NOMINAL");
-  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
-  res = BDTClassifier_BLIND_Function(3,0,0,6, 0,181, "NOMINAL");
-  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
-  res = BDTClassifier_BLIND_Function(3,0,6,30, 0,181, "NOMINAL");
-  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
+//  res = BDTClassifier_BLIND_Function(3,0,0,30, 0,181, "NOMINAL");
+//  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
+//  res = BDTClassifier_BLIND_Function(3,0,0,6, 0,181, "NOMINAL");
+//  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
+//  res = BDTClassifier_BLIND_Function(3,0,6,30, 0,181, "NOMINAL");
+//  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
   res = BDTClassifier_BLIND_Function(2,0,0,30, 0,181, "NOMINAL");
   if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
-  res = BDTClassifier_BLIND_Function(2,0,0,4, 0,181, "NOMINAL");
-  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
-  res = BDTClassifier_BLIND_Function(2,0,4,9, 0,181, "NOMINAL");
-  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
-  res = BDTClassifier_BLIND_Function(2,0,9,30, 0,181, "NOMINAL");
-  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
-  tsrange.first = _real_time;
+//  res = BDTClassifier_BLIND_Function(2,0,0,4, 0,181, "NOMINAL");
+//  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
+//  res = BDTClassifier_BLIND_Function(2,0,4,9, 0,181, "NOMINAL");
+//  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
+//  res = BDTClassifier_BLIND_Function(2,0,9,30, 0,181, "NOMINAL");
+//  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
+//  tsrange.first = _real_time;
   //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
   //  res = BDTClassifier_BLIND_Function(0,6, 0,180);
   //if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));

@@ -5,8 +5,8 @@
 binplotter::binplotter(){
 };
 
-binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _train_state =3,  bool find_bdt = false){
-  type = _type; ts = _ts; ylim = _ylim;  pl = _pl; ph = _ph; cl = _cl; ch = _ch; blow = _blow; bhigh = _bhigh, train_state = _train_state;
+binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _train_state =3,  bool find_bdt = false, bool _eff_old = false){
+  type = _type; ts = _ts; ylim = _ylim;  pl = _pl; ph = _ph; cl = _cl; ch = _ch; blow = _blow; bhigh = _bhigh, train_state = _train_state; eff_old = _eff_old;
 
   int nbin = 120;
   if (massrng.find(ts) != massrng.end()) { nbin = (int) ((massrng[ts].second - massrng[ts].first)/0.05); } 
@@ -169,7 +169,14 @@ RooRealVar binplotter::get_yield(int state =3 ){
 };
 
 std::pair<double, double> binplotter::get_eff(int state =3){
-  std::pair<double, double> bdteff = openEffhist((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, train_state, state, vcut);  
+  std::pair<double, double> bdteff = openEffhist((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, train_state, state, vcut, eff_old);  
+  return bdteff;
+};
+
+std::pair<double, double> binplotter::get_eff_sysdpt(int state =3, std::string what = ""){
+  std::pair<double, double> bdteff;
+  if(what == "NO") bdteff= openEffhist_SYSNODPT((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, train_state, state, vcut, what);  
+  else bdteff = openEffhist_SYSDPT((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, train_state, state, vcut, what);  
   return bdteff;
 };
 

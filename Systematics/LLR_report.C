@@ -15,7 +15,7 @@ void LLR_report()
 	value_header.open("../LLR_CCorder.h", std::ios_base::out);
 	value_header << "#pragma once\n\n#include <map>\n\nint getNomBkgO(int state, int pl, int ph, int cl, int ch)\n{\n";
 	texout.open("LLR_result.tex");
-	texout << "\\section{Likelihood-ratio test}\n";
+	texout << "\\subsection{Likelihood-ratio test}\n";
 
 	int table_cent_2S[10] = {0, 10, 20, 40, 60, 80, 100, 120, 140, 181};
 	int table_cent_3S[4] = {0, 40, 100, 181};
@@ -26,8 +26,7 @@ void LLR_report()
 	double pvalue;
 	double pvalue_t[7][7] = {{0}};
 	auto run_report = [&] (int state) {
-	  	texout << Form("Result %dS, Centrality [%d, %d], p_{T} [%d, %d]\n", state, cl, ch, pl, ph, state) ;
-		texout << "\\begin{table}[h!]\n	\\centering\n	\\begin{tabular}{cc||cccc}\n		N & NLL & p(H0: N = 1) & p(H0: N = 2) & p(H0: N = 3) & p(H0: N = 4)\\\\ \n		\\hline\n";
+		texout << "\\begin{table}[htb]\n	\\begin{center}\n	\\cation{"<<Form("Result %dS, Centrality [%d, %d], $p_{T}$ [%d, %d]\n", state, cl, ch, pl, ph, state)<<"}\n{\\footnotesize\\renewcommand{\\arraystretch}{1.4}\n		\\begin{tabular}{cc||cccc}\n			N & NLL & p(H0: N = 1) & p(H0: N = 2) & p(H0: N = 3) & p(H0: N = 4)\\\\ \n		\\hline\n";
 	  	pvalue = 1;
 		vector<int> N1over= {};
 		vector<int> N2over= {};
@@ -160,7 +159,7 @@ void LLR_report()
 	texout << Form(		"4 & %.2f & %.1f\\% & %.1f\\% & %.1f\\% & \\\\\n", NLLs[3], pvalue_t[1][4]*100, pvalue_t[2][4]*100, pvalue_t[3][4]*100);
 	texout << Form(		"5 & %.2f & %.1f\\% & %.1f\\% & %.1f\\% & %.1f\\% \\\\\n", NLLs[4], pvalue_t[1][5]*100, pvalue_t[2][5]*100, pvalue_t[3][5]*100, pvalue_t[4][5]*100);
 	texout << Form(		"6 & %.2f & %.1f\\% & %.1f\\% & %.1f\\% & %.1f\\% \\\\\n", NLLs[5], pvalue_t[1][6]*100, pvalue_t[2][6]*100, pvalue_t[3][6]*100, pvalue_t[4][6]*100);
-	texout << "	\\end{tabular}\n	\\cation{caption}\n	\\label{tab:lab}\n\\end{table}\n\n";
+	texout << "	\\end{tabular}\n		\\label{tab:lab}\n	}\n	\\end{center}\\end{table}\n\n";
 
 
 

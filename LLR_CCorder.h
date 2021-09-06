@@ -9,7 +9,7 @@ int getNomBkgO(int state, int pl, int ph, int cl, int ch)
 	if( (state == 2 && pl == 0 && ph == 30 && cl == 20 && ch == 40) ) return 1;
 	if( (state == 2 && pl == 0 && ph == 30 && cl == 40 && ch == 60) ) return 1;
 	if( (state == 2 && pl == 0 && ph == 30 && cl == 60 && ch == 80) ) return 1;
-	if( (state == 2 && pl == 0 && ph == 30 && cl == 80 && ch == 100) ) return 1;//Ignore LLR tes result 4
+	if( (state == 2 && pl == 0 && ph == 30 && cl == 80 && ch == 100) ) return 1;//Was 4, but changed for smooth pdf
 	if( (state == 2 && pl == 0 && ph == 30 && cl == 100 && ch == 120) ) return 1;
 	if( (state == 2 && pl == 0 && ph == 30 && cl == 120 && ch == 140) ) return 1;
 	if( (state == 2 && pl == 0 && ph == 30 && cl == 140 && ch == 181) ) return 1;

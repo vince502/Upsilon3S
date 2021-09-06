@@ -1,7 +1,7 @@
 void plot_RAApt_nS()
 {
 //=========Macro generated from canvas: c2/
-//=========  (Fri Aug 20 15:25:01 2021) by ROOT version 6.22/06
+//=========  (Mon Sep  6 15:13:06 2021) by ROOT version 6.22/06
    TCanvas *c2 = new TCanvas("c2", "",0,0,1000,700);
    gStyle->SetOptStat(0);
    gStyle->SetOptTitle(0);
@@ -14,10 +14,10 @@ void plot_RAApt_nS()
    Double_t xAxis1[3] = {0, 6, 30}; 
    
    TH1D *h3pt__1 = new TH1D("h3pt__1","PbPb 2 ratio cent 2S",2, xAxis1);
-   h3pt__1->SetBinContent(1,0.0877282);
-   h3pt__1->SetBinContent(2,0.07902583);
-   h3pt__1->SetBinError(1,0.05229863);
-   h3pt__1->SetBinError(2,0.02047334);
+   h3pt__1->SetBinContent(1,0.07592996);
+   h3pt__1->SetBinContent(2,0.07388216);
+   h3pt__1->SetBinError(1,0.0444746);
+   h3pt__1->SetBinError(2,0.02729761);
    h3pt__1->SetMinimum(0);
    h3pt__1->SetMaximum(1.3);
    h3pt__1->SetEntries(2);
@@ -49,12 +49,12 @@ void plot_RAApt_nS()
    Double_t xAxis2[4] = {0, 4, 9, 30}; 
    
    TH1D *h2pt__2 = new TH1D("h2pt__2","PbPb 2 ratio cent 3S",3, xAxis2);
-   h2pt__2->SetBinContent(1,0.07567129);
-   h2pt__2->SetBinContent(2,0.1718375);
-   h2pt__2->SetBinContent(3,0.07656519);
-   h2pt__2->SetBinError(1,0.03288872);
-   h2pt__2->SetBinError(2,0.02836988);
-   h2pt__2->SetBinError(3,0.01190895);
+   h2pt__2->SetBinContent(1,0.06857919);
+   h2pt__2->SetBinContent(2,0.1411677);
+   h2pt__2->SetBinContent(3,0.08589855);
+   h2pt__2->SetBinError(1,0.02985397);
+   h2pt__2->SetBinError(2,0.03193592);
+   h2pt__2->SetBinError(3,0.01685725);
    h2pt__2->SetMinimum(0);
    h2pt__2->SetMaximum(1.3);
    h2pt__2->SetEntries(3);

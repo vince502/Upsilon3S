@@ -11,7 +11,9 @@
 
 using namespace std;
 
-extern const long int maxBranchSize = 100000;
+#if !defined(BDTTreeSetting_h)
+extern const long int maxBranUPchSize = 100000;
+#endif
 
 // import the tree to the RooDataSet
 UInt_t          runNb;

@@ -159,9 +159,9 @@ void doConstraintFit_SYSSIGPAR(int step = 0){
       std::cout << type << std::endl;
 
        double mean_sigma1S1;
-       if(state ==3) mean_sigma1S1 = map_keyval["sigmaNS_1"].first*(U1S_mass/U3S_mass);
-       if(state ==2) mean_sigma1S1 = map_keyval["sigmaNS_1"].first*(U1S_mass/U2S_mass);
-       if(state ==1) mean_sigma1S1 = map_keyval["sigmaNS_1"].first*(U1S_mass/U1S_mass);
+       if(state ==3) mean_sigma1S1 = map_keyval["sigmaNS_1"].first;//*(U1S_mass/U3S_mass);
+       if(state ==2) mean_sigma1S1 = map_keyval["sigmaNS_1"].first;//*(U1S_mass/U2S_mass);
+       if(state ==1) mean_sigma1S1 = map_keyval["sigmaNS_1"].first;//*(U1S_mass/U1S_mass);
 
       MassYieldFit_data(type, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, -0.05,0.00,0.01,0.00, -0.03}, (Double_t[]) {0.11, 0.5, 0.4, 0.01, -0.2, -0.2, -0.2,-0.1, -0.1}, (Double_t[]) {0.41, (map_keyval["alpha"].first+map_keyval["alpha"].second)*2, (map_keyval["n"].first+map_keyval["n"].second)*4, 0.95, 0.10, 0.05, 0.2,0.2, 0.2, 0.1}, 
  //     MassYieldFit_data(type, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 5.0,5.1,2.1,0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, -0.3, -0.3, -0.3,-0.3}, (Double_t[]) {0.31, (map_keyval["alpha"].first+map_keyval["alpha"].second)*2, (map_keyval["n"].first+map_keyval["n"].second)*4, 0.95, 9.1, 10.1, 2.3,0.3}, 
@@ -201,7 +201,7 @@ auto fixfit = [&](int depth  = 5) mutable {
       TFile* file_DATAres_input = new TFile(name_file_data.c_str(), "OPEN");
  std::vector<std::pair<int, int> > cBinPair;
  cBinPair =	{{0,40}, {40, 100},  {100,181}, /*{0, 181} ,*/  }; 
- if(train_state==2) cBinPair = { /*{0,10}, {10,20}, {20,40}, {40,60}, {60,80},*/ {80,100},/* {100,120}, {120, 140}, {140, 181}*//* {0,181} */};	
+ if(train_state==2) cBinPair = { {0,10}, {10,20}, {20,40}, {40,60}, {60,80}, {80,100},{100,120}, {120, 140}, {140, 181}/* {0,181} */};	
  std::vector<std::pair<double, double> > ptPair = {{0, 30}};	//{ {0, 6}, {6, 30}, {0, 30}};
  std::vector<std::pair<double, double> > rapPair = {{-2.4, 2.4}};	//{ {-2.4, 2.4}, {-1.2, 1.2} };
  for( auto rp : rapPair ) {
@@ -259,7 +259,7 @@ train_state = 3;
 state =3;
  //Sealed
  if(step == 1 || step == 99 || step == 11){
-  for( auto ptpair : (std::vector<std::pair<double, double> >) {/*{0, 30}, {0, 6}, */{6, 30}}){ 
+  for( auto ptpair : (std::vector<std::pair<double, double> >) {/*{0, 30},*/ {0, 6}, {6, 30}}){ 
     ptMin = ptpair.first;
     ptMax = ptpair.second;
 //    std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);
