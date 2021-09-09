@@ -329,9 +329,9 @@ dbg(1000);
   RooRealVar* nSig3S;
 
 dbg(1000);
-  RooRealVar* frac2over1 = new RooRealVar("frac_2sOver1s","2S/1S",0.3,0,1);
-  RooRealVar* frac3over1 = new RooRealVar("frac_3sOver1s","3S/1S",0.1,0,1);
-  RooRealVar* frac3over2 = new RooRealVar("frac_3sOver2s","3S/2S",0.1,0,1);
+  RooRealVar* frac2over1 = new RooRealVar("frac_2sOver1s","2S/1S",0.15,-0.,0.4);
+  RooRealVar* frac3over1 = new RooRealVar("frac_3sOver1s","3S/1S",0.03,-0.02,0.20);
+  RooRealVar* frac3over2 = new RooRealVar("frac_3sOver2s","3S/2S",0.3,-0.2,1);
   RooRealVar* nBkg = new RooRealVar("nBkg", "# of background signal", 300, -1000, 10000000);
 
 dbg(1000);
@@ -402,6 +402,7 @@ dbg(1000);
     use_model = "model_gc";
   }
   else if(fitdir.find("GC")==std::string::npos){
+    dbg(1021);
     mf.works->import(*model);
     mf.works->Print();
   }

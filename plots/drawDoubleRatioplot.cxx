@@ -1,7 +1,8 @@
 #include "../upsilonAna.cxx"
 #include "../.workdir.h"
+#include "../LLR_CCorder.h"
 
-RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC", std::pair<double, double> bdtpair = {-0.1,1.00}, int state =3, long ts = 9999999999);
+RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC", std::pair<double, double> bdtpair = {-0.1,1.00}, int state =3, int get_pre=0, long ts = 9999999999, bool eff_old= true);
 std::pair<TH1D*, TH1D*> getPbPbDR(int shift1=0, int shift2=0);
 
 void drawDoubleRatioplot(){
@@ -96,18 +97,18 @@ void drawDoubleRatioplot(){
 };
 
 //////////////////////////////////////////////////////////////////////////////
-RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC", std::pair<double, double> bdtpair = {-0.1,1.00}, int state =3, long ts = 9999999999){
+RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC", std::pair<double, double> bdtpair = {-0.1,1.00}, int state =3,  int get_pre =0, long ts = 9999999999, bool eff_old = true){
   double val_bdt_nom = Get_BDT(ts, state, (int) ptpair.first, (int) ptpair.second, cbpair.first, cbpair.second);
-  bdtpair.first = val_bdt_nom;
+  if(bdtpair.first ==-2){
+    bdtpair.first = val_bdt_nom;
+  }
   double ylim = 2.4;
 
   binplotter* bp ;
-  bp = new binplotter(type,ts, ylim, ptpair.first, ptpair.second, cbpair.first, cbpair.second, bdtpair.first, bdtpair.second, state, false);
+  bp = new binplotter(type,ts, ylim, ptpair.first, ptpair.second, cbpair.first, cbpair.second, bdtpair.first, bdtpair.second, state, false, eff_old);
 
-  const auto frac_pair = bp->get_frac();
-  RooRealVar fracYNPbPb;
-  if(state ==2) fracYNPbPb =frac_pair.first;
-  if(state ==3) fracYNPbPb =frac_pair.second;
+  RooRealVar fracYNPbPb  = bp->get_frac(state);
+  if(get_pre ==1) return fracYNPbPb;
   RooRealVar yNAA, yNPP, y1PP,  fracYNPP;
   TFile* file_pp = TFile::Open(Form("%s/fitresults_upsilon_fixParm1_seed2_DoubleCB_PP_DATA_pt0.0-30.0_y0.0-2.4_muPt4.0.root",hin16023.Data() ));
   TFile* file_pp_eff = TFile::Open(Form("%s/efficiency_ups3s_useDataPtWeight1_tnp_trgId0_trkId0_muId-100_staId-100.root", hin16023.Data() ));
@@ -150,19 +151,19 @@ std::pair<TH1D*, TH1D*> getPbPbDR(int shift1 = 0, int shift2 = 1){
   Double_t* centthree = new Double_t[4]{0,40,100,181};
   Double_t* centthree_rev = new Double_t[4]{181,100,40,0};
 
-  TH1D* h1 = new TH1D("h1" , "PbPb 2S double ratio cent", 70, 0, 420);
-  TH1D* h2 = new TH1D("h2" , "PbPb 3S double ratio cent", 70, 0, 420);
+  TH1D* h1 = new TH1D("h1" , "PbPb 2S double ratio cent", 420, 0, 420);
+  TH1D* h2 = new TH1D("h2" , "PbPb 3S double ratio cent", 420, 0, 420);
   setTDRStyle();
   for(int idx =0; idx <9; ++idx){
     std::cout << cbinnine_rev[idx+1]*2 << " , " << cbinnine_rev[idx]*2 << std::endl;
-    RooRealVar dr_bin = getDoubleRatioValue({centnine_rev[idx+1],centnine_rev[idx]},{0,30}, "CB3:CC2:DRFF",{-2,1.0}, 2);
+    RooRealVar dr_bin = getDoubleRatioValue({centnine_rev[idx+1],centnine_rev[idx]},{0,30}, Form("CB3:CC$d:DRFF", getNomBkgO(2, 0, 30, centnin_rev[idx+1],centnine_rev[idx]),{-2,1.0}, 2);
     double npart = glp::Npart[{cbinnine_rev[idx+1],cbinnine_rev[idx]}].first;
     h1->SetBinContent(h1->FindBin(npart)+ shift1, dr_bin.getVal());
     h1->SetBinError(h1->FindBin(npart) + shift1, dr_bin.getError());
   }
   
   for(int idx =0; idx <3; ++idx){
-    RooRealVar dr_bin = getDoubleRatioValue({centthree_rev[idx+1],centthree_rev[idx]},{0,30}, "CB3:CC2:DRFF", {-2, 1.0}, 3);
+    RooRealVar dr_bin = getDoubleRatioValue({centthree_rev[idx+1],centthree_rev[idx]},{0,30}, Form("CB3:CC%d:DRFF",3, 0,30, centthree_rev[idx+1],centthree_rev[idx]), {-2, 1.0}, 3);
     double npart = glp::Npart[{cbinthree_rev[idx+1],cbinthree_rev[idx]}].first;
     h2->SetBinContent(h2->FindBin(npart) + shift2, dr_bin.getVal());
     h2->SetBinError(h2->FindBin(npart)+ shift2, dr_bin.getError());

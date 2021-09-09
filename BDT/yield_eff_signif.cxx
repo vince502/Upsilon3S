@@ -1,8 +1,15 @@
 #pragma once
 #include "yield_eff_signif.h"
 #include "Get_Optimal_BDT.cxx"
+#include "../LLR_CCorder.h"
 
-binplotter::binplotter(){
+binplotter::binplotter(){};
+
+binplotter::binplotter(ana_bins x){
+  type = Form("CB3:CC%d:%s", getNomBkgO(x), findtype(x).c_str()) ;
+  ts = 9999999999; ylim = 2.4, pl = (double) x.pl; ph = (double) x.ph; cl = x.cl; ch = x.ch; blow = Get_BDT(ts, x.state, pl, ph, cl, ch, 0., ylim, 2); bhigh = 1; train_state = x.state; eff_old = true;
+  init(false);
+
 };
 
 binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _train_state =3,  bool find_bdt = false, bool _eff_old = false){
@@ -11,12 +18,9 @@ binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _
   int nbin = 120;
   if (massrng.find(ts) != massrng.end()) { nbin = (int) ((massrng[ts].second - massrng[ts].first)/0.05); } 
   init(find_bdt);
-  std::cout << "--------------------Calculated nbin : " << nbin << "----------------------"<< std::endl;
 };
 
 binplotter::~binplotter(){ 
-	file1->Close(); 
-	std::cout << "Destructor Called : " << file1->IsOpen();
 };
 
 void binplotter::init(bool get_bdt= true){
@@ -52,7 +56,7 @@ void binplotter::init(bool get_bdt= true){
     filename = filename.substr(0, filename.length() -5) + Form("_DDiter%d.root",fitdir[4]-48); 
   }
 
-  std::cout << "Opening Yield file : " << filename.c_str() << std::endl;
+//  std::cout << "Opening Yield file : " << filename.c_str() << std::endl;
   file1 =TFile::Open(filename.c_str());
   if(file1==nullptr || file1->IsZombie()|| refit){
     std::cout << "Running Fitter for new Yield" << std::endl;
@@ -94,7 +98,7 @@ void binplotter::dump(){
 };
 
 
-std::pair<RooRealVar, RooRealVar> binplotter::get_frac(){
+RooRealVar binplotter::get_frac(int state){
 
   RooRealVar Yield1S, Frac2S, Frac3S;
   const RooArgList& paramList = res->floatParsFinal();
@@ -119,7 +123,9 @@ std::pair<RooRealVar, RooRealVar> binplotter::get_frac(){
   yield1S = Yield1S;
   frac2S = Frac2S;
   frac3S = Frac3S;
-  return std::make_pair(Frac2S, Frac3S);
+  if(state == 3) return Frac3S;
+  if(state ==2) return Frac2S;
+  else return RooRealVar("wrongState","",0);
 
 };
 
@@ -168,15 +174,15 @@ RooRealVar binplotter::get_yield(int state =3 ){
 
 };
 
-std::pair<double, double> binplotter::get_eff(int state =3){
-  std::pair<double, double> bdteff = openEffhist((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, train_state, state, vcut, eff_old);  
+std::pair<double, double> binplotter::get_eff(int state =3, bool getNum = false){
+  std::pair<double, double> bdteff = openEffhist((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, train_state, state, vcut, eff_old, getNum);  
   return bdteff;
 };
 
-std::pair<double, double> binplotter::get_eff_sysdpt(int state =3, std::string what = ""){
+std::pair<double, double> binplotter::get_eff_sysdpt(int state =3, std::string what = "", bool getNum = false){
   std::pair<double, double> bdteff;
-  if(what == "NO") bdteff= openEffhist_SYSNODPT((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, train_state, state, vcut, what);  
-  else bdteff = openEffhist_SYSDPT((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, train_state, state, vcut, what);  
+  if(what == "NO") bdteff= openEffhist_SYSNODPT((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, train_state, state, vcut, what, getNum);  
+  else bdteff = openEffhist_SYSDPT((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, train_state, state, vcut, what, getNum);  
   return bdteff;
 };
 

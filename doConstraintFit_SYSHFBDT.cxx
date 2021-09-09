@@ -9,7 +9,7 @@
 
 void doConstraintFit_SYSHFBDT(int sys_step, int step = 0){
 
-  std::string type 			= "CB3:CC2:GC"	;
+  std::string type 			= "CB3:CC2:DRGC"	;
   std::string type2 			= "CB3:CC2:DR2FF"	;
   std::string type_r 			= "CB3:CC2:DRGC"	;
 //  std::string typenobdt 		= "CB3:CC4:FF"	;
@@ -287,16 +287,16 @@ if(step ==1 || step == 99 || step ==12){
   cutBDTlow = INTBIN_BDTLOW;
   type2 = "CB3:CC2:DRFF";
   fixfit(-1);
-  cutBDTlow = INTBIN_BDTLOW;
-  cBinLow = 0;
-  cBinHigh = 181;
-  type2 = "CB3:CC2:DR2FF";
-  fixfit(-1);
-  cutBDTlow = INTBIN_BDTLOW;
-  cBinLow = 0;
-  cBinHigh = 181;
-  type2 = "CB3:CC2:FF";
-  fixfit(-1);
+//  cutBDTlow = INTBIN_BDTLOW;
+//  cBinLow = 0;
+//  cBinHigh = 181;
+//  type2 = "CB3:CC2:DR2FF";
+//  fixfit(-1);
+//  cutBDTlow = INTBIN_BDTLOW;
+//  cBinLow = 0;
+//  cBinHigh = 181;
+//  type2 = "CB3:CC2:FF";
+//  fixfit(-1);
 }
 
 
@@ -307,7 +307,7 @@ state =2;
 if(step ==2 || step == 99 || step ==21){
   cBinLow = 0;
   cBinHigh = 181;
-  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30},  {0, 4}, {4, 9},{9, 30} }){ 
+  for( auto ptpair : (std::vector<std::pair<double, double> >) {/*{0, 30},  {0, 4},*/ {4, 9},{9, 30} }){ 
     ptMin = ptpair.first;
     ptMax = ptpair.second;
 //    std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);
@@ -329,16 +329,16 @@ if(step ==2 || step ==99 || step == 22){
   cutBDTlow = INTBIN_BDTLOW;
   type2 = "CB3:CC2:DRFF";
   fixfit(-1);
-  cutBDTlow = INTBIN_BDTLOW;
-  cBinLow = 0;
-  cBinHigh = 181;
-  type2 = "CB3:CC2:DR2FF";
-  fixfit(-1);
-  cutBDTlow = INTBIN_BDTLOW;
-  cBinLow = 0;
-  cBinHigh = 181;
-  type2 = "CB3:CC2:FF";
-  fixfit(-1);
+//  cutBDTlow = INTBIN_BDTLOW;
+//  cBinLow = 0;
+//  cBinHigh = 181;
+//  type2 = "CB3:CC2:DR2FF";
+//  fixfit(-1);
+//  cutBDTlow = INTBIN_BDTLOW;
+//  cBinLow = 0;
+//  cBinHigh = 181;
+//  type2 = "CB3:CC2:FF";
+//  fixfit(-1);
 }
 
 

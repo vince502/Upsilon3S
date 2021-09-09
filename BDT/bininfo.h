@@ -213,8 +213,14 @@ std::vector< std::string > info_BDT(long ts, std::string aux = "")
 	  long inputts;
 	  if(strcmp(&stringbuf[0], "#")==0) continue;
 	  try{
-	    stol( stringbuf.substr(0,10));
-	    inputts = stol(stringbuf.substr(0,10));
+	    try{
+	      stol( stringbuf.substr(0,10));
+	      inputts = stol( stringbuf.substr(0,10));
+	    }
+	    catch(...){
+	      stol( stringbuf.substr(0,11));
+	      inputts = stol( stringbuf.substr(0,11));
+	    }
 	  }
 	  catch(...){
 	    if( aux != ""){
@@ -237,7 +243,6 @@ std::vector< std::string > info_BDT(long ts, std::string aux = "")
 	  return null_pair;
 	}
 
-
 };
 double Get_BDT(long ts, int state, int ptMin, int ptMax, int cBinLow, int cBinHigh, double vcut =0.00, double rap = 2.4, int signif_ = 2){
   string name_file = Form("%s/BDT/Significance_hist/HIST_train%dS_%ld_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_vp_%.4f_S%d.root", workdir.Data(), state, ts, ptMin, ptMax, (int) (rap*10), (int) (rap*10), cBinLow, cBinHigh, vcut, signif_);
@@ -247,16 +252,18 @@ double Get_BDT(long ts, int state, int ptMin, int ptMax, int cBinLow, int cBinHi
   return stod(key->GetTitle());
 }
 
-std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio =0.16, int train_state =3, string name_input_opt = "", string formula_significance= "S2", string the_opt ="");
+std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio =0.16, int train_state =3, string name_input_opt = "", string formula_significance= "S2", string the_opt ="", bool save = true);
 std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, RooRealVar r_ratio, int train_state =3, string name_input_opt = "", string formula_significance= "S2");
 
 RooRealVar get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int state1 =1, int state2 = 3, bool eff_old = false);
 
 TH1D* func_hist_optimal_BDT();
 
+//#if !defined(YIELD_EFF_SIGNIF_H)
 struct ana_bins{
   int pl, ph, cl, ch, state;
 };
+//#endif
 
 std::map<std::string, std::vector<ana_bins> > ana_bm ={
 	{"2c", 	{
@@ -292,6 +299,13 @@ std::map<std::string, std::vector<ana_bins> > ana_bm ={
 	},
 
 };
+
+std::string findtype(ana_bins x){
+	std::string fittype = "";
+	if(x.cl ==0 && x.ch ==181) fittype = "GC";
+	else fittype = "FF";
+	return fittype;
+}
 
 
 #endif

@@ -6,7 +6,7 @@
 #include "./BDT/yield_eff_signif.cxx"
 
 void doConstraintFit_SYSBDTERR(int global_step = 1, int step = 0){
-  std::string type 			= "CB3:CC2:GC"	;
+  std::string type 			= "CB3:CC2:DRGC"	;
   std::string type2 			= "CB3:CC2:DR2FF"	;
   std::string type_r 			= "CB3:CC2:DRGC"	;
   std::string typenobdt 		= "CB3:CC4:FF"	;
@@ -108,7 +108,7 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0) mutable {
 //  if(_step >=0|| _step == -100 || _step == -52){
 //    fit_mc_dat(type_r, blow_ref);
 //  }
-    auto sb_ratio = get_eff_acc(type_r, typenobdt, ts, rapMax, ptMin, ptMax, cBinLow, cBinHigh, blow_ref, 1.0, train_state, 1, state);
+    auto sb_ratio = get_eff_acc(type_r, typenobdt, ts, rapMax, ptMin, ptMax, cBinLow, cBinHigh, blow_ref, 1.0, train_state, 1, state, true);
     if( _step == 1) ratio = sb_ratio.getVal() + sb_ratio.getError();
     if( _step == -1) ratio = sb_ratio.getVal() - sb_ratio.getError();
     if(_step == 0){ std::cout << "Why fitting Nominal here? " << std::endl;}
@@ -117,6 +117,7 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0) mutable {
     if(_step ==  1 ) systype = "SYSUP";
     if(_step == -1 ) systype = "SYSDOWN";
     else std::cout << " !!! " << std::endl;
+    std::cout << systype.c_str() << std::endl;
    auto res_GOB = Get_Optimal_BDT(ts,ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP , ratio, train_state, "", "S2", systype.c_str());
    auto res_GOB_ref = Get_Optimal_BDT(ts,ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP , sb_ratio.getVal(), train_state, "", "S2", "SX");
    double res_blow = res_GOB.first;
@@ -124,7 +125,7 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0) mutable {
    if (res_blow == res_blow_ref){
        std::cout << "[DBG0831] " <<res_blow << " , " << res_blow_ref<< std::endl;;
        std::cout << "[BDT val Getter] Referencing BDT ratio from Integrated Bin" << std::endl;
-       auto sb_ratio_INT = get_eff_acc(type_r, typenobdt, ts, rapMax, 0, 30, 0, 181, -0.0, 1.0, train_state, 1, state);
+       auto sb_ratio_INT = get_eff_acc(type_r, typenobdt, ts, rapMax, 0, 30, 0, 181, -0.0, 1.0, train_state, 1, state, true);
        double ratio_INT_ref = sb_ratio_INT.getVal();
        double ratio_INT = ratio_INT_ref + ((double) _step * sb_ratio.getError() ); 
 	std::cout << "[DBG0831] " << Form(" INT RATIOS (SB, REF, ratio_INT) %.6f %.6f %.6f" , sb_ratio_INT.getVal(), ratio_INT_ref, ratio_INT) << std::endl;
@@ -223,8 +224,8 @@ auto fixfit = [&](int depth  = 5) mutable {
        std::cout << name_file_data << std::endl;
       TFile* file_DATAres_input = new TFile(name_file_data.c_str(), "OPEN");
  std::vector<std::pair<int, int> > cBinPair;
- cBinPair =	{{0,40}, {40, 100},  {100,181}, /*{0, 181} ,*/  }; 
- if(train_state==2) cBinPair = {/* {0,10}, {10,20}, {20,40}, {40,60}, {60,80},*/ {80,100},/* {100,120}, {120, 140}, {140, 181}*/ /*{0,181} */};	
+ cBinPair =	{/*{0,40}, {40, 100},*/  {100,181}, /*{0, 181} ,*/  }; 
+ if(train_state==2) cBinPair = { {0,10}, {10,20}, {20,40}, {40,60}, {60,80}, {80,100}, {100,120}, {120, 140}, {140, 181} /*{0,181} */};	
  std::vector<std::pair<double, double> > ptPair = {{0, 30}};	//{ {0, 6}, {6, 30}, {0, 30}};
  std::vector<std::pair<double, double> > rapPair = {{-2.4, 2.4}};	//{ {-2.4, 2.4}, {-1.2, 1.2} };
  for( auto rp : rapPair ) {
@@ -281,7 +282,7 @@ train_state = 3;
 state =3;
  //Sealed
  if(step == 1 || step == 99 || step == 11 || step == 31){
-  for( auto ptpair : (std::vector<std::pair<double, double> >) {/*{0, 30},*/{0, 6}, {6, 30}}){ 
+  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30},{0, 6}, {6, 30}}){ 
     ptMin = ptpair.first;
     ptMax = ptpair.second;
     std::pair<double, double> res = prep_bdtval(-0.0, global_step);
@@ -289,7 +290,7 @@ state =3;
     ratio = res.second;
     if(ptpair.first == 0 && ptpair.second == 30){ INTBIN_BDTLOW = res.first; }
     std::cout << "cutBDTlow, ratio: " << cutBDTlow << ", "<< ratio << std::endl;
-//    METHOD_MCGCDATA(1);
+    METHOD_MCGCDATA(2);
   }
 }
 
@@ -303,16 +304,16 @@ if(step ==1 || step == 99 || step ==12){
   cutBDTlow = INTBIN_BDTLOW;
   type2 = "CB3:CC2:DRFF" + bdt_seg;
   fixfit(global_step);
-  cutBDTlow = INTBIN_BDTLOW;
-  cBinLow = 0;
-  cBinHigh = 181;
-  type2 = "CB3:CC2:DR2FF" + bdt_seg;
-  fixfit(global_step);
-  cutBDTlow = INTBIN_BDTLOW;
-  cBinLow = 0;
-  cBinHigh = 181;
-  type2 = "CB3:CC2:FF" + bdt_seg;
-  fixfit(global_step);
+//  cutBDTlow = INTBIN_BDTLOW;
+//  cBinLow = 0;
+//  cBinHigh = 181;
+//  type2 = "CB3:CC2:DR2FF" + bdt_seg;
+//  fixfit(global_step);
+//  cutBDTlow = INTBIN_BDTLOW;
+//  cBinLow = 0;
+//  cBinHigh = 181;
+//  type2 = "CB3:CC2:FF" + bdt_seg;
+//  fixfit(global_step);
 }
 
 
@@ -323,7 +324,7 @@ state =2;
 if(step ==2 || step ==99 || step == 21 || step == 31){
   cBinLow = 0;
   cBinHigh = 181;
-  for( auto ptpair : (std::vector<std::pair<double, double> >) {/*{0, 30}, */{0, 4}, {4, 9},{9, 30} } ){ 
+  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30}, {0, 4}, {4, 9},{9, 30} } ){ 
     ptMin = ptpair.first;
     ptMax = ptpair.second;
     std::pair<double, double> res = prep_bdtval(-0.0, global_step);
@@ -331,7 +332,7 @@ if(step ==2 || step ==99 || step == 21 || step == 31){
     sb_ratio = res.second;
     if(ptpair.first == 0 && ptpair.second == 30){ INTBIN_BDTLOW = res.first; }
     std::cout << "cutBDTlow, sb_ratio: " << cutBDTlow << ", "<< sb_ratio.getVal() << std::endl;
-//    METHOD_MCGCDATA(1);
+    METHOD_MCGCDATA(2);
   }
 };
 
@@ -341,23 +342,20 @@ if(step ==2 || step ==99 || step == 21 || step == 31){
 if(step ==2 || step == 99 || step == 22){
   ptMin = 0;
   ptMax = 30;
-  dbg();
   cutBDTlow = INTBIN_BDTLOW;
   type2 = "CB3:CC2:DRFF" + bdt_seg;
   fixfit(global_step);
-  dbg();
-  cutBDTlow = INTBIN_BDTLOW;
-  cBinLow = 0;
-  cBinHigh = 181;
-  type2 = "CB3:CC2:DR2FF" + bdt_seg;
-  fixfit(global_step);
-  dbg();
-  cutBDTlow = INTBIN_BDTLOW;
-  cBinLow = 0;
-  cBinHigh = 181;
-  type2 = "CB3:CC2:FF" + bdt_seg;
-  fixfit(global_step);
-  dbg();
+//  cutBDTlow = INTBIN_BDTLOW;
+//  cBinLow = 0;
+//  cBinHigh = 181;
+//  type2 = "CB3:CC2:DR2FF" + bdt_seg;
+//  fixfit(global_step);
+//  dbg();
+//  cutBDTlow = INTBIN_BDTLOW;
+//  cBinLow = 0;
+//  cBinHigh = 181;
+//  type2 = "CB3:CC2:FF" + bdt_seg;
+//  fixfit(global_step);
 }
 
 

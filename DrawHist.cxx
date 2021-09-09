@@ -46,13 +46,18 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
       name_pdf_bkg = "bkgECC";
       }
   }
+  string s_bdtupdown = "";
+  if(fitdir.find("bdt")!= std::string::npos){
+    if(fitdir.find("bdtup")!=std::string::npos) s_bdtupdown = "SYSUP";
+    if(fitdir.find("bdtdown")!=std::string::npos)  s_bdtupdown = "SYSDOWN";
+  }
 
   int ylim10 = (int) (rapMax*10);
   int DDiter =0;
   std::pair<double, TH1D*> _hist_;
   TH1D* signif_hist;
   if( signif_ratio != -1){
-    _hist_ = Get_Optimal_BDT(ts, ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP, signif_ratio, train_state); 
+    _hist_ = Get_Optimal_BDT(ts, ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP, signif_ratio, train_state, "", "S2", s_bdtupdown.c_str()); 
     signif_hist = _hist_.second;
     if (signif_hist ==nullptr) {
       std::cout << "[Error] Significance plot not loaded, returning with null histogram" << std::endl;

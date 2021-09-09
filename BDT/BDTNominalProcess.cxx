@@ -29,12 +29,12 @@ void _BDTNominalProcess(int step= 0, long ts= 00000000, double ptLow = 0, double
 
 }
 //void BDTNominalPostProcess(long ts=9999999999)
-void BDTNominalProcess(long ts=9999999996)
+void BDTNominalProcess(long ts=99999999991)
 {
-//  BDTClassifierApplication_NOM(ts, 3, 9, 0, true, 0, 30);
-//  BDTClassifierApplication_NOM(ts, 3, 3, 1, true, 0, 30);
-//  BDTClassifierApplication_NOM(ts, 3, 2, 1, true, 0, 30);
-//  BDTClassifierApplication_NOM(ts, 3, 1, 1, true, 0, 30);
+  BDTClassifierApplication_NOM(ts, 3, 9, 0, true, 0, 30);
+  BDTClassifierApplication_NOM(ts, 3, 3, 1, true, 0, 30);
+  BDTClassifierApplication_NOM(ts, 3, 2, 1, true, 0, 30);
+  BDTClassifierApplication_NOM(ts, 3, 1, 1, true, 0, 30);
 //
 //  BDTClassifierApplication_NOM(ts, 3, 9, 0, true, 0, 6);
 //  BDTClassifierApplication_NOM(ts, 3, 3, 1, true, 0, 6);
@@ -66,10 +66,10 @@ void BDTNominalProcess(long ts=9999999996)
 //  BDTClassifierApplication_NOM(ts, 2, 2, 1, true, 9, 30);
 //  BDTClassifierApplication_NOM(ts, 2, 1, 1, true, 9, 30);
 
-//  makeRooDataset_fromBDT_NOM(ts, true, 0, 3, 0, 30 );
-//  makeRooDataset_fromBDT_NOM(ts, true, 1, 3, 0, 30 );
-//  makeRooDataset_fromBDT_NOM(ts, true, 2, 3, 0, 30, "MC_1S" );
-//  makeRooDataset_fromBDT_NOM(ts, true, 2, 3, 0, 30, "MC_2S" );
+  makeRooDataset_fromBDT_NOM(ts, true, 0, 3, 0, 30 );
+  makeRooDataset_fromBDT_NOM(ts, true, 1, 3, 0, 30 );
+  makeRooDataset_fromBDT_NOM(ts, true, 2, 3, 0, 30, "MC_1S" );
+  makeRooDataset_fromBDT_NOM(ts, true, 2, 3, 0, 30, "MC_2S" );
 //
 //  makeRooDataset_fromBDT_NOM(ts, true, 0, 3, 0, 6 );
 //  makeRooDataset_fromBDT_NOM(ts, true, 1, 3, 0, 6 );

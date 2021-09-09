@@ -25,7 +25,7 @@ double getDPTVariUnc(ana_bins k){
 	return unc_sys;
 };
 
-void DPTAppUnc(){
+void DPTNOUnc(){
 	TFile* output = new TFile("effNODPT_unc.root","recreate");
 	TH1D *rc2s, *rc3s, *rp2s, *rp3s;
 	rc2s = new TH1D("rc2S","",10,0,9); //include int. bin

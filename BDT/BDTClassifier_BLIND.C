@@ -25,7 +25,8 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
   _ts = (long) tstamp;
   _real_time = (long) tstamp;
   std::cout <<"time stamp---> " <<  tstamp << std::endl;
-  if(strcmp(opt.c_str(),"NOMINAL")==0) _ts = (long) 9999999995;
+  if(strcmp(opt.c_str(),"NOMINAL")==0) _ts = (long) 9999999999;
+  if(strcmp(opt.c_str(),"NOMINAL2")==0) _ts = (long) 99999999991;
   std::system(Form("cat BDTClassifier_BLIND.C >> ./.past_source/_BDTClassifier_BLIND_%ld.old",(long) tstamp));
   ofstream log;
   log.open("BDT_description.log", std::ios_base::out|std::ios_base::app);
@@ -184,7 +185,9 @@ void BDTClassifier_BLIND( ){
 //  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
 //  res = BDTClassifier_BLIND_Function(3,0,6,30, 0,181, "NOMINAL");
 //  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
-  res = BDTClassifier_BLIND_Function(2,0,0,30, 0,181, "NOMINAL");
+  res = BDTClassifier_BLIND_Function(3,0,0,30, 0,181, "NOMINAL2");
+  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
+  res = BDTClassifier_BLIND_Function(2,0,0,30, 0,181, "NOMINAL2");
   if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
 //  res = BDTClassifier_BLIND_Function(2,0,0,4, 0,181, "NOMINAL");
 //  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));

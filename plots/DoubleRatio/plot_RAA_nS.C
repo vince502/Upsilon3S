@@ -1,7 +1,7 @@
 void plot_RAA_nS()
 {
 //=========Macro generated from canvas: c2/
-//=========  (Mon Sep  6 15:33:08 2021) by ROOT version 6.22/06
+//=========  (Tue Sep  7 21:03:11 2021) by ROOT version 6.22/06
    TCanvas *c2 = new TCanvas("c2", "",0,0,1000,700);
    gStyle->SetOptStat(0);
    gStyle->SetOptTitle(0);
@@ -125,25 +125,25 @@ void plot_RAA_nS()
    
    grae->Draw("ape");
    
-   TH1D *RAAcent_2S__1 = new TH1D("RAAcent_2S__1","PbPb 2 ratio cent",35,0,420);
-   RAAcent_2S__1->SetBinContent(1,1.000763);
-   RAAcent_2S__1->SetBinContent(3,0.4692493);
-   RAAcent_2S__1->SetBinContent(5,0.2684407);
-   RAAcent_2S__1->SetBinContent(8,0.1481288);
-   RAAcent_2S__1->SetBinContent(11,0.1710891);
-   RAAcent_2S__1->SetBinContent(16,0.1268126);
-   RAAcent_2S__1->SetBinContent(22,0.07571438);
-   RAAcent_2S__1->SetBinContent(28,0.06814327);
-   RAAcent_2S__1->SetBinContent(32,0.04742893);
-   RAAcent_2S__1->SetBinError(1,0.1930153);
-   RAAcent_2S__1->SetBinError(3,0.1055491);
-   RAAcent_2S__1->SetBinError(5,0.0723821);
-   RAAcent_2S__1->SetBinError(8,0.05559569);
-   RAAcent_2S__1->SetBinError(11,0.04550774);
-   RAAcent_2S__1->SetBinError(16,0.03673264);
-   RAAcent_2S__1->SetBinError(22,0.0316515);
-   RAAcent_2S__1->SetBinError(28,0.04112928);
-   RAAcent_2S__1->SetBinError(32,0.03699921);
+   TH1D *RAAcent_2S__1 = new TH1D("RAAcent_2S__1","PbPb 2 ratio cent",420,0,420);
+   RAAcent_2S__1->SetBinContent(12,1.000763);
+   RAAcent_2S__1->SetBinContent(32,0.4692493);
+   RAAcent_2S__1->SetBinContent(55,0.2684407);
+   RAAcent_2S__1->SetBinContent(88,0.1481288);
+   RAAcent_2S__1->SetBinContent(132,0.1710891);
+   RAAcent_2S__1->SetBinContent(189,0.1268126);
+   RAAcent_2S__1->SetBinContent(263,0.07571438);
+   RAAcent_2S__1->SetBinContent(332,0.06814327);
+   RAAcent_2S__1->SetBinContent(383,0.04742893);
+   RAAcent_2S__1->SetBinError(12,0.1930153);
+   RAAcent_2S__1->SetBinError(32,0.1055491);
+   RAAcent_2S__1->SetBinError(55,0.0723821);
+   RAAcent_2S__1->SetBinError(88,0.05559569);
+   RAAcent_2S__1->SetBinError(132,0.04550774);
+   RAAcent_2S__1->SetBinError(189,0.03673264);
+   RAAcent_2S__1->SetBinError(263,0.0316515);
+   RAAcent_2S__1->SetBinError(332,0.04112928);
+   RAAcent_2S__1->SetBinError(383,0.03699921);
    RAAcent_2S__1->SetMinimum(0);
    RAAcent_2S__1->SetMaximum(1.3);
    RAAcent_2S__1->SetEntries(9);
@@ -171,13 +171,13 @@ void plot_RAA_nS()
    RAAcent_2S__1->GetZaxis()->SetTitleFont(42);
    RAAcent_2S__1->Draw("same");
    
-   TH1D *RAAcent_3S__2 = new TH1D("RAAcent_3S__2","PbPb 2 ratio cent",35,0,420);
-   RAAcent_3S__2->SetBinContent(3,0.5134596);
-   RAAcent_3S__2->SetBinContent(12,0.1292691);
-   RAAcent_3S__2->SetBinContent(26,0.1274464);
-   RAAcent_3S__2->SetBinError(3,0.1038328);
-   RAAcent_3S__2->SetBinError(12,0.04274275);
-   RAAcent_3S__2->SetBinError(26,0.03117786);
+   TH1D *RAAcent_3S__2 = new TH1D("RAAcent_3S__2","PbPb 2 ratio cent",420,0,420);
+   RAAcent_3S__2->SetBinContent(28,0.5134596);
+   RAAcent_3S__2->SetBinContent(136,0.1292691);
+   RAAcent_3S__2->SetBinContent(310,0.1274464);
+   RAAcent_3S__2->SetBinError(28,0.1038328);
+   RAAcent_3S__2->SetBinError(136,0.04274275);
+   RAAcent_3S__2->SetBinError(310,0.03117786);
    RAAcent_3S__2->SetMinimum(0);
    RAAcent_3S__2->SetMaximum(1.3);
    RAAcent_3S__2->SetEntries(3);

@@ -7,7 +7,7 @@
 #include "./BDT/yield_eff_signif.cxx"
 
 void doConstraintFit_NOMlikeSYSHF(int step = 0){
-  std::string type 			= "CB3:CC2:GC"	;
+  std::string type 			= "CB3:CC2:DRGC"	;
   std::string type2 			= "CB3:CC2:DR2FF"	;
   std::string type_r 			= "CB3:CC2:DRGC"	;
   std::string typenobdt 		= "CB3:CC4:FF"	;
@@ -261,7 +261,7 @@ train_state = 3;
 state =3;
  //Sealed
  if(step == 1 || step == 99 || step == 11 || step == 111){
-  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30},/* {0, 6}, {6, 30}*/}){ 
+  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30}, {0, 6}, {6, 30}}){ 
     ptMin = ptpair.first;
     ptMax = ptpair.second;
     std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);
@@ -283,16 +283,16 @@ if(step ==1 || step == 99 || step ==12){
   cutBDTlow = INTBIN_BDTLOW;
   type2 = "CB3:CC2:DRFF";
   fixfit(-1);
-  cutBDTlow = INTBIN_BDTLOW;
-  cBinLow = 0;
-  cBinHigh = 181;
-  type2 = "CB3:CC2:DR2FF";
-  fixfit(-1);
-  cutBDTlow = INTBIN_BDTLOW;
-  cBinLow = 0;
-  cBinHigh = 181;
-  type2 = "CB3:CC2:FF";
-  fixfit(-1);
+//  cutBDTlow = INTBIN_BDTLOW;
+//  cBinLow = 0;
+//  cBinHigh = 181;
+//  type2 = "CB3:CC2:DR2FF";
+//  fixfit(-1);
+//  cutBDTlow = INTBIN_BDTLOW;
+//  cBinLow = 0;
+//  cBinHigh = 181;
+//  type2 = "CB3:CC2:FF";
+//  fixfit(-1);
 }
 
 
@@ -303,7 +303,7 @@ state =2;
 if(step ==2 || step ==99|| step ==21){
   cBinLow = 0;
   cBinHigh = 181;
-  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30},/* {0, 4}, {4, 9},{9, 30}*/ }){ 
+  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30}, {0, 4}, {4, 9},{9, 30} }){ 
     ptMin = ptpair.first;
     ptMax = ptpair.second;
    std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);
@@ -314,7 +314,7 @@ if(step ==2 || step ==99|| step ==21){
     sb_ratio = res.second;
     if(ptpair.first == 0 && ptpair.second == 30){ INTBIN_BDTLOW = res.first; }
     std::cout << "cutBDTlow, sb_ratio: " << cutBDTlow << ", "<< sb_ratio.getVal() << std::endl;
-    METHOD_MCGCDATA(1);
+    METHOD_MCGCDATA(2);
   }
 };
 
@@ -324,23 +324,19 @@ if(step ==2 || step ==99|| step ==21){
 if(step ==2 || step == 99 || step == 22){
   ptMin = 0;
   ptMax = 30;
-  dbg();
-//  cutBDTlow = INTBIN_BDTLOW;
-//  type2 = "CB3:CC2:DRFF";
-//  fixfit(-1);
-//  dbg();
+  cutBDTlow = INTBIN_BDTLOW;
+  type2 = "CB3:CC2:DRFF";
+  fixfit(-1);
 //  cutBDTlow = INTBIN_BDTLOW;
 //  cBinLow = 0;
 //  cBinHigh = 181;
 //  type2 = "CB3:CC2:DR2FF";
 //  fixfit(-1);
-//  dbg();
-  cutBDTlow = INTBIN_BDTLOW;
-  cBinLow = 0;
-  cBinHigh = 181;
-  type2 = "CB3:CC1:FF";
-  fixfit(-1);
-  dbg();
+//  cutBDTlow = INTBIN_BDTLOW;
+//  cBinLow = 0;
+//  cBinHigh = 181;
+//  type2 = "CB3:CC1:FF";
+//  fixfit(-1);
 }
 
 

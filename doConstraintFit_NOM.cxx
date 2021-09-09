@@ -7,7 +7,7 @@
 #include "./BDT/yield_eff_signif.cxx"
 
 void doConstraintFit_NOM(int step = 0){
-  std::string type 			= "CB3:CC2:GC"	;
+  std::string type 			= "CB3:CC2:DRGC"	;
   std::string type2 			= "CB3:CC2:DR2FF"	;
   std::string type_r 			= "CB3:CC2:DRGC"	;
   std::string typenobdt 		= "CB3:CC4:FF"	;
@@ -111,7 +111,7 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0) mutable {
    res_GOB = Get_Optimal_BDT(ts,ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP , sb_ratio.getVal(), train_state, "", "S2");
     res_blow= res_GOB.first;
     }
-    else{ res_blow = -1; sb_ratio = RooRealVar("d", "", 0); res_GOB = std::make_pair(0, nullptr) }
+    else{ res_blow = -1; sb_ratio = RooRealVar("d", "", 0); res_GOB = std::make_pair(0, nullptr); }
 
 
    if(_step <=-999){
@@ -234,7 +234,7 @@ auto fixfit = [&](int depth  = 5) mutable {
 //    sb_ratio = RooRealVar("ratio","",-1);
 //    for( int i = 11; i < 12; i++){
 //         cutBDTlow = -1.0 + 0.1*i;
- 	MassYieldFit_data(type2, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, xts, cutBDTlow, cutBDThigh, (Double_t[]) {map_keyval_2["sigma1S_1"].first, map_keyval_2["alpha"].first, map_keyval_2["n"].first, map_keyval_2["frac"].first, -0.15,-0.1,0.1,0.1}, (Double_t[]) {0.05, 0.5, 0.4, 0.05, -0.3, -0.3, -0.1,-0.1}, (Double_t[]) {-1, -1, -1, -1, 0.2, 0.1, 0.05,0.05}, 
+ 	MassYieldFit_data(type2, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, xts, cutBDTlow, cutBDThigh, (Double_t[]) {map_keyval_2["sigma1S_1"].first, map_keyval_2["alpha"].first, map_keyval_2["n"].first, map_keyval_2["frac"].first, -0.15,-0.1,0.1,0.1}, (Double_t[]) {0.05, 0.5, 0.4, 0.05, -0.3, -0.4, -0.4,-0.4}, (Double_t[]) {-1, -1, -1, -1, 0.2, 0.3, 0.35,0.35}, 
          (std::map<string, params_vhl>) {
          {"frac2", {map_keyval_2["frac2"].first, 0, -1} }, 
          {"xNS", {map_keyval_2["x1S"].first,0,-1}}, 
@@ -258,7 +258,7 @@ train_state = 3;
 state =3;
  //Sealed
  if(step == 1 || step == 99 || step == 11 || step == 111){
-  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30},/* {0, 6}, {6, 30}*/}){ 
+  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30}, {0, 6}, {6, 30}}){ 
     ptMin = ptpair.first;
     ptMax = ptpair.second;
     std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);
@@ -280,16 +280,16 @@ if(step ==1 || step == 99 || step ==12){
   cutBDTlow = INTBIN_BDTLOW;
   type2 = "CB3:CC2:DRFF";
   fixfit(-1);
-  cutBDTlow = INTBIN_BDTLOW;
-  cBinLow = 0;
-  cBinHigh = 181;
-  type2 = "CB3:CC2:DR2FF";
-  fixfit(-1);
-  cutBDTlow = INTBIN_BDTLOW;
-  cBinLow = 0;
-  cBinHigh = 181;
-  type2 = "CB3:CC2:FF";
-  fixfit(-1);
+//  cutBDTlow = INTBIN_BDTLOW;
+//  cBinLow = 0;
+//  cBinHigh = 181;
+//  type2 = "CB3:CC2:DR2FF";
+//  fixfit(-1);
+//  cutBDTlow = INTBIN_BDTLOW;
+//  cBinLow = 0;
+//  cBinHigh = 181;
+//  type2 = "CB3:CC2:FF";
+//  fixfit(-1);
 }
 
 
@@ -300,15 +300,15 @@ state =2;
 if(step ==2 || step ==99|| step ==21){
   cBinLow = 0;
   cBinHigh = 181;
-  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30},/* {0, 4}, {4, 9},{9, 30}*/ }){ 
+  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30}, {0, 4}, {4, 9},{9, 30} }){ 
     ptMin = ptpair.first;
     ptMax = ptpair.second;
-    std::pair<double, RooRealVar> res = prep_bdtval(-0.0, 5);
+    std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);
     cutBDTlow = res.first;
     sb_ratio = res.second;
     if(ptpair.first == 0 && ptpair.second == 30){ INTBIN_BDTLOW = res.first; }
     std::cout << "cutBDTlow, sb_ratio: " << cutBDTlow << ", "<< sb_ratio.getVal() << std::endl;
-//    METHOD_MCGCDATA(0);
+    METHOD_MCGCDATA(2);
   }
 };
 
@@ -318,23 +318,20 @@ if(step ==2 || step ==99|| step ==21){
 if(step ==2 || step == 99 || step == 22){
   ptMin = 0;
   ptMax = 30;
-  dbg();
   cutBDTlow = INTBIN_BDTLOW;
   type2 = "CB3:CC2:DRFF";
   fixfit(-1);
-  dbg();
-  cutBDTlow = INTBIN_BDTLOW;
-  cBinLow = 0;
-  cBinHigh = 181;
-  type2 = "CB3:CC2:DR2FF";
-  fixfit(-1);
-  dbg();
-  cutBDTlow = INTBIN_BDTLOW;
-  cBinLow = 0;
-  cBinHigh = 181;
-  type2 = "CB3:CC2:FF";
-  fixfit(-1);
-  dbg();
+//  cutBDTlow = INTBIN_BDTLOW;
+//  cBinLow = 0;
+//  cBinHigh = 181;
+//  type2 = "CB3:CC2:DR2FF";
+//  fixfit(-1);
+//  dbg();
+//  cutBDTlow = INTBIN_BDTLOW;
+//  cBinLow = 0;
+//  cBinHigh = 181;
+//  type2 = "CB3:CC2:FF";
+//  fixfit(-1);
 }
 
 

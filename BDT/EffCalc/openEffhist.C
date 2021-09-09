@@ -81,12 +81,13 @@ std::pair<double, double> getEffhist(float pl, float ph, float yl, float yh, int
   return std::make_pair(NumGen,ErrGen);
 };
 
-std::pair<double, double> openEffhist(float _pl, float _ph, float _yl, float _yh, int _cl, int _ch, bool _istnp, bool wei, bool _sw, int kTrigSel, long _ts, double _bdt_tsl, double _bdt_tsh, int train_state =3, int state =3 , double _vcut = 0.00, bool eff_old = false){
+std::pair<double, double> openEffhist(float _pl, float _ph, float _yl, float _yh, int _cl, int _ch, bool _istnp, bool wei, bool _sw, int kTrigSel, long _ts, double _bdt_tsl, double _bdt_tsh, int train_state =3, int state =3 , double _vcut = 0.00, bool eff_old = false, bool get_num = false){
   std::pair<double, double> gen = getEffhist( _pl,  _ph, _yl, _yh, _cl, _ch, _istnp, wei, _sw, kTrigSel, state);
   std::pair<double, double> reco = getEffhist( _pl,  _ph, _yl, _yh, _cl, _ch, _istnp, wei, _ts, _bdt_tsl, _bdt_tsh, train_state, state, _vcut, eff_old);
   double BDTratio = reco.first/gen.first;
   double BDTratioErr = BDTratio*TMath::Sqrt(TMath::Power(reco.second/reco.first,2)+TMath::Power(gen.second/gen.first,2));
   std::cout << Form( "[DIAGNOSIS] NOM NUMGEN, NUMREO= (%.1f, %.1f)", gen.first, reco.first) << std::endl;
   std::cout << Form("Efficiency of BDT %ld, ", _ts) << Form("Cut %f-%f : ", _bdt_tsl, _bdt_tsh) << BDTratio << ", " << BDTratioErr<< std::endl;
-  return std::make_pair(BDTratio, BDTratioErr);
+  if (get_num) return std::make_pair(gen.first, reco.first);
+  else  return std::make_pair(BDTratio, BDTratioErr);
 }

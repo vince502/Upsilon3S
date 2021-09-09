@@ -9,7 +9,7 @@
 
 void doConstraintFit_SYSSIGPAR(int step = 0){
 
-  std::string type 			= "CB3:CC2:GCXMC1P"	;
+  std::string type 			= "CB3:CC2:DRGCXMC1P"	;
   std::string type2 			= "CB3:CC2:DR2FFXMC1P"	;
   std::string type_r 			= "CB3:CC2:DRGCXMC1P"	;
 //  std::string typenobdt 		= "CB3:CC4:FFXMC1P"	;
@@ -163,7 +163,7 @@ void doConstraintFit_SYSSIGPAR(int step = 0){
        if(state ==2) mean_sigma1S1 = map_keyval["sigmaNS_1"].first;//*(U1S_mass/U2S_mass);
        if(state ==1) mean_sigma1S1 = map_keyval["sigmaNS_1"].first;//*(U1S_mass/U1S_mass);
 
-      MassYieldFit_data(type, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, -0.05,0.00,0.01,0.00, -0.03}, (Double_t[]) {0.11, 0.5, 0.4, 0.01, -0.2, -0.2, -0.2,-0.1, -0.1}, (Double_t[]) {0.41, (map_keyval["alpha"].first+map_keyval["alpha"].second)*2, (map_keyval["n"].first+map_keyval["n"].second)*4, 0.95, 0.10, 0.05, 0.2,0.2, 0.2, 0.1}, 
+      MassYieldFit_data(type, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, -0.05,0.00,0.01,0.00, -0.03}, (Double_t[]) {0.11, 0.5, 0.4, 0.01, -0.3, -0.3, -0.2,-0.1, -0.1}, (Double_t[]) {0.41, (map_keyval["alpha"].first+map_keyval["alpha"].second)*2, (map_keyval["n"].first+map_keyval["n"].second)*4, 0.95, 0.10, 0.05, 0.2,0.2, 0.2, 0.1}, 
  //     MassYieldFit_data(type, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 5.0,5.1,2.1,0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, -0.3, -0.3, -0.3,-0.3}, (Double_t[]) {0.31, (map_keyval["alpha"].first+map_keyval["alpha"].second)*2, (map_keyval["n"].first+map_keyval["n"].second)*4, 0.95, 9.1, 10.1, 2.3,0.3}, 
 //      MassYieldFit_data(type2, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 0.0,0.1,0.1,0.1, -0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, -0.3, -0.3, -0.3,-0.3, -0.3}, (Double_t[]) {-1, -1, -1, -1, 0.1, 0.1, 0.3,0.3, 0.3}, 
 //      MassYieldFit_data(type2, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 5.0,5.1,2.1,0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, 5.3, 1.3, 0.3,-0.3}, (Double_t[]) {-1, -1, -1, -1, 9.1, 7.1, 2.3,0.3}, 
@@ -259,7 +259,7 @@ train_state = 3;
 state =3;
  //Sealed
  if(step == 1 || step == 99 || step == 11){
-  for( auto ptpair : (std::vector<std::pair<double, double> >) {/*{0, 30},*/ {0, 6}, {6, 30}}){ 
+  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30}, {0, 6}, {6, 30}}){ 
     ptMin = ptpair.first;
     ptMax = ptpair.second;
 //    std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);
@@ -283,16 +283,16 @@ if(step ==1 || step == 99 || step ==12){
   cutBDTlow = INTBIN_BDTLOW;
   type2 = "CB3:CC2:DRFFXMC1P";
   fixfit(-1);
-  cutBDTlow = INTBIN_BDTLOW;
-  cBinLow = 0;
-  cBinHigh = 181;
-  type2 = "CB3:CC2:DR2FFXMC1P";
-  fixfit(-1);
-  cutBDTlow = INTBIN_BDTLOW;
-  cBinLow = 0;
-  cBinHigh = 181;
-  type2 = "CB3:CC2:FFXMC1P";
-  fixfit(-1);
+//  cutBDTlow = INTBIN_BDTLOW;
+//  cBinLow = 0;
+//  cBinHigh = 181;
+//  type2 = "CB3:CC2:DR2FFXMC1P";
+//  fixfit(-1);
+//  cutBDTlow = INTBIN_BDTLOW;
+//  cBinLow = 0;
+//  cBinHigh = 181;
+//  type2 = "CB3:CC2:FFXMC1P";
+//  fixfit(-1);
 }
 
 
@@ -303,7 +303,7 @@ state =2;
 if(step ==2 || step == 99 || step ==21){
   cBinLow = 0;
   cBinHigh = 181;
-  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30}, {0, 4}, {4, 9},{9, 30} }){ 
+  for( auto ptpair : (std::vector<std::pair<double, double> >) {/*{0, 30}, {0, 4},*/ {4, 9}/*,{9, 30}*/ }){ 
     ptMin = ptpair.first;
     ptMax = ptpair.second;
 //    std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);
@@ -325,16 +325,16 @@ if(step ==2 || step ==99 || step == 22){
   cutBDTlow = INTBIN_BDTLOW;
   type2 = "CB3:CC2:DRFFXMC1P";
   fixfit(-1);
-  cutBDTlow = INTBIN_BDTLOW;
-  cBinLow = 0;
-  cBinHigh = 181;
-  type2 = "CB3:CC2:DR2FFXMC1P";
-  fixfit(-1);
-  cutBDTlow = INTBIN_BDTLOW;
-  cBinLow = 0;
-  cBinHigh = 181;
-  type2 = "CB3:CC2:FFXMC1P";
-  fixfit(-1);
+//  cutBDTlow = INTBIN_BDTLOW;
+//  cBinLow = 0;
+//  cBinHigh = 181;
+//  type2 = "CB3:CC2:DR2FFXMC1P";
+//  fixfit(-1);
+//  cutBDTlow = INTBIN_BDTLOW;
+//  cBinLow = 0;
+//  cBinHigh = 181;
+//  type2 = "CB3:CC2:FFXMC1P";
+//  fixfit(-1);
 }
 
 

@@ -1,16 +1,16 @@
 #include "../BDT/bininfo.h"
 
-void systematic_ups()
+void systematic_ups_DR()
 {
 	std::map<TString, TFile*> m_sys = {
-	  					{"signal parameter", new TFile("sigPAR_unc.root", "open")},
-	  					{"signal pdf", new TFile("sigPDF_unc.root", "open")},
-	  					{"bkground pdf", new TFile("bkgPDF_unc.root", "open")},
+	  					{"signal parameter", new TFile("sigPAR_DR_unc.root", "open")},
+	  					{"signal pdf", new TFile("sigPDF_DR_unc.root", "open")},
+	  					{"bkground pdf", new TFile("bkgPDF_DR_unc.root", "open")},
 	  					{"acceptance dpt", new TFile("ACC_unc.root", "open")},
 	  					{"efficiency dpt", new TFile("effDPT_unc.root", "open")},
 	  					{"efficiency tnp", new TFile("effTNP_unc.root", "open")},
-	  					{"centrality calibration", new TFile("CENT_unc.root", "open")},
-	  					{"BDT variation", new TFile("BDT_unc.root", "open")},
+	  					{"centrality calibration", new TFile("CENT_DR_unc.root", "open")},
+	  					{"BDT variation", new TFile("BDT_DR_unc.root", "open")},
 	};
 	for(auto x : m_sys) { std::cout << x.first.Data() << ", File: " << x.second->GetName()<< std::endl;} //Check File Open
 	gStyle->SetHistLineColor(kGray+1);
@@ -20,7 +20,7 @@ void systematic_ups()
 	TH1D* h_rp2s = new TH1D("hsys_tot_p2S", "", 3, 1, 3);
 	TH1D* h_rp3s = new TH1D("hsys_tot_p3S", "", 2, 1, 2);
 	std::map<std::pair<TString, TString> , TH1D*> m_hists;
-	TFile* output = new TFile("total_systematic.root", "recreate");
+	TFile* output = new TFile("total_systematic_DR.root", "recreate");
 	output->cd();
 	TString names[8];
 	int xc_n= 0;

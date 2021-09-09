@@ -5,7 +5,7 @@
 #include "yield_eff_signif.h"
 #include "TApplication.h"
 
-std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio =0.16 , int train_state =3, string name_input_opt = "", string formula_significance= "S2", string the_opt="")
+std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio =0.16 , int train_state =3, string name_input_opt = "", string formula_significance= "S2", string the_opt="", bool save = true)
 {
   
   std::string st_opt;
@@ -157,6 +157,7 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
   else {
     dir_ratio = HISTFILE->mkdir(Form("r_%.6f", ratio), "");
   }
+  
   HISTFILE->cd();
   dir_ratio->cd();
   hist_res->Write();
@@ -188,10 +189,7 @@ RooRealVar get_eff_acc(std::string type, std::string type2, long ts, double ylim
   binplotter bp2 = binplotter(type2, ts, ylim,pl, ph, cl, ch, -1, bhigh, train_state, false, eff_old);
   bp.get_yield();
   nbkg = bp2.get_bkg();
-  auto frac_pair = bp.get_frac();
-  RooRealVar frac_nS;
-  if(state2 ==2 ){ frac_nS = frac_pair.first;}
-  if(state2 ==3 ){ frac_nS = frac_pair.second;}
+  auto frac_nS = bp.get_frac(state2);
   RooRealVar yield1S = bp2.get_yield(state1);
   auto effp1 = bp.get_eff(state1);
   auto effp2 = bp.get_eff(state2);

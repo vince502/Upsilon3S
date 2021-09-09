@@ -86,10 +86,14 @@ TH1D* getPbPbRAA(int state =3, double bdt_fix = -2, int shift =0){
 
   Color_t theColor;
   theColor = kRed+2;
+  int thenbin;
+  if(state ==3) thenbin = 3;
+  if(state ==2) thenbin = 9;
   if(state ==3) theColor = kGreen+2;
   if(state ==2) theColor = kBlue+2;
 
-  TH1D* h1 = new TH1D(Form("RAAcent_%dS", state) , "PbPb 2 ratio cent", 35, 0, 420);
+//  TH1D* h1 = new TH1D(Form("RAAcent_%dS", state) , "PbPb 2 ratio cent", thenbin, (state==3) ? cbinthree : cbinnine);
+  TH1D* h1 = new TH1D(Form("RAAcent_%dS", state) , "PbPb 2 ratio cent", 420, 0, 420);
   gStyle->SetOptStat(kFALSE);
   gStyle->SetOptTitle(kFALSE);
   if(state ==3){
@@ -100,6 +104,8 @@ TH1D* getPbPbRAA(int state =3, double bdt_fix = -2, int shift =0){
       double npart = glp::Npart[{centthree_rev[idx+1],centthree_rev[idx]}].first;
       h1->SetBinContent(h1->FindBin(npart) + shift, dr_bin.getVal());
       h1->SetBinError(h1->FindBin(npart) + shift, dr_bin.getError());
+  //    h1->SetBinContent(idx+1, dr_bin.getVal());
+  //    h1->SetBinError(idx +1, dr_bin.getError());
     }
   }
   if(state ==2){
@@ -110,6 +116,8 @@ TH1D* getPbPbRAA(int state =3, double bdt_fix = -2, int shift =0){
       double npart = glp::Npart[{centnine_rev[idx+1],centnine_rev[idx]}].first;
       h1->SetBinContent(h1->FindBin(npart) + shift, dr_bin.getVal());
       h1->SetBinError(h1->FindBin(npart) + shift, dr_bin.getError());
+//      h1->SetBinContent(idx+1, dr_bin.getVal());
+//      h1->SetBinError(idx+1, dr_bin.getError());
     }
   }
   h1->GetYaxis()->SetRangeUser(0,1.3);

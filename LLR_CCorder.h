@@ -25,3 +25,7 @@ int getNomBkgO(int state, int pl, int ph, int cl, int ch)
 	if( (state == 3 && pl == 0 && ph == 30 && cl == 0 && ch == 181) ) return 2;
 	else return -1;
 };
+int getNomBkgO(ana_bins x )
+{
+	return getNomBkgO(x.state, x.pl, x.ph, x.cl, x.ch);
+};
