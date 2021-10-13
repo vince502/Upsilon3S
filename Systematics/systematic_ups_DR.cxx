@@ -6,8 +6,8 @@ void systematic_ups_DR()
 	  					{"signal parameter", new TFile("sigPAR_DR_unc.root", "open")},
 	  					{"signal pdf", new TFile("sigPDF_DR_unc.root", "open")},
 	  					{"bkground pdf", new TFile("bkgPDF_DR_unc.root", "open")},
-	  					{"acceptance dpt", new TFile("ACC_unc.root", "open")},
-	  					{"efficiency dpt", new TFile("effDPT_unc.root", "open")},
+	  					{"acceptance dpt", new TFile("ACCQuad_unc.root", "open")},
+	  					{"efficiency dpt", new TFile("effDPTQuad_unc.root", "open")},
 	  					{"efficiency tnp", new TFile("effTNP_unc.root", "open")},
 	  					{"centrality calibration", new TFile("CENT_DR_unc.root", "open")},
 	  					{"BDT variation", new TFile("BDT_DR_unc.root", "open")},
@@ -147,19 +147,41 @@ void systematic_ups_DR()
 	double down = 1e-3;
 
 	c1->cd();
+	TLine *l_bin = new TLine();
+	l_bin->SetLineStyle(kDashed);
+	l_bin->SetLineColor(kBlack);
+	l_bin->SetLineWidth(1);
+	double l_x;
 
 //	c1->SetLogy();
 	h_rc2s->GetYaxis()->SetRangeUser(down,up);
 	h_rc2s->SetFillColor(kGray);
 	h_rc2s->SetLineColor(kGray+2);
-	h_rc2s->GetXaxis()->SetLabelSize(0);
+//	h_rc2s->GetXaxis()->SetLabelSize(0);
+	h_rc2s->GetXaxis()->SetBinLabel(1 , "0-5 %");
+	h_rc2s->GetXaxis()->SetBinLabel(2 , "5-10 %");
+	h_rc2s->GetXaxis()->SetBinLabel(3 , "10-20 %");
+	h_rc2s->GetXaxis()->SetBinLabel(4 , "20-30 %");
+	h_rc2s->GetXaxis()->SetBinLabel(5 , "30-40 %");
+	h_rc2s->GetXaxis()->SetBinLabel(6 , "40-50 %");
+	h_rc2s->GetXaxis()->SetBinLabel(7 , "50-60 %");
+	h_rc2s->GetXaxis()->SetBinLabel(8 , "60-70 %");
+	h_rc2s->GetXaxis()->SetBinLabel(9 , "70-90 %");
+	h_rc2s->GetXaxis()->SetBinLabel(10, "int.");
+	h_rc2s->GetXaxis()->SetTickSize(0);
+	h_rc2s->SetLineWidth(2);
 	h_rc2s->Draw();
 
 	for(int i=0; i<8; i++){
 		h_rc2s_b[i]->SetFillColor(colors[i]);
 		h_rc2s_b[i]->GetXaxis()->SetLabelSize(0);
 		h_rc2s_b[i]->Draw("same");
+		l_x = h_rc2s->GetBinCenter(i+1) + h_rc2s->GetBinWidth(i+1)/2;
+		l_bin->DrawLine(l_x,0, l_x, h_rc2s->GetBinContent(i+1)) ;
 	}
+		l_x = h_rc2s->GetBinCenter(9) + h_rc2s->GetBinWidth(9)/2;
+		l_bin->DrawLine(l_x,0, l_x, h_rc2s->GetBinContent(9)) ;
+
 	TLegend* leg = new TLegend(0.7, 0.7,0.89, 0.89);
 	for(int i =0; i< 8; i++){
 		leg->AddEntry(h_rc2s_b[i]->GetName(),names[i], "f");
@@ -171,13 +193,20 @@ void systematic_ups_DR()
 //	c2->SetLogy();
 	h_rc3s->GetYaxis()->SetRangeUser(down, up);
 	h_rc3s->SetFillColor(kGray);
-	h_rc3s->SetLineColor(kGray+2);
-	h_rc3s->GetXaxis()->SetLabelSize(0);
+	h_rc3s->SetLineColor(kBlack);
+	h_rc3s->SetLineWidth(2);
+	h_rc3s->GetXaxis()->SetBinLabel(1 , "0-20 %");
+	h_rc3s->GetXaxis()->SetBinLabel(2 , "20-50 %");
+	h_rc3s->GetXaxis()->SetBinLabel(3 , "50-90 %");
+	h_rc3s->GetXaxis()->SetBinLabel(4 , "int.");
+//	h_rc3s->GetXaxis()->SetLabelSize(0);
 	h_rc3s->Draw();
 	for(int i=0; i<8; i++){
 		h_rc3s_b[i]->SetFillColor(colors[i]);
 		h_rc3s_b[i]->GetXaxis()->SetLabelSize(0);
 		h_rc3s_b[i]->Draw("same");
+		l_x = h_rc3s->GetBinCenter(i+1) + h_rc3s->GetBinWidth(i+1)/2;
+		l_bin->DrawLine(l_x,0, l_x, h_rc3s->GetBinContent(i+1)) ;
 	}
 	leg->Draw("same");
 	
@@ -186,12 +215,19 @@ void systematic_ups_DR()
 	h_rp2s->GetYaxis()->SetRangeUser(down, up);
 	h_rp2s->SetFillColor(kGray);
 	h_rp2s->SetLineColor(kGray+2);
-	h_rp2s->GetXaxis()->SetLabelSize(0);
+	h_rp2s->SetLineColor(kBlack);
+	h_rp2s->SetLineWidth(2);
+	h_rp2s->GetXaxis()->SetBinLabel(1 , "0-4 GeV/c");
+	h_rp2s->GetXaxis()->SetBinLabel(2 , "4-9 GeV/c");
+	h_rp2s->GetXaxis()->SetBinLabel(3 , "9-30 GeV/c");
+//	h_rp2s->GetXaxis()->SetLabelSize(0);
 	h_rp2s->Draw();
 	for(int i=0; i<8; i++){
 		h_rp2s_b[i]->SetFillColor(colors[i]);
 		h_rp2s_b[i]->GetXaxis()->SetLabelSize(0);
 		h_rp2s_b[i]->Draw("same");
+		l_x = h_rp2s->GetBinCenter(i+1) + h_rp2s->GetBinWidth(i+1)/2;
+		l_bin->DrawLine(l_x,0, l_x, h_rp2s->GetBinContent(i+1)) ;
 	}
 	leg->Draw("same");
 	
@@ -199,17 +235,27 @@ void systematic_ups_DR()
 //	c4->SetLogy();
 	h_rp3s->GetYaxis()->SetRangeUser(down, up);
 	h_rp3s->SetFillColor(kGray);
-	h_rp3s->SetLineColor(kGray+2);
-	h_rp3s->GetXaxis()->SetLabelSize(0);
+	h_rp3s->SetLineColor(kBlack);
+	h_rp3s->SetLineWidth(2);
+//	h_rp3s->GetXaxis()->SetLabelSize(0);
+	h_rp3s->GetXaxis()->SetBinLabel(1 , "0-6 GeV/c");
+	h_rp3s->GetXaxis()->SetBinLabel(2 , "6-30 GeV/c");
 	h_rp3s->Draw();
 	for(int i=0; i<8; i++){
 		h_rp3s_b[i]->SetFillColor(colors[i]);
 		h_rp3s_b[i]->GetXaxis()->SetLabelSize(0);
 		h_rp3s_b[i]->Draw("same");
+		l_x = h_rp3s->GetBinCenter(i+1) + h_rp3s->GetBinWidth(i+1)/2;
+		l_bin->DrawLine(l_x,0, l_x, h_rp3s->GetBinContent(i+1)) ;
 	}
 	leg->Draw("same");
 	
+	
 	output->cd();
+	c1->SaveAs("../checkout/total_uncDR_2Scent.pdf");
+	c2->SaveAs("../checkout/total_uncDR_3Scent.pdf");
+	c3->SaveAs("../checkout/total_uncDR_2Spt.pdf");
+	c4->SaveAs("../checkout/total_uncDR_3Spt.pdf");
 	c1->Write();
 	c2->Write();
 	c3->Write();

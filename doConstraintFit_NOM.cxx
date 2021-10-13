@@ -7,7 +7,7 @@
 #include "./BDT/yield_eff_signif.cxx"
 
 void doConstraintFit_NOM(int step = 0){
-  std::string type 			= "CB3:CC2:DRGC"	;
+  std::string type 			= "CB3:CC2:GC"	;
   std::string type2 			= "CB3:CC2:DR2FF"	;
   std::string type_r 			= "CB3:CC2:DRGC"	;
   std::string typenobdt 		= "CB3:CC4:FF"	;
@@ -176,6 +176,7 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0) mutable {
        {"sigmaNS_1", { mean_sigma1S1,0,1}},
        {"mag", { 1, 0, 0 }},
       {"sb_ratio", { sb_ratio.getVal(), 0, 0}},
+      {"tmp", {0,0,0} },
        });
     }
 
@@ -300,7 +301,7 @@ state =2;
 if(step ==2 || step ==99|| step ==21){
   cBinLow = 0;
   cBinHigh = 181;
-  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30}, {0, 4}, {4, 9},{9, 30} }){ 
+  for( auto ptpair : (std::vector<std::pair<double, double> >) {/*{0, 30}, {0, 4},*/ {4, 9}/*,{9, 30}*/ }){ 
     ptMin = ptpair.first;
     ptMax = ptpair.second;
     std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);

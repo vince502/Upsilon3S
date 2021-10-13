@@ -7,6 +7,7 @@
 #include "RooFit.h"
 #include "./EffCalc/openEffhist.C"
 #include "./EffCalc/DNDPT/openEffhist_SYSDPT.C"
+#include "./EffCalc/DNDPT/openEffhist_SYSDPT_NN.C"
 #include "./EffCalc/noDNDPT/openEffhist_SYSNODPT.C"
 #include "bininfo.h"
 
@@ -26,6 +27,7 @@ class binplotter
 	RooRealVar get_yield(int state =3);
 	RooRealVar get_bkg(int state = 3);
 	std::pair<double, double> get_eff(int state =3, bool getNum = false);
+	std::vector<double> get_eff_NN(int state =3);
 	std::pair<double, double> get_eff_sysdpt(int state =3, std::string what = "", bool getNum = false);
 	RooRealVar yield_eff();
 	RooRealVar get_frac(int state);

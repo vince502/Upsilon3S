@@ -2,15 +2,16 @@
 #include "../.workdir.h"
 #include "../LLR_CCorder.h"
 
-RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC", std::pair<double, double> bdtpair = {-0.1,1.00}, int state =3, int get_pre=0, long ts = 9999999999, bool eff_old= true);
+RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC", std::pair<double, double> bdtpair = {-0.1,1.00}, int state =3, int get_pre=0, long ts = 9999999999, bool eff_old= false);
 std::pair<TH1D*, TH1D*> getPbPbDR(int shift1=0, int shift2=0);
 
 void drawDoubleRatioplot(){
   TCanvas* c2 = new TCanvas("c2","",900,700);
   TCanvas* c3 = new TCanvas("c3","",900,700);
   TPad *p2_1, *p2_2, *p3_1, *p3_2;
-  p2_1 = new TPad("p21", "", 0.05, 0,0.83,1);
+  p2_1 = new TPad("p21", "", 0.05, 0.02,0.83,1);
   p2_1->SetRightMargin(0);
+  p2_1->SetBottomMargin(0.02);
   p2_2 = new TPad("p22", "", 0.83, 0,1,1);
   p2_2->SetLeftMargin(0);
   p3_1 = new TPad("p31", "", 0.05, 0,0.83,1);
@@ -108,29 +109,53 @@ RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, do
   bp = new binplotter(type,ts, ylim, ptpair.first, ptpair.second, cbpair.first, cbpair.second, bdtpair.first, bdtpair.second, state, false, eff_old);
 
   RooRealVar fracYNPbPb  = bp->get_frac(state);
+  auto _Yaa_eff_pair = bp->get_eff(state);
+  auto _Y1aa_eff_pair = bp->get_eff(1);
+  double _Yaa_eff = _Yaa_eff_pair.first;
+  double _Y1aa_eff = _Y1aa_eff_pair.first;
+  RooRealVar _Yaa_acc = upsi::getacceptance(ptpair.first, ptpair.second, (double) -1*ylim, ylim, 3.5, state);
+  RooRealVar _Y1aa_acc = upsi::getacceptance(ptpair.first, ptpair.second, (double) -1*ylim, ylim, 3.5, 1);
+  fracYNPbPb.setVal(fracYNPbPb.getVal() *((_Y1aa_eff * _Y1aa_acc.getVal() ) / (_Yaa_eff * _Yaa_acc.getVal() )  ) );
+  fracYNPbPb.setError(fracYNPbPb.getError() *((_Y1aa_eff * _Y1aa_acc.getVal() ) / (_Yaa_eff * _Yaa_acc.getVal() )  ));
   if(get_pre ==1) return fracYNPbPb;
   RooRealVar yNAA, yNPP, y1PP,  fracYNPP;
   TFile* file_pp = TFile::Open(Form("%s/fitresults_upsilon_fixParm1_seed2_DoubleCB_PP_DATA_pt0.0-30.0_y0.0-2.4_muPt4.0.root",hin16023.Data() ));
-  TFile* file_pp_eff = TFile::Open(Form("%s/efficiency_ups3s_useDataPtWeight1_tnp_trgId0_trkId0_muId-100_staId-100.root", hin16023.Data() ));
-  TFile* file_pp_acc = TFile::Open(Form("%s/acceptance_wgt_norm_3S.root", hin16023.Data() ));
+  TFile* file_pp_eff = TFile::Open(Form("%s/efficiency_ups%ds_useDataPtWeight1_tnp_trgId0_trkId0_muId-100_staId-100.root", hin16023.Data(), state ));
+  TFile* file_pp_acc = TFile::Open(Form("%s/acceptance_wgt_norm_%dS.root", hin16023.Data(), state ));
+  TFile* file_pp1_eff = TFile::Open(Form("%s/efficiency_ups1s_useDataPtWeight1_tnp_trgId0_trkId0_muId-100_staId-100.root", hin16023.Data() ));
+  TFile* file_pp1_acc = TFile::Open(Form("%s/acceptance_wgt_norm_1S.root", hin16023.Data() ));
 
   TH1D *hYpp = (TH1D*) file_pp->Get("fitResults");
+  TH1D *hApp, *hEpp, *h1App, *h1Epp;
+  hApp = (TH1D*) file_pp_acc->Get(Form("hIntAccPP%dS",state));
+  hEpp = (TH1D*) file_pp_eff->Get("hcentintEffPP");
+  h1App = (TH1D*) file_pp1_acc->Get(Form("hIntAccPP1S"));
+  h1Epp = (TH1D*) file_pp1_eff->Get("hcentintEffPP");
+  double _Ypp_acc = hApp->GetBinContent(1);
+  double _Ypp_eff = hEpp->GetBinContent(1);
+  double _Y1pp_acc = h1App->GetBinContent(1);
+  double _Y1pp_eff = h1Epp->GetBinContent(1);
 
   double _Y1pp = hYpp->GetBinContent(1);
   double _Y1pp_err = hYpp->GetBinError(1);
+  double _corr;
+  if(state ==2 ) _corr = 7.048e+04; 
+  if(state ==3 ) _corr = -4.57e+04;
   double _YNpp = hYpp->GetBinContent(state);
   double _YNpp_err = hYpp->GetBinError(state);
 //  double _Y3pp = hYpp->GetBinContent(3);
 //  double _Y3pp_err = hYpp->GetBinError(3);
-  y1PP = RooRealVar("Y1yieldPP", "1S yield pp", _Y1pp);
-  yNPP = RooRealVar(Form("Y%dyieldPP",state), Form("%dS yield pp",state), _YNpp);
+  y1PP = RooRealVar("Y1yieldPP", "1S yield pp", _Y1pp /(_Y1pp_acc* _Y1pp_eff) );
+  yNPP = RooRealVar(Form("Y%dyieldPP",state), Form("%dS yield pp",state), _YNpp/(_Ypp_acc* _Ypp_eff));
 //  y3PP = RooRealVar("Y3yieldPP", "3S yield pp", _Y3pp);
-  y1PP.setError(_Y1pp_err);
-  yNPP.setError(_YNpp_err);
+  y1PP.setError(_Y1pp_err/(_Y1pp_acc* _Y1pp_eff));
+  yNPP.setError(_YNpp_err/(_Ypp_acc* _Ypp_eff));
 //  y3PP.setError(_Y3pp_err);
   fracYNPP = RooRealVar(Form("fracY%dover1SPP",state), Form("%dS fraction",state), _YNpp/_Y1pp);
 //  fracY3PP = RooRealVar("fracY3over1SPP", "3S fraction", _Y3pp/_Y1pp);
-  fracYNPP.setError((1/_Y1pp)*TMath::Sqrt(TMath::Power( _Y1pp_err,2) + TMath::Power((_YNpp/_Y1pp)*_YNpp_err,2) ));
+//  fracYNPP.setError((_YNpp/_Y1pp)*TMath::Sqrt(TMath::Power( _YNpp_err/_YNpp,2) + TMath::Power((_Y1pp_err/_Y1pp),2) - 2*( _corr / (_Y1pp * _YNpp) ) )); //PP statistical Error Aslo goes to Global
+  fracYNPP.setError(0);
+  std::cout << "Frac Y(nS) PP : " << Form("%.4f +- %.4f",fracYNPP.getVal(), fracYNPP.getError() ) << std::endl; 
 //  fracY3PP.setError((1/_Y1pp)*TMath::Sqrt(TMath::Power( _Y1pp_err,2) + TMath::Power((_Y3pp/_Y1pp)*_Y3pp_err,2) ));
 //  std::cout << "fracY3PP Val, Err: " << fracY3PP.getVal() <<", " << fracY3PP.getError() << std::endl;
   RooRealVar DRYN = RooRealVar(Form("%dSDoubleRatio",state), Form("%dS Double Ratio PbPb/pp",state), fracYNPbPb.getVal()/fracYNPP.getVal());
@@ -156,14 +181,14 @@ std::pair<TH1D*, TH1D*> getPbPbDR(int shift1 = 0, int shift2 = 1){
   setTDRStyle();
   for(int idx =0; idx <9; ++idx){
     std::cout << cbinnine_rev[idx+1]*2 << " , " << cbinnine_rev[idx]*2 << std::endl;
-    RooRealVar dr_bin = getDoubleRatioValue({centnine_rev[idx+1],centnine_rev[idx]},{0,30}, Form("CB3:CC$d:DRFF", getNomBkgO(2, 0, 30, centnin_rev[idx+1],centnine_rev[idx]),{-2,1.0}, 2);
+    RooRealVar dr_bin = getDoubleRatioValue({centnine_rev[idx+1],centnine_rev[idx]},{0,30}, Form("CB3:CC%d:DRFF", getNomBkgO(2, 0, 30, centnine_rev[idx+1],centnine_rev[idx])),{-2.,1.0}, 2);
     double npart = glp::Npart[{cbinnine_rev[idx+1],cbinnine_rev[idx]}].first;
     h1->SetBinContent(h1->FindBin(npart)+ shift1, dr_bin.getVal());
     h1->SetBinError(h1->FindBin(npart) + shift1, dr_bin.getError());
   }
   
   for(int idx =0; idx <3; ++idx){
-    RooRealVar dr_bin = getDoubleRatioValue({centthree_rev[idx+1],centthree_rev[idx]},{0,30}, Form("CB3:CC%d:DRFF",3, 0,30, centthree_rev[idx+1],centthree_rev[idx]), {-2, 1.0}, 3);
+    RooRealVar dr_bin = getDoubleRatioValue({centthree_rev[idx+1],centthree_rev[idx]},{0,30}, Form("CB3:CC%d:DRFF",getNomBkgO(3, 0,30, centthree_rev[idx+1],centthree_rev[idx])), {-2., 1.0}, 3);
     double npart = glp::Npart[{cbinthree_rev[idx+1],cbinthree_rev[idx]}].first;
     h2->SetBinContent(h2->FindBin(npart) + shift2, dr_bin.getVal());
     h2->SetBinError(h2->FindBin(npart)+ shift2, dr_bin.getError());
@@ -174,26 +199,28 @@ std::pair<TH1D*, TH1D*> getPbPbDR(int shift1 = 0, int shift2 = 1){
   h1->SetLineColor(kBlue+2);
   h1->GetXaxis()->SetLabelSize(0.04);
   h1->GetXaxis()->SetTitleOffset(1.1);
-  h1->GetXaxis()->SetTitle("N_{part}");
-  h1->GetYaxis()->SetTitle("(#Upsilon(2S)/#Upsilon(1S))_{PbPb} / #Upsilon(2S)/#Upsilon(1S))_{pp}");
+  h1->GetXaxis()->SetTitle("#LT N_{part} #GT");
+  h1->GetYaxis()->SetTitle("(#Upsilon(nS)/#Upsilon(1S))_{PbPb} / #Upsilon(nS)/#Upsilon(1S))_{pp}");
   h1->GetXaxis()->CenterTitle();
   h1->GetYaxis()->CenterTitle();
-  h1->GetYaxis()->SetTitleOffset(1.2);
-  h1->GetYaxis()->SetTitleSize(0.04);
+  h1->GetYaxis()->SetTitleOffset(1.0);
+  h1->GetXaxis()->SetTitleOffset(1.1);
+  h1->GetYaxis()->SetTitleSize(0.05);
+  h1->GetXaxis()->SetTitleSize(0.05);
 
 
   h2->GetYaxis()->SetRangeUser(0,1.6);
   h2->SetMarkerStyle(kCircle);
   h2->SetMarkerColor(kGreen+2);
   h2->SetLineColor(kGreen+2);
-  h2->GetXaxis()->SetLabelSize(0.04);
+  h2->GetXaxis()->SetLabelSize(0.05);
   h2->GetXaxis()->SetTitleOffset(1.1);
   h2->GetXaxis()->SetTitle("N_{part}");
   h2->GetYaxis()->SetTitle("(#Upsilon(3S)/#Upsilon(1S))_{PbPb} / #Upsilon(3S)/#Upsilon(1S))_{pp}");
   h2->GetXaxis()->CenterTitle();
   h2->GetYaxis()->CenterTitle();
   h2->GetYaxis()->SetTitleOffset(1.2);
-  h2->GetYaxis()->SetTitleSize(0.04);
+  h2->GetYaxis()->SetTitleSize(0.05);
 
   return std::make_pair(h1, h2);
 };

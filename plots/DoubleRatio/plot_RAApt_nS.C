@@ -1,8 +1,8 @@
 void plot_RAApt_nS()
 {
 //=========Macro generated from canvas: c2/
-//=========  (Mon Sep  6 15:13:06 2021) by ROOT version 6.22/06
-   TCanvas *c2 = new TCanvas("c2", "",0,0,1000,700);
+//=========  (Fri Oct  1 04:42:39 2021) by ROOT version 6.22/06
+   TCanvas *c2 = new TCanvas("c2", "",0,0,700,700);
    gStyle->SetOptStat(0);
    gStyle->SetOptTitle(0);
    c2->Range(-3.75,-0.1625,33.75,1.4625);
@@ -16,8 +16,8 @@ void plot_RAApt_nS()
    TH1D *h3pt__1 = new TH1D("h3pt__1","PbPb 2 ratio cent 2S",2, xAxis1);
    h3pt__1->SetBinContent(1,0.07592996);
    h3pt__1->SetBinContent(2,0.07388216);
-   h3pt__1->SetBinError(1,0.0444746);
-   h3pt__1->SetBinError(2,0.02729761);
+   h3pt__1->SetBinError(1,0.04842447);
+   h3pt__1->SetBinError(2,0.03048804);
    h3pt__1->SetMinimum(0);
    h3pt__1->SetMaximum(1.3);
    h3pt__1->SetEntries(2);
@@ -30,16 +30,17 @@ void plot_RAApt_nS()
    ci = TColor::GetColor("#009900");
    h3pt__1->SetMarkerColor(ci);
    h3pt__1->SetMarkerStyle(4);
-   h3pt__1->GetXaxis()->SetTitle("N_{part}");
+   h3pt__1->GetXaxis()->SetTitle("p_{T}");
    h3pt__1->GetXaxis()->CenterTitle(true);
    h3pt__1->GetXaxis()->SetLabelFont(42);
    h3pt__1->GetXaxis()->SetLabelSize(0.04);
+   h3pt__1->GetXaxis()->SetTitleSize(0.06);
    h3pt__1->GetXaxis()->SetTitleOffset(1.2);
    h3pt__1->GetXaxis()->SetTitleFont(42);
    h3pt__1->GetYaxis()->SetTitle("#Upsilon (3S) R_{AA}");
    h3pt__1->GetYaxis()->CenterTitle(true);
    h3pt__1->GetYaxis()->SetLabelFont(42);
-   h3pt__1->GetYaxis()->SetTitleSize(0.04);
+   h3pt__1->GetYaxis()->SetTitleSize(0.06);
    h3pt__1->GetYaxis()->SetTitleOffset(1.1);
    h3pt__1->GetYaxis()->SetTitleFont(42);
    h3pt__1->GetZaxis()->SetLabelFont(42);
@@ -50,11 +51,11 @@ void plot_RAApt_nS()
    
    TH1D *h2pt__2 = new TH1D("h2pt__2","PbPb 2 ratio cent 3S",3, xAxis2);
    h2pt__2->SetBinContent(1,0.06857919);
-   h2pt__2->SetBinContent(2,0.1411677);
+   h2pt__2->SetBinContent(2,0.1479398);
    h2pt__2->SetBinContent(3,0.08589855);
-   h2pt__2->SetBinError(1,0.02985397);
-   h2pt__2->SetBinError(2,0.03193592);
-   h2pt__2->SetBinError(3,0.01685725);
+   h2pt__2->SetBinError(1,0.03250194);
+   h2pt__2->SetBinError(2,0.03716405);
+   h2pt__2->SetBinError(3,0.01921141);
    h2pt__2->SetMinimum(0);
    h2pt__2->SetMaximum(1.3);
    h2pt__2->SetEntries(3);
@@ -66,16 +67,17 @@ void plot_RAApt_nS()
    ci = TColor::GetColor("#000099");
    h2pt__2->SetMarkerColor(ci);
    h2pt__2->SetMarkerStyle(4);
-   h2pt__2->GetXaxis()->SetTitle("N_{part}");
+   h2pt__2->GetXaxis()->SetTitle("p_{T}");
    h2pt__2->GetXaxis()->CenterTitle(true);
    h2pt__2->GetXaxis()->SetLabelFont(42);
    h2pt__2->GetXaxis()->SetLabelSize(0.04);
+   h2pt__2->GetXaxis()->SetTitleSize(0.06);
    h2pt__2->GetXaxis()->SetTitleOffset(1.2);
    h2pt__2->GetXaxis()->SetTitleFont(42);
    h2pt__2->GetYaxis()->SetTitle("#Upsilon (2S) R_{AA}");
    h2pt__2->GetYaxis()->CenterTitle(true);
    h2pt__2->GetYaxis()->SetLabelFont(42);
-   h2pt__2->GetYaxis()->SetTitleSize(0.04);
+   h2pt__2->GetYaxis()->SetTitleSize(0.06);
    h2pt__2->GetYaxis()->SetTitleOffset(1.1);
    h2pt__2->GetYaxis()->SetTitleFont(42);
    h2pt__2->GetZaxis()->SetLabelFont(42);

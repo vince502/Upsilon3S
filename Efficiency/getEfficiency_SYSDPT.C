@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void getEfficiency(
+void getEfficiency_SYSDPT(
   float ptLow = 0.0, float ptHigh = 30.0,
   float yLow = 0.0, float yHigh = 2.4,
   int cLow = 0, int cHigh = 181, bool isTnP = false, bool isPtWeight = false, bool isSwitch=false, int kTrigSel = kTrigUps, bool isBDT = false, int state =3, int isSys =1
@@ -49,7 +49,7 @@ void getEfficiency(
   else if(!isSwitch) ftrigSel += Form("_%s",fTrigName[kTrigSel_].Data());
 
   //input files
-  TString inputMC =  "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/OniaTree/MC/OniaTree_MC_Ups3S_PbPb2018_HydjetDrumMB_5p02TeV_merged.root";
+  TString inputMC =  "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/OniaTree/MC/Oniatree_Y3SMC_v210618_pdgfix.root";
   if(state ==1) inputMC = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/OniaTree/MC/OniaTree_Ups1SMC_HydjetDrumMB_5p02TeV_v210621.root";
   if(state ==2) inputMC = "/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/OniaTree/MC/OniaTree_Ups2SMC_HydjetDrumMB_5p02TeV_v210628.root";
   TChain* mytree = new TChain("hionia/myTree"); 
@@ -65,17 +65,30 @@ void getEfficiency(
   if(state==2) fPtW = new TFile(Form("%s/WeightedFunction/Func_dNdpT_2S.root",store.Data()),"read");
   if(state==3) fPtW = new TFile(Form("%s/WeightedFunction/Func_dNdpT_3S.root",store.Data()),"read");
   TF1* f1 = (TF1*) fPtW->Get("fitRatio");
-  TF1 *f1_up, *f1_down;
-  if(IsSys !=0){
+  TF1 *f1_up, *f1_down, *f1_NU, *f1_ND, *f1_UN, *f1_DN;
+
+  if(isSys !=0){
     f1_up = (TF1*) f1->Clone();
     f1_down = (TF1*) f1->Clone();
+    f1_NU = (TF1*) f1->Clone();
+    f1_ND = (TF1*) f1->Clone();
+    f1_UN = (TF1*) f1->Clone();
+    f1_DN = (TF1*) f1->Clone();
     f1_up->SetParameters(f1->GetParameter(0) + f1->GetParError(0),f1->GetParameter(1) + f1->GetParError(1));
     f1_down->SetParameters(f1->GetParameter(0) - f1->GetParError(0),f1->GetParameter(1) - f1->GetParError(1));
+    f1_NU->SetParameters(f1->GetParameter(0) - 0,f1->GetParameter(1) + f1->GetParError(1));
+    f1_ND->SetParameters(f1->GetParameter(0) - 0,f1->GetParameter(1) - f1->GetParError(1));
+    f1_UN->SetParameters(f1->GetParameter(0) + f1->GetParError(0),f1->GetParameter(1) - 0);
+    f1_DN->SetParameters(f1->GetParameter(0) - f1->GetParError(0),f1->GetParameter(1) - 0);
   }
 
   TString histName = Form("%dS_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d_TrigSel%s_SYSPT",state, ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight,ftrigSel.c_str());
 //  TH1D* hreco = new TH1D(Form("hreco"),"hreco",1,xmin,xmax);
   TH1D* hgen = new TH1D(Form("hgen"),"hgen",1,xmin,xmax);
+  TH1D* hgen_NU = new TH1D(Form("hgen_NU"),"hgen",1,xmin,xmax);
+  TH1D* hgen_ND = new TH1D(Form("hgen_ND"),"hgen",1,xmin,xmax);
+  TH1D* hgen_UN = new TH1D(Form("hgen_UN"),"hgen",1,xmin,xmax);
+  TH1D* hgen_DN = new TH1D(Form("hgen_DN"),"hgen",1,xmin,xmax);
   TH1D* hgen_bin = new TH1D(Form("hgen_bin"),"hgen",(int) (xmax-xmin),xmin,xmax);
 
 //  hreco->Sumw2();
@@ -98,7 +111,11 @@ void getEfficiency(
   double tnp_weight = 1;
   double tnp_trig_weight_mupl = -1;
   double tnp_trig_weight_mumi = -1;
-  double pt_weight = 1;
+  double pt_Weight = 1;
+  double pt_Weight_NU=1;
+  double pt_Weight_ND=1;
+  double pt_Weight_UN=1;
+  double pt_Weight_DN=1;
   
   double tnp_trig_dimu=-1;
 
@@ -127,18 +144,24 @@ void getEfficiency(
 
       if(Gen_mu_charge[Gen_QQ_mupl_idx[igen]]*Gen_mu_charge[Gen_QQ_mumi_idx[igen]]>0) continue;
 
-      pt_weight = 1;
+      pt_Weight = 1;
       if(isPtWeight){
-	pt_weight = f1->Eval(JP_Gen->Pt()); 
-	if( IsSys){
-	  ptWeight_up = f1_up->Eval(pt);
-	  ptWeight_down = f1_down->Eval(pt);
-	  ptWeight = ( fabs(ptWeight_up-ptWeight ) > fabs( ptWeight_down -ptWeight) ) ? ptWeight_up : ptWeight_down;
+	pt_Weight = f1->Eval(JP_Gen->Pt()); 
+	if( isSys){
+	  pt_Weight_NU = f1_NU->Eval(JP_Gen->Pt());
+	  pt_Weight_ND = f1_ND->Eval(JP_Gen->Pt());
+	  pt_Weight_UN = f1_UN->Eval(JP_Gen->Pt());
+	  pt_Weight_DN = f1_DN->Eval(JP_Gen->Pt());
+
 	}
       }
 
-      hgen->Fill(JP_Gen->Pt(),weight*pt_weight);
-      hgen_bin->Fill(JP_Gen->Pt(),weight*pt_weight);
+      hgen->Fill(JP_Gen->Pt(),weight*pt_Weight);
+      hgen_NU->Fill(JP_Gen->Pt(),weight*pt_Weight_NU);
+      hgen_ND->Fill(JP_Gen->Pt(),weight*pt_Weight_ND);
+      hgen_UN->Fill(JP_Gen->Pt(),weight*pt_Weight_UN);
+      hgen_DN->Fill(JP_Gen->Pt(),weight*pt_Weight_DN);
+      hgen_bin->Fill(JP_Gen->Pt(),weight*pt_Weight);
     }
 
   //  bool HLTPass = false;
@@ -268,6 +291,10 @@ void getEfficiency(
 //  heff->Write();
 //  hreco->Write();
   hgen->Write();
+  hgen_NU->Write();
+  hgen_ND->Write();
+  hgen_UN->Write();
+  hgen_DN->Write();
   hgen_bin->Write();
   cgen->Close();
   outFile->Close();

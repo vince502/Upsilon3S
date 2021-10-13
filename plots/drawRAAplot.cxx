@@ -8,7 +8,7 @@ TH1D* getPbPbRAA(int state =3, double bdt_fix=-2);
 
 // Double Ratio Finding Function
 //////////////////////////////////////////////////////////////////////////////
-RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC", double bdtlow_val = -2, int state =3, int getPre = 0,long ts =9999999999, bool stdvcut = false, bool eff_old = false){
+RooRealVar getDoubleRatioValue(bool inc_pp_stat, std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC", double bdtlow_val = -2, int state =3, int getPre = 0,long ts =9999999999, bool stdvcut = false, bool eff_old = false){
    // 1625503068; //1623391157; //BLIND Nominal
   double val_bdt_nom = Get_BDT(ts, state, (int) ptpair.first, (int) ptpair.second, cbpair.first, cbpair.second);
 
@@ -46,6 +46,7 @@ RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, do
   double _Ypp_err = hYpp->GetBinError(state);
   double _Ypp_acc = hApp->GetBinContent(1);
   double _Ypp_eff = hEpp->GetBinContent(1);
+  std::cout << Form("\n[BIN] pp attrib. %.0f-%.0f GeV/c, %d-%d(/2 %%) -> yield : %.3f $\\pm$ %.3f, acc : %.3f, eff : %.3f", ptpair.first, ptpair.second, cbpair.first, cbpair.second, _Ypp, _Ypp_err, _Ypp_acc, _Ypp_eff) << std::endl;
   if(!(ptpair.first ==0 && ptpair.second ==30 )){
     _Ypp_eff = hEpp_pt->GetBinContent(hEpp_pt->FindBin((ptpair.first+ptpair.second)/2));
   }
@@ -54,7 +55,7 @@ RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, do
   Double_t cs_pp = 28*TMath::Power(10,9);
   Double_t Nmb = 11968044281.;
   auto taa =glp::Taa[{(int) (cbpair.first/2), (int) (cbpair.second/2)}];
- 
+
   Double_t tirg_presc = 1.0684;
   Double_t taa_Nmb = taa.first*Nmb/tirg_presc;
   Double_t step_one = (cs_pp)/(taa_Nmb);
@@ -62,7 +63,9 @@ RooRealVar getDoubleRatioValue(std::pair <int, int> cbpair, std::pair<double, do
   Double_t val_RAA = 4.*step_two*yAA.getVal()/yPP.getVal();
 
   std::cout << std::endl << std::endl << "RAAAAA : " << val_RAA << std::endl << std::endl;
-  Double_t err_RAA = 4*step_two*((1/yPP.getVal())*(yAA.getError()- (yAA.getVal()/yPP.getVal())*yPP.getError())); 
+  Double_t err_RAA;
+  if(inc_pp_stat) err_RAA= 4*step_two*((1/yPP.getVal())*TMath::Sqrt( (yAA.getError()*yAA.getError()+ TMath::Power( (yAA.getVal()/yPP.getVal())*yPP.getError(), 2) )) ); 
+  if(!inc_pp_stat) err_RAA= 4*step_two*( yAA.getError() / yPP.getVal() ); 
 
   RooRealVar val_return = RooRealVar("raa","", val_RAA);
   val_return.setError(err_RAA);
@@ -99,8 +102,8 @@ TH1D* getPbPbRAA(int state =3, double bdt_fix = -2, int shift =0){
   if(state ==3){
     for(int idx =0; idx <3; ++idx){
       RooRealVar dr_bin;
-      if(bdt_fix != -2) dr_bin = getDoubleRatioValue({cbinthree_rev[idx+1],cbinthree_rev[idx]},{0,30}, Form("CB3:CC%d:FF", getNomBkgO(state, 0, 30, cbinthree_rev[idx+1],cbinthree_rev[idx]) ), bdt_tmp_val2[idx+1], state );
-      else dr_bin = getDoubleRatioValue({cbinthree_rev[idx+1],cbinthree_rev[idx]},{0,30}, Form("CB3:CC%d:FF", getNomBkgO(state, 0, 30, cbinthree_rev[idx+1],cbinthree_rev[idx]) ), bdt_fix, state );
+      if(bdt_fix != -2) dr_bin = getDoubleRatioValue(false, {cbinthree_rev[idx+1],cbinthree_rev[idx]},{0,30}, Form("CB3:CC%d:FF", getNomBkgO(state, 0, 30, cbinthree_rev[idx+1],cbinthree_rev[idx]) ), bdt_tmp_val2[idx+1], state );
+      else dr_bin = getDoubleRatioValue(false, {cbinthree_rev[idx+1],cbinthree_rev[idx]},{0,30}, Form("CB3:CC%d:FF", getNomBkgO(state, 0, 30, cbinthree_rev[idx+1],cbinthree_rev[idx]) ), bdt_fix, state );
       double npart = glp::Npart[{centthree_rev[idx+1],centthree_rev[idx]}].first;
       h1->SetBinContent(h1->FindBin(npart) + shift, dr_bin.getVal());
       h1->SetBinError(h1->FindBin(npart) + shift, dr_bin.getError());
@@ -111,8 +114,8 @@ TH1D* getPbPbRAA(int state =3, double bdt_fix = -2, int shift =0){
   if(state ==2){
     for(int idx =0; idx <9; ++idx){
       RooRealVar dr_bin;
-      if(bdt_fix != -2) dr_bin = getDoubleRatioValue({cbinnine_rev[idx+1],cbinnine_rev[idx]},{0,30}, Form("CB3:CC%d:FF", getNomBkgO(state, 0, 30, cbinnine_rev[idx+1],cbinnine_rev[idx]) ), bdt_tmp_val2[idx+1], state );
-      else dr_bin = getDoubleRatioValue({cbinnine_rev[idx+1],cbinnine_rev[idx]},{0,30}, Form("CB3:CC%d:FF", getNomBkgO(state, 0, 30, cbinnine_rev[idx+1],cbinnine_rev[idx]) ), bdt_fix, state );
+      if(bdt_fix != -2) dr_bin = getDoubleRatioValue(false, {cbinnine_rev[idx+1],cbinnine_rev[idx]},{0,30}, Form("CB3:CC%d:FF", getNomBkgO(state, 0, 30, cbinnine_rev[idx+1],cbinnine_rev[idx]) ), bdt_tmp_val2[idx+1], state );
+      else dr_bin = getDoubleRatioValue(false, {cbinnine_rev[idx+1],cbinnine_rev[idx]},{0,30}, Form("CB3:CC%d:FF", getNomBkgO(state, 0, 30, cbinnine_rev[idx+1],cbinnine_rev[idx]) ), bdt_fix, state );
       double npart = glp::Npart[{centnine_rev[idx+1],centnine_rev[idx]}].first;
       h1->SetBinContent(h1->FindBin(npart) + shift, dr_bin.getVal());
       h1->SetBinError(h1->FindBin(npart) + shift, dr_bin.getError());
@@ -127,10 +130,11 @@ TH1D* getPbPbRAA(int state =3, double bdt_fix = -2, int shift =0){
   h1->GetXaxis()->SetLabelSize(0.04);
   h1->GetYaxis()->SetTitle(Form("#Upsilon (%dS) R_{AA}", state) );
   h1->GetYaxis()->SetTitle("R_{AA}");
-  h1->GetYaxis()->SetTitleOffset(1.1);
-  h1->GetYaxis()->SetTitleSize(0.04);
-  h1->GetXaxis()->SetTitle("N_{part}");
-  h1->GetXaxis()->SetTitleOffset(1.2);
+  h1->GetYaxis()->SetTitleOffset(0.9);
+  h1->GetYaxis()->SetTitleSize(0.05);
+  h1->GetXaxis()->SetTitle("#LT N_{part} #GT");
+  h1->GetXaxis()->SetTitleOffset(1.0);
+  h1->GetXaxis()->SetTitleSize(0.05);
   h1->GetXaxis()->CenterTitle();
   h1->GetYaxis()->CenterTitle();
   return h1;
@@ -155,8 +159,8 @@ TH1D* getPbPbRAA_pt(int state =3, double bdt_fix = -2, int shift =0){
     for(int idx =0; idx <2; ++idx){
       std::cout << "take from value: " << bdt_tmp_val[idx+1] << std::endl;
       RooRealVar dr_bin;
-      if(bdt_fix != -2) dr_bin= getDoubleRatioValue({0,181},{ptbintwo[idx],ptbintwo[idx+1]}, Form("CB3:CC%d:GC", getNomBkgO(state, ptbintwo[idx], ptbintwo[idx+1],0, 181) ), bdt_tmp_val[idx+1], state );
-      else dr_bin= getDoubleRatioValue({0,181},{ptbintwo[idx],ptbintwo[idx+1]}, Form("CB3:CC%d:GC", getNomBkgO(state, ptbintwo[idx], ptbintwo[idx+1],0, 181) ), bdt_fix, state );
+      if(bdt_fix != -2) dr_bin= getDoubleRatioValue(true, {0,181},{ptbintwo[idx],ptbintwo[idx+1]}, Form("CB3:CC%d:GC", getNomBkgO(state, ptbintwo[idx], ptbintwo[idx+1],0, 181) ), bdt_tmp_val[idx+1], state );
+      else dr_bin= getDoubleRatioValue(true, {0,181},{ptbintwo[idx],ptbintwo[idx+1]}, Form("CB3:CC%d:GC", getNomBkgO(state, ptbintwo[idx], ptbintwo[idx+1],0, 181) ), bdt_fix, state );
       h1->SetBinContent(h1->FindBin( (ptbintwo[idx]+ptbintwo[idx+1])/2), dr_bin.getVal());
       h1->SetBinError(h1->FindBin( (ptbintwo[idx]+ptbintwo[idx+1])/2), dr_bin.getError());
     }
@@ -165,8 +169,8 @@ TH1D* getPbPbRAA_pt(int state =3, double bdt_fix = -2, int shift =0){
     for(int idx =0; idx <3; ++idx){
       std::cout << "take from value: " << bdt_tmp_val[idx+1] << std::endl;
       RooRealVar dr_bin;
-      if(bdt_fix != -2) dr_bin= getDoubleRatioValue({0,181},{ptbinthree[idx],ptbinthree[idx+1]}, Form("CB3:CC%d:GC", getNomBkgO(state, ptbinthree[idx], ptbinthree[idx+1],0, 181) ), bdt_tmp_val[idx+1], state );
-      else dr_bin= getDoubleRatioValue({0,181},{ptbinthree[idx],ptbinthree[idx+1]}, Form("CB3:CC%d:GC", getNomBkgO(state, ptbinthree[idx], ptbinthree[idx+1],0, 181) ), bdt_fix, state );
+      if(bdt_fix != -2) dr_bin= getDoubleRatioValue(true, {0,181},{ptbinthree[idx],ptbinthree[idx+1]}, Form("CB3:CC%d:GC", getNomBkgO(state, ptbinthree[idx], ptbinthree[idx+1],0, 181) ), bdt_tmp_val[idx+1], state );
+      else dr_bin= getDoubleRatioValue(true, {0,181},{ptbinthree[idx],ptbinthree[idx+1]}, Form("CB3:CC%d:GC", getNomBkgO(state, ptbinthree[idx], ptbinthree[idx+1],0, 181) ), bdt_fix, state );
       h1->SetBinContent(h1->FindBin( (ptbinthree[idx]+ptbinthree[idx+1])/2), dr_bin.getVal());
       h1->SetBinError(h1->FindBin( (ptbinthree[idx]+ptbinthree[idx+1])/2), dr_bin.getError());
     }
@@ -178,12 +182,12 @@ TH1D* getPbPbRAA_pt(int state =3, double bdt_fix = -2, int shift =0){
   h1->GetXaxis()->SetLabelSize(0.04);
   h1->GetYaxis()->SetTitle(Form("#Upsilon (%dS) R_{AA}", state) );
   h1->GetYaxis()->SetTitleOffset(1.1);
-  h1->GetXaxis()->SetTitle("N_{part}");
-  h1->GetYaxis()->SetTitleSize(0.05);
+  h1->GetXaxis()->SetTitle("p_{T}");
+  h1->GetXaxis()->SetTitleSize(0.06);
   h1->GetXaxis()->SetTitleOffset(1.2);
   h1->GetXaxis()->CenterTitle();
   h1->GetYaxis()->CenterTitle();
-  h1->GetYaxis()->SetTitleSize(0.04);
+  h1->GetYaxis()->SetTitleSize(0.06);
   return h1;
 };
 
@@ -235,12 +239,12 @@ void drawRAAplot(){
   y3_int->GetYaxis()->SetLabelOffset(0);
   y3_int->GetYaxis()->SetRangeUser(0,1.3);
 
-  auto raa2_int = getDoubleRatioValue({0,181}, {0,30},Form("CB3:CC%d:GC", getNomBkgO(2, 0, 30,0, 181) ), -2, 2);
-  auto raa3_int = getDoubleRatioValue({0,181}, {0,30},Form("CB3:CC%d:GC", getNomBkgO(3, 0, 30,0, 181) ), -2, 3);
+  auto raa2_int = getDoubleRatioValue(true, {0,181}, {0,30},Form("CB3:CC%d:GC", getNomBkgO(2, 0, 30,0, 181) ), -2, 2);
+  auto raa3_int = getDoubleRatioValue(true, {0,181}, {0,30},Form("CB3:CC%d:GC", getNomBkgO(3, 0, 30,0, 181) ), -2, 3);
 //  auto hPbPb1S = getPbPbRAA(1, -0.1, 2);
   auto hPbPb2S = getPbPbRAA(2, -2, 0);
   auto hPbPb3S = getPbPbRAA(3, -2, 0 );
-  TGraphAsymmErrors* gr1S = new TGraphAsymmErrors(10); 
+  TGraphAsymmErrors* gr1S = new TGraphAsymmErrors(9); 
   gr1S->SetName("RAAcent_1S");
   gr1S->SetPoint(0,8.3000002, 0.79200000);
   gr1S->SetPoint(1,30.600000, 0.92199999);
@@ -370,7 +374,7 @@ void drawRAApt_plot(){
 //  c2->SaveAs(Form("%s/plots/DoubleRatio/plot_test.pdf", workdir.Data() ));
 //  c2->SaveAs(Form("%s/plots/DoubleRatio/plot_test.cxx", workdir.Data() ));
 //  c2->SaveAs(Form("%s/plots/DoubleRatio/plot_test_bdt0.2_1.0.cxx", workdir.Data() ));
-  TCanvas* c2 = new TCanvas("c2","",1000,700);
+  TCanvas* c2 = new TCanvas("c2","",700,700);
   auto hPbPb3S = getPbPbRAA_pt(3);
   auto hPbPb2S = getPbPbRAA_pt(2);
 //  TH1D* hPbPb2S = new TH1D("hPbPb2S" , "PbPb 2 ratio cent", 1, 0, 3);

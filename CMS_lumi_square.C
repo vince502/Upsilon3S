@@ -3,7 +3,7 @@
 //#include "CMS_lumi_v2mass.h"
 #include <iostream>
 
-void CMS_lumi_square( TPad* pad, int iPeriod=3, int iPosX=10 )
+void CMS_lumi_square( TPad* pad, int iPeriod=101, int iPosX=10 )
 {            
   bool outOfFrame    = false;
   if( iPosX/10==0 ) 
@@ -46,6 +46,12 @@ void CMS_lumi_square( TPad* pad, int iPeriod=3, int iPosX=10 )
   }
   else if( iPeriod==3 )
   {
+    lumiText += "PbPb ";
+    lumiText += lumi_PbPb502TeV_blind;
+    lumiText += " (5.02 TeV)";
+  }
+  else if( iPeriod==4 )
+  {
     lumiText += "pPb ";
     lumiText += lumi_pPb502TeV;
     lumiText += " (5.02 TeV)";
@@ -53,7 +59,7 @@ void CMS_lumi_square( TPad* pad, int iPeriod=3, int iPosX=10 )
   else if ( iPeriod==101 )
   {
     lumiText += "PbPb ";
-    lumiText += lumi_PbPb502TeV;
+    lumiText += lumi_PbPb502TeV_blind;
     lumiText += ", pp ";
     lumiText += lumi_pp502TeV;
     lumiText += " (5.02 TeV)";

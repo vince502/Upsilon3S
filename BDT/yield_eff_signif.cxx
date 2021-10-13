@@ -186,6 +186,11 @@ std::pair<double, double> binplotter::get_eff_sysdpt(int state =3, std::string w
   return bdteff;
 };
 
+std::vector<double> binplotter::get_eff_NN(int state =3){
+  std::vector<double> bdteff = openEffhist_SYSDPT_NN((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, train_state, state, vcut, "",eff_old);  
+  return bdteff;
+};
+
 RooRealVar binplotter::yield_eff(){
   RooRealVar Yield3S = binplotter::get_yield();
   double bdteff = get_eff().first;

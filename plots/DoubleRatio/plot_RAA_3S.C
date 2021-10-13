@@ -1,7 +1,7 @@
 void plot_RAA_3S()
 {
 //=========Macro generated from canvas: c3/
-//=========  (Tue Sep  7 21:03:11 2021) by ROOT version 6.22/06
+//=========  (Fri Oct  1 18:27:57 2021) by ROOT version 6.22/06
    TCanvas *c3 = new TCanvas("c3", "",0,0,1000,700);
    gStyle->SetOptStat(0);
    gStyle->SetOptTitle(0);
@@ -25,11 +25,11 @@ void plot_RAA_3S()
    
    TH1D *RAAcent_3S__6 = new TH1D("RAAcent_3S__6","PbPb 2 ratio cent",420,0,420);
    RAAcent_3S__6->SetBinContent(28,0.5134596);
-   RAAcent_3S__6->SetBinContent(136,0.1292691);
+   RAAcent_3S__6->SetBinContent(136,0.1291925);
    RAAcent_3S__6->SetBinContent(310,0.1274464);
-   RAAcent_3S__6->SetBinError(28,0.1038328);
-   RAAcent_3S__6->SetBinError(136,0.04274275);
-   RAAcent_3S__6->SetBinError(310,0.03117786);
+   RAAcent_3S__6->SetBinError(28,0.1195692);
+   RAAcent_3S__6->SetBinError(136,0.04667686);
+   RAAcent_3S__6->SetBinError(310,0.03508381);
    RAAcent_3S__6->SetMinimum(0);
    RAAcent_3S__6->SetMaximum(1.3);
    RAAcent_3S__6->SetEntries(3);
@@ -43,17 +43,18 @@ void plot_RAA_3S()
    ci = TColor::GetColor("#009900");
    RAAcent_3S__6->SetMarkerColor(ci);
    RAAcent_3S__6->SetMarkerStyle(4);
-   RAAcent_3S__6->GetXaxis()->SetTitle("N_{part}");
+   RAAcent_3S__6->GetXaxis()->SetTitle("#LT N_{part} #GT");
    RAAcent_3S__6->GetXaxis()->CenterTitle(true);
    RAAcent_3S__6->GetXaxis()->SetLabelFont(42);
    RAAcent_3S__6->GetXaxis()->SetLabelSize(0.04);
-   RAAcent_3S__6->GetXaxis()->SetTitleOffset(1.2);
+   RAAcent_3S__6->GetXaxis()->SetTitleSize(0.05);
+   RAAcent_3S__6->GetXaxis()->SetTitleOffset(1);
    RAAcent_3S__6->GetXaxis()->SetTitleFont(42);
    RAAcent_3S__6->GetYaxis()->SetTitle("R_{AA}");
    RAAcent_3S__6->GetYaxis()->CenterTitle(true);
    RAAcent_3S__6->GetYaxis()->SetLabelFont(42);
-   RAAcent_3S__6->GetYaxis()->SetTitleSize(0.04);
-   RAAcent_3S__6->GetYaxis()->SetTitleOffset(1.1);
+   RAAcent_3S__6->GetYaxis()->SetTitleSize(0.05);
+   RAAcent_3S__6->GetYaxis()->SetTitleOffset(0.9);
    RAAcent_3S__6->GetYaxis()->SetTitleFont(42);
    RAAcent_3S__6->GetZaxis()->SetLabelFont(42);
    RAAcent_3S__6->GetZaxis()->SetTitleOffset(1);
@@ -137,7 +138,7 @@ tex->SetNDC();
    
    TH1D *y3int__7 = new TH1D("y3int__7","",3,0,1);
    y3int__7->SetBinContent(3,0.1104473);
-   y3int__7->SetBinError(3,0.02608092);
+   y3int__7->SetBinError(3,0.02965967);
    y3int__7->SetMinimum(0);
    y3int__7->SetMaximum(1.3);
    y3int__7->SetEntries(1);
