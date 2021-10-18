@@ -260,10 +260,21 @@ RooRealVar get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, i
 TH1D* func_hist_optimal_BDT();
 
 //#if !defined(YIELD_EFF_SIGNIF_H)
+//struct ana_bins : TObject{
 struct ana_bins{
-  string bin_attr;
-  int pl, ph, cl, ch, centl, centh, plot_idx, state;
-
+//	ana_bins() =default ;
+//	ana_bins(TString _bin_attr, int _pl, int _ph, int _cl, int _ch, int _centl, int _centh, int _plot_idx, int _state){ bin_attr = _bin_attr; pl = _pl ; ph = _ph; cl = _cl; ch = _ch; centl = _centl; centh = _centh; plot_idx =_plot_idx; state = _state;};
+	TString bin_attr;
+	int pl, ph, cl, ch, centl, centh, plot_idx, state;
+	bool operator==( ana_bins a){
+		return ((a.pl==pl&&a.ph==ph&&a.cl==cl&&a.ch==ch&&a.state==state) || (a.pl==pl&&a.ph==ph&&a.centl==centl&&a.centh==centh&&a.state==state) );
+	};
+	bool operator()(ana_bins a, ana_bins b){
+		return (a < b);
+	};
+	bool operator<(const ana_bins& b) const{
+		return ( stoi(Form("%d%d%d%d%d", state, pl, ph, centl, centh)) < stoi(Form("%d%d%d%d%d", b.state, b.pl, b.ph, b.centl, b.centh)) );
+	};
 };
 //#endif
 

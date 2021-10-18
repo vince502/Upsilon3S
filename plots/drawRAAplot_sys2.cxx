@@ -9,6 +9,7 @@ double quadsum(double arg1, double arg2){
 
 void drawRAAplot_sys2()
 {
+	bool ISPROJSTAT = true;
 //  	gStyle->SetErrorX(0.00001);
 	gStyle->SetOptStat(kFALSE);
 	gStyle->SetOptTitle(kFALSE);
