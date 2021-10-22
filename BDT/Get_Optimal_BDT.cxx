@@ -49,7 +49,7 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
   TChain* tree_train_raw = new TChain();
   RooDataSet* rd_data = (RooDataSet*) file_input_rd->Get(Form("dataset_Y%dSpt%dto%d", train_state, (int) ptMin, (int) ptMax));
   std::string treedir = "";
-  if(ts >= 9999999990) treedir = Form("/data/Y%dSpt%dto%d", train_state, (int) ptMin, (int) ptMax);
+  if(ts >= 1634636609) treedir = Form("/data/Y%dSpt%dto%d", train_state, (int) ptMin, (int) ptMax);
   tree_train_raw->Add(Form("%s%s/dataset1/TrainTree", name_input.c_str(), treedir.c_str()));
   tree_train_raw->Add(Form("%s%s/dataset2/TrainTree", name_input.c_str(), treedir.c_str()));
   std::string theCut = Form("(mass<11.5 && mass>8.0) && (pt>%f) && (pt<%f) && (y>%f) && (y<%f) && (cBin>=%d) && (cBin<%d) && (QQVtxProb>%f)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP );

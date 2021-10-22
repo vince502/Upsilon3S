@@ -69,7 +69,7 @@ void getEfficiencyBDT(
 
   //SetBranchAddress
   SetTreeBDT settree_;
-  settree_.TreeSetting(mytree, (ts >=9999999990), train_state,(int) ptLow, (int) ptHigh);
+  settree_.TreeSetting(mytree, (ts >=1634636609), train_state,(int) ptLow, (int) ptHigh);
 
   //pT reweighting function
 //  TFile *fPtW = new TFile(Form("%s/Efficiency/Func_dNdpT_2S.root",workdir.Data()),"read");
@@ -127,7 +127,7 @@ void getEfficiencyBDT(
       if(!( nTrkWMea1 >5 && nTrkWMea2 >5 && nPixWMea1 > 0 && nPixWMea2 > 0 && fabs(dxy1) < 0.3 && fabs(dxy2) < 0.3 && fabs(dz1) < 20. && fabs(dz2) < 20.) ) continue;
 
     histName = Form("BDT_%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID", state, ts, bdt_tsl, bdt_tsh,ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,vcut,isTnP,isPtWeight);
-    if(ts >= 9999999990) histName = Form("BDT_%dS_train%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID_fix", state, train_state, ts, bdt_tsl, bdt_tsh,ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,vcut,isTnP,isPtWeight);
+    if(ts >= 1634636609) histName = Form("BDT_%dS_train%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID_fix", state, train_state, ts, bdt_tsl, bdt_tsh,ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,vcut,isTnP,isPtWeight);
     }
     double ptW =1;
     if( isPtWeight) ptW = f1->Eval(pt);

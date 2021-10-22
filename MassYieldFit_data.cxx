@@ -9,7 +9,7 @@ struct params_vhl{
   Double_t low;
   Double_t high;
 };
-void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 181, double cutQVP = 0.01, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1. ,Double_t params[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {},Double_t paramslow[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {},Double_t paramshigh[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {}, std::map<std::string, params_vhl> map_params={}){
+void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 181, double cutQVP = 0.00, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1. ,Double_t params[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {},Double_t paramslow[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {},Double_t paramshigh[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {}, std::map<std::string, params_vhl> map_params={}){
   massfitter mf = massfitter();
 ////////////////////////////////////////////////////////////////////////
   int DDiter = 0;
@@ -62,7 +62,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
   if(map_params.find("tmp") != map_params.end() &&map_params["tmp"].val == 1) aux = "_tmp";
   std::string name_file_output = Form("%s/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f%s.root" ,workdir.Data(), ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10,  cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP, aux.c_str() );
 
- if( ts >= 9999999990) name_file_output = Form("%s/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f%s.root" ,workdir.Data(), train_state, ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP, aux.c_str() );
+ if( ts >= 1634636609) name_file_output = Form("%s/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f%s.root" ,workdir.Data(), train_state, ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP, aux.c_str() );
   if(fitdir.find("DD") != std::string::npos){
     DDiter = fitdir[4]-48;
     name_file_output = name_file_output.substr(0,name_file_output.length()-5) + Form("_DDiter%d.root", DDiter);
@@ -86,7 +86,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
     mf.dsCut	= Form("( pt >=%f && pt <=%f) && (y >= %f && y <=%f) && (cBin>%d && cBin<=%d) &&(pt1 >= %f) && (pt2 >= %f) && (eta1 >= %f && eta1 <= %f) && ( eta2 >= %f && eta2 <= %f) && (BDT>= %f && BDT < %f) && (QQVtxProb > %.f)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, MupTCut, MupTCut, etaMin, etaMax, etaMin, etaMax, cutBDTlow, cutBDThigh, cutQVP);
   }
   std::string name_dataset = "dataset";
-  if( ts >= 9999999990 ) name_dataset = name_dataset + Form("_Y%dSpt%dto%d", train_state, (int) ptMin, (int) ptMax);
+  if( ts >= 1634636609 ) name_dataset = name_dataset + Form("_Y%dSpt%dto%d", train_state, (int) ptMin, (int) ptMax);
   mf.ws_init(name_dataset.c_str(),mf.list_arg, "mass");
   mf.works->var("mass")->Print();
 

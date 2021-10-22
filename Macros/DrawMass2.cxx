@@ -2,7 +2,9 @@
 
 std::vector<TH1D*> Get_hists()
 {
-	TFile* f_data = TFile::Open(Form("%s/BDT/roodatasets/%s", workdir.Data(), "OniaRooDataset_BDT9999999999_OniaSkim_TrigS13_BDT.root"));
+//	TFile* f_data = TFile::Open(Form("%s/BDT/roodatasets/%s", workdir.Data(), "OniaRooDataset_BDT1634633971_OniaSkim_TrigS13_BDT.root"));
+	TFile* f_data = TFile::Open(Form("%s/BDT/Validation/roodatasets/%s", workdir.Data(), "OniaRooDataset_BDT1634805675_OniaSkim_TrigS13_BDT.root"));
+//	TFile* f_data = TFile::Open(Form("%s/BDT/roodatasets/%s", workdir.Data(), "OniaRooDataset_BDT9999999999_OniaSkim_TrigS13_BDT.root"));
 	double mass;
 	double bdt;
 	RooDataSet* rd = (RooDataSet*) f_data->Get("dataset_Y3Spt0to30");
@@ -51,6 +53,6 @@ void DrawMass2()
 			}
 			hists[idx]->Draw("same pe");
 	}
-	c1->SaveAs("FullMassBDTCompare.C");
+	c1->SaveAs("FullMassBDTCompare_fullmass2.C");
 }
 

@@ -6,9 +6,11 @@ TString hin16023 = store + "/../HIN16023";
 TString hfdir = store + "/HFBinEdgeCentCalVariation";
 TString dnptdir = store + "/MC_Eff_TnP_sys/EffPtSys";
 TString tnpdir = store + "/MC_Eff_TnP_sys/EffTnPSys";
+TString cmsstore = "/home/CMS";
 
 std::string ONIABDTMC_LATEST = "OutputSkim_isMC1_3S_v210628_bkup.root";
 std::string ONIABDTMC1S_LATEST = "OutputSkim_isMC1_1S_v210628_bkup.root";
+std::string ONIABDTMC1S_3SEVTMATCH = "OutputSkim_isMC1_1S_matchedTo3S.root";
 std::string ONIABDTMC2S_LATEST = "OutputSkim_isMC1_2S_v210628_bkup.root";
 std::string ONIABDTDATA_LATEST = "OutputSkim_isMC0_v210628_bkup.root";
 std::string ONIABDTDATAB_LATEST = "OutputSkim_isMC0_v210628_ForBLIND.root";

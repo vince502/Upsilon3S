@@ -9,10 +9,11 @@
 #include "TMVA/Tools.h"
 #include "TMVA/TMVAGui.h"
 #include <ctime>
-#include "../.workdir.h"
+#include "../../.workdir.h"
 long _ts;
 long _real_time;
 char logbuf[2000];
+long _ts_buf=0;
 
 bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptHigh, int cBinLow, int cBinHigh, std::string opt = ""){
   //Load Library
@@ -23,11 +24,14 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
 
   std::time_t tstamp = std::time(nullptr);
   _ts = (long) tstamp;
+  if(_ts_buf==0) _ts_buf = _ts;
+  if(strcmp(opt.c_str(), "continue")==0) _ts = _ts_buf;
+  _ts_buf = _ts;
   _real_time = (long) tstamp;
   std::cout <<"time stamp---> " <<  tstamp << std::endl;
   if(strcmp(opt.c_str(),"NOMINAL")==0) _ts = (long) 9999999999;
   if(strcmp(opt.c_str(),"NOMINAL2")==0) _ts = (long) 99999999992;
-  std::system(Form("cat BDTClassifier_BLIND.C >> ./.past_source/_BDTClassifier_BLIND_%ld.old",(long) tstamp));
+  std::system(Form("cat BDTClassifier_BLIND_staticweight.C >> ../.past_source/_BDTClassifier_BLIND_%ld.old",(long) tstamp));
   ofstream log;
   log.open("BDT_description.log", std::ios_base::out|std::ios_base::app);
 //  log << tstamp;
@@ -40,7 +44,7 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
   
   //INPUT & OUTPUT Call
   TFile* inputDATA = new TFile(Form("%s/%s", store.Data(), ONIABDTDATAB_LATEST.c_str()),"read");
-//  TFile* inputDATA = new TFile(Form("%s/%s", hfdir.Data(), SYS_HFDOWNDATA.c_str()),"read");
+ // TFile* inputDATA = new TFile(Form("%s/%s", hfdir.Data(), SYS_HFDOWNDATA.c_str()),"read");
   TFile* inputMC   ;
   if(state ==1) inputMC= new TFile(Form("%s/%s", store.Data(), ONIABDTMC1S_LATEST.c_str()),"read");
   if(state ==2) inputMC= new TFile(Form("%s/%s", store.Data(), ONIABDTMC2S_LATEST.c_str()),"read");
@@ -48,6 +52,7 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
   //new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_v210416.root","read");
   TFile* output;
   if(strcmp(opt.c_str(), "NOMINAL") ==0 ) output = new TFile(Form("%s/BDTresultY3S_%ld_BLIND.root",BDTDir.Data(),_ts),"update");
+  else if(strcmp(opt.c_str(), "continue") ==0) output = new TFile(Form("%s/BDTresultY3S_%ld_BLIND.root",BDTDir.Data(),_ts),"update");
   else output = new TFile(Form("%s/BDTresultY3S_%ld_BLIND.root",BDTDir.Data(),_ts),"recreate");
 
   double ylim 		= 2.4;
@@ -124,8 +129,8 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
     loader1->SetSignalWeightExpression("weight");
     loader2->SetSignalWeightExpression("weight");
 
-    loader1->PrepareTrainingAndTestTree( cut1, cut2, "SplitSeed=100:SplitMode=Alternate:NormMode=NumEvents:!V");
-    loader2->PrepareTrainingAndTestTree( cut1, cut2, "SplitSeed=100:SplitMode=Alternate:NormMode=NumEvents:!V");
+    loader1->PrepareTrainingAndTestTree( cut1, cut2, "SplitSeed=100:SplitMode=Alternate:NormMode=NumEvents:nTrain_Signal=30000:!V");
+    loader2->PrepareTrainingAndTestTree( cut1, cut2, "SplitSeed=100:SplitMode=Alternate:NormMode=NumEvents:nTrain_Signal=30000:!V");
 
 
   //Book Training BDT Method
@@ -167,7 +172,7 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
 }
 
 //Main Function
-void BDTClassifier_BLIND( ){
+void BDTClassifier_BLIND_staticweight( ){
   ofstream log;
   //log.open("BDT_description.log", std::ios_base::out|std::ios_base::app);
   //log << "Bin by Bin training start----------------------" <<std::endl; ; 
@@ -179,24 +184,27 @@ void BDTClassifier_BLIND( ){
   std::cin.getline(logbuf,2000);
   bool res; 
 
-  std::vector<std::pair<int, int> >bin1spt = {{0,30},{0,1},{1,2},{2,3},{3,4},{4,5},{5,6},{6,8},{8,10},{10,12},{18,30},{12,18},{12,15},{15,30}};
-  std::vector<std::pair<int, int> >bin2spt = {/*{0,4},{4,9},{9,30},{0,30},{9,12},{12,30}*/{0,2},{2,4},{4,6},{6,9},{12,15},{15,20},{12,20},{12,24},{20,50},{24,50},{30,50},{12,50}, {15, 50}};
-  std::vector<std::pair<int, int> >bin3spt = {/*{0,6},{6,30},{0,30},*/{0,4},{4,9},{9,12},{12,15},{15,50},{12,24},{24,50},{12,20},{20,50},{12,30},{30,50},{15,30}};
-  for( auto pair : bin3spt) 
-  {
-  	res = BDTClassifier_BLIND_Function(3,0,pair.first,pair.second, 0,181, "NOMINAL");
-  	if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
-  }
-  for( auto pair : bin2spt) 
-  {
-  	res = BDTClassifier_BLIND_Function(2,0,pair.first,pair.second, 0,181, "NOMINAL");
-  	if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
-  }
-  for( auto pair : bin1spt) 
-  {
-  	res = BDTClassifier_BLIND_Function(1,0,pair.first,pair.second, 0,181, "NOMINAL");
-	if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
-  }
+  std::vector<std::pair<int, int> >bin1spt = {/*{0,30},{0,1},{1,2},{2,3},{3,4},{4,5},{5,6},{6,8},{8,10},{10,12},{18,30}*/{12,18},{12,15},{15,30}};
+  std::vector<std::pair<int, int> >bin2spt = {/*{0,2},{2,4},{4,6},{6,9},{9,12},{12,15},{15,20},{12,20},{12,24},{20,50},{24,50},{30,50}*/{12,50}, {15, 50}};
+  std::vector<std::pair<int, int> >bin3spt = {/*{0,4},{4,9},{9,12},{12,15},{15,50},{12,24},{24,50},{12,20},{20,50},{12,30},{30,50},{15,30}*/};
+//  for( auto pair : bin3spt) 
+//  {
+//  	res = BDTClassifier_BLIND_Function(3,0,pair.first,pair.second, 0,181, "NOMINAL");
+//  	if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
+//  }
+//  for( auto pair : bin2spt) 
+//  {
+//  	res = BDTClassifier_BLIND_Function(2,0,pair.first,pair.second, 0,181, "NOMINAL");
+//  	if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
+//  }
+//  for( auto pair : bin1spt) 
+//  {
+//  	res = BDTClassifier_BLIND_Function(1,0,pair.first,pair.second, 0,181, "NOMINAL");
+  	res = BDTClassifier_BLIND_Function(1,0,0,30, 0,181, "");
+  	res = BDTClassifier_BLIND_Function(2,0,0,30, 0,181, "continue");
+  	res = BDTClassifier_BLIND_Function(3,0,0,30, 0,181, "continue");
+  	if(!res)std::system(Form("rm ../.past_source/_BDT_Blind_Classifier_staticweight_%ld.old",(long) _real_time));
+//  }
 //  res = BDTClassifier_BLIND_Function(3,0,0,6, 0,181, "NOMINAL");
 //  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
 //  res = BDTClassifier_BLIND_Function(3,0,6,30, 0,181, "NOMINAL");

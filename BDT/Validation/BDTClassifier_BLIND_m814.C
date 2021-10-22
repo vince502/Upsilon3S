@@ -9,10 +9,11 @@
 #include "TMVA/Tools.h"
 #include "TMVA/TMVAGui.h"
 #include <ctime>
-#include "../.workdir.h"
+#include "../../.workdir.h"
 long _ts;
 long _real_time;
 char logbuf[2000];
+long _ts_buf=0;
 
 bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptHigh, int cBinLow, int cBinHigh, std::string opt = ""){
   //Load Library
@@ -23,11 +24,14 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
 
   std::time_t tstamp = std::time(nullptr);
   _ts = (long) tstamp;
+  if(_ts_buf==0) _ts_buf = _ts;
+  if(strcmp(opt.c_str(), "continue")==0) _ts = _ts_buf;
+  _ts_buf = _ts;
   _real_time = (long) tstamp;
   std::cout <<"time stamp---> " <<  tstamp << std::endl;
-  if(strcmp(opt.c_str(),"NOMINAL")==0) _ts = (long) 9999999999;
-  if(strcmp(opt.c_str(),"NOMINAL2")==0) _ts = (long) 99999999992;
-  std::system(Form("cat BDTClassifier_BLIND.C >> ./.past_source/_BDTClassifier_BLIND_%ld.old",(long) tstamp));
+//  if(strcmp(opt.c_str(),"NOMINAL")==0) _ts = (long) 9999999999;
+//  if(strcmp(opt.c_str(),"NOMINAL2")==0) _ts = (long) 99999999992;
+  std::system(Form("cat BDTClassifier_BLIND_m814.C >> ../.past_source/_BDTClassifier_BLIND_m814_%ld.old",(long) tstamp));
   ofstream log;
   log.open("BDT_description.log", std::ios_base::out|std::ios_base::app);
 //  log << tstamp;
@@ -48,11 +52,12 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
   //new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_v210416.root","read");
   TFile* output;
   if(strcmp(opt.c_str(), "NOMINAL") ==0 ) output = new TFile(Form("%s/BDTresultY3S_%ld_BLIND.root",BDTDir.Data(),_ts),"update");
+  else if(strcmp(opt.c_str(), "continue") ==0) output = new TFile(Form("%s/BDTresultY3S_%ld_BLIND.root",BDTDir.Data(),_ts),"update");
   else output = new TFile(Form("%s/BDTresultY3S_%ld_BLIND.root",BDTDir.Data(),_ts),"recreate");
 
   double ylim 		= 2.4;
   double massLow 	= 8;
-  double massHigh 	= 11.5;
+  double massHigh 	= 14;
   double Simucut  	= 3.5;
   string HybSoft 	= "&&nPixWMea1>0&&nPixWMea2>0&&nTrkWMea1>5&&nTrkWMea2>5&&fabs(dxy1)<0.3&&fabs(dxy2)<0.3&&fabs(dz1)<20&&fabs(dz2)<20";
   string rejectNAN 	= "&&!TMath::IsNaN(ctau)&&!TMath::IsNaN(ctau3D)&&!TMath::IsNaN(cosAlpha)&&!TMath::IsNaN(cosAlpha3D)";//"&&!TMath::IsNaN(QQMassErr)&&!TMath::IsNaN(dxyErr1)&&!TMath::IsNaN(dxyErr2)&&!TMath::IsNaN(QQVtxProb)&&!TMath::IsNaN(QQdca)&&!TMath::IsNaN(cosAlpha)&&!TMath::IsNaN(cosAlpha3D)";
@@ -64,16 +69,16 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
   TTree* SigTree =(TTree*) inputMC->Get("tree");
   TTree* BkgTreeTest_primary1 =(TTree*) inputDATA->Get(Form("tree3"));
   TTree* BkgTreeTest_primary2 =(TTree*) inputDATA->Get(Form("tree2"));
-  TTree* BkgTreeTest1 = BkgTreeTest_primary1->CopyTree("(mass>8.&&mass<8.6)||(mass>10.8&&mass<11.5)");
-  TTree* BkgTreeTest2 = BkgTreeTest_primary2->CopyTree("(mass>8.&&mass<8.6)||(mass>10.8&&mass<11.5)");
+  TTree* BkgTreeTest1 = BkgTreeTest_primary1->CopyTree("(mass>8.&&mass<8.6)||(mass>10.8&&mass<14)");
+  TTree* BkgTreeTest2 = BkgTreeTest_primary2->CopyTree("(mass>8.&&mass<8.6)||(mass>10.8&&mass<14)");
 
   BkgTreeTest1->SetName("tree3");
   BkgTreeTest2->SetName("tree2");
   TTree* BkgTreeTrain_primary1 =(TTree*) inputDATA->Get(Form("tree2"));
   TTree* BkgTreeTrain_primary2 =(TTree*) inputDATA->Get(Form("tree3"));
 //  TTree* BkgTreeTrain0 = BkgTreeTrain_primary1->CopyTree("(mass>8.&&mass<8.6)||(mass>10.8&&mass<11.5)");
-  TTree* BkgTreeTrain1 = BkgTreeTrain_primary1->CopyTree("(mass>8.&&mass<8.6)||(mass>10.8&&mass<11.5)");
-  TTree* BkgTreeTrain2 = BkgTreeTrain_primary2->CopyTree("(mass>8.&&mass<8.6)||(mass>10.8&&mass<11.5)");
+  TTree* BkgTreeTrain1 = BkgTreeTrain_primary1->CopyTree("(mass>8.&&mass<8.6)||(mass>10.8&&mass<14)");
+  TTree* BkgTreeTrain2 = BkgTreeTrain_primary2->CopyTree("(mass>8.&&mass<8.6)||(mass>10.8&&mass<14)");
   std::cout << "Number of Events in Trees (Sig, BkgTest, BkgTrain) : ( " << SigTree->GetEntries(cut1) << ", "<< BkgTreeTest1->GetEntries(cut2) << ", " << BkgTreeTrain2->GetEntries(cut2) << " )" << std::endl;
   //Factory Call
   TMVA::Factory *factory1 = new TMVA::Factory(Form("TMVA_BDT_Classifier1_%ld",_ts),  output, "!V:Silent:Color:DrawProgressBar:Transformations=G:AnalysisType=Classification");
@@ -167,7 +172,7 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
 }
 
 //Main Function
-void BDTClassifier_BLIND( ){
+void BDTClassifier_BLIND_m814( ){
   ofstream log;
   //log.open("BDT_description.log", std::ios_base::out|std::ios_base::app);
   //log << "Bin by Bin training start----------------------" <<std::endl; ; 
@@ -179,24 +184,27 @@ void BDTClassifier_BLIND( ){
   std::cin.getline(logbuf,2000);
   bool res; 
 
-  std::vector<std::pair<int, int> >bin1spt = {{0,30},{0,1},{1,2},{2,3},{3,4},{4,5},{5,6},{6,8},{8,10},{10,12},{18,30},{12,18},{12,15},{15,30}};
-  std::vector<std::pair<int, int> >bin2spt = {/*{0,4},{4,9},{9,30},{0,30},{9,12},{12,30}*/{0,2},{2,4},{4,6},{6,9},{12,15},{15,20},{12,20},{12,24},{20,50},{24,50},{30,50},{12,50}, {15, 50}};
-  std::vector<std::pair<int, int> >bin3spt = {/*{0,6},{6,30},{0,30},*/{0,4},{4,9},{9,12},{12,15},{15,50},{12,24},{24,50},{12,20},{20,50},{12,30},{30,50},{15,30}};
-  for( auto pair : bin3spt) 
-  {
-  	res = BDTClassifier_BLIND_Function(3,0,pair.first,pair.second, 0,181, "NOMINAL");
-  	if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
-  }
-  for( auto pair : bin2spt) 
-  {
-  	res = BDTClassifier_BLIND_Function(2,0,pair.first,pair.second, 0,181, "NOMINAL");
-  	if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
-  }
-  for( auto pair : bin1spt) 
-  {
-  	res = BDTClassifier_BLIND_Function(1,0,pair.first,pair.second, 0,181, "NOMINAL");
-	if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
-  }
+  std::vector<std::pair<int, int> >bin1spt = {/*{0,30},{0,1},{1,2},{2,3},{3,4},{4,5},{5,6},{6,8},{8,10},{10,12},{18,30}*/{12,18},{12,15},{15,30}};
+  std::vector<std::pair<int, int> >bin2spt = {/*{0,2},{2,4},{4,6},{6,9},{9,12},{12,15},{15,20},{12,20},{12,24},{20,50},{24,50},{30,50}*/{12,50}, {15, 50}};
+  std::vector<std::pair<int, int> >bin3spt = {/*{0,4},{4,9},{9,12},{12,15},{15,50},{12,24},{24,50},{12,20},{20,50},{12,30},{30,50},{15,30}*/};
+//  for( auto pair : bin3spt) 
+//  {
+//  	res = BDTClassifier_BLIND_Function(3,0,pair.first,pair.second, 0,181, "NOMINAL");
+//  	if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
+//  }
+//  for( auto pair : bin2spt) 
+//  {
+//  	res = BDTClassifier_BLIND_Function(2,0,pair.first,pair.second, 0,181, "NOMINAL");
+//  	if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
+//  }
+//  for( auto pair : bin1spt) 
+//  {
+//  	res = BDTClassifier_BLIND_Function(1,0,pair.first,pair.second, 0,181, "NOMINAL");
+  	res = BDTClassifier_BLIND_Function(1,0,0,30, 0,181, "");
+  	res = BDTClassifier_BLIND_Function(2,0,0,30, 0,181, "continue");
+  	res = BDTClassifier_BLIND_Function(3,0,0,30, 0,181, "continue");
+  	if(!res)std::system(Form("rm ../.past_source/_BDT_Blind_Classifier_m814_%ld.old",(long) _real_time));
+//  }
 //  res = BDTClassifier_BLIND_Function(3,0,0,6, 0,181, "NOMINAL");
 //  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));
 //  res = BDTClassifier_BLIND_Function(3,0,6,30, 0,181, "NOMINAL");

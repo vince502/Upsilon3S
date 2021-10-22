@@ -48,7 +48,7 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   if(Trig == "Ups") Nmassbins = (RangeHigh -RangeLow)*30; 
   TFile* fout;
   std::string name_output = Form("Yield/Yield_%ld_CB3_%dS_pt_%d-%d_rap_%d-%d_cBin_%d-%d_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_%d.root", ts, (int) state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), bdtlow, bdthigh, cutQVP,(int) fixvar);
-  if(ts >= 9999999990) name_output = Form("Yield/Yield_%ld_CB3_%dS_train%dS_pt_%d-%d_rap_%d-%d_cBin_%d-%d_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_%d.root", ts, (int) state, train_state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), bdtlow, bdthigh, cutQVP,(int) fixvar);
+  if(ts >= 1634636609) name_output = Form("Yield/Yield_%ld_CB3_%dS_train%dS_pt_%d-%d_rap_%d-%d_cBin_%d-%d_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_%d.root", ts, (int) state, train_state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), bdtlow, bdthigh, cutQVP,(int) fixvar);
   fout = new TFile(name_output.c_str(), "RECREATE");
 
   Double_t MupTCut = single_LepPtCut(MupT);
@@ -57,7 +57,7 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   fin = new TFile(Form("./BDT/roodatasets/%s", fname.c_str()),"READ");
   RooDataSet* dataset;
   std::string name_dataset = "dataset";
-  if(ts >= 9999999990) name_dataset= name_dataset + Form("_Y%dSpt%dto%d", train_state, (int) ptMin, (int) ptMax) ;
+  if(ts >= 1634636609) name_dataset= name_dataset + Form("_Y%dSpt%dto%d", train_state, (int) ptMin, (int) ptMax) ;
   dataset = (RooDataSet*) fin->Get(name_dataset.c_str());
 
   RooWorkspace* works1 = new RooWorkspace(Form("workspace"));

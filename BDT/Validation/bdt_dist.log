@@ -1,0 +1,400 @@
+Y(1S) pT [0, 30] mode 1 : Chi2 test : signal (background) = 0.4439 (0.4184)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.4969 (0.7985), #Bkg = 28714, $Sig = 735190
+Y(1S) pT [0, 1] mode 1 : Chi2 test : signal (background) = 0.5366 (0.5010)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.7803 (0.2244), #Bkg = 1833, $Sig = 11799
+Y(1S) pT [1, 2] mode 1 : Chi2 test : signal (background) = 0.3749 (0.0108)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.2840 (0.3953), #Bkg = 2889, $Sig = 32585
+Y(1S) pT [2, 3] mode 1 : Chi2 test : signal (background) = 0.9098 (0.1656)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.7854 (0.0010), #Bkg = 3008, $Sig = 43963
+Y(1S) pT [3, 4] mode 1 : Chi2 test : signal (background) = 0.7387 (0.4510)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9321 (0.2722), #Bkg = 3115, $Sig = 44932
+Y(1S) pT [4, 5] mode 1 : Chi2 test : signal (background) = 0.4266 (0.5307)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9812 (0.9461), #Bkg = 2878, $Sig = 46197
+Good training 
+Y(1S) pT [5, 6] mode 1 : Chi2 test : signal (background) = 0.7006 (0.1666)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.8779 (0.0116), #Bkg = 2682, $Sig = 46617
+Y(1S) pT [6, 8] mode 1 : Chi2 test : signal (background) = 0.1669 (0.0879)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9508 (0.4700), #Bkg = 5250, $Sig = 92462
+Y(1S) pT [8, 10] mode 1 : Chi2 test : signal (background) = 0.6762 (0.3306)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.3606 (0.8114), #Bkg = 4001, $Sig = 87731
+Y(1S) pT [10, 12] mode 1 : Chi2 test : signal (background) = 0.2236 (0.3378)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.1407 (0.7971), #Bkg = 1712, $Sig = 77314
+Y(1S) pT [18, 30] mode 1 : Chi2 test : signal (background) = 0.0564 (0.0886)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9657 (0.0463), #Bkg = 181, $Sig = 99671
+Y(1S) pT [12, 18] mode 1 : Chi2 test : signal (background) = 0.8037 (0.8264)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9176 (0.9172), #Bkg = 1165, $Sig = 151917
+Good training 
+Y(1S) pT [12, 15] mode 1 : Chi2 test : signal (background) = 0.7829 (0.3745)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.6947 (0.3091), #Bkg = 880, $Sig = 89884
+Y(1S) pT [15, 30] mode 1 : Chi2 test : signal (background) = 0.3228 (0.5057)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.4504 (0.6209), #Bkg = 466, $Sig = 161704
+Y(2S) pT [0, 4] mode 1 : Chi2 test : signal (background) = 0.8531 (0.1439)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9355 (0.3107), #Bkg = 10845, $Sig = 150000
+Y(2S) pT [4, 9] mode 1 : Chi2 test : signal (background) = 0.9837 (0.3507)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.7738 (0.8162), #Bkg = 13193, $Sig = 220131
+Good training 
+Y(2S) pT [12, 30] mode 1 : Chi2 test : signal (background) = 0.3608 (0.2177)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.4100 (0.9228), #Bkg = 1346, $Sig = 238446
+Y(2S) pT [0, 30] mode 1 : Chi2 test : signal (background) = 0.3143 (0.7107)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.4871 (0.9660), #Bkg = 28714, $Sig = 714252
+Y(2S) pT [0, 2] mode 1 : Chi2 test : signal (background) = 0.5244 (0.6333)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.5239 (0.5797), #Bkg = 4722, $Sig = 48092
+Good training 
+Y(2S) pT [2, 4] mode 1 : Chi2 test : signal (background) = 0.6685 (0.0686)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9917 (0.2829), #Bkg = 6123, $Sig = 101908
+Y(2S) pT [4, 6] mode 1 : Chi2 test : signal (background) = 0.7196 (0.0977)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.8071 (0.4818), #Bkg = 5560, $Sig = 94295
+Y(2S) pT [6, 9] mode 1 : Chi2 test : signal (background) = 0.9226 (0.8233)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.1419 (0.3613), #Bkg = 7633, $Sig = 125836
+Y(2S) pT [9, 12] mode 1 : Chi2 test : signal (background) = 0.4526 (0.4066)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.2196 (0.6567), #Bkg = 3330, $Sig = 105674
+Y(2S) pT [12, 15] mode 1 : Chi2 test : signal (background) = 0.9314 (0.0675)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.2409 (0.2880), #Bkg = 880, $Sig = 79883
+Y(2S) pT [15, 20] mode 1 : Chi2 test : signal (background) = 0.0884 (0.0484)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.7933 (0.1643), #Bkg = 353, $Sig = 84576
+Y(2S) pT [12, 20] mode 1 : Chi2 test : signal (background) = 0.2933 (0.3261)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.4202 (0.4857), #Bkg = 1233, $Sig = 164460
+Y(2S) pT [12, 24] mode 1 : Chi2 test : signal (background) = 0.3639 (0.5407)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.4245 (0.9732), #Bkg = 1306, $Sig = 204338
+Y(2S) pT [20, 50] mode 1 : Chi2 test : signal (background) = 0.8623 (0.1549)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.5988 (0.0430), #Bkg = 151, $Sig = 108345
+Y(2S) pT [24, 50] mode 1 : Chi2 test : signal (background) = 0.4135 (0.0048)
+                            Kolmogorov-Smirnov test : signal (background) probability = 1.0000 (0.0012), #Bkg = 78, $Sig = 68467
+Y(2S) pT [30, 50] mode 1 : Chi2 test : signal (background) = 0.3818 (0.0873)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.8231 (0.0380), #Bkg = 38, $Sig = 34359
+Y(2S) pT [12, 50] mode 1 : Chi2 test : signal (background) = 0.5461 (0.9645)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.1524 (1.0000), #Bkg = 1384, $Sig = 272805
+Y(2S) pT [15, 50] mode 1 : Chi2 test : signal (background) = 0.7909 (0.2681)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.1611 (0.5418), #Bkg = 504, $Sig = 192922
+Y(3S) pT [0, 6] mode 1 : Chi2 test : signal (background) = 0.1329 (0.2896)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0710 (0.7075), #Bkg = 16405, $Sig = 234642
+Y(3S) pT [6, 30] mode 1 : Chi2 test : signal (background) = 0.2305 (0.1254)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.5304 (0.6212), #Bkg = 12309, $Sig = 118141
+Good training 
+Y(3S) pT [0, 30] mode 1 : Chi2 test : signal (background) = 0.5959 (0.0406)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9866 (0.9693), #Bkg = 28714, $Sig = 352784
+Good training 
+Y(3S) pT [0, 4] mode 1 : Chi2 test : signal (background) = 0.6559 (0.1525)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9922 (0.3110), #Bkg = 10845, $Sig = 164718
+Y(3S) pT [4, 9] mode 1 : Chi2 test : signal (background) = 0.5019 (0.0179)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.7598 (0.5101), #Bkg = 13193, $Sig = 124853
+Good training 
+Y(3S) pT [9, 12] mode 1 : Chi2 test : signal (background) = 0.2495 (0.2686)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.3993 (0.8488), #Bkg = 3330, $Sig = 28835
+Y(3S) pT [12, 15] mode 1 : Chi2 test : signal (background) = 0.0330 (0.5200)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.5079 (0.4949), #Bkg = 880, $Sig = 15752
+Y(3S) pT [15, 50] mode 1 : Chi2 test : signal (background) = 0.4876 (0.1210)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9750 (0.6607), #Bkg = 504, $Sig = 20363
+Good training 
+Y(3S) pT [12, 24] mode 1 : Chi2 test : signal (background) = 0.5539 (0.0472)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9126 (0.5971), #Bkg = 1306, $Sig = 31720
+Good training 
+Y(3S) pT [24, 50] mode 1 : Chi2 test : signal (background) = 0.2358 (0.1258)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9966 (0.0628), #Bkg = 78, $Sig = 4396
+Y(3S) pT [12, 20] mode 1 : Chi2 test : signal (background) = 0.9091 (0.3055)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.7246 (0.8976), #Bkg = 1233, $Sig = 27747
+Good training 
+Y(3S) pT [20, 50] mode 1 : Chi2 test : signal (background) = 0.4863 (0.4932)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9315 (0.0256), #Bkg = 151, $Sig = 8369
+Y(3S) pT [12, 30] mode 1 : Chi2 test : signal (background) = 0.1291 (0.0646)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9198 (0.9410), #Bkg = 1346, $Sig = 34378
+Good training 
+Y(3S) pT [30, 50] mode 1 : Chi2 test : signal (background) = 0.0417 (0.1326)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.8410 (0.0415), #Bkg = 38, $Sig = 1738
+Y(3S) pT [15, 30] mode 1 : Chi2 test : signal (background) = 0.0757 (0.3383)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.6337 (0.7729), #Bkg = 466, $Sig = 18625
+Good training 
+Y(1S) pT [0, 30] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0000)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0068), #Bkg = 28714, $Sig = 735190
+Y(1S) pT [0, 1] mode 2 : Chi2 test : signal (background) = 0.0000 (0.2278)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.1092), #Bkg = 1833, $Sig = 11799
+Y(1S) pT [1, 2] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0638)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.4380), #Bkg = 2889, $Sig = 32585
+Y(1S) pT [2, 3] mode 2 : Chi2 test : signal (background) = 0.0000 (0.1678)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.3718), #Bkg = 3008, $Sig = 43963
+Y(1S) pT [3, 4] mode 2 : Chi2 test : signal (background) = 0.0000 (0.6063)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0056 (0.1965), #Bkg = 3115, $Sig = 44932
+Y(1S) pT [4, 5] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0603)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.7136), #Bkg = 2878, $Sig = 46197
+Y(1S) pT [5, 6] mode 2 : Chi2 test : signal (background) = 0.0000 (0.1714)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.8809), #Bkg = 2682, $Sig = 46617
+Y(1S) pT [6, 8] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0275)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.7860), #Bkg = 5250, $Sig = 92462
+Y(1S) pT [8, 10] mode 2 : Chi2 test : signal (background) = 0.0000 (0.7435)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.1271), #Bkg = 4001, $Sig = 87731
+Y(1S) pT [10, 12] mode 2 : Chi2 test : signal (background) = 0.0000 (0.1636)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0968), #Bkg = 1712, $Sig = 77314
+Y(1S) pT [18, 30] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0004)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0000), #Bkg = 181, $Sig = 99671
+Y(1S) pT [12, 18] mode 2 : Chi2 test : signal (background) = 0.0000 (0.1049)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.1490), #Bkg = 1165, $Sig = 151917
+Y(1S) pT [12, 15] mode 2 : Chi2 test : signal (background) = 0.0000 (0.1831)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.1805), #Bkg = 880, $Sig = 89884
+Y(1S) pT [15, 30] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0004)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0002), #Bkg = 466, $Sig = 161704
+Y(2S) pT [0, 4] mode 2 : Chi2 test : signal (background) = 0.0000 (0.2059)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.2118), #Bkg = 10845, $Sig = 150000
+Y(2S) pT [4, 9] mode 2 : Chi2 test : signal (background) = 0.0000 (0.1983)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.2934), #Bkg = 13193, $Sig = 220131
+Y(2S) pT [12, 30] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0000)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0093), #Bkg = 1346, $Sig = 238446
+Y(2S) pT [0, 30] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0000)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0046), #Bkg = 28714, $Sig = 714252
+Y(2S) pT [0, 2] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0005)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0004 (0.2505), #Bkg = 4722, $Sig = 48092
+Y(2S) pT [2, 4] mode 2 : Chi2 test : signal (background) = 0.0000 (0.2145)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.5083), #Bkg = 6123, $Sig = 101908
+Y(2S) pT [4, 6] mode 2 : Chi2 test : signal (background) = 0.0000 (0.3983)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0178), #Bkg = 5560, $Sig = 94295
+Y(2S) pT [6, 9] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0035)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0518), #Bkg = 7633, $Sig = 125836
+Y(2S) pT [9, 12] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0002)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0107), #Bkg = 3330, $Sig = 105674
+Y(2S) pT [12, 15] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0030)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0643), #Bkg = 880, $Sig = 79883
+Y(2S) pT [15, 20] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0010)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0004), #Bkg = 353, $Sig = 84576
+Y(2S) pT [12, 20] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0008)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0650), #Bkg = 1233, $Sig = 164460
+Y(2S) pT [12, 24] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0006)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0046), #Bkg = 1306, $Sig = 204338
+Y(2S) pT [20, 50] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0000)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0000), #Bkg = 151, $Sig = 108345
+Y(2S) pT [24, 50] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0038)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0000), #Bkg = 78, $Sig = 68467
+Y(2S) pT [30, 50] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0009)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0000), #Bkg = 38, $Sig = 34359
+Y(2S) pT [12, 50] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0026)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0343), #Bkg = 1384, $Sig = 272805
+Y(2S) pT [15, 50] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0075)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0020), #Bkg = 504, $Sig = 192922
+Y(3S) pT [0, 6] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0000)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0040), #Bkg = 16405, $Sig = 234642
+Y(3S) pT [6, 30] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0023)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0135), #Bkg = 12309, $Sig = 118141
+Y(3S) pT [0, 30] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0000)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0161), #Bkg = 28714, $Sig = 352784
+Y(3S) pT [0, 4] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0000)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0075 (0.0010), #Bkg = 10845, $Sig = 164718
+Y(3S) pT [4, 9] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0793)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.6358), #Bkg = 13193, $Sig = 124853
+Y(3S) pT [9, 12] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0098)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0285), #Bkg = 3330, $Sig = 28835
+Y(3S) pT [12, 15] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0531)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.4181), #Bkg = 880, $Sig = 15752
+Y(3S) pT [15, 50] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0163)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0049), #Bkg = 504, $Sig = 20363
+Y(3S) pT [12, 24] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0060)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0079), #Bkg = 1306, $Sig = 31720
+Y(3S) pT [24, 50] mode 2 : Chi2 test : signal (background) = 0.0000 (0.1067)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0195), #Bkg = 78, $Sig = 4396
+Y(3S) pT [12, 20] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0079)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0111), #Bkg = 1233, $Sig = 27747
+Y(3S) pT [20, 50] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0012)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0000), #Bkg = 151, $Sig = 8369
+Y(3S) pT [12, 30] mode 2 : Chi2 test : signal (background) = 0.0000 (0.3630)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.1260), #Bkg = 1346, $Sig = 34378
+Y(3S) pT [30, 50] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0507)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0006), #Bkg = 38, $Sig = 1738
+Y(3S) pT [15, 30] mode 2 : Chi2 test : signal (background) = 0.0000 (0.0007)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0019), #Bkg = 466, $Sig = 18625
+Y(1S) pT [0, 30] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0000)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0424), #Bkg = 28594, $Sig = 735190
+Y(1S) pT [0, 1] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0491)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.6929), #Bkg = 1745, $Sig = 11799
+Y(1S) pT [1, 2] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0314)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0900), #Bkg = 2972, $Sig = 32585
+Y(1S) pT [2, 3] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0210)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0260), #Bkg = 3152, $Sig = 43963
+Y(1S) pT [3, 4] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0020)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.1856), #Bkg = 2969, $Sig = 44932
+Y(1S) pT [4, 5] mode 3 : Chi2 test : signal (background) = 0.0000 (0.4336)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.3689), #Bkg = 2910, $Sig = 46197
+Y(1S) pT [5, 6] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0268)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0840), #Bkg = 2670, $Sig = 46617
+Y(1S) pT [6, 8] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0526)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.2326), #Bkg = 5325, $Sig = 92462
+Y(1S) pT [8, 10] mode 3 : Chi2 test : signal (background) = 0.0000 (0.8296)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.9782), #Bkg = 3926, $Sig = 87731
+Y(1S) pT [10, 12] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0735)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.7585), #Bkg = 1688, $Sig = 77314
+Y(1S) pT [18, 30] mode 3 : Chi2 test : signal (background) = 0.0000 (0.4394)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.3977), #Bkg = 140, $Sig = 99671
+Y(1S) pT [12, 18] mode 3 : Chi2 test : signal (background) = 0.0000 (0.2549)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.7390), #Bkg = 1097, $Sig = 151917
+Y(1S) pT [12, 15] mode 3 : Chi2 test : signal (background) = 0.0000 (0.8580)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.6081), #Bkg = 829, $Sig = 89884
+Y(1S) pT [15, 30] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0456)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.7110), #Bkg = 408, $Sig = 161704
+Y(2S) pT [0, 4] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0035)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0028), #Bkg = 10838, $Sig = 150000
+Y(2S) pT [4, 9] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0002)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.6707), #Bkg = 13275, $Sig = 220131
+Y(2S) pT [12, 30] mode 3 : Chi2 test : signal (background) = 0.0000 (0.3103)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.3594), #Bkg = 1237, $Sig = 238446
+Y(2S) pT [0, 30] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0000)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0063), #Bkg = 28594, $Sig = 714252
+Y(2S) pT [0, 2] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0078)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.5062), #Bkg = 4717, $Sig = 48092
+Y(2S) pT [2, 4] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0449)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.2571), #Bkg = 6121, $Sig = 101908
+Y(2S) pT [4, 6] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0125)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0041), #Bkg = 5580, $Sig = 94295
+Y(2S) pT [6, 9] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0053)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.7091), #Bkg = 7695, $Sig = 125836
+Y(2S) pT [9, 12] mode 3 : Chi2 test : signal (background) = 0.0000 (0.3787)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.6567), #Bkg = 3244, $Sig = 105674
+Y(2S) pT [12, 15] mode 3 : Chi2 test : signal (background) = 0.0000 (0.1668)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.9949), #Bkg = 829, $Sig = 79883
+Y(2S) pT [15, 20] mode 3 : Chi2 test : signal (background) = 0.0000 (0.1773)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.6254), #Bkg = 320, $Sig = 84576
+Y(2S) pT [12, 20] mode 3 : Chi2 test : signal (background) = 0.0000 (0.8395)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.9999), #Bkg = 1149, $Sig = 164460
+Y(2S) pT [12, 24] mode 3 : Chi2 test : signal (background) = 0.0000 (0.8244)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.9217), #Bkg = 1200, $Sig = 204338
+Y(2S) pT [20, 50] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0457)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.1584), #Bkg = 114, $Sig = 108345
+Y(2S) pT [24, 50] mode 3 : Chi2 test : signal (background) = 0.0000 (0.5123)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.2032), #Bkg = 63, $Sig = 68467
+Y(2S) pT [30, 50] mode 3 : Chi2 test : signal (background) = 0.0000 (0.2732)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.3027), #Bkg = 26, $Sig = 34359
+Y(2S) pT [12, 50] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0819)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.5187), #Bkg = 1263, $Sig = 272805
+Y(2S) pT [15, 50] mode 3 : Chi2 test : signal (background) = 0.0000 (0.2550)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.5206), #Bkg = 434, $Sig = 192922
+Y(3S) pT [0, 6] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0000)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0044), #Bkg = 16418, $Sig = 234642
+Y(3S) pT [6, 30] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0013)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.1397), #Bkg = 12176, $Sig = 118141
+Y(3S) pT [0, 30] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0000)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.0215), #Bkg = 28594, $Sig = 352784
+Y(3S) pT [0, 4] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0000)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0037 (0.0022), #Bkg = 10838, $Sig = 164718
+Y(3S) pT [4, 9] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0983)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.7016), #Bkg = 13275, $Sig = 124853
+Y(3S) pT [9, 12] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0321)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.4553), #Bkg = 3244, $Sig = 28835
+Y(3S) pT [12, 15] mode 3 : Chi2 test : signal (background) = 0.0000 (0.3198)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.5673), #Bkg = 829, $Sig = 15752
+Y(3S) pT [15, 50] mode 3 : Chi2 test : signal (background) = 0.0000 (0.5342)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.5206), #Bkg = 434, $Sig = 20363
+Y(3S) pT [12, 24] mode 3 : Chi2 test : signal (background) = 0.0000 (0.5270)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.3676), #Bkg = 1200, $Sig = 31720
+Y(3S) pT [24, 50] mode 3 : Chi2 test : signal (background) = 0.0000 (0.0946)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.1367), #Bkg = 63, $Sig = 4396
+Y(3S) pT [12, 20] mode 3 : Chi2 test : signal (background) = 0.0000 (0.1036)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.9485), #Bkg = 1149, $Sig = 27747
+Y(3S) pT [20, 50] mode 3 : Chi2 test : signal (background) = 0.0000 (0.9628)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.9416), #Bkg = 114, $Sig = 8369
+Y(3S) pT [12, 30] mode 3 : Chi2 test : signal (background) = 0.0000 (0.1418)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.7384), #Bkg = 1237, $Sig = 34378
+Y(3S) pT [30, 50] mode 3 : Chi2 test : signal (background) = 0.0000 (0.4209)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.1705), #Bkg = 26, $Sig = 1738
+Y(3S) pT [15, 30] mode 3 : Chi2 test : signal (background) = 0.0000 (0.1351)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0000 (0.8221), #Bkg = 408, $Sig = 18625
+Y(1S) pT [0, 30] mode 4 : Chi2 test : signal (background) = 0.3095 (0.2954)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.3550 (0.7698), #Bkg = 28594, $Sig = 735190
+Y(1S) pT [0, 1] mode 4 : Chi2 test : signal (background) = 0.6309 (0.9749)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.8390 (0.7809), #Bkg = 1745, $Sig = 11799
+Good training 
+Y(1S) pT [1, 2] mode 4 : Chi2 test : signal (background) = 0.9167 (0.7636)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.8600 (0.4219), #Bkg = 2972, $Sig = 32585
+Y(1S) pT [2, 3] mode 4 : Chi2 test : signal (background) = 0.7813 (0.4093)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.7422 (0.2243), #Bkg = 3152, $Sig = 43963
+Y(1S) pT [3, 4] mode 4 : Chi2 test : signal (background) = 0.9021 (0.2057)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.7104 (0.0746), #Bkg = 2969, $Sig = 44932
+Y(1S) pT [4, 5] mode 4 : Chi2 test : signal (background) = 0.1193 (0.0770)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.6603 (0.1848), #Bkg = 2910, $Sig = 46197
+Y(1S) pT [5, 6] mode 4 : Chi2 test : signal (background) = 0.3578 (0.5247)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9088 (0.9969), #Bkg = 2670, $Sig = 46617
+Good training 
+Y(1S) pT [6, 8] mode 4 : Chi2 test : signal (background) = 0.0044 (0.5185)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.8963 (0.7765), #Bkg = 5325, $Sig = 92462
+Good training 
+Y(1S) pT [8, 10] mode 4 : Chi2 test : signal (background) = 0.4378 (0.5539)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.2069 (0.0745), #Bkg = 3926, $Sig = 87731
+Y(1S) pT [10, 12] mode 4 : Chi2 test : signal (background) = 0.7748 (0.4960)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.2652 (0.2198), #Bkg = 1688, $Sig = 77314
+Y(1S) pT [18, 30] mode 4 : Chi2 test : signal (background) = 0.5468 (0.0089)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9887 (0.0033), #Bkg = 140, $Sig = 99671
+Y(1S) pT [12, 18] mode 4 : Chi2 test : signal (background) = 0.6442 (0.0177)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9385 (0.0928), #Bkg = 1097, $Sig = 151917
+Y(1S) pT [12, 15] mode 4 : Chi2 test : signal (background) = 0.4039 (0.0006)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9697 (0.0880), #Bkg = 829, $Sig = 89884
+Y(1S) pT [15, 30] mode 4 : Chi2 test : signal (background) = 0.1986 (0.0017)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.4221 (0.0015), #Bkg = 408, $Sig = 161704
+Y(2S) pT [0, 4] mode 4 : Chi2 test : signal (background) = 0.5080 (0.6327)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9196 (0.7925), #Bkg = 10838, $Sig = 150000
+Good training 
+Y(2S) pT [4, 9] mode 4 : Chi2 test : signal (background) = 0.7767 (0.2337)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.7714 (0.9912), #Bkg = 13275, $Sig = 220131
+Good training 
+Y(2S) pT [12, 30] mode 4 : Chi2 test : signal (background) = 0.4802 (0.0005)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.2048 (0.0201), #Bkg = 1237, $Sig = 238446
+Y(2S) pT [0, 30] mode 4 : Chi2 test : signal (background) = 0.2113 (0.8167)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.5663 (0.6433), #Bkg = 28594, $Sig = 714252
+Good training 
+Y(2S) pT [0, 2] mode 4 : Chi2 test : signal (background) = 0.6619 (0.2508)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.8145 (0.9657), #Bkg = 4717, $Sig = 48092
+Good training 
+Y(2S) pT [2, 4] mode 4 : Chi2 test : signal (background) = 0.9692 (0.0570)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9922 (0.9899), #Bkg = 6121, $Sig = 101908
+Good training 
+Y(2S) pT [4, 6] mode 4 : Chi2 test : signal (background) = 0.0123 (0.6810)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9336 (0.8891), #Bkg = 5580, $Sig = 94295
+Good training 
+Y(2S) pT [6, 9] mode 4 : Chi2 test : signal (background) = 0.0430 (0.9004)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.2912 (0.7770), #Bkg = 7695, $Sig = 125836
+Y(2S) pT [9, 12] mode 4 : Chi2 test : signal (background) = 0.6067 (0.2799)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.4258 (0.0119), #Bkg = 3244, $Sig = 105674
+Y(2S) pT [12, 15] mode 4 : Chi2 test : signal (background) = 0.7443 (0.0004)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9093 (0.0536), #Bkg = 829, $Sig = 79883
+Y(2S) pT [15, 20] mode 4 : Chi2 test : signal (background) = 0.5076 (0.0021)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9327 (0.0026), #Bkg = 320, $Sig = 84576
+Y(2S) pT [12, 20] mode 4 : Chi2 test : signal (background) = 0.1319 (0.0071)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.4719 (0.0932), #Bkg = 1149, $Sig = 164460
+Y(2S) pT [12, 24] mode 4 : Chi2 test : signal (background) = 0.3311 (0.0065)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.3224 (0.0241), #Bkg = 1200, $Sig = 204338
+Y(2S) pT [20, 50] mode 4 : Chi2 test : signal (background) = 0.5971 (0.0015)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.8680 (0.0047), #Bkg = 114, $Sig = 108345
+Y(2S) pT [24, 50] mode 4 : Chi2 test : signal (background) = 0.8018 (0.0483)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9994 (0.0340), #Bkg = 63, $Sig = 68467
+Y(2S) pT [30, 50] mode 4 : Chi2 test : signal (background) = 0.6878 (0.2369)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9420 (0.0474), #Bkg = 26, $Sig = 34359
+Y(2S) pT [12, 50] mode 4 : Chi2 test : signal (background) = 0.5168 (0.0023)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0974 (0.0100), #Bkg = 1263, $Sig = 272805
+Y(2S) pT [15, 50] mode 4 : Chi2 test : signal (background) = 0.5936 (0.0043)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.5052 (0.0059), #Bkg = 434, $Sig = 192922
+Y(3S) pT [0, 6] mode 4 : Chi2 test : signal (background) = 0.2856 (0.5093)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.0299 (0.9369), #Bkg = 16418, $Sig = 234642
+Y(3S) pT [6, 30] mode 4 : Chi2 test : signal (background) = 0.1662 (0.0145)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.4173 (0.1229), #Bkg = 12176, $Sig = 118141
+Y(3S) pT [0, 30] mode 4 : Chi2 test : signal (background) = 0.4822 (0.3642)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9999 (0.6788), #Bkg = 28594, $Sig = 352784
+Good training 
+Y(3S) pT [0, 4] mode 4 : Chi2 test : signal (background) = 0.7869 (0.7986)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.8056 (1.0000), #Bkg = 10838, $Sig = 164718
+Good training 
+Y(3S) pT [4, 9] mode 4 : Chi2 test : signal (background) = 0.8782 (0.0841)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9650 (0.6045), #Bkg = 13275, $Sig = 124853
+Good training 
+Y(3S) pT [9, 12] mode 4 : Chi2 test : signal (background) = 0.4779 (0.1324)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.5382 (0.0720), #Bkg = 3244, $Sig = 28835
+Y(3S) pT [12, 15] mode 4 : Chi2 test : signal (background) = 0.4480 (0.0057)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.4307 (0.0621), #Bkg = 829, $Sig = 15752
+Y(3S) pT [15, 50] mode 4 : Chi2 test : signal (background) = 0.5381 (0.1322)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.8515 (0.0052), #Bkg = 434, $Sig = 20363
+Y(3S) pT [12, 24] mode 4 : Chi2 test : signal (background) = 0.8038 (0.0038)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9944 (0.0269), #Bkg = 1200, $Sig = 31720
+Y(3S) pT [24, 50] mode 4 : Chi2 test : signal (background) = 0.9652 (0.0765)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9475 (0.0571), #Bkg = 63, $Sig = 4396
+Y(3S) pT [12, 20] mode 4 : Chi2 test : signal (background) = 0.8757 (0.0015)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.5893 (0.0212), #Bkg = 1149, $Sig = 27747
+Y(3S) pT [20, 50] mode 4 : Chi2 test : signal (background) = 0.1815 (0.0317)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.4533 (0.0168), #Bkg = 114, $Sig = 8369
+Y(3S) pT [12, 30] mode 4 : Chi2 test : signal (background) = 0.3179 (0.0038)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.8344 (0.0172), #Bkg = 1237, $Sig = 34378
+Y(3S) pT [30, 50] mode 4 : Chi2 test : signal (background) = 0.6940 (0.0837)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.1820 (0.0246), #Bkg = 26, $Sig = 1738
+Y(3S) pT [15, 30] mode 4 : Chi2 test : signal (background) = 0.4788 (0.0166)
+                            Kolmogorov-Smirnov test : signal (background) probability = 0.9973 (0.0099), #Bkg = 408, $Sig = 18625
