@@ -1,4 +1,53 @@
 #include "../BDT/bininfo.h"
+//ana_bins structure defniition in bininfo.h
+//>struct ana_bins{
+//>	TString bin_attr;
+//>	int pl, ph, cl, ch, centl, centh, plot_idx, state;
+//>	bool operator==( ana_bins a){
+//>		return ((a.pl==pl&&a.ph==ph&&a.cl==cl&&a.ch==ch&&a.state==state) || (a.pl==pl&&a.ph==ph&&a.centl==centl&&a.centh==centh&&a.state==state) );
+//>	};
+//>	bool operator()(ana_bins a, ana_bins b){
+//>		return (a < b);
+//>	};
+//>	bool operator<(const ana_bins& b) const{
+//>		return ( stoi(Form("%d%d%d%d%d", state, pl, ph, centl, centh)) < stoi(Form("%d%d%d%d%d", b.state, b.pl, b.ph, b.centl, b.centh)) );
+//>	};
+//>};
+
+//>std::map<std::string, std::vector<ana_bins> > ana_bm ={
+//>	{"2c", 	{
+//>		{"c", 0, 30,  0, 10, 0,5, 9, 2},
+//>		{"c", 0, 30, 10, 20, 5,10, 8, 2},
+//>		{"c", 0, 30, 20, 40, 10, 20, 7, 2},
+//>		{"c", 0, 30, 40, 60, 20, 30, 6, 2},
+//>		{"c", 0, 30, 60, 80, 30, 40, 5, 2},
+//>		{"c", 0, 30, 80, 100, 40, 50, 4, 2},
+//>		{"c", 0, 30, 100, 120, 50, 60, 3, 2},
+//>		{"c", 0, 30, 120, 140, 60, 70, 2, 2},
+//>		{"c", 0, 30, 140, 181, 70, 90, 1, 2},
+//>		{"c", 0, 30, 0, 181, 0, 90, 10, 2},
+//>		}
+//>	},
+//>	{"3c", 	{
+//>		{"c", 0, 30,  0, 40, 0, 20, 3, 3},
+//>		{"c", 0, 30, 40, 100, 20, 50, 2, 3},
+//>		{"c", 0, 30, 100, 181, 50, 90, 1, 3},
+//>		{"c", 0, 30, 0, 181, 0, 90, 4, 3},
+//>		}
+//>	},
+//>	{"2p", 	{
+//>		{"p", 0, 4,  0, 181, 0, 90, 1, 2},
+//>		{"p", 4, 9,  0, 181, 0, 90, 2, 2},
+//>		{"p", 9, 30,  0, 181, 0, 90, 3, 2},
+//>		}
+//>	},
+//>	{"3p", 	{
+//>		{"p", 0, 6,  0, 181, 0, 90, 1, 3},
+//>		{"p", 6, 30,  0, 181, 0, 90, 2, 3},
+//>		}
+//>	},
+//>
+//>};
 
 void systematic_ups()
 {
