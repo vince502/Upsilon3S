@@ -1,20 +1,21 @@
 #include "../BDT/bininfo.h"
 
-std::vector<TH1D*> Get_hists()
+std::vector<TH1D*> Get_hists(long ts, int state)
 {
 //	TFile* f_data = TFile::Open(Form("%s/BDT/roodatasets/%s", workdir.Data(), "OniaRooDataset_BDT1634633971_OniaSkim_TrigS13_BDT.root"));
-	TFile* f_data = TFile::Open(Form("%s/BDT/Validation/roodatasets/%s", workdir.Data(), "OniaRooDataset_BDT1634805675_OniaSkim_TrigS13_BDT.root"));
+//	TFile* f_data = TFile::Open(Form("%s/BDT/Validation/roodatasets/%s", workdir.Data(), "OniaRooDataset_BDT1634805675_OniaSkim_TrigS13_BDT.root"));
+	TFile* f_data = TFile::Open(Form("%s/BDT/Validation/roodatasets/%s", workdir.Data(), Form("OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root",ts)));
 //	TFile* f_data = TFile::Open(Form("%s/BDT/roodatasets/%s", workdir.Data(), "OniaRooDataset_BDT9999999999_OniaSkim_TrigS13_BDT.root"));
 	double mass;
 	double bdt;
-	RooDataSet* rd = (RooDataSet*) f_data->Get("dataset_Y3Spt0to30");
+	RooDataSet* rd = (RooDataSet*) f_data->Get(Form("dataset_Y%dSpt0to30",state) );
 	TTree* t_data = (TTree*) rd->GetClonedTree();
 	t_data->SetBranchAddress("mass", &mass);
 	t_data->SetBranchAddress("BDT", &bdt);
 	TH1D* hist[6];
 	for(int idx = 0; idx<6; idx++)
 	{
-		hist[idx] = new TH1D(Form("h_%d",idx), "", 120, 8, 14);
+		hist[idx] = new TH1D(Form("h_%d",idx), "", 140,6, 14);
 	}
 	int nE = t_data->GetEntries();
 	for(int evt =0; evt < nE; evt++)
@@ -36,9 +37,9 @@ std::vector<TH1D*> Get_hists()
 
 };
 
-void DrawMass2()
+void DrawMass2(long ts, int state)
 {
-	auto hists = Get_hists();
+	auto hists = Get_hists(ts, state);
 	TCanvas* c1 =new TCanvas("c1", "", 1200, 900);
 	EColor colrs[6] = {kBlack , kBlue , kMagenta , kTeal , kOrange , kRed};
 	for (int idx =0; idx < 6; idx++)
@@ -53,6 +54,6 @@ void DrawMass2()
 			}
 			hists[idx]->Draw("same pe");
 	}
-	c1->SaveAs("FullMassBDTCompare_fullmass2.C");
+	c1->SaveAs("FullMassBDTCompare_fullmass_m614.C");
 }
 

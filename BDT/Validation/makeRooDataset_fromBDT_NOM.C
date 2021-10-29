@@ -3,6 +3,7 @@
 #include "../../cutsAndBinUpsilonV2.h"
 #include "../../Style_jaebeom.h"
 #include "../../rootFitHeaders.h"
+#include "../../.workdir.h"
 #include <RooGaussian.h>
 #include <RooCBShape.h>
 #include <RooWorkspace.h>
@@ -27,10 +28,10 @@ void makeRooDataset_fromBDT_NOM(long ts, bool cutID, bool isMC, int train_state 
 
   TFile* rf; 
   if(aux_opt =="nan"){
-  if(!isMC) rf = new TFile(Form("./BDTAppliedData/BDTApp_%ld.root",ts), "OPEN");
-  else if(isMC) rf = new TFile(Form("./BDTAppliedData/BDTApp_%ld_MC.root",ts), "OPEN");
+  if(!isMC) rf = new TFile(Form("%s/BDT/BDTAppliedData/BDTApp_%ld.root",workdir.Data(), ts), "OPEN");
+  else if(isMC) rf = new TFile(Form("%s/BDT/BDTAppliedData/BDTApp_%ld_MC.root",workdir.Data(), ts), "OPEN");
   }
-  if(aux_opt !="nan") rf = new TFile(Form("./BDTAppliedData/BDTApp_%ld_%s.root",ts, aux_opt.c_str()), "OPEN");
+  if(aux_opt !="nan") rf = new TFile(Form("%s/BDT/BDTAppliedData/BDTApp_%ld_%s.root",workdir.Data(), ts, aux_opt.c_str()), "OPEN");
 
   TTree* tree = (TTree*) rf->Get("tree");
 
@@ -92,7 +93,7 @@ void makeRooDataset_fromBDT_NOM(long ts, bool cutID, bool isMC, int train_state 
   for(int i=0; i < nEvt; i++){
     if((i%10000)==0)std::cout<< "Fetching index : " << i << "\n";
     tree->GetEntry(i);
-    if( !(fabs(dz1)<0.3&&fabs(dz2)<0.3&&fabs(dxy1)<20&&fabs(dxy2)<20&&nPixWMea1>0&&nPixWMea2>0&&nTrkWMea1>5&&nTrkWMea2>5 && pt1>3.5&&pt2>3.5 && pt >= ptLow && pt <= ptHigh) ) continue;
+    if( !(fabs(dz1)<20&&fabs(dz2)<20&&fabs(dxy1)<0.3&&fabs(dxy2)<0.3&&nPixWMea1>0&&nPixWMea2>0&&nTrkWMea1>5&&nTrkWMea2>5 && pt1>3.5&&pt2>3.5 && pt >= ptLow && pt <= ptHigh) ) continue;
   //  if(!strcmp(&className,"Background")){
       massVar->setVal( (double)mass ) ;
       ptVar->setVal(   (double)pt   ) ;
@@ -109,7 +110,7 @@ void makeRooDataset_fromBDT_NOM(long ts, bool cutID, bool isMC, int train_state 
       dataSet->add( *argSet);
 //    }
   }
-  TFile* wf = new TFile(Form("roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT%s.root",ts,smc.c_str()),"update");
+  TFile* wf = new TFile(Form("%s/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT%s.root",workdir.Data(), ts,smc.c_str()),"update");
   wf->cd();
   dataSet->Write();
   wf->Write();

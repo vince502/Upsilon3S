@@ -5,19 +5,22 @@
 
 binplotter::binplotter(){};
 
-binplotter::binplotter(ana_bins x){
+binplotter::binplotter(ana_bins x, int _train_state ){
   type = Form("CB3:CC%d:%s", getNomBkgO(x), findtype(x).c_str()) ;
-  ts = 9999999999; ylim = 2.4, pl = (double) x.pl; ph = (double) x.ph; cl = x.cl; ch = x.ch; blow = Get_BDT(ts, x.state, pl, ph, cl, ch, 0., ylim, 2); bhigh = 1; train_state = x.state; eff_old = true;
+  ts = 9999999999; ylim = 2.4, pl = (double) x.pl; ph = (double) x.ph; cl = x.cl; ch = x.ch; blow = Get_BDT(ts, x.state, pl, ph, cl, ch, 0., ylim, 2); bhigh = 1; train_state = x.state; eff_old = false; train_state = _train_state;
   init(false);
 
 };
 
-binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _train_state =3,  bool find_bdt = false, bool _eff_old = false){
-  type = _type; ts = _ts; ylim = _ylim;  pl = _pl; ph = _ph; cl = _cl; ch = _ch; blow = _blow; bhigh = _bhigh, train_state = _train_state; eff_old = _eff_old;
+binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _train_state =3, int _target_state=3,  bool find_bdt = false, bool _eff_old = false){
+  type = _type; ts = _ts; ylim = _ylim;  pl = _pl; ph = _ph; cl = _cl; ch = _ch; blow = _blow; bhigh = _bhigh, train_state = _train_state; target_state = _target_state; eff_old = _eff_old;
 
   int nbin = 120;
   if (massrng.find(ts) != massrng.end()) { nbin = (int) ((massrng[ts].second - massrng[ts].first)/0.05); } 
   init(find_bdt);
+};
+binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _train_state =3, bool find_bdt = false, bool _eff_old = false){
+	binplotter( _type, _ts, _ylim, _pl, _ph, _cl, _ch, _blow, _bhigh, _train_state, _train_state, find_bdt, _eff_old);
 };
 
 binplotter::~binplotter(){ 
@@ -48,7 +51,7 @@ void binplotter::init(bool get_bdt= true){
   fitdir = info_fit[2].c_str();
   fittype =fitdir;
   
-  if(get_bdt){ blow = Get_Optimal_BDT(ts, pl, ph,(double) -1*ylim, ylim, cl, ch, vcut, train_state).first; }
+  if(get_bdt){ blow = Get_BDT(ts, train_state, pl, ph, cl, ch, vcut, (double)ylim);}//Get_Optimal_BDT(ts, pl, ph,(double) -1*ylim, ylim, cl, ch, vcut, train_state).first; }
   
   filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10,nbin, cl, ch, blow, bhigh, vcut);
   if(ts >= 1634636609) filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", train_state, ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10, cl, ch, blow, bhigh, vcut);

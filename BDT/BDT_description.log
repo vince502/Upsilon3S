@@ -321,3 +321,101 @@ Bin by Bin training end::1623349594,1623350222
 1634805675::8.00,14.00::0.00,30.00::0,181::BLIND[1,1]::1S::::mass 8-14 and no QQME
 1634805675::8.00,14.00::0.00,30.00::0,181::BLIND[1,1]::2S::continue::mass 8-14 and no QQME
 1634805675::8.00,14.00::0.00,30.00::0,181::BLIND[1,1]::3S::continue::mass 8-14 and no QQME
+1634894212::6.00,14.00::0.00,30.00::0,181::BLIND[1,1]::1S::::checking mass range of 6 - 14 GeV noQQME
+1634894212::6.00,14.00::0.00,30.00::0,181::BLIND[1,1]::2S::continue::checking mass range of 6 - 14 GeV noQQME
+1634894212::6.00,14.00::0.00,30.00::0,181::BLIND[1,1]::3S::continue::checking mass range of 6 - 14 GeV noQQME
+1634905500::6.00,14.00::0.00,30.00::0,181::BLIND[1,1]::1S::::check if single mu variables help now
+1634905500::6.00,14.00::0.00,30.00::0,181::BLIND[1,1]::2S::continue::check if single mu variables help now
+1634905500::6.00,14.00::0.00,30.00::0,181::BLIND[1,1]::3S::continue::check if single mu variables help now
+1634908293::6.00,14.00::0.00,30.00::0,181::BLIND[1,1]::1S::::more test with more single muon variables 
+1634908293::6.00,14.00::0.00,30.00::0,181::BLIND[1,1]::2S::continue::more test with more single muon variables 
+1634908293::6.00,14.00::0.00,30.00::0,181::BLIND[1,1]::3S::continue::more test with more single muon variables 
+1634974179::6.00,14.00::0.00,30.00::0,181::BLIND[1,1]::1S::::6-14,noQQME,dcaFrac
+1634974179::6.00,14.00::0.00,30.00::0,181::BLIND[1,1]::2S::continue::6-14,noQQME,dcaFrac
+1634974179::6.00,14.00::0.00,30.00::0,181::BLIND[1,1]::3S::continue::6-14,noQQME,dcaFrac
+1634978074::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::Nominal with dcaFraction
+1634978074::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::Nominal with dcaFraction
+1634978935::7.50,12.50::0.00,30.00::0,181::BLIND[1,1]::1S::::Balance Mass Range with dcaF
+1634978074::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::Nominal with dcaFraction
+1634979385::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOM,noQQME
+1634978935::7.50,12.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::Balance Mass Range with dcaF
+1634979385::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOM,noQQME
+1634978935::7.50,12.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::Balance Mass Range with dcaF
+1634979385::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOM,noQQME
+1634979091::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::BigTree
+1634982803::7.50,12.50::0.00,30.00::0,181::BLIND[1,1]::1S::::balance mass
+1634982803::7.50,12.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::balance mass
+1634982803::7.50,12.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::balance mass
+1634979091::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::BigTree
+1634986483::7.50,12.50::0.00,30.00::0,181::BLIND[1,1]::1S::::Balance mass,noQQME, dcaF
+1634986483::7.50,12.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::Balance mass,noQQME, dcaF
+1634986483::7.50,12.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::Balance mass,noQQME, dcaF
+1634979091::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::BigTree
+1635055936::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::Very Big Tree
+1635129351::7.50,12.50::0.00,30.00::0,181::BLIND[1,1]::1S::::7.5~12.5 noQQME new tree
+1635129352::7.50,12.50::0.00,30.00::0,181::BLIND[1,1]::1S::::7.5~12.5 Mass new tree
+1635129351::7.50,12.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::7.5~12.5 noQQME new tree
+1635129352::7.50,12.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::7.5~12.5 Mass new tree
+1635129351::7.50,12.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::7.5~12.5 noQQME new tree
+1635129352::7.50,12.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::7.5~12.5 Mass new tree
+1635129351::7.50,12.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::7.5~12.5 noQQME new tree
+1635129352::7.50,12.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::7.5~12.5 Mass new tree
+1635129350::8.00,14.00::0.00,30.00::0,181::BLIND[1,1]::3S::continue::noQQME new tree
+1635139612::7.50,12.50::0.00,30.00::0,181::BLIND[1,1]::1S::::7.5~12.5, noQQME new tree
+1635139612::7.50,12.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::7.5~12.5, noQQME new tree
+1635139612::7.50,12.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::7.5~12.5, noQQME new tree
+1635055936::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::Very Big Tree
+1635055936::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::Very Big Tree
+1635252097::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::::nominal, nS run
+8000000001::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL
+8000000001::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL
+8000000001::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL
+80000000001::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL
+80000000002::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, no Weight
+80000000001::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL
+80000000001::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL
+80000000002::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, no Weight
+80000000002::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, no Weight
+8000000002::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, no Weight
+8000000001::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL
+8000000001::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL
+8000000002::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, no Weight
+8000000001::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL
+8000000002::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, no Weight
+8000000002::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, no Weight
+8000000002::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, no Weight
+8000000002::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, no Weight
+8000000003::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, PCA transformation
+8000000003::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, PCA transformation
+8000000003::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, PCA transformation
+8000000004::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, no QQVtxProb, #Signal restrict
+8000000005::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, no cosAlpha(2D and 3D), #Signal restrict
+8000000004::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, no QQVtxProb, #Signal restrict
+8000000005::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, no cosAlpha(2D and 3D), #Signal restrict
+8000000004::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, no QQVtxProb, #Signal restrict
+8000000005::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, no cosAlpha(2D and 3D), #Signal restrict
+8000000006::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, no ctau(2D and 3D), #Signal restrict
+8000000006::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, no ctau(2D and 3D), #Signal restrict
+8000000006::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, no ctau(2D and 3D), #Signal restrict
+8000000007::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, no QQMassErr, #Signal restrict
+8000000008::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, no QQdca, #Signal restrict
+8000000007::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, no QQMassErr, #Signal restrict
+8000000007::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, no QQMassErr, #Signal restrict
+8000000008::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, no QQdca, #Signal restrict
+8000000009::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, no QQMassErr and no QQVtxProb, #Signal restrict
+8000000008::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, no QQdca, #Signal restrict
+8000000009::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, no QQMassErr and no QQVtxProb, #Signal restrict
+8000000008::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, no QQdca, #Signal restrict
+8000000009::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, no QQMassErr and no QQVtxProb, #Signal restrict
+8100000001::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, Only cosalpha, ctau (3D), #Signal restrict
+8100000001::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, Only cosalpha, ctau (3D), #Signal restrict
+8100000002::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, Only cosalpha, ctau (2D), #Signal restrict
+8100000001::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, Only cosalpha, ctau (3D), #Signal restrict
+8100000002::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, Only cosalpha, ctau (2D), #Signal restrict
+8100000002::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, Only cosalpha, ctau (2D), #Signal restrict
+8100000004::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, Only cosalpha, ctau (3D), #Signal restrict
+8100000004::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, Only cosalpha, ctau (3D), #Signal restrict
+8100000004::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, Only cosalpha, ctau (3D), #Signal restrict
+8000000010::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, GAUS transformation, small Signal smaple
+8000000010::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, GAUS transformation, small Signal smaple
+8000000010::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, GAUS transformation, small Signal smaple

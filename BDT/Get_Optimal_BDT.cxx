@@ -181,12 +181,12 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
 };
 
 //Function to get BDT ratio //
-RooRealVar get_eff_acc(std::string type, std::string type2, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int train_state = 3, int state1 =1, int state2 =3, bool eff_old = true){
+RooRealVar get_eff_acc(std::string type, std::string type2, long ts, long ts2, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int train_state = 3, int state1 =1, int state2 =3, bool eff_old = true){
 
   RooRealVar eff22, eff21, eff1, eff2, nbkg;
 
   binplotter bp = binplotter(type, ts, ylim,pl, ph, cl, ch, blow, bhigh, train_state, false, eff_old);
-  binplotter bp2 = binplotter(type2, ts, ylim,pl, ph, cl, ch, -1, bhigh, train_state, false, eff_old);
+  binplotter bp2 = binplotter(type2, ts2, ylim,pl, ph, cl, ch, -1, bhigh, train_state, false, eff_old);
   bp.get_yield();
   nbkg = bp2.get_bkg();
   auto frac_nS = bp.get_frac(state2);
@@ -216,4 +216,10 @@ RooRealVar get_eff_acc(std::string type, std::string type2, long ts, double ylim
   res_var.setError(ratio_err);// res_var.getVal()*TMath::Sqrt( TMath::Power(eff22.getError()/eff22.getVal(),2) + TMath::Power(eff21.getError()/eff21.getVal(),2) + TMath::Power(eff1.getError()/eff1.getVal(),2) + TMath::Power(eff2.getError()/eff2.getVal(),2) + TMath::Power(nbkg.getError()/nbkg.getVal(),2) + TMath::Power(yield3S.getError()/yield3S.getVal(),2) ) ); 
   return res_var;
   
+};
+RooRealVar get_eff_acc(std::string type, std::string type2, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int train_state = 3, int state1 =1, int state2 =3, bool eff_old = true){
+	return	get_eff_acc(type, type2, ts, ts, ylim, pl, ph, cl, ch, blow, bhigh, train_state, state1, state2, eff_old);
+};
+RooRealVar get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int train_state = 3, int state1 =1, int state2 =3, bool eff_old = true){
+	return	get_eff_acc(type, "CB3:CC4:FF", ts, 9999999999, ylim, pl, ph, cl, ch, blow, bhigh, train_state, state1, state2, eff_old);
 };

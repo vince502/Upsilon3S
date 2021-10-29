@@ -14,7 +14,7 @@ void DrawHist_(long ts,double ylim, float blow, float bhigh, float vcut, TString
 void DrawHist__();
 void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 180, double cutQVP = 0.01, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1., double signif_ratio = 0.02,  int train_state =3, bool draw_mag = false, string aux = ""){
   setTDRStyle();
-  int Nmassbins = 70;
+  int Nmassbins = 140;
 
   std::string sig_func = parsed[0];
   std::string bkg_func = parsed[1];

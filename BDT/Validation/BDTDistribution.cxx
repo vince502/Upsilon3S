@@ -101,19 +101,20 @@ TString BDTDistribution_onebin(int _state, int _pl, int _ph, int mode, long ts =
 	hist_s_te->Draw("same,l");
 	hist_b_te->Draw("same,l");
 
-	c1->SaveAs(Form("%s/BDT/Validation/plots_massdiff/Mass8_14_Y%dS_pt_%d_%d_BDTDistplot_m%d.C", workdir.Data(), _state, _pl, _ph, mode));
+	gSystem->mkdir(Form("%s/BDT/Validation/Plots/%ld", workdir.Data(), ts);)
+	c1->SaveAs(Form("%s/BDT/Validation/Plots/%ld/Y%dS_pt_%d_%d_BDTDistplot_m%d.C", workdir.Data(),ts, _state, _pl, _ph, mode));
 	f_res->Close();
 	return return_var; 
 
 };
 
-void BDTDistribution()
+void BDTDistribution(long ts)
 {
-	ofstream x("bdt_dist.log", ios::out);
+	ofstream x(Form("bdt_dist%ld.log", ios::out);
 	for(int i =1; i<5; i++){
-		for( auto ptpair : bin1spt){x << BDTDistribution_onebin(1,ptpair.first,ptpair.second, i).Data(); }
-		for( auto ptpair : bin2spt){x << BDTDistribution_onebin(2,ptpair.first,ptpair.second, i).Data(); }
-		for( auto ptpair : bin3spt){x << BDTDistribution_onebin(3,ptpair.first,ptpair.second, i).Data(); }
+		for( auto ptpair : bin1spt){x << BDTDistribution_onebin(1,ptpair.first,ptpair.second, i, ts).Data(); }
+		for( auto ptpair : bin2spt){x << BDTDistribution_onebin(2,ptpair.first,ptpair.second, i, ts).Data(); }
+		for( auto ptpair : bin3spt){x << BDTDistribution_onebin(3,ptpair.first,ptpair.second, i, ts).Data(); }
 	}
 	x.close();
 }

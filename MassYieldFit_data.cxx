@@ -77,16 +77,33 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
   Double_t MupTCut = single_LepPtCut(MupT);
   Double_t etaMax= 2.4;
   Double_t etaMin = -2.4;
+  Double_t massMin= 0;
+  Double_t massMax= 999;
+  if(map_params.find("massCut")!=map_params.end()){
+	  massMin = map_params["massCut"].low;
+	  massMax = map_params["massCut"].high;
+  	  mf.Range_fit_low = map_params["massCut"].low;
+      mf.Range_fit_high = map_params["massCut"].high;
+  }
   if(!isBDT){
     mf.list_arg	= {"mass", "pt", "y", "cBin", "pt1", "pt2", "eta1", "eta2","QQVtxProb"};
-    mf.dsCut	= Form("( pt >=%f && pt <=%f) && (y >= %f && y <=%f) && (cBin>=%d && cBin<%d) &&(pt1 >= %f) && (pt2 >= %f) && (eta1 >= %f && eta1 <= %f) && ( eta2 >= %f && eta2 <= %f) &&(QQVtxProb > %.f", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, MupTCut, MupTCut, etaMin, etaMax, etaMin, etaMax, cutQVP);
+    mf.dsCut	= Form("(mass >=%f && mass <=%f) && ( pt >=%f && pt <=%f) && (y >= %f && y <=%f) && (cBin>=%d && cBin<%d) &&(pt1 >= %f) && (pt2 >= %f) && (eta1 >= %f && eta1 <= %f) && ( eta2 >= %f && eta2 <= %f) &&(QQVtxProb > %.f", massMin, massMax, ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, MupTCut, MupTCut, etaMin, etaMax, etaMin, etaMax, cutQVP);
   }
   if(isBDT){
     mf.list_arg	= {"mass", "pt", "y", "cBin", "pt1", "pt2", "eta1", "eta2", "QQVtxProb", "BDT"};
-    mf.dsCut	= Form("( pt >=%f && pt <=%f) && (y >= %f && y <=%f) && (cBin>%d && cBin<=%d) &&(pt1 >= %f) && (pt2 >= %f) && (eta1 >= %f && eta1 <= %f) && ( eta2 >= %f && eta2 <= %f) && (BDT>= %f && BDT < %f) && (QQVtxProb > %.f)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, MupTCut, MupTCut, etaMin, etaMax, etaMin, etaMax, cutBDTlow, cutBDThigh, cutQVP);
+    mf.dsCut	= Form("(mass >= %f && mass <= %f) &&( pt >=%f && pt <=%f) && (y >= %f && y <=%f) && (cBin>%d && cBin<=%d) &&(pt1 >= %f) && (pt2 >= %f) && (eta1 >= %f && eta1 <= %f) && ( eta2 >= %f && eta2 <= %f) && (BDT>= %f && BDT < %f) && (QQVtxProb > %.f)", massMin, massMax,ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, MupTCut, MupTCut, etaMin, etaMax, etaMin, etaMax, cutBDTlow, cutBDThigh, cutQVP);
   }
   std::string name_dataset = "dataset";
-  if( ts >= 1634636609 ) name_dataset = name_dataset + Form("_Y%dSpt%dto%d", train_state, (int) ptMin, (int) ptMax);
+  int ds_state = train_state;
+  int ds_pl = (int) ptMin;
+  int ds_ph = (int) ptMax;
+  if(map_params.find("DS_alter") !=map_params.end()){
+	  params_vhl altpar = map_params["DS_alter"];
+	  ds_state = altpar.val;
+	  ds_pl = altpar.low;
+	  ds_ph = altpar.high;
+  }
+  if( ts >= 1634636609 ) name_dataset = name_dataset + Form("_Y%dSpt%dto%d", ds_state, ds_pl, ds_ph);
   mf.ws_init(name_dataset.c_str(),mf.list_arg, "mass");
   mf.works->var("mass")->Print();
 
@@ -416,9 +433,9 @@ dbg(1000);
   RooFitResult* Result;
   if(fitdir.find("GC")!=std::string::npos){
     std::cout << "Fitting with Gaussian Constraint" << std::endl;
-    Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), Constrain(list_var_for_gc), NumCPU(16), Hesse(kTRUE), Range(mf.Range_fit_low, mf.Range_fit_high), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));
+    Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), Constrain(list_var_for_gc), PrefitDataFraction(0.1), Minimizer("Minuit","minimize"), NumCPU(16), Range(mf.Range_fit_low, mf.Range_fit_high), SumW2Error(kTRUE), Extended(kTRUE));
   }
-  else  {Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), NumCPU(16), Hesse(kTRUE), Range(mf.Range_fit_low, mf.Range_fit_high), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));}
+  else  {Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), PrefitDataFraction(0.1),  Minimizer("Minuit","minimize"), NumCPU(16), Range(mf.Range_fit_low, mf.Range_fit_high), SumW2Error(kTRUE), Extended(kTRUE));}
 dbg();
   mf.works->pdf(use_model.c_str())->plotOn(massPlot, Name("modelPlot"));
   mf.works->pdf(use_model.c_str())->plotOn(massPlot, Components(RooArgSet(*Signal1S)), LineColor(kRed), LineStyle(kDashed), MoveToBack());

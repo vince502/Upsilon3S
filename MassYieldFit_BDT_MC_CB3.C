@@ -46,10 +46,7 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   }
   Int_t Nmassbins = (RangeHigh - RangeLow)*30;
   if(Trig == "Ups") Nmassbins = (RangeHigh -RangeLow)*30; 
-  TFile* fout;
-  std::string name_output = Form("Yield/Yield_%ld_CB3_%dS_pt_%d-%d_rap_%d-%d_cBin_%d-%d_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_%d.root", ts, (int) state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), bdtlow, bdthigh, cutQVP,(int) fixvar);
-  if(ts >= 1634636609) name_output = Form("Yield/Yield_%ld_CB3_%dS_train%dS_pt_%d-%d_rap_%d-%d_cBin_%d-%d_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_%d.root", ts, (int) state, train_state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), bdtlow, bdthigh, cutQVP,(int) fixvar);
-  fout = new TFile(name_output.c_str(), "RECREATE");
+
 
   Double_t MupTCut = single_LepPtCut(MupT);
 
@@ -162,7 +159,7 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
 
   works1->import(*model);
 /////////////////////////////////////////////////////////////FITTING START//////////////////////////////////////////////////////////////////////////////////////////
-  RooAbsReal* nll = works1->pdf("model")->createNLL(*reducedDS, Save(), NumCPU(16), Hesse(kTRUE), Range(RangeLow, RangeHigh), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));
+  RooAbsReal* nll = works1->pdf("model")->createNLL(*reducedDS, Save(), PrefitDataFraction(0.03), Minimizer("Minuit","minimize"), NumCPU(16), Range(RangeLow, RangeHigh), SumW2Error(kTRUE), Extended(kTRUE));
   RooMinuit m(*nll);
   RooFitResult* Result = m.fit("shr");
   Result->SetName("fitresult_model_reducedDS");
@@ -284,6 +281,11 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
     cont_plt->Draw();
     cc->SaveAs(Form("%s/cont.pdf",massDIRcont.Data()) );
   }
+
+  TFile* fout;
+  std::string name_output = Form("Yield/Yield_%ld_CB3_%dS_pt_%d-%d_rap_%d-%d_cBin_%d-%d_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_%d.root", ts, (int) state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), bdtlow, bdthigh, cutQVP,(int) fixvar);
+  if(ts >= 1634636609) name_output = Form("Yield/Yield_%ld_CB3_%dS_train%dS_pt_%d-%d_rap_%d-%d_cBin_%d-%d_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_%d.root", ts, (int) state, train_state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), bdtlow, bdthigh, cutQVP,(int) fixvar);
+  fout = new TFile(name_output.c_str(), "RECREATE");
 
   fout->cd();
   works1->Write();

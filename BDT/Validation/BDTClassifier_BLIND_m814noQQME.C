@@ -17,6 +17,8 @@ long _ts_buf=0;
 
 bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptHigh, int cBinLow, int cBinHigh, std::string opt = ""){
   //Load Library
+  int nthreads = 2;
+  ROOT::EnableImplicitMT(nthreads);
   TMVA::Tools::Instance();
   int traintree, testtree;
     traintree=1;
@@ -81,8 +83,8 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
   TTree* BkgTreeTrain2 = BkgTreeTrain_primary2->CopyTree("(mass>8.&&mass<8.6)||(mass>10.8&&mass<14)");
   std::cout << "Number of Events in Trees (Sig, BkgTest, BkgTrain) : ( " << SigTree->GetEntries(cut1) << ", "<< BkgTreeTest1->GetEntries(cut2) << ", " << BkgTreeTrain2->GetEntries(cut2) << " )" << std::endl;
   //Factory Call
-  TMVA::Factory *factory1 = new TMVA::Factory(Form("TMVA_BDT_Classifier1_%ld",_ts),  output, "!V:Silent:Color:DrawProgressBar:Transformations=G:AnalysisType=Classification");
-  TMVA::Factory *factory2 = new TMVA::Factory(Form("TMVA_BDT_Classifier2_%ld",_ts),  output, "!V:Silent:Color:DrawProgressBar:Transformations=G:AnalysisType=Classification");
+  TMVA::Factory *factory1 = new TMVA::Factory(Form("TMVA_BDT_Classifier1_%ld",_ts),  output, "V:Color:DrawProgressBar:Transformations=G:AnalysisType=Classification");
+  TMVA::Factory *factory2 = new TMVA::Factory(Form("TMVA_BDT_Classifier2_%ld",_ts),  output, "V:Color:DrawProgressBar:Transformations=G:AnalysisType=Classification");
   for( auto loader : {loader1, loader2} ) 
   {
 //    loader->AddVariable("QQMassErr", "Dimu Mass error", "F");

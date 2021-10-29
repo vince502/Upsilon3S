@@ -22,18 +22,19 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
     traintree=1;
     testtree=1;
 
-  std::time_t tstamp = std::time(nullptr);
-  _ts = (long) tstamp;
+  std::time_t tstamp = 8000000007;
+  _ts = 8000000007;
+  (long) tstamp;
   if(_ts_buf==0) _ts_buf = _ts;
   if(strcmp(opt.c_str(), "continue")==0) _ts = _ts_buf;
   _ts_buf = _ts;
   _real_time = (long) tstamp;
   std::cout <<"time stamp---> " <<  tstamp << std::endl;
-  if(strcmp(opt.c_str(),"NOMINAL")==0) _ts = (long) 9999999999;
-  if(strcmp(opt.c_str(),"NOMINAL2")==0) _ts = (long) 99999999992;
-  std::system(Form("cat BDTClassifier_BLIND_noQQME.C >> ../.past_source/_BDTClassifier_BLIND_%ld.old",(long) tstamp));
-  ofstream log;
-  log.open("BDT_description.log", std::ios_base::out|std::ios_base::app);
+//  if(strcmp(opt.c_str(),"NOMINAL")==0) _ts = (long) 9999999999;
+//  if(strcmp(opt.c_str(),"NOMINAL2")==0) _ts = (long) 99999999992;
+  std::system(Form("cat BDTClassifier_BLIND_noQQME.C >> ../.past_source/_BDTClassifier_BLIND_noQQME_%ld.old",(long) tstamp));
+  ofstream log, log2;
+
 //  log << tstamp;
 
   TString mainDIR= workdir+"/BDT";
@@ -44,7 +45,7 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
   
   //INPUT & OUTPUT Call
   TFile* inputDATA = new TFile(Form("%s/%s", store.Data(), ONIABDTDATAB_LATEST.c_str()),"read");
- // TFile* inputDATA = new TFile(Form("%s/%s", hfdir.Data(), SYS_HFDOWNDATA.c_str()),"read");
+//  TFile* inputDATA = new TFile(Form("%s/%s", hfdir.Data(), SYS_HFDOWNDATA.c_str()),"read");
   TFile* inputMC   ;
   if(state ==1) inputMC= new TFile(Form("%s/%s", store.Data(), ONIABDTMC1S_LATEST.c_str()),"read");
   if(state ==2) inputMC= new TFile(Form("%s/%s", store.Data(), ONIABDTMC2S_LATEST.c_str()),"read");
@@ -81,11 +82,11 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
   TTree* BkgTreeTrain2 = BkgTreeTrain_primary2->CopyTree("(mass>8.&&mass<8.6)||(mass>10.8&&mass<11.5)");
   std::cout << "Number of Events in Trees (Sig, BkgTest, BkgTrain) : ( " << SigTree->GetEntries(cut1) << ", "<< BkgTreeTest1->GetEntries(cut2) << ", " << BkgTreeTrain2->GetEntries(cut2) << " )" << std::endl;
   //Factory Call
-  TMVA::Factory *factory1 = new TMVA::Factory(Form("TMVA_BDT_Classifier1_%ld",_ts),  output, "!V:Silent:Color:DrawProgressBar:Transformations=G:AnalysisType=Classification");
-  TMVA::Factory *factory2 = new TMVA::Factory(Form("TMVA_BDT_Classifier2_%ld",_ts),  output, "!V:Silent:Color:DrawProgressBar:Transformations=G:AnalysisType=Classification");
+  TMVA::Factory *factory1 = new TMVA::Factory(Form("TMVA_BDT_Classifier1_%ld",_ts),  output, "V:Color:DrawProgressBar:Transformations=G:AnalysisType=Classification");
+  TMVA::Factory *factory2 = new TMVA::Factory(Form("TMVA_BDT_Classifier2_%ld",_ts),  output, "V:Color:DrawProgressBar:Transformations=G:AnalysisType=Classification");
   for( auto loader : {loader1, loader2} ) 
   {
-//    loader->AddVariable("QQMassErr", "Dimu Mass error", "F");
+ //   loader->AddVariable("QQMassErr", "Dimu Mass error", "F");
     loader->AddVariable("ctau3D", "3 dim ctau of the dimuon","F");
     loader->AddVariable("ctau", "2 dim ctau of the dimuon","F");
     loader->AddVariable("QQVtxProb", "Vtx prob", "F");
@@ -116,7 +117,7 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
 
   }
     Double_t signalWeight     = 1;// 1.4e-6 ;
-    Double_t backgroundWeight = 40; //1e-3;
+    Double_t backgroundWeight = 1; //1e-3;
     loader1->AddSignalTree     (SigTree, signalWeight);
     loader2->AddSignalTree     (SigTree, signalWeight);
     loader1->AddBackgroundTree (BkgTreeTrain1, backgroundWeight, "Train");
@@ -129,8 +130,8 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
     loader1->SetSignalWeightExpression("weight");
     loader2->SetSignalWeightExpression("weight");
 
-    loader1->PrepareTrainingAndTestTree( cut1, cut2, "SplitSeed=100:SplitMode=Alternate:NormMode=NumEvents:!V");
-    loader2->PrepareTrainingAndTestTree( cut1, cut2, "SplitSeed=100:SplitMode=Alternate:NormMode=NumEvents:!V");
+    loader1->PrepareTrainingAndTestTree( cut1, cut2, "SplitSeed=100:nTrain_Signal=50000:SplitMode=Alternate:NormMode=None:!V");
+    loader2->PrepareTrainingAndTestTree( cut1, cut2, "SplitSeed=100:nTrain_Signal=50000:SplitMode=Alternate:NormMode=None:!V");
 
 
   //Book Training BDT Method
@@ -155,11 +156,14 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
   c1->Delete();
   }
   output->Close();
+  log.open("BDT_description.log", std::ios_base::out|std::ios_base::app);
+  log2.open("../BDT_description.log", std::ios_base::out|std::ios_base::app);
   if(opt!= "") 
     if(strcmp(opt.c_str(),"NOMINAL")==0) opt=Form("ALIAS_TS->%ld", (long) tstamp);
     opt +="::";
   if(opt!="NR"){
   log << _ts << "::"<< Form("%2.2f,%2.2f",massLow,massHigh) << "::" << Form("%2.2f,%2.2f",ptLow, ptHigh) <<"::" << Form("%d,%d",cBinLow, cBinHigh) <<  "::" << Form("BLIND[%d,%d]::%dS::%s",traintree, testtree, state, opt.c_str())<<logbuf << std::endl;
+  log2 << _ts << "::"<< Form("%2.2f,%2.2f",massLow,massHigh) << "::" << Form("%2.2f,%2.2f",ptLow, ptHigh) <<"::" << Form("%d,%d",cBinLow, cBinHigh) <<  "::" << Form("BLIND[%d,%d]::%dS::%s",traintree, testtree, state, opt.c_str())<<logbuf << std::endl;
   }
 
   log.close();
@@ -181,7 +185,7 @@ void BDTClassifier_BLIND_noQQME( ){
   std::pair<long, long> tsrange;
   std::vector<long > v_ts;
   std::cout << "Write down description for this run :";
-  std::cin.getline(logbuf,2000);
+  strcpy(logbuf,  "NOMINAL, no QQMassErr, #Signal restrict");
   bool res; 
 
   std::vector<std::pair<int, int> >bin1spt = {/*{0,30},{0,1},{1,2},{2,3},{3,4},{4,5},{5,6},{6,8},{8,10},{10,12},{18,30}*/{12,18},{12,15},{15,30}};
