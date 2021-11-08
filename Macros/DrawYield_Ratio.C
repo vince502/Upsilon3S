@@ -23,6 +23,7 @@ void DrawYield_Ratio(long ts, int yield_state, int train_state){
 			double theerr = cval.getError();
 			hist->SetBinContent(counter1, theval/ref.getVal());
 			hist->SetBinError(counter1, (theval/ref.getVal())*TMath::Sqrt(TMath::Power(theerr/theval,2) + TMath::Power(ref.getError()/ref.getVal(),2)));
+			hist->GetYaxis()->SetRangeUser(0.4,2);
 			}
 			catch(...){ std::cout << "No bin BDT("<< bdtv <<")"<<std::endl;}
 			counter1++;

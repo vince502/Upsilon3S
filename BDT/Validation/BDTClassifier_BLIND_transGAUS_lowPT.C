@@ -185,7 +185,7 @@ void BDTClassifier_BLIND_transGAUS_lowPT( ){
   std::pair<long, long> tsrange;
   std::vector<long > v_ts;
   std::cout << "Write down description for this run :";
-  strcpy(logbuf,  "NOMINAL, GAUS transformation, low pT, small Signal smaple");
+  strcpy(logbuf,  "NOMINAL, GAUS transformation, low pT (now low-high-integrated all), small Signal smaple");
   bool res; 
 
   std::vector<std::pair<int, int> >bin1spt = {/*{0,30},{0,1},{1,2},{2,3},{3,4},{4,5},{5,6},{6,8},{8,10},{10,12},{18,30}*/{12,18},{12,15},{15,30}};
@@ -204,7 +204,13 @@ void BDTClassifier_BLIND_transGAUS_lowPT( ){
 //  for( auto pair : bin1spt) 
 //  {
 //  	res = BDTClassifier_BLIND_Function(1,0,pair.first,pair.second, 0,181, "NOMINAL");
-  	res = BDTClassifier_BLIND_Function(1,0,0,30, 0,181, "");
+  	res = BDTClassifier_BLIND_Function(1,0,6,30, 0,181, "");
+  	res = BDTClassifier_BLIND_Function(2,0,6,30, 0,181, "continue");
+  	res = BDTClassifier_BLIND_Function(3,0,6,30, 0,181, "continue");
+  	res = BDTClassifier_BLIND_Function(1,0,0,6, 0,181, "continue");
+  	res = BDTClassifier_BLIND_Function(2,0,0,6, 0,181, "continue");
+  	res = BDTClassifier_BLIND_Function(3,0,0,6, 0,181, "continue");
+  	res = BDTClassifier_BLIND_Function(1,0,0,30, 0,181, "continue");
   	res = BDTClassifier_BLIND_Function(2,0,0,30, 0,181, "continue");
   	res = BDTClassifier_BLIND_Function(3,0,0,30, 0,181, "continue");
   	if(!res)std::system(Form("rm ../.past_source/_BDT_Blind_Classifier_transGAUS_lowPT_%ld.old",(long) _real_time));

@@ -2,31 +2,32 @@
 #include "yield_eff_signif.h"
 #include "Get_Optimal_BDT.cxx"
 #include "../LLR_CCorder.h"
+#include "../script_tools.h"
 
 binplotter::binplotter(){};
 
-binplotter::binplotter(ana_bins x, int _train_state ){
+binplotter::binplotter(ana_bins x, int _train_state, int _bdtptMin, int _bdtptMax ){
   type = Form("CB3:CC%d:%s", getNomBkgO(x), findtype(x).c_str()) ;
-  ts = 9999999999; ylim = 2.4, pl = (double) x.pl; ph = (double) x.ph; cl = x.cl; ch = x.ch; blow = Get_BDT(ts, x.state, pl, ph, cl, ch, 0., ylim, 2); bhigh = 1; train_state = x.state; eff_old = false; train_state = _train_state;
+  ts = 9999999999; ylim = 2.4, pl = (double) x.pl; ph = (double) x.ph; cl = x.cl; ch = x.ch; blow = Get_BDT(ts, x.state, pl, ph, cl, ch, 0., ylim, 2); bhigh = 1; bdtptMin = _bdtptMin; bdtptMax = _bdtptMax; train_state = x.state; eff_old = false; train_state = _train_state;
   init(false);
-
 };
 
-binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _train_state =3, int _target_state=3,  bool find_bdt = false, bool _eff_old = false){
-  type = _type; ts = _ts; ylim = _ylim;  pl = _pl; ph = _ph; cl = _cl; ch = _ch; blow = _blow; bhigh = _bhigh, train_state = _train_state; target_state = _target_state; eff_old = _eff_old;
+binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _bdtptMin, int _bdtptMax, int _train_state =3, int _target_state=3,  bool find_bdt = false, bool _eff_old = false){
+  dbg(50);
+  type = _type; ts = _ts; ylim = _ylim;  pl = _pl; ph = _ph; cl = _cl; ch = _ch; blow = _blow; bhigh = _bhigh; bdtptMin = _bdtptMin; bdtptMax = _bdtptMax;train_state = _train_state; target_state = _target_state; eff_old = _eff_old;
 
   int nbin = 120;
   if (massrng.find(ts) != massrng.end()) { nbin = (int) ((massrng[ts].second - massrng[ts].first)/0.05); } 
   init(find_bdt);
 };
-binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _train_state =3, bool find_bdt = false, bool _eff_old = false){
-	binplotter( _type, _ts, _ylim, _pl, _ph, _cl, _ch, _blow, _bhigh, _train_state, _train_state, find_bdt, _eff_old);
-};
+binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _bdtptMin, int _bdtptMax, int _train_state =3, bool find_bdt = false, bool _eff_old = false) : binplotter( _type, _ts, _ylim, _pl, _ph, _cl, _ch, _blow, _bhigh, _bdtptMin, _bdtptMax, _train_state, _train_state, find_bdt, _eff_old){};
 
 binplotter::~binplotter(){ 
+	std::cout << "[bp][Deconstruct] call" << std::endl;
 };
 
 void binplotter::init(bool get_bdt= true){
+  std::cout << "Init binplotter " << std::endl;
   auto info_fit = parser_symbol(type, ":");
   fitfunc = info_fit[0]+"_"+info_fit[1];
   int ylim10 = (int) (ylim*10);
@@ -51,32 +52,48 @@ void binplotter::init(bool get_bdt= true){
   fitdir = info_fit[2].c_str();
   fittype =fitdir;
   
-  if(get_bdt){ blow = Get_BDT(ts, train_state, pl, ph, cl, ch, vcut, (double)ylim);}//Get_Optimal_BDT(ts, pl, ph,(double) -1*ylim, ylim, cl, ch, vcut, train_state).first; }
+  if(get_bdt){ blow = Get_BDT(ts, train_state, bdtptMin, bdtptMax, pl, ph, cl, ch, vcut, (double)ylim);}//Get_Optimal_BDT(ts, pl, ph,(double) -1*ylim, ylim, cl, ch, vcut, train_state).first; }
+  dbg(51);
   
-  filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10,nbin, cl, ch, blow, bhigh, vcut);
-  if(ts >= 1634636609) filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", train_state, ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10, cl, ch, blow, bhigh, vcut);
+  filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_bdtpt_%d_%d_vp%.4f.root", ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10,nbin, cl, ch, blow, bhigh,  bdtptMin, bdtptMax, vcut);
+  if(ts >= 1634636609) filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_bdtpt_%d_%d_vp%.4f.root", train_state, ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10, cl, ch, blow, bhigh, bdtptMin, bdtptMax, vcut);
+  if( blow == -1.0000){
+	  filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10,nbin, cl, ch, blow, bhigh,  vcut);
+	  if(ts >= 1634636609){ auto query_file =  getfileany(Form("%s/Yield", workdir.Data()), Form("Yield_:S_9999999999_FF_CB3_CC:pt_%d-%d:cbin_%d-%d:BDT1_cut-1.0000-1.0000:vp%.4f.root",pl, ph, cl, ch, vcut) );
+	  if(!query_file.empty()) filename = query_file[0];
+	  }
+		  //Form("/home/vince402/Upsilon3S/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", train_state, ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10, cl, ch, blow, bhigh,  vcut);
+  }
+  std::cout << "[bp] yield file name : " << filename.c_str() << std::endl;
   if(fitdir.find("DD") != std::string::npos){
     filename = filename.substr(0, filename.length() -5) + Form("_DDiter%d.root",fitdir[4]-48); 
   }
 
 //  std::cout << "Opening Yield file : " << filename.c_str() << std::endl;
   file1 =TFile::Open(filename.c_str());
+  std::cout << "[bp][init] file1 is open? : " << file1->IsOpen() << std::endl;
   if(file1==nullptr || file1->IsZombie()|| refit){
-    std::cout << "Running Fitter for new Yield" << std::endl;
-    string command;
-    if(strcmp(fitfunc.c_str(),"")==0){ command =Form("root -l -b -q \'../MassYieldFit_BDT.C(\"/home/vince402/Upsilon3S/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root\", %d, %d, %.1f, %.1f, \"3p5\", \"S13\", %d, %d, %.3f, %.2f, %.2f , (Double_t[]) {0.13, 1.54, 3.68, 0.56, 5.0, 1.8, 3.13}, (Double_t[]) {0.01, 0.5, 0.5, 0.15, 0.5, 0.1, 0.1}, (Double_t[]) {0.25, 4, 7, 0.95, 9, 4.0, 8})\'",ts, pl, ph,-1*ylim,ylim, cl, ch, vcut, blow, bhigh);}
-    if(strcmp(fitfunc.c_str(),"_CC3")==0){ command =Form("root -l -b -q \'../MassYieldFit_BDT_CC3.C(\"/home/vince402/Upsilon3S/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root\", %d, %d, %.1f, %.1f, \"3p5\", \"S13\", %d, %d, %.3f, %.2f, %.2f , (Double_t[]) {0.13, 1.54, 3.68, 0.56, -0.1, -0.1, 0.0}, (Double_t[]) {0.01, 0.5, 0.5, 0.15, -0.2, -0.2, -0.1}, (Double_t[]) {0.25, 4, 7, 0.95, 0.2,0.2,0.2})\'",ts, pl, ph,-1*ylim,ylim, cl, ch, vcut, blow, bhigh);}
-    int a = system(command.c_str());
+	throw std::invalid_argument( "No Fit Results found! Fit the data first" );
   }
+  auto file_keys = file1->GetListOfKeys();
+	std::cout << "[bp][init] keys in files : ";
+  for ( auto key : *file_keys ){
+	std::cout << key->GetName() << ", ";
+  }
+    std::cout << std::endl;
 
   RooFitResult *res_tmp;
   res_tmp = (RooFitResult*) file1->Get("fitresult_model_reducedDS");
+
   if(res_tmp==nullptr)
   {
     res_tmp = (RooFitResult*) file1->Get("fitresult_model_gc_reducedDS");
   }
+  std::cout << "[bp][init] res_tmp : " << static_cast<void*> (res_tmp) << ", " << res_tmp->GetName() << std::endl;
   worksp = (RooWorkspace*) file1->Get("workspace");
   res = (RooFitResult*) res_tmp->Clone();
+  std::cout << "[bp][init] res : " << static_cast<void*> (res) << ", " << res->GetName() << std::endl;
+
 //  res->SetDirectory(0);
 //  worksp->SetDirectory(0);
 };
@@ -152,6 +169,8 @@ RooRealVar binplotter::get_bkg(int state = 3)
 };
 
 RooRealVar binplotter::get_yield(int state =3 ){
+	std::cout << "[bp][get_yield] state : " << state << std::endl;
+	std::cout << "[bp][get_yield] res alive? : " << static_cast<void*>(res) << std::endl;
   RooRealVar Yield1S, Yield2S, Yield3S;
   const RooArgList& paramList = res->floatParsFinal();
   Yield1S = *(RooRealVar*) worksp->var("nSig1S");

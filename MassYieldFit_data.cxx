@@ -9,7 +9,7 @@ struct params_vhl{
   Double_t low;
   Double_t high;
 };
-void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 181, double cutQVP = 0.00, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1. ,Double_t params[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {},Double_t paramslow[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {},Double_t paramshigh[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {}, std::map<std::string, params_vhl> map_params={}){
+void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 181, double cutQVP = 0.00, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1. ,int bdtptMin =0, int bdtptMax = 30, Double_t params[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {},Double_t paramslow[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {},Double_t paramshigh[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {}, std::map<std::string, params_vhl> map_params={}){
   massfitter mf = massfitter();
 ////////////////////////////////////////////////////////////////////////
   int DDiter = 0;
@@ -60,9 +60,10 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
   else name_file_input = Form("%s/roodatasetFiles/OniaRooDataSet_OniaSkim_Trig%s.root", workdir.Data(), Trig.c_str());
   string aux = "";
   if(map_params.find("tmp") != map_params.end() &&map_params["tmp"].val == 1) aux = "_tmp";
-  std::string name_file_output = Form("%s/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f%s.root" ,workdir.Data(), ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10,  cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP, aux.c_str() );
+  long outputts = ( cutBDTlow == -1 ) ? 9999999999 : ts;
+  std::string name_file_output = Form("%s/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_bdtpt_%d_%d_vp%.4f%s.root" ,workdir.Data(), outputts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10,  cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP, aux.c_str() );
 
- if( ts >= 1634636609) name_file_output = Form("%s/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f%s.root" ,workdir.Data(), train_state, ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP, aux.c_str() );
+ if( ts >= 1634636609) name_file_output = Form("%s/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_bdtpt_%d_%d_vp%.4f%s.root" ,workdir.Data(), train_state, outputts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP, aux.c_str() );
   if(fitdir.find("DD") != std::string::npos){
     DDiter = fitdir[4]-48;
     name_file_output = name_file_output.substr(0,name_file_output.length()-5) + Form("_DDiter%d.root", DDiter);
@@ -95,8 +96,8 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
   }
   std::string name_dataset = "dataset";
   int ds_state = train_state;
-  int ds_pl = (int) ptMin;
-  int ds_ph = (int) ptMax;
+  int ds_pl = (int) bdtptMin;
+  int ds_ph = (int) bdtptMax;
   if(map_params.find("DS_alter") !=map_params.end()){
 	  params_vhl altpar = map_params["DS_alter"];
 	  ds_state = altpar.val;
@@ -606,6 +607,6 @@ dbg();
   mf.fout->Close();
   int drawmag = (int) map_params["mag"].val; 
 
-  DrawHist(parsed, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh,map_params["sb_ratio"].val, train_state, (bool) drawmag, aux );
+  DrawHist(parsed, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, map_params["sb_ratio"].val, train_state, (bool) drawmag, aux );
  
 }

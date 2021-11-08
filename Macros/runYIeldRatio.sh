@@ -5,4 +5,4 @@
 #root -l -b -q 'DrawYield_Ratio.C(8000000004)'
 cd /home/vince402/Upsilon3S #BDT/Validation
 cd /home/vince402/Upsilon3S/Macros #BDT/Validation
-root -l -b -q 'DrawYield_Ratio.C(80000000'$1', '$2', '$3')'
+root -l -b -q 'DrawYield_Ratio.C('$1', '$2', '$3')'

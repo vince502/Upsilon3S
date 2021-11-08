@@ -5,12 +5,12 @@
 #include "yield_eff_signif.h"
 #include "TApplication.h"
 
-std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio =0.16 , int train_state =3, string name_input_opt = "", string formula_significance= "S2", string the_opt="", bool save = true)
+std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio =0.16 , int train_state =3, int bdtptMin =0, int bdtptMax = 30, string name_input_opt = "", string formula_significance= "S2", string the_opt="", bool save = true)
 {
   
   std::string st_opt;
   if(strcmp(name_input_opt.c_str(),"")!=0) st_opt = "_"+name_input_opt;
-  std::string output_fname = Form("%s/BDT/Significance_hist/HIST_train%dS_%ld_pt_%d-%d_rap_%d-%d_cbin_%d-%d_vp_%.4f_%s%s", workdir.Data(), train_state, ts, (int) ptMin, (int) ptMax, (int) (rapMin*10), (int) (rapMax*10), cBinLow, cBinHigh, cutQVP, formula_significance.c_str(), st_opt.c_str() );
+  std::string output_fname = Form("%s/BDT/Significance_hist/HIST_train%dS_bdtpt_%d_%d_%ld_pt_%d-%d_rap_%d-%d_cbin_%d-%d_vp_%.4f_%s%s", workdir.Data(), train_state, bdtptMin, bdtptMax, ts, (int) ptMin, (int) ptMax, (int) (rapMin*10), (int) (rapMax*10), cBinLow, cBinHigh, cutQVP, formula_significance.c_str(), st_opt.c_str() );
   TFile* HISTFILE = nullptr;
   HISTFILE = new TFile(Form("%s.root",output_fname.c_str()), "update" );
   std::cout << static_cast<void*>(HISTFILE) << std::endl;
@@ -47,9 +47,9 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
   TFile* file_input_rd = TFile::Open(name_input_rd.c_str());
   TFile* cache_out = new TFile(".cache.root","recreate");
   TChain* tree_train_raw = new TChain();
-  RooDataSet* rd_data = (RooDataSet*) file_input_rd->Get(Form("dataset_Y%dSpt%dto%d", train_state, (int) ptMin, (int) ptMax));
+  RooDataSet* rd_data = (RooDataSet*) file_input_rd->Get(Form("dataset_Y%dSpt%dto%d", train_state, bdtptMin, bdtptMax));
   std::string treedir = "";
-  if(ts >= 1634636609) treedir = Form("/data/Y%dSpt%dto%d", train_state, (int) ptMin, (int) ptMax);
+  if(ts >= 1634636609) treedir = Form("/data/Y%dSpt%dto%d", train_state, bdtptMin, bdtptMax);
   tree_train_raw->Add(Form("%s%s/dataset1/TrainTree", name_input.c_str(), treedir.c_str()));
   tree_train_raw->Add(Form("%s%s/dataset2/TrainTree", name_input.c_str(), treedir.c_str()));
   std::string theCut = Form("(mass<11.5 && mass>8.0) && (pt>%f) && (pt<%f) && (y>%f) && (y<%f) && (cBin>=%d) && (cBin<%d) && (QQVtxProb>%f)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP );
@@ -181,20 +181,25 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
 };
 
 //Function to get BDT ratio //
-RooRealVar get_eff_acc(std::string type, std::string type2, long ts, long ts2, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int train_state = 3, int state1 =1, int state2 =3, bool eff_old = true){
-
+RooRealVar get_eff_acc(std::string type, std::string type2, long ts, long ts2, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int bdtptMin= 0, int bdtptMax =30, int train_state = 3, int state1 =1, int state2 =3, bool eff_old = true){
+dbg(123);
   RooRealVar eff22, eff21, eff1, eff2, nbkg;
 
-  binplotter bp = binplotter(type, ts, ylim,pl, ph, cl, ch, blow, bhigh, train_state, false, eff_old);
-  binplotter bp2 = binplotter(type2, ts2, ylim,pl, ph, cl, ch, -1, bhigh, train_state, false, eff_old);
-  bp.get_yield();
-  nbkg = bp2.get_bkg();
-  auto frac_nS = bp.get_frac(state2);
-  RooRealVar yield1S = bp2.get_yield(state1);
-  auto effp1 = bp.get_eff(state1);
-  auto effp2 = bp.get_eff(state2);
-  auto eff2p1 = bp2.get_eff(state1);
-  auto eff2p2 = bp2.get_eff(state2);
+  binplotter* bp = new binplotter(type, ts, ylim,pl, ph, cl, ch, blow, bhigh, bdtptMin, bdtptMax, train_state, false, eff_old);
+dbg(122);
+  binplotter* bp2 = new binplotter(type2, ts2, ylim,pl, ph, cl, ch, -1, bhigh, bdtptMin, bdtptMax, train_state, false, eff_old);
+dbg(121);
+  std::cout << bp->res->GetName() << std::endl;
+  bp->dump();
+  bp2->dump();
+  bp->get_yield();
+  nbkg = bp2->get_bkg();
+  auto frac_nS = bp->get_frac(state2);
+  RooRealVar yield1S = bp2->get_yield(state1);
+  auto effp1 = bp->get_eff(state1);
+  auto effp2 = bp->get_eff(state2);
+  auto eff2p1 = bp2->get_eff(state1);
+  auto eff2p2 = bp2->get_eff(state2);
   eff2= RooRealVar(Form("eff%d",state2), "", effp2.first);
   eff2.setError(effp2.second);
   eff1= RooRealVar(Form("eff%d",state1), "", effp1.first);
@@ -217,9 +222,9 @@ RooRealVar get_eff_acc(std::string type, std::string type2, long ts, long ts2, d
   return res_var;
   
 };
-RooRealVar get_eff_acc(std::string type, std::string type2, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int train_state = 3, int state1 =1, int state2 =3, bool eff_old = true){
-	return	get_eff_acc(type, type2, ts, ts, ylim, pl, ph, cl, ch, blow, bhigh, train_state, state1, state2, eff_old);
+RooRealVar get_eff_acc(std::string type, std::string type2, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int bdtptMin= 0, int bdtptMax =30, int train_state = 3 ,int state1 =1, int state2 =3, bool eff_old = true){
+	return	get_eff_acc(type, type2, ts, ts, ylim, pl, ph, cl, ch, blow, bhigh,bdtptMin, bdtptMax,  train_state, state1, state2, eff_old);
 };
-RooRealVar get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int train_state = 3, int state1 =1, int state2 =3, bool eff_old = true){
-	return	get_eff_acc(type, "CB3:CC4:FF", ts, 9999999999, ylim, pl, ph, cl, ch, blow, bhigh, train_state, state1, state2, eff_old);
+RooRealVar get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh,  int bdtptMin= 0, int bdtptMax =30,int train_state = 3,int state1 =1, int state2 =3, bool eff_old = true){
+	return	get_eff_acc(type, "CB3:CC4:FF", ts, 9999999999, ylim, pl, ph, cl, ch, blow, bhigh, bdtptMin, bdtptMax, train_state, state1, state2, eff_old);
 };

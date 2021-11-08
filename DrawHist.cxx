@@ -12,7 +12,7 @@ using namespace RooFit;
 
 void DrawHist_(long ts,double ylim, float blow, float bhigh, float vcut, TString MupT = "3p5", string Trig = "S13", TString fittype = "freefit") {};
 void DrawHist__();
-void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 180, double cutQVP = 0.01, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1., double signif_ratio = 0.02,  int train_state =3, bool draw_mag = false, string aux = ""){
+void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 180, double cutQVP = 0.01, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1., int bdtptMin =0, int bdtptMax = 30, double signif_ratio = 0.02,  int train_state =3, bool draw_mag = false, string aux = ""){
   setTDRStyle();
   int Nmassbins = 140;
 
@@ -57,7 +57,7 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
   std::pair<double, TH1D*> _hist_;
   TH1D* signif_hist;
   if( signif_ratio != -1){
-    _hist_ = Get_Optimal_BDT(ts, ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP, signif_ratio, train_state, "", "S2", s_bdtupdown.c_str()); 
+    _hist_ = Get_Optimal_BDT(ts, ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP, signif_ratio, train_state, bdtptMin, bdtptMax, "", "S2", s_bdtupdown.c_str()); 
     signif_hist = _hist_.second;
     if (signif_hist ==nullptr) {
       std::cout << "[Error] Significance plot not loaded, returning with null histogram" << std::endl;
@@ -67,8 +67,8 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
 
   std::string method_selection = (isBDT) ? "BDT" : "Data"; 
 //  if(strcmp(aux.c_str(),"")!= 0 ) aux = "_"+aux;
-  std::string name_file_output = Form("%s/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f%s.root" ,workdir.Data(), ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP, aux.c_str() );
- if(ts >= 1634636609) name_file_output = Form("%s/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f%s.root" ,workdir.Data(), train_state, ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, cutQVP, aux.c_str() );
+  std::string name_file_output = Form("%s/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_bdtpt_%d_%d_vp%.4f%s.root" ,workdir.Data(), ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP, aux.c_str() );
+ if(ts >= 1634636609) name_file_output = Form("%s/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_bdtpt_%d_%d_vp%.4f%s.root" ,workdir.Data(), train_state, ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP, aux.c_str() );
   std::cout << name_file_output << std::endl;
   if( fitdir.find("DD") !=std::string::npos)
   {
@@ -145,10 +145,11 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
   TLatex* lt0 = new TLatex();
   FormLatex(lt0, 12, 0.038);
   lt0->DrawLatex(0.20,0.80, Form("BDT #in [%.2f, %.2f]",cutBDTlow, cutBDThigh));
-  lt0->DrawLatex(0.20,0.75, Form("p_{T}^{#mu} #geq %s GeV/c",MupT.Data()));
-  lt0->DrawLatex(0.20,0.70, Form("%d #leq p_{T}^{#mu#mu} < %d GeV/c", (int) ptMin, (int) ptMax));
-  lt0->DrawLatex(0.20,0.65, Form("Centrality %d-%d %%",(int) cBinLow/2, (int) cBinHigh/2));
-  lt0->DrawLatex(0.20,0.60, Form("Trigger : %s", Trig.c_str()));
+  lt0->DrawLatex(0.20,0.75, Form("BDT p_{T} #in [%d, %d]",bdtptMin, bdtptMax));
+  lt0->DrawLatex(0.20,0.70, Form("p_{T}^{#mu} #geq %s GeV/c",MupT.Data()));
+  lt0->DrawLatex(0.20,0.65, Form("%d #leq p_{T}^{#mu#mu} < %d GeV/c", (int) ptMin, (int) ptMax));
+  lt0->DrawLatex(0.20,0.60, Form("Centrality %d-%d %%",(int) cBinLow/2, (int) cBinHigh/2));
+  lt0->DrawLatex(0.20,0.55, Form("Trigger : %s", Trig.c_str()));
   
   CMS_lumi_square( pad_mass, 2, 11);
 
@@ -221,7 +222,7 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
 
   c1->Update();
 //  c1->Draw();
-  c1->SaveAs(Form("%s/FitPlot_train%dS_%ld_%s_%s-%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_vp%.4f%s.pdf",massDIR.Data(), train_state, ts,fitdir.c_str(), sig_func.c_str(), bkg_func.c_str(), (int) (ptMin*10), (int) (ptMax*10), ylim10, ylim10, Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(),(int) swflag,(int) isBDT, cutBDTlow, cutBDThigh, cutQVP, aux.c_str()));
+  c1->SaveAs(Form("%s/FitPlot_train%dS_%ld_%s_%s-%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_bdtpt_%d_%d_vp%.4f%s.pdf",massDIR.Data(), train_state, ts,fitdir.c_str(), sig_func.c_str(), bkg_func.c_str(), (int) (ptMin*10), (int) (ptMax*10), ylim10, ylim10, Nmassbins, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(),(int) swflag,(int) isBDT, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP, aux.c_str()));
   c1->Close();
 
 };

@@ -419,3 +419,27 @@ Bin by Bin training end::1623349594,1623350222
 8000000010::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, GAUS transformation, small Signal smaple
 8000000010::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, GAUS transformation, small Signal smaple
 8000000010::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, GAUS transformation, small Signal smaple
+8100000003::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, Only QQVtxProb, QQMassErr, #Signal restrict
+8000000011::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, GAUS transformation, low pT, small Signal smaple
+8100000003::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, Only QQVtxProb, QQMassErr, #Signal restrict
+8100000003::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, Only QQVtxProb, QQMassErr, #Signal restrict
+8000000011::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, GAUS transformation, low pT, small Signal smaple
+8000000011::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, GAUS transformation, low pT, small Signal smaple
+8000000011::8.00,11.50::0.00,6.00::0,181::BLIND[1,1]::1S::::NOMINAL, GAUS transformation, low pT, small Signal smaple
+8000000011::8.00,11.50::0.00,6.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, GAUS transformation, low pT, small Signal smaple
+8000000011::8.00,11.50::0.00,6.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, GAUS transformation, low pT, small Signal smaple
+8000000011::8.00,11.50::6.00,30.00::0,181::BLIND[1,1]::1S::continue::NOMINAL, GAUS transformation, low pT, small Signal smaple
+8000000011::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::continue::NOMINAL, GAUS transformation, low pT, small Signal smaple
+8000000011::8.00,11.50::6.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, GAUS transformation, low pT, small Signal smaple
+8000000011::8.00,11.50::6.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, GAUS transformation, low pT, small Signal smaple
+8000000011::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, GAUS transformation, low pT, small Signal smaple
+8000000011::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, GAUS transformation, low pT, small Signal smaple
+8000000011::8.00,11.50::6.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, GAUS transformation, low pT (now low-high-integrated all), small Signal smaple
+8000000011::8.00,11.50::6.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, GAUS transformation, low pT (now low-high-integrated all), small Signal smaple
+8000000011::8.00,11.50::6.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, GAUS transformation, low pT (now low-high-integrated all), small Signal smaple
+8000000011::8.00,11.50::0.00,6.00::0,181::BLIND[1,1]::1S::continue::NOMINAL, GAUS transformation, low pT (now low-high-integrated all), small Signal smaple
+8000000011::8.00,11.50::0.00,6.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, GAUS transformation, low pT (now low-high-integrated all), small Signal smaple
+8000000011::8.00,11.50::0.00,6.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, GAUS transformation, low pT (now low-high-integrated all), small Signal smaple
+8000000011::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::continue::NOMINAL, GAUS transformation, low pT (now low-high-integrated all), small Signal smaple
+8000000011::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, GAUS transformation, low pT (now low-high-integrated all), small Signal smaple
+8000000011::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, GAUS transformation, low pT (now low-high-integrated all), small Signal smaple

@@ -12,8 +12,8 @@ using namespace std;
 
 void getEfficiencyBDT_V2(
   float ptLow = 0.0, float ptHigh = 30.0,
-  float yLow = 0.0, float yHigh = 2.4,
-  int cLow = 0, int cHigh = 181, bool isTnP = false, bool isPtWeight = false, long  ts = 9999999999, double bdt_tsl = 0.0, double bdt_tsh =0.0, int train_state = 3, int state= 3, double vcut = 0.00
+  float yLow = -2.4, float yHigh = 2.4,
+  int cLow = 0, int cHigh = 181, bool isTnP = true, bool isPtWeight = true, long  ts = 9999999999, double bdt_tsl = 0.0, double bdt_tsh =0.0, int train_state = 3, int state= 3, double vcut = 0.00
   ) {
 
   gStyle->SetOptStat(0);
@@ -63,6 +63,7 @@ void getEfficiencyBDT_V2(
     inputMC =Form("/home/vince402/Upsilon3S/BDT/BDTAppliedData/BDTApp_%ld_MC.root", ts);
     fPtW = new TFile(Form("%s/WeightedFunction/Func_dNdpT_3S.root", store.Data()),"read");
   }
+  std::cout << inputMC.Data()<<std::endl;
   TChain* mytree = new TChain("tree"); 
   mytree->Add(inputMC.Data());
   TF1* f1 = (TF1*) fPtW->Get("fitRatio");
@@ -76,9 +77,9 @@ void getEfficiencyBDT_V2(
 //  TF1* f1 = (TF1*) fPtW->Get("fitRatio");
 
   TString histName = Form("BDT_%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d", state, ts, bdt_tsl, bdt_tsh, ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight);
-  TH1D* hreco = new TH1D(Form("hreco"),"hreco",20000,0,20000);
-  TH1D* hreco_tnp = new TH1D(Form("hreco_tnp"),"hreco_tnp",20000,0,20000);
-  TH1D* hreco_xtnp = new TH1D(Form("hreco_xtnp"),"hreco_xtnp",20000,0,20000);
+  TH2D* hreco = new TH2D(Form("hreco"),"hreco",20000,0,20000,50,0,50);
+  TH2D* hreco_tnp = new TH2D(Form("hreco_tnp"),"hreco_tnp",20000,0,20000,50,0,50);
+  TH2D* hreco_xtnp = new TH2D(Form("hreco_xtnp"),"hreco_xtnp",20000,0,20000,50,0,50);
 
   hreco->Sumw2();
   hreco_tnp->Sumw2();
@@ -125,47 +126,21 @@ void getEfficiencyBDT_V2(
     if (checkID) {
       if(!( nTrkWMea1 >5 && nTrkWMea2 >5 && nPixWMea1 > 0 && nPixWMea2 > 0 && fabs(dxy1) < 0.3 && fabs(dxy2) < 0.3 && fabs(dz1) < 20. && fabs(dz2) < 20.) ) continue;
 
-    histName = Form("BDT_%dS_%ld_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID", state, ts,ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,vcut,isTnP,isPtWeight);
-    if(ts >= 1634636609) histName = Form("BDT_%dS_train%dS_%ld_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID_fix_test", state, train_state, ts,ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,vcut,isTnP,isPtWeight);
+    histName = Form("BDT_%dS_%ld_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID", state, ts,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,vcut,isTnP,isPtWeight);
+    if(ts >= 1634636609) histName = Form("BDT_%dS_train%dS_%ld_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID_fix_test", state, train_state, ts,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,vcut,isTnP,isPtWeight);
     }
     double ptW =1;
     if( isPtWeight) ptW = f1->Eval(pt);
     weight = weight ;//* ptW;
     int bdtidx = (BDT+1.0000)*10000; 
-    hreco->Fill(bdtidx,weight);
-    hreco_tnp->Fill(bdtidx,weight);
-    hreco_xtnp->Fill(bdtidx, weight/tnp_weight);
+    hreco->Fill(bdtidx, pt, weight);
+    hreco_tnp->Fill(bdtidx, pt, weight);
+    hreco_xtnp->Fill(bdtidx, pt, weight/tnp_weight);
     count++;
 
   }
   cout << "count " << count << endl;
 
-  //Draw
-  //RECO
-  TCanvas * creco = new TCanvas(Form("creco_%s",histName.Data()),"creco",0,0,400,400);
-  creco->cd();
-  hreco->Draw();
-
-  //RECO TnP
-  TCanvas * creco_tnp = new TCanvas(Form("creco_tnp_%s",histName.Data()),"creco with tnp",0,0,400,400);
-  creco_tnp->cd();
-  hreco_tnp->Draw("pe");
-  
-  //RECO xTnP
-//  TCanvas * creco_xtnp = new TCanvas(Form("creco_xtnp_%s",histName.Data()),"creco no tnp",0,0,400,400);
-  hreco_xtnp->Draw("same,pe");
-
-  //Divide
-//  TH1D* heff;
-//  heff = (TH1D*)hreco->Clone(Form("heff_%s",histName.Data()));
-//  heff->Divide(heff, hgen, 1, 1, "B");
-//  heff->SetTitle("Efficiency");
-//  TCanvas * ceff = new TCanvas(Form("ceff_%s",histName.Data()),"ceff",0,400,400,400);
-//  ceff->cd();
-//  heff->Draw();
-
-  //Save efficiency files for later use.
-//  heff->SetName(Form("mc_eff_vs_pt_TnP%d_dNdPt%d_Cent%d%d",isTnP, isPtWeight, cLow, cHigh));
   TString outFileName = Form("/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_%s.root",histName.Data());
   TFile* outFile = new TFile(outFileName,"RECREATE");
 //  heff->Write();
@@ -173,8 +148,6 @@ void getEfficiencyBDT_V2(
   hreco_tnp->Write();
   hreco_xtnp->Write();
 //  hgen->Write();
-  creco->Close();
-  creco_tnp->Close();
   outFile->Close();
 
 }

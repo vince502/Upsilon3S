@@ -33,7 +33,7 @@ std::pair<double, double> getEffhist(float pl, float ph, float yl, float yh, int
   mh = mp.second;
 
   string fname =Form("%s/BDT/EffCalc/mc_eff_BDT_%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID", workdir.Data(), state, ts, bdt_low, bdt_high, pl, ph, yl, yh, 3.5, ml, mh, cl, ch, vcut, istnp, wei);
-  if(ts >= 1634636609 && !eff_old) fname =Form("%s/BDT/EffCalc/mc_eff_BDT_%dS_train%dS_%ld_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID_fix_test", workdir.Data(), state, train_state, ts, pl, ph, yl, yh, 3.5, ml, mh, cl, ch,vcut, istnp, wei);
+  if(ts >= 1634636609 && !eff_old) fname =Form("%s/BDT/EffCalc/mc_eff_BDT_%dS_train%dS_%ld_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID_fix_test", workdir.Data(), state, train_state, ts, yl, yh, 3.5, ml, mh, cl, ch,vcut, istnp, wei);
   if(ts >= 1634636609 && eff_old) fname =Form("%s/BDT/EffCalc/mc_eff_BDT_%dS_train%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID", workdir.Data(), state, train_state, ts, bdt_low, bdt_high, pl, ph, yl, yh, 3.5, ml, mh, cl, ch,vcut, istnp, wei);
   // if(!TFile::Open(Form("%s.root",fname.c_str()),"read")){
 //    std::cout << "-----Calculate new Efficiency for current parameters-----" << std::endl;
@@ -50,13 +50,16 @@ std::pair<double, double> getEffhist(float pl, float ph, float yl, float yh, int
 
   std::cout << fname.c_str() << std::endl;
   TList* list1 = (TList*) histfile->GetListOfKeys();
-  TH1D* rechist = (TH1D*) histfile->Get(list1->At(0)->GetName());
+  std::cout<< list1->At(0)->GetName() << std::endl;
+  TH2D* rechist = (TH2D*) histfile->Get(list1->At(0)->GetName());
 
   double NumReco, ErrReco;
   if (ts >= 1634636609 && !eff_old){
-  	int ibdt_low = (bdt_low+1.0000)*10000;
-	int ibdt_high = (bdt_high+1.0000)*10000;
-  	NumReco = rechist->Integral(ibdt_low, ibdt_high);
+  	int ibdt_low = (bdt_low+1.0000)*10000 + 1;
+	int ibdt_high = (bdt_high+1.0000)*10000 ;
+	int ipl = (int) pl + 1;
+	int iph = (int) ph;
+  	NumReco = rechist->Integral(ibdt_low, ibdt_high, pl+1, ph);
   	ErrReco = TMath::Sqrt(NumReco);
   }
   else{

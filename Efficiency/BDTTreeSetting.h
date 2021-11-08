@@ -100,7 +100,7 @@ void SetTreeBDT::TreeSetting(TTree* tree, bool NOM ,int train_state, int ptLow, 
   tree->SetBranchAddress("pt_weight", &pt_weight);
   tree->SetBranchAddress("QQVtxProb", &QQVtxProb);
   if(!NOM)  tree->SetBranchAddress("BDT", &BDT);
-  if(NOM)tree->SetBranchAddress(Form("BDTY%dSpt%dto%d", train_state, ptLow, ptHigh), &BDT);
+  if(NOM){if( tree->SetBranchAddress(Form("BDTY%dSpt%dto%d", train_state, ptLow, ptHigh), &BDT)<0){ std::cout << Form("[Error] NO BDT BRANCH in tree \"%s\" \"BDTY%dSpt%dto%d\"! ", tree->GetName(), train_state, ptLow, ptHigh) <<std::endl; throw std::exception();}}
   tree->SetBranchAddress("nTrkWMea1", &nTrkWMea1);
   tree->SetBranchAddress("nTrkWMea2", &nTrkWMea2);
   tree->SetBranchAddress("nPixWMea2", &nPixWMea2);
@@ -141,7 +141,7 @@ void SetTreeBDT_SYSREF::TreeSetting(TTree* tree, bool NOM ,int train_state, int 
   tree->SetBranchAddress("eta2", &eta2);
   tree->SetBranchAddress("eta", &eta);
   if(!NOM)  tree->SetBranchAddress("BDT", &BDT);
-  if(NOM)tree->SetBranchAddress(Form("BDTY%dSpt%dto%d", train_state, ptLow, ptHigh), &BDT);
+  if(NOM){if( tree->SetBranchAddress(Form("BDTY%dSpt%dto%d", train_state, ptLow, ptHigh), &BDT)<0){ std::cout << "[Error] NO BDT BRANCH! " <<std::endl; throw std::exception();}}
   tree->SetBranchAddress("QQVtxProb", &QQVtxProb);
   tree->SetBranchAddress("nTrkWMea1", &nTrkWMea1);
   tree->SetBranchAddress("nTrkWMea2", &nTrkWMea2);

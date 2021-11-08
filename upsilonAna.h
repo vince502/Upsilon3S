@@ -9,14 +9,18 @@
 namespace upsi{
 
 	RooRealVar getacceptance(double ptlow, double pthigh, double ylow, double yhigh, double sm_ptcut, int sample_state = 3, bool isptWeight =true){
-		TFile* accfile = TFile::Open(Form("%s/Acceptance/AccRes_%dS_pt%.1f_%.1f_y%.1f_%.1f_SimuPt%.1f_ptW%d.root",workdir.Data(), sample_state, ptlow, pthigh, ylow, yhigh, sm_ptcut, isptWeight));
-		TH1D* htmp = (TH1D*) accfile->Get("hGenRatio");
-		RooRealVar returnVal = RooRealVar("accVar","accVar", htmp->GetBinContent(1),-2,2);
-		returnVal.setError(htmp->GetBinError(1));
+		TFile* accfile = TFile::Open(Form("%s/Acceptance/AccRes_%dS_y%.1f_%.1f_SimuPt%.1f_ptW%d.root",workdir.Data(), sample_state, ylow, yhigh, sm_ptcut, isptWeight));
+		TH1D* hGen = (TH1D*) accfile->Get("hGen");
+		TH1D* hGenAcc = (TH1D*) accfile->Get("hGenAcc");
+		double NGen = hGen->Integral((int) ptlow +1, (int) pthigh);
+		double NGenAcc = hGenAcc->Integral((int) ptlow +1, (int) pthigh);
+		double Acc = NGenAcc/NGen;
+		RooRealVar returnVal = RooRealVar("accVar","accVar", Acc,-2,2);
+		returnVal.setError(TMath::Sqrt(Acc));
 		return returnVal;
 	};
 
-	RooRealVar getcrosssection(std::string type, long ts, double ptlow, double pthigh, double ylow, double yhigh, double sm_ptcut, double clow, double chigh, double blow, double bhigh, int state =3, bool find_bdt = false);
+	RooRealVar getcrosssection(std::string type, long ts, double ptlow, double pthigh, double ylow, double yhigh, double sm_ptcut, double clow, double chigh, double blow, double bhigh, int bdtptMin, int bdtptMax, int state =3, bool find_bdt = false);
 
 };
 

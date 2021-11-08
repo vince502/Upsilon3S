@@ -1,8 +1,9 @@
 void BDTCorYieldplot_train3_3S_8100000004_2()
 {
 //=========Macro generated from canvas: c1/
-//=========  (Fri Oct 29 17:17:35 2021) by ROOT version 6.24/06
+//=========  (Sat Oct 30 04:06:49 2021) by ROOT version 6.24/06
    TCanvas *c1 = new TCanvas("c1", "",0,0,1000,600);
+   gStyle->SetOptStat(0);
    c1->Range(0,0,1,1);
    c1->SetFillColor(0);
    c1->SetBorderMode(0);
@@ -16,6 +17,8 @@ void BDTCorYieldplot_train3_3S_8100000004_2()
    Y3S_train3__1->SetBinError(1,0.4315022);
    Y3S_train3__1->SetBinError(11,0.5175644);
    Y3S_train3__1->SetBinError(13,0.5701907);
+   Y3S_train3__1->SetMinimum(0.4);
+   Y3S_train3__1->SetMaximum(2);
    Y3S_train3__1->SetEntries(3);
 
    Int_t ci;      // for color index setting

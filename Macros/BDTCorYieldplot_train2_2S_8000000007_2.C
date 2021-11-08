@@ -1,7 +1,7 @@
 void BDTCorYieldplot_train2_2S_8000000007_2()
 {
 //=========Macro generated from canvas: c1/
-//=========  (Fri Oct 29 19:14:55 2021) by ROOT version 6.24/06
+//=========  (Fri Oct 29 21:24:16 2021) by ROOT version 6.24/06
    TCanvas *c1 = new TCanvas("c1", "",0,0,1000,600);
    gStyle->SetOptStat(0);
    c1->Range(0,0,1,1);
@@ -12,24 +12,30 @@ void BDTCorYieldplot_train2_2S_8000000007_2()
    
    TH1D *Y2S_train2__1 = new TH1D("Y2S_train2__1","",15,0,15);
    Y2S_train2__1->SetBinContent(1,1);
-   Y2S_train2__1->SetBinContent(8,1.205494);
-   Y2S_train2__1->SetBinContent(9,1.258631);
-   Y2S_train2__1->SetBinContent(10,1.094371);
-   Y2S_train2__1->SetBinContent(11,1.104512);
-   Y2S_train2__1->SetBinContent(12,1.097812);
-   Y2S_train2__1->SetBinContent(13,0.994286);
-   Y2S_train2__1->SetBinContent(14,1.096183);
-   Y2S_train2__1->SetBinContent(15,1.505517);
+   Y2S_train2__1->SetBinContent(5,1.075435);
+   Y2S_train2__1->SetBinContent(6,1.090351);
+   Y2S_train2__1->SetBinContent(7,1.173372);
+   Y2S_train2__1->SetBinContent(8,1.205275);
+   Y2S_train2__1->SetBinContent(9,1.258368);
+   Y2S_train2__1->SetBinContent(10,1.093985);
+   Y2S_train2__1->SetBinContent(11,1.103991);
+   Y2S_train2__1->SetBinContent(12,1.096904);
+   Y2S_train2__1->SetBinContent(13,0.9930996);
+   Y2S_train2__1->SetBinContent(14,1.094089);
+   Y2S_train2__1->SetBinContent(15,1.501547);
    Y2S_train2__1->SetBinError(1,0.2891212);
-   Y2S_train2__1->SetBinError(8,0.3954519);
-   Y2S_train2__1->SetBinError(9,0.405359);
-   Y2S_train2__1->SetBinError(10,0.3600243);
-   Y2S_train2__1->SetBinError(11,0.3625729);
-   Y2S_train2__1->SetBinError(12,0.361257);
-   Y2S_train2__1->SetBinError(13,0.3487531);
-   Y2S_train2__1->SetBinError(14,0.4054805);
-   Y2S_train2__1->SetBinError(15,0.6138931);
-   Y2S_train2__1->SetEntries(9);
+   Y2S_train2__1->SetBinError(5,0.4241557);
+   Y2S_train2__1->SetBinError(6,0.4125915);
+   Y2S_train2__1->SetBinError(7,0.4034501);
+   Y2S_train2__1->SetBinError(8,0.3953802);
+   Y2S_train2__1->SetBinError(9,0.4052743);
+   Y2S_train2__1->SetBinError(10,0.3598975);
+   Y2S_train2__1->SetBinError(11,0.3624021);
+   Y2S_train2__1->SetBinError(12,0.360958);
+   Y2S_train2__1->SetBinError(13,0.348337);
+   Y2S_train2__1->SetBinError(14,0.4047058);
+   Y2S_train2__1->SetBinError(15,0.6122744);
+   Y2S_train2__1->SetEntries(12);
 
    Int_t ci;      // for color index setting
    TColor *color; // for color definition with alpha
