@@ -101,7 +101,7 @@ TString BDTDistribution_onebin(int _state, int _pl, int _ph, int mode, long ts =
 	hist_s_te->Draw("same,l");
 	hist_b_te->Draw("same,l");
 
-	gSystem->mkdir(Form("%s/BDT/Validation/Plots/%ld", workdir.Data(), ts);)
+	gSystem->mkdir(Form("%s/BDT/Validation/Plots/%ld", workdir.Data(), ts));
 	c1->SaveAs(Form("%s/BDT/Validation/Plots/%ld/Y%dS_pt_%d_%d_BDTDistplot_m%d.C", workdir.Data(),ts, _state, _pl, _ph, mode));
 	f_res->Close();
 	return return_var; 
@@ -110,7 +110,7 @@ TString BDTDistribution_onebin(int _state, int _pl, int _ph, int mode, long ts =
 
 void BDTDistribution(long ts)
 {
-	ofstream x(Form("bdt_dist%ld.log", ios::out);
+	ofstream x(Form("bdt_dist%ld.log", ts), ios::out);
 	for(int i =1; i<5; i++){
 		for( auto ptpair : bin1spt){x << BDTDistribution_onebin(1,ptpair.first,ptpair.second, i, ts).Data(); }
 		for( auto ptpair : bin2spt){x << BDTDistribution_onebin(2,ptpair.first,ptpair.second, i, ts).Data(); }

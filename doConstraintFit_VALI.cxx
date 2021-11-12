@@ -50,17 +50,23 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0) mutable {
 	string str_prefit = Form("%s/Yield/Common/",workdir.Data() );
 	auto query_file =  getfileany(Form("%s/Yield", workdir.Data()), Form("Yield_9999999999_CB3_%dS_train:pt_%d-%d:cBin_%d-%d:BDT_-1.0000-1.0000:MC_0.root", state, (int) ptMin, (int) ptMax, cBinLow, cBinHigh ) );
 	if(query_file.empty()){
-		str_prefit += query_file[0];
-		if(!checkFile(str_prefit) ) {std::cout << "Cannot find fitted data!" << std::endl;   MassYieldFit_BDT_MC_CB3(ts, "", fname, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, train_state, state, fixvar, swflag, cutQVP, -1, cutBDThigh, bdtptMin, bdtptMax);}
+		std::cout << "Cannot find fitted data!" << std::endl;   MassYieldFit_BDT_MC_CB3(ts, "", fname, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, train_state, state, fixvar, swflag, cutQVP, -1, cutBDThigh, bdtptMin, bdtptMax);
 	}
+	if(!(query_file.empty())){
+		str_prefit = Form("%s/Yield/", workdir.Data()) + query_file[0];
+		if(!checkFile(str_prefit) ) {std::cout << "Cannot find fitted data!" << std::endl;   MassYieldFit_BDT_MC_CB3(ts, "", fname, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, train_state, state, fixvar, swflag, cutQVP, -1, cutBDThigh, bdtptMin, bdtptMax);
+		}
   }
+}
   dbg();
   if(_step >=2|| _step == -102 || _step == -52){
     MassYieldFit_BDT_MC_CB3(ts, "", fname, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, train_state, state, fixvar, swflag, cutQVP, blow_ref, cutBDThigh, bdtptMin, bdtptMax);
 }
 
       auto fit_mc_dat = [&] (string type_, double bl){
-      TFile* file_MCres_input = new TFile(Form("Yield/Yield_%ld_CB3_%dS_train%dS_pt_%d-%d_rap_%d-%d_cBin_%d-%d_MupT%s_%s_BDT_%.4f-%.4f_bdtpt_%d_%d_vp_%.4f_MC_%d.root", ts, (int) state ,train_state,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), bl, cutBDThigh, bdtptMin, bdtptMax,cutQVP,(int) fixvar), "OPEN");
+	  long kts = ts;
+	  if(bl == -1.0000) kts = 9999999999;
+      TFile* file_MCres_input = new TFile(Form("Yield/Yield_%ld_CB3_%dS_train%dS_pt_%d-%d_rap_%d-%d_cBin_%d-%d_MupT%s_%s_BDT_%.4f-%.4f_bdtpt_%d_%d_vp_%.4f_MC_%d.root", kts, (int) state ,train_state,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), bl, cutBDThigh, bdtptMin, bdtptMax,cutQVP,(int) fixvar), "OPEN");
       RooFitResult* result_MC = (RooFitResult*) file_MCres_input->Get("fitresult_model_reducedDS");
       std::cout << file_MCres_input->GetName() << std::endl;
       auto list_fit_initial = result_MC->floatParsInit();
@@ -110,9 +116,15 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0) mutable {
       }
     };
   if(_step >=1|| _step == -101 || _step == -51){
-	string str_prefit = Form("%s/Yield/Common/",workdir.Data() );
-	str_prefit += getnobdtyield((int) ptMin, (int) ptMax, cBinLow, cBinHigh, state);
-    if(!checkFile(str_prefit) )fit_mc_dat(typenobdt, -1);
+	string str_prefit = Form("%s/Yield/",workdir.Data() );
+	auto query_file =  getfileany(Form("%s/Yield", workdir.Data()), Form("Yield_:S_9999999999_FF_CB3_CC:pt_%d-%d:cbin_%d-%d:BDT1_cut-1.0000-1.0000:vp%.4f.root",  (int) ptMin, (int) ptMax, cBinLow, cBinHigh , cutQVP ) );
+	if(query_file.empty()){
+		fit_mc_dat(typenobdt, -1);
+	}
+	if(!(query_file.empty())){
+		str_prefit += query_file[0];
+	    if(!checkFile(str_prefit) )fit_mc_dat(typenobdt, -1);
+		}
   }
   if(_step >=0|| _step == -100 || _step == -52){
     fit_mc_dat(type_r, blow_ref);
@@ -296,7 +308,7 @@ state =3;
 if(step ==1200){
 	for ( auto loopstates : { 3,} ){ 
 	  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30}/*, {0, 6}, {6, 30}*/}){ 
-		  for( auto bdtptpair : (std::vector<std::pair<double, double> >) {{6, 30},/*{0, 30}, {0, 6}*/ }){ 
+		  for( auto bdtptpair : (std::vector<std::pair<double, double> >) {/*{6, 30},*/{0, 30},/* {0, 6}*/ }){ 
 			ts = input_ts;
 			train_state =loopstates;
 			state = loopstates;
@@ -321,8 +333,9 @@ if(step ==1200){
 
 if(step ==1201){
 	for ( auto loopstates : { 3,  } ){ 
-	  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0,4},/*{0,2}*//*{0, 6}, {0, 6}, {6, 30}*/}){ 
-		  for( auto bdtptpair : (std::vector<std::pair<double, double> >) {/*{6, 30},*/{0, 6},/*{0, 30} */ }){ 
+	  for( auto ptpair : (std::vector<std::pair<double, double> >) {/*{0,4},*/{0,2}/*{0, 6}, {0, 6}, {6, 30}*/}){ 
+		  for( auto bdtptpair : (std::vector<std::pair<double, double> >) {{6, 30},{0, 6},{0, 30}  }){ 
+			if( ptpair.second == 4 && bdtptpair.second == 6) continue;
 			ts = input_ts;
 			train_state =loopstates;
 			state = loopstates;
@@ -334,7 +347,7 @@ if(step ==1201){
 	    	fname2S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC_2S.root", ts, Trig.c_str());
 	    	fname1S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC_1S.root", ts, Trig.c_str());
 			std::cout << "fname(nS) : " << fname3S.c_str() << std::endl;
-		    std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -0);
+		    std::pair<double, RooRealVar> res = prep_bdtval(-0.0, 3);
 		    cutBDTlow = res.first;
 		    sb_ratio = res.second;
 		    if(ptpair.first == 0 && ptpair.second == 30){ INTBIN_BDTLOW = res.first; }
@@ -359,7 +372,31 @@ if(step ==1201){
     ptMax = ptpair.second;
     type 			= "CB3:CC3:GC"	;
 //    std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);
-	for(double xj : {0.3,0.25,0.2,0.15,0.1,0.05,0.0,-0.05,-0.1,-0.2,-0.3,-0.4,-0.6,-0.7}/*}*/){
+	for(double xj : {0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.2,0.05,-0.1,-0.3,-0.5,-0.7,-0.8}/*}*/){
+    	cutBDTlow = xj;
+    	type 			= "CB3:CC3:GC"	;
+		if(xj < -0.2) type = "CB3:CC4:GC";
+
+    	METHOD_MCGCDATA(1);
+	}
+  }
+}
+ if( step == 13111){
+  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30}/*, {0, 6}, {6, 30}*/}){ 
+//	ts = 9999999999;// 1635252097;// 1635139612;
+	ts = input_ts;
+	train_state =aux_train_state;
+	state = aux_train_state;
+	cutQVP= 0.05;
+	sb_ratio.setVal(-1);
+    fname3S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC.root", ts, Trig.c_str());
+    fname2S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC_2S.root", ts, Trig.c_str());
+    fname1S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC_1S.root", ts, Trig.c_str());
+    ptMin = ptpair.first;
+    ptMax = ptpair.second;
+    type 			= "CB3:CC3:GC"	;
+//    std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);
+	for(double xj : {0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.2,0.05,-0.1,-0.3,-0.5,-0.7,-0.8}/*}*/){
     	cutBDTlow = xj;
     	type 			= "CB3:CC3:GC"	;
 		if(xj < -0.2) type = "CB3:CC4:GC";

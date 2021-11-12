@@ -4,7 +4,7 @@ std::vector<TH1D*> Get_hists(long ts, int state)
 {
 //	TFile* f_data = TFile::Open(Form("%s/BDT/roodatasets/%s", workdir.Data(), "OniaRooDataset_BDT1634633971_OniaSkim_TrigS13_BDT.root"));
 //	TFile* f_data = TFile::Open(Form("%s/BDT/Validation/roodatasets/%s", workdir.Data(), "OniaRooDataset_BDT1634805675_OniaSkim_TrigS13_BDT.root"));
-	TFile* f_data = TFile::Open(Form("%s/BDT/Validation/roodatasets/%s", workdir.Data(), Form("OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root",ts)));
+	TFile* f_data = TFile::Open(Form("%s/BDT/roodatasets/%s", workdir.Data(), Form("OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root",ts)));
 //	TFile* f_data = TFile::Open(Form("%s/BDT/roodatasets/%s", workdir.Data(), "OniaRooDataset_BDT9999999999_OniaSkim_TrigS13_BDT.root"));
 	double mass;
 	double bdt;
@@ -21,7 +21,7 @@ std::vector<TH1D*> Get_hists(long ts, int state)
 	for(int evt =0; evt < nE; evt++)
 	{
 		t_data->GetEntry(evt);
-		double cut[6] = {-1, -0.3, -0.1, 0.1, 0.2, 0.3};
+		double cut[6] = {-1, -0.3,  0.1, 0.4,  0.7, 0.9};
 		for(int idx = 0; idx<6; idx++)
 		{
 			

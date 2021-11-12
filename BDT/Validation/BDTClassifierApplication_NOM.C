@@ -23,8 +23,8 @@ void BDTClassifierApplication_NOM(long ts= 9999999999, int train_state =2, int t
 
 
   TMVA::Tools::Instance();
-  TMVA::Reader *reader1 = new TMVA::Reader("!Silent");
-  TMVA::Reader *reader2 = new TMVA::Reader("!Silent");
+  TMVA::Reader *reader1 = new TMVA::Reader("V:!Silent");
+  TMVA::Reader *reader2 = new TMVA::Reader("V:!Silent");
   TXMLEngine xml;
   XMLDocPointer_t xmldoc = xml.ParseFile(Form("./data/Y%dSpt%dto%d/dataset1/weights/TMVA_BDT_Classifier1_%ld_BDT.weights.xml", train_state, ptLow, ptHigh, ts));
   XMLDocPointer_t mainnode = xml.DocGetRootElement(xmldoc);
