@@ -61,9 +61,10 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
   string aux = "";
   if(map_params.find("tmp") != map_params.end() &&map_params["tmp"].val == 1) aux = "_tmp";
   long outputts = ( cutBDTlow == -1 ) ? 9999999999 : ts;
-  std::string name_file_output = Form("%s/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_bdtpt_%d_%d_vp%.4f%s.root" ,workdir.Data(), outputts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10,  cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP, aux.c_str() );
-
- if( ts >= 1634636609) name_file_output = Form("%s/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_bdtpt_%d_%d_vp%.4f%s.root" ,workdir.Data(), train_state, outputts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP, aux.c_str() );
+  std::string name_file_output = GetFit(__FITRESLATEST, false, type, outputts, train_state, 0, (int) ptMin, (int) ptMax, cBinLow, cBinHigh, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP, aux);
+//  std::string name_file_output = Form("%s/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_bdtpt_%d_%d_vp%.4f%s.root" ,workdir.Data(), outputts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10,  cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP, aux.c_str() );
+//
+// if( ts >= 1634636609) name_file_output = Form("%s/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_bdtpt_%d_%d_vp%.4f%s.root" ,workdir.Data(), train_state, outputts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP, aux.c_str() );
   if(fitdir.find("DD") != std::string::npos){
     DDiter = fitdir[4]-48;
     name_file_output = name_file_output.substr(0,name_file_output.length()-5) + Form("_DDiter%d.root", DDiter);
@@ -434,9 +435,9 @@ dbg(1000);
   RooFitResult* Result;
   if(fitdir.find("GC")!=std::string::npos){
     std::cout << "Fitting with Gaussian Constraint" << std::endl;
-    Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), Constrain(list_var_for_gc), PrefitDataFraction(0.1), Minimizer("Minuit","minimize"), NumCPU(16), Range(mf.Range_fit_low, mf.Range_fit_high), SumW2Error(kTRUE), Extended(kTRUE));
+    Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), Constrain(list_var_for_gc), PrefitDataFraction(0.1), Minimizer("Minuit","minimize"), NumCPU(18), Range(mf.Range_fit_low, mf.Range_fit_high), SumW2Error(kTRUE), Extended(kTRUE));
   }
-  else  {Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), PrefitDataFraction(0.1),  Minimizer("Minuit","minimize"), NumCPU(16), Range(mf.Range_fit_low, mf.Range_fit_high), SumW2Error(kTRUE), Extended(kTRUE));}
+  else  {Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), PrefitDataFraction(0.1),  Minimizer("Minuit","minimize"), NumCPU(38), Range(mf.Range_fit_low, mf.Range_fit_high), SumW2Error(kTRUE), Extended(kTRUE));}
 dbg();
   mf.works->pdf(use_model.c_str())->plotOn(massPlot, Name("modelPlot"));
   mf.works->pdf(use_model.c_str())->plotOn(massPlot, Components(RooArgSet(*Signal1S)), LineColor(kRed), LineStyle(kDashed), MoveToBack());
@@ -487,6 +488,8 @@ dbg();
 
   WriteMessage("Writting result is dOnE !!!");
 
+int i = 499;
+dbg(i);i++;
   Double_t Yield1S	= mf.works->var("nSig1S")->getVal();
   Double_t Yield1SErr	= mf.works->var("nSig1S")->getError();
   Double_t Yield2S, Yield3S, Yield2SErr, Yield3SErr;
@@ -527,13 +530,14 @@ dbg();
   }
 
   Double_t YieldBkg 	= mf.works->var("nBkg")->getVal();
-
+  dbg();
   hYield->SetBinContent(1, Yield1S);
   hYield->SetBinError(1, Yield1SErr);
   hYield->SetBinContent(2, Yield2S);
   hYield->SetBinError(2, Yield2SErr);
   hYield->SetBinContent(3, Yield3S);
   hYield->SetBinError(3, Yield3SErr);
+  dbg();
 
   Double_t meanout = mf.works->var("mean1S")->getVal();
   if(fitdir.find("DR") ==std::string::npos){
@@ -562,6 +566,7 @@ dbg();
     Bkgfc = mf.works->pdf("bkgErf")->asTF(*(mf.works->var("mass")));
   }
 
+  dbg();
   Double_t TIntgr1S = Sgnfc1S->Integral(mf.Range_fit_low, mf.Range_fit_high);
   Double_t TIntgr2S = Sgnfc2S->Integral(mf.Range_fit_low, mf.Range_fit_high);
   Double_t TIntgr3S = Sgnfc3S->Integral(mf.Range_fit_low, mf.Range_fit_high);
@@ -570,6 +575,7 @@ dbg();
   Double_t IntgrBkg = Bkgfc->Integral(meanout-2*sigmaout, meanout+2*sigmaout);
   Double_t Significance =(Yield1S*IntgrSig/TIntgr1S/TMath::Sqrt(((Yield1S*IntgrSig/TIntgr1S)+(YieldBkg*IntgrBkg/TIntgrBkg))));
 
+  dbg();
   TH1D* hfrac = new TH1D("hfrac", "", 7, 0, 7);
   hfrac->SetBinContent(1, Sgnfc1S->Eval(U1S_mass));
   hfrac->SetBinContent(2, Bkgfc->Eval(U1S_mass));
@@ -580,9 +586,11 @@ dbg();
   hfrac->SetBinContent(7, Bkgfc->Integral(8.0, 8.6)+Bkgfc->Integral(10.8, 11.5));
   hfrac->SetBinContent(8, Bkgfc->Integral(mf.Range_fit_low, mf.Range_fit_high));
 
+  dbg();
   TH1D* hfracdist = new TH1D("hfracdist","",20, 9, 10);
   for(Int_t i =0; i <20; i++){
     hfracdist->SetBinContent(i+1, Sgnfc1S->Eval(9+0.05*i)/(Sgnfc1S->Eval(9+0.05*i)+Bkgfc->Eval(9+0.05*i)));
+  dbg();
   }
   /**/
   mf.fout->cd();

@@ -476,3 +476,36 @@ Bin by Bin training end::1623349594,1623350222
 8000000147::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, GAUS transformation, small Signal smaple, Gradboost3 (single mu var) 
 8000000147::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, GAUS transformation, small Signal smaple, Gradboost3 (single mu var) 
 8000000147::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, GAUS transformation, small Signal smaple, Gradboost3 (single mu var) 
+8000000016::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000016::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000016::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000017::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000017::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000017::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000019::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000018::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000019::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000018::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000019::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000018::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000021::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000020::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000021::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000020::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000021::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000020::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000023::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000024::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, G+D Vartrans, small Signal smaple, Gradboost13 CrossEntropy with 8 - 14 mass 
+8000000024::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, G+D Vartrans, small Signal smaple, Gradboost13 CrossEntropy with 8 - 14 mass 
+8000000024::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, G+D Vartrans, small Signal smaple, Gradboost13 CrossEntropy with 8 - 14 mass 
+8000000023::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000023::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+800000025::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000026::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL
+800000025::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000026::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL
+8000000026::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL
+800000025::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000027::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::1S::::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000027::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::2S::continue::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+8000000027::8.00,11.50::0.00,30.00::0,181::BLIND[1,1]::3S::continue::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 

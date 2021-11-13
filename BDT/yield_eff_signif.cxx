@@ -28,7 +28,7 @@ binplotter::~binplotter(){
 
 void binplotter::init(bool get_bdt= true){
   std::cout << "Init binplotter " << std::endl;
-  if ( file1 != nullptr ) file1->Close();
+//  if ( file1 != nullptr && file1-> ) file1->Close();
   auto info_fit = parser_symbol(type, ":");
   fitfunc = info_fit[0]+"_"+info_fit[1];
   int ylim10 = (int) (ylim*10);
@@ -55,16 +55,16 @@ void binplotter::init(bool get_bdt= true){
   
   if(get_bdt){ blow = Get_BDT(ts, train_state, bdtptMin, bdtptMax, pl, ph, cl, ch, vcut, (double)ylim);}//Get_Optimal_BDT(ts, pl, ph,(double) -1*ylim, ylim, cl, ch, vcut, train_state).first; }
   dbg(51);
-  
-  filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_bdtpt_%d_%d_vp%.4f.root", ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10,nbin, cl, ch, blow, bhigh,  bdtptMin, bdtptMax, vcut);
-  if(ts >= 1634636609) filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_bdtpt_%d_%d_vp%.4f.root", train_state, ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10, cl, ch, blow, bhigh, bdtptMin, bdtptMax, vcut);
-  if( blow == -1.0000){
-	  filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10,nbin, cl, ch, blow, bhigh,  vcut);
-	  if(ts >= 1634636609){ auto query_file =  getfileany(Form("%s/Yield", workdir.Data()), Form("Yield_:S_9999999999_FF_CB3_CC4:pt_%d-%d:cbin_%d-%d:BDT1_cut-1.0000-1.0000:vp%.4f.root",pl, ph, cl, ch, vcut) );
-	  if(!query_file.empty()) filename = Form("%s/Yield/%s",workdir.Data(), query_file[0].c_str());
-	  }
+  filename = GetFit(__FITRESLATEST, false, type, ts, train_state, target_state, pl, ph, cl, ch, blow, bhigh, bdtptMin, bdtptMax, vcut,"");  
+//  filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_bdtpt_%d_%d_vp%.4f.root", ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10,nbin, cl, ch, blow, bhigh,  bdtptMin, bdtptMax, vcut);
+//  if(ts >= 1634636609) filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_bdtpt_%d_%d_vp%.4f.root", train_state, ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10, cl, ch, blow, bhigh, bdtptMin, bdtptMax, vcut);
+//  if( blow == -1.0000){
+//	  filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10,nbin, cl, ch, blow, bhigh,  vcut);
+//	  if(ts >= 1634636609){ auto query_file =  getfileany(Form("%s/Yield", workdir.Data()), Form("Yield_:S_9999999999_FF_CB3_CC4:pt_%d-%d:cbin_%d-%d:BDT1_cut-1.0000-1.0000:vp%.4f.root",pl, ph, cl, ch, vcut) );
+//	  if(!query_file.empty()) filename = Form("%s/Yield/%s",workdir.Data(), query_file[0].c_str());
+//	  }
 		  //Form("/home/vince402/Upsilon3S/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_vp%.4f.root", train_state, ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10, cl, ch, blow, bhigh,  vcut);
-  }
+//  }
   std::cout << "[bp] yield file name : " << filename.c_str() << std::endl;
   if(fitdir.find("DD") != std::string::npos){
     filename = filename.substr(0, filename.length() -5) + Form("_DDiter%d.root",fitdir[4]-48); 
