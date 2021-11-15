@@ -15,7 +15,7 @@ long _real_time;
 char logbuf[2000];
 long _ts_buf=0;
 
-bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptHigh, int cBinLow, int cBinHigh, std::string opt = ""){
+bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptHigh, int cBinLow, int cBinHigh, std::string opt = "", long inputts =0, string bookOpt = "", string datprep =""){
   //Load Library
   ROOT::EnableImplicitMT(4);
   TMVA::Tools::Instance();
@@ -23,8 +23,8 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
     traintree=1;
     testtree=1;
 
-  std::time_t tstamp = 8000000028;
-  _ts = 8000000028;
+  std::time_t tstamp = inputts;
+  _ts = inputts;
   (long) tstamp;
   if(_ts_buf==0) _ts_buf = _ts;
   if(strcmp(opt.c_str(), "continue")==0) _ts = _ts_buf;
@@ -33,7 +33,7 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
   std::cout <<"time stamp---> " <<  tstamp << std::endl;
 //  if(strcmp(opt.c_str(),"NOMINAL")==0) _ts = (long) 9999999999;
 //  if(strcmp(opt.c_str(),"NOMINAL2")==0) _ts = (long) 99999999992;
-  std::system(Form("cat BDTClassifier_BLIND_BDT17.C >> ../.past_source/_BDTClassifier_BLIND_BDT17_%ld.old",(long) tstamp));
+  std::system(Form("cat BDTClassifier_BLIND_BDT.C >> ../.past_source/_BDTClassifier_BLIND_BDT_%ld.old",(long) tstamp));
   ofstream log, log2;
 
 //  log << tstamp;
@@ -131,15 +131,19 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
     loader1->SetSignalWeightExpression("weight");
     loader2->SetSignalWeightExpression("weight");
 
-    loader1->PrepareTrainingAndTestTree( cut1, cut2, "SplitSeed=100:nTrain_Signal=100000:SplitMode=Alternate:NormMode=None:!V");
-    loader2->PrepareTrainingAndTestTree( cut1, cut2, "SplitSeed=100:nTrain_Signal=100000:SplitMode=Alternate:NormMode=None:!V");
+    loader1->PrepareTrainingAndTestTree( cut1, cut2, datprep.c_str());
+    loader2->PrepareTrainingAndTestTree( cut1, cut2, datprep.c_str());
 
 
   //Book Training BDT Method
   factory1->BookMethod( loader1, TMVA::Types::kBDT, TString::Format("BDT"  ),
-  	"!H:!V:NTrees=500:MaxDepth=3:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.6:UseBaggedBoost:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D+G");//");
+//  	"!H:!V:NTrees=500:MaxDepth=3:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.6:UseBaggedBoost:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:Transformations=G+D+G+D+G"
+		bookOpt.c_str()
+  );//");
   factory2->BookMethod( loader2, TMVA::Types::kBDT, TString::Format("BDT"  ),
-  	"!H:!V:NTrees=500:MaxDepth=3:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.6:UseBaggedBoost:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D+G");//");
+//  	"!H:!V:NTrees=500:MaxDepth=3:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.6:UseBaggedBoost:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:Transformations=G+D+G+D+G");//");
+		bookOpt.c_str()
+  );//");
   //Train Test Evaluate
   
   for( auto setting : std::map<TMVA::Factory*, std::pair<TMVA::DataLoader*, string> > {{factory1, {loader1, "BDT"}}, {factory2,  {loader2, "BDT"}}} )
@@ -177,7 +181,7 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
 }
 
 //Main Function
-void BDTClassifier_BLIND_BDT17( ){
+void BDTClassifier_BLIND_BDT( long _inputts , string _bookOpt, string _datprep){
   ofstream log;
   //log.open("BDT_description.log", std::ios_base::out|std::ios_base::app);
   //log << "Bin by Bin training start----------------------" <<std::endl; ; 
@@ -205,10 +209,10 @@ void BDTClassifier_BLIND_BDT17( ){
 //  for( auto pair : bin1spt) 
 //  {
 //  	res = BDTClassifier_BLIND_Function(1,0,pair.first,pair.second, 0,181, "NOMINAL");
-  	res = BDTClassifier_BLIND_Function(1,0,0,30, 0,181, "");
-  	res = BDTClassifier_BLIND_Function(2,0,0,30, 0,181, "continue");
-  	res = BDTClassifier_BLIND_Function(3,0,0,30, 0,181, "continue");
-  	if(!res)std::system(Form("rm ../.past_source/_BDT_Blind_Classifier_BDT17_%ld.old",(long) _real_time));
+  	res = BDTClassifier_BLIND_Function(1,0,0,30, 0,181, "", _inputts, _bookOpt, _datprep);
+  	res = BDTClassifier_BLIND_Function(2,0,0,30, 0,181, "continue", _inputts, _bookOpt, _datprep);
+  	res = BDTClassifier_BLIND_Function(3,0,0,30, 0,181, "continue", _inputts, _bookOpt, _datprep);
+  	if(!res)std::system(Form("rm ../.past_source/_BDT_Blind_Classifier_BDT_%ld.old",(long) _real_time));
 //  }
 //  res = BDTClassifier_BLIND_Function(3,0,0,6, 0,181, "NOMINAL");
 //  if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier_%ld.old",(long) _real_time));

@@ -22,8 +22,8 @@ RooRealVar getDoubleRatioValue(bool inc_pp_stat, std::pair <int, int> cbpair, st
   binplotter* bp ;
   int target_state = state;
   if(train_state ==0) train_state = target_state;
-  bp = new binplotter(type,ts, ylim, ptpair.first, ptpair.second, cbpair.first, cbpair.second, bdtpair.first, bdtpair.second, bdtptMin, bdtptMax, train_state, target_state, false, eff_old);
-  if (stdvcut){ bp->set_params(0.01); }
+  double app_cutQVP = (stdvcut) ? 0.01 : 0.0000;
+  bp = new binplotter(type,ts, ylim, ptpair.first, ptpair.second, cbpair.first, cbpair.second, app_cutQVP, bdtpair.first, bdtpair.second, bdtptMin, bdtptMax, train_state, target_state, false, eff_old);
 
   RooRealVar _y = bp->get_yield(state);
   if(getPre==2) return _y;

@@ -2,7 +2,7 @@
 
 std::vector<TH1D*> Get_hists(long ts, int state)
 {
-	auto cut = VALI_V3_BDTTESTCUT;
+	auto cut = VALI_V3_BDTTESTCUT3;
 	int nbins = cut.size()+1;
 //	TFile* f_data = TFile::Open(Form("%s/BDT/roodatasets/%s", workdir.Data(), "OniaRooDataset_BDT1634633971_OniaSkim_TrigS13_BDT.root"));
 //	TFile* f_data = TFile::Open(Form("%s/BDT/Validation/roodatasets/%s", workdir.Data(), "OniaRooDataset_BDT1634805675_OniaSkim_TrigS13_BDT.root"));
@@ -45,7 +45,7 @@ std::vector<TH1D*> Get_hists(long ts, int state)
 
 };
 
-void DrawMass2(long ts, int state)
+void DrawMass3(long ts, int state)
 {
 	auto hists = Get_hists(ts, state);
 	int nhists = hists.size();
@@ -53,16 +53,16 @@ void DrawMass2(long ts, int state)
 	Color_t colrs[12] = {kBlack , kBlue , kMagenta , kTeal , kOrange , kRed, kBlue -6, kMagenta +3, kTeal +3, kOrange -3, kRed -7, kCyan +2, };
 	for (int idx =0; idx < nhists; idx++)
 	{
-
+			hists[idx]->Scale(1/hists[idx]->GetSum());
 			hists[idx]->SetMarkerColor(colrs[idx]);
 			hists[idx]->SetLineColor(colrs[idx]);
 			if( idx == 0 )
 			{
-				hists[idx]->GetYaxis()->SetRangeUser(1,4000);
+				hists[idx]->GetYaxis()->SetRangeUser(0,0.1);
 				hists[idx]->Draw("pe");
 			}
 			hists[idx]->Draw("same pe");
 	}
-	c1->SaveAs(Form("./FullMassBDT/FullMassBDTCompare_fullmass_m614_%ld_%d.C", ts, state));
+	c1->SaveAs(Form("./FullMassBDT/FullMassBDTCompare_fullmass_m614_Norm_%ld_%d.C", ts, state));
 }
 

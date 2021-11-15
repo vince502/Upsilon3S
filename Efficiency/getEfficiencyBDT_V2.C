@@ -7,13 +7,14 @@
 #include "tnp_weight_lowptPbPb.h"
 #include "BDTTreeSetting.h"
 #include "../.workdir.h"
+#include "../fitreslib.h"
 
 using namespace std;
 
 void getEfficiencyBDT_V2(
   float ptLow = 0.0, float ptHigh = 30.0,
   float yLow = -2.4, float yHigh = 2.4,
-  int cLow = 0, int cHigh = 181, bool isTnP = true, bool isPtWeight = true, long  ts = 9999999999, double bdt_tsl = 0.0, double bdt_tsh =0.0, int train_state = 3, int state= 3, double vcut = 0.00
+  int cLow = 0, int cHigh = 181, bool isTnP = true, bool isPtWeight = true, long  ts = 9999999999, double bdt_tsl = 0.0, double bdt_tsh =0.0, int bdtptMin =0, int bdtptMax = 1, int train_state = 3, int state= 3, double vcut = 0.00
   ) {
 
   gStyle->SetOptStat(0);
@@ -76,7 +77,7 @@ void getEfficiencyBDT_V2(
 //  TFile *fPtW = new TFile(Form("%s/Efficiency/Func_dNdpT_2S.root",workdir.Data()),"read");
 //  TF1* f1 = (TF1*) fPtW->Get("fitRatio");
 
-  TString histName = Form("BDT_%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d", state, ts, bdt_tsl, bdt_tsh, ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight);
+//  TString histName = Form("BDT_%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_isTnP%d_isPtWeight%d", state, ts, bdt_tsl, bdt_tsh, ptLow,ptHigh,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,isTnP,isPtWeight);
   TH2D* hreco = new TH2D(Form("hreco"),"hreco",20000,0,20000,50,0,50);
   TH2D* hreco_tnp = new TH2D(Form("hreco_tnp"),"hreco_tnp",20000,0,20000,50,0,50);
   TH2D* hreco_xtnp = new TH2D(Form("hreco_xtnp"),"hreco_xtnp",20000,0,20000,50,0,50);
@@ -126,8 +127,8 @@ void getEfficiencyBDT_V2(
     if (checkID) {
       if(!( nTrkWMea1 >5 && nTrkWMea2 >5 && nPixWMea1 > 0 && nPixWMea2 > 0 && fabs(dxy1) < 0.3 && fabs(dxy2) < 0.3 && fabs(dz1) < 20. && fabs(dz2) < 20.) ) continue;
 
-    histName = Form("BDT_%dS_%ld_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID", state, ts,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,vcut,isTnP,isPtWeight);
-    if(ts >= 1634636609) histName = Form("BDT_%dS_train%dS_%ld_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID_fix_test", state, train_state, ts,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,vcut,isTnP,isPtWeight);
+//    histName = Form("BDT_%dS_%ld_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID", state, ts,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,vcut,isTnP,isPtWeight);
+//    if(ts >= 1634636609) histName = Form("BDT_%dS_train%dS_%ld_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID_fix_test", state, train_state, ts,yLow,yHigh,muPtCut,massLow,massHigh,cLow,cHigh,vcut,isTnP,isPtWeight);
     }
     double ptW =1;
     if( isPtWeight) ptW = f1->Eval(pt);
@@ -140,9 +141,9 @@ void getEfficiencyBDT_V2(
 
   }
   cout << "count " << count << endl;
+	string histName = GetEffNum(__FITRESLATEST, ts, train_state, state, bdtptMin, bdtptMax, yLow, yHigh, muPtCut, massLow, massHigh, cLow, cHigh, vcut, isTnP, isPtWeight);
 
-  TString outFileName = Form("/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_%s.root",histName.Data());
-  TFile* outFile = new TFile(outFileName,"RECREATE");
+  TFile* outFile = new TFile(histName.c_str(),"RECREATE");
 //  heff->Write();
   hreco->Write();
   hreco_tnp->Write();

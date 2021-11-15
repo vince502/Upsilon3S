@@ -17,11 +17,11 @@ TString BDTDistribution_onebin(int _state, int _pl, int _ph, int mode, long ts =
 	if(mode ==4 ) {dataset_index1 =2; dataset_index2 = 2;}
 	t_train = (TTree*) f_res->Get(Form("%s/dataset%d/TrainTree",bdtdir(_state, _pl, _ph).c_str(), dataset_index1));
 	t_test  = (TTree*) f_res->Get(Form("%s/dataset%d/TestTree" ,bdtdir(_state, _pl, _ph).c_str(), dataset_index2));
-	int nBins = 40;
-	TH1D* hist_s_tr = new TH1D("h_s_tr", "", nBins, -0.6, 0.6);
-	TH1D* hist_b_tr = new TH1D("h_b_tr", "", nBins, -0.6, 0.6);
-	TH1D* hist_s_te = new TH1D("h_s_te", "", nBins, -0.6, 0.6);
-	TH1D* hist_b_te = new TH1D("h_b_te", "", nBins, -0.6, 0.6);
+	int nBins = 80;
+	TH1D* hist_s_tr = new TH1D("h_s_tr", "", nBins, -1,1);
+	TH1D* hist_b_tr = new TH1D("h_b_tr", "", nBins, -1,1);
+	TH1D* hist_s_te = new TH1D("h_s_te", "", nBins, -1,1);
+	TH1D* hist_b_te = new TH1D("h_b_te", "", nBins, -1,1);
 	float bdt_tr, bdt_te;
 	t_train->SetBranchAddress("BDT", &bdt_tr);
 	t_test->SetBranchAddress("BDT", &bdt_te);

@@ -11,16 +11,18 @@ binplotter::binplotter(ana_bins x, int _train_state, int _bdtptMin, int _bdtptMa
   ts = 9999999999; ylim = 2.4, pl = (double) x.pl; ph = (double) x.ph; cl = x.cl; ch = x.ch; blow = Get_BDT(ts, x.state, pl, ph, cl, ch, 0., ylim, 2); bhigh = 1; bdtptMin = _bdtptMin; bdtptMax = _bdtptMax; train_state = x.state; eff_old = false; train_state = _train_state;
   init(false);
 };
-
-binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _bdtptMin, int _bdtptMax, int _train_state =3, int _target_state=3,  bool find_bdt = false, bool _eff_old = false){
+binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _vcut, double _blow, double _bhigh, int _bdtptMin, int _bdtptMax, int _train_state =3, int _target_state=3,  bool find_bdt = false, bool _eff_old = false){
   dbg(50);
-  type = _type; ts = _ts; ylim = _ylim;  pl = _pl; ph = _ph; cl = _cl; ch = _ch; blow = _blow; bhigh = _bhigh; bdtptMin = _bdtptMin; bdtptMax = _bdtptMax;train_state = _train_state; target_state = _target_state; eff_old = _eff_old;
+  type = _type; ts = _ts; ylim = _ylim;  pl = _pl; ph = _ph; cl = _cl; ch = _ch; blow = _blow; bhigh = _bhigh; bdtptMin = _bdtptMin; bdtptMax = _bdtptMax;train_state = _train_state; target_state = _target_state; eff_old = _eff_old; vcut= _vcut;
 
   int nbin = 120;
   if (massrng.find(ts) != massrng.end()) { nbin = (int) ((massrng[ts].second - massrng[ts].first)/0.05); } 
   init(find_bdt);
 };
-binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _bdtptMin, int _bdtptMax, int _train_state =3, bool find_bdt = false, bool _eff_old = false) : binplotter( _type, _ts, _ylim, _pl, _ph, _cl, _ch, _blow, _bhigh, _bdtptMin, _bdtptMax, _train_state, _train_state, find_bdt, _eff_old){};
+
+binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _bdtptMin, int _bdtptMax, int _train_state =3, int _target_state=3,  bool find_bdt = false, bool _eff_old = false) : binplotter( _type, _ts, _ylim, _pl, _ph, _cl, _ch, 0, _blow, _bhigh, _bdtptMin, _bdtptMax, _train_state, _train_state, find_bdt, _eff_old){};
+
+binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _bdtptMin, int _bdtptMax, int _train_state =3, bool find_bdt = false, bool _eff_old = false) : binplotter( _type, _ts, _ylim, _pl, _ph, _cl, _ch, 0., _blow, _bhigh, _bdtptMin, _bdtptMax, _train_state, _train_state, find_bdt, _eff_old){};
 
 binplotter::~binplotter(){ 
 	std::cout << "[bp][Deconstruct] call" << std::endl;
@@ -90,10 +92,9 @@ void binplotter::init(bool get_bdt= true){
   {
     res_tmp = (RooFitResult*) file1->Get("fitresult_model_gc_reducedDS");
   }
-  std::cout << "[bp][init] res_tmp : " << static_cast<void*> (res_tmp) << ", " << res_tmp->GetName() << std::endl;
   worksp = (RooWorkspace*) file1->Get("workspace");
   res = (RooFitResult*) res_tmp->Clone();
-  std::cout << "[bp][init] res : " << static_cast<void*> (res) << ", " << res->GetName() << std::endl;
+//  std::cout << "[bp][init] res : " << static_cast<void*> (res) << ", " << res->GetName() << std::endl;
 
 //  res->SetDirectory(0);
 //  worksp->SetDirectory(0);
@@ -171,7 +172,7 @@ RooRealVar binplotter::get_bkg(int state = 3)
 
 RooRealVar binplotter::get_yield(int state =3 ){
 	std::cout << "[bp][get_yield] state : " << state << std::endl;
-	std::cout << "[bp][get_yield] res alive? : " << static_cast<void*>(res) << std::endl;
+//	std::cout << "[bp][get_yield] res alive? : " << static_cast<void*>(res) << std::endl;
   RooRealVar Yield1S, Yield2S, Yield3S;
   const RooArgList& paramList = res->floatParsFinal();
   Yield1S = *(RooRealVar*) worksp->var("nSig1S");
@@ -198,7 +199,8 @@ RooRealVar binplotter::get_yield(int state =3 ){
 };
 
 std::pair<double, double> binplotter::get_eff(int state =3, bool getNum = false){
-  std::pair<double, double> bdteff = openEffhist((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, train_state, state, vcut, eff_old, getNum);  
+	std::cout << "[bp][get_eff] :" << train_state << ", " << state << std::endl;
+  std::pair<double, double> bdteff = openEffhist((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, bdtptMin, bdtptMax, train_state, state, vcut, eff_old, getNum);  
   return bdteff;
 };
 

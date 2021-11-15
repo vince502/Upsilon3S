@@ -20,23 +20,19 @@ void BDTNominalProcess(long ts=1635139612, int mode =0, std::vector<std::pair<in
 		if(mode ==1){
 			BDTClassifierApplication_NOM(ts, 2, 9, 0, true, ptpair.first, ptpair.second);
 			makeRooDataset_fromBDT_NOM(ts, true, false, 2,  ptpair.first, ptpair.second );
-			BDTClassifierApplication_NOM(ts, 1, 9, 0, true, ptpair.first, ptpair.second);
-			makeRooDataset_fromBDT_NOM(ts, true, false, 1,  ptpair.first, ptpair.second );
-
-		}
-		if(mode ==1){
 			BDTClassifierApplication_NOM(ts, 2, 2, 1, true, ptpair.first, ptpair.second);
 			makeRooDataset_fromBDT_NOM(ts, true, true, 2,   ptpair.first, ptpair.second, "MC_2S");
-			BDTClassifierApplication_NOM(ts, 1, 1, 1, true, ptpair.first, ptpair.second);
-			makeRooDataset_fromBDT_NOM(ts, true, true, 1,   ptpair.first, ptpair.second, "MC_1S");
-		}
-		if(mode ==1){
 			BDTClassifierApplication_NOM(ts, 2, 3, 1, true, ptpair.first, ptpair.second);
 			makeRooDataset_fromBDT_NOM(ts, true, true, 2,   ptpair.first, ptpair.second, "nan");
 			BDTClassifierApplication_NOM(ts, 2, 1, 1, true, ptpair.first, ptpair.second);
 			makeRooDataset_fromBDT_NOM(ts, true, true, 2,   ptpair.first, ptpair.second, "MC_1S");
+
 		}
-		if(mode ==1){
+		if(mode ==2){
+			BDTClassifierApplication_NOM(ts, 1, 9, 0, true, ptpair.first, ptpair.second);
+			makeRooDataset_fromBDT_NOM(ts, true, false, 1,  ptpair.first, ptpair.second );
+			BDTClassifierApplication_NOM(ts, 1, 1, 1, true, ptpair.first, ptpair.second);
+			makeRooDataset_fromBDT_NOM(ts, true, true, 1,   ptpair.first, ptpair.second, "MC_1S");
 			BDTClassifierApplication_NOM(ts, 1, 2, 1, true, ptpair.first, ptpair.second);
 			makeRooDataset_fromBDT_NOM(ts, true, true, 1,   ptpair.first, ptpair.second, "MC_2S");
 			BDTClassifierApplication_NOM(ts, 1, 3, 1, true, ptpair.first, ptpair.second);

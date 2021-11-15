@@ -10,7 +10,7 @@ function TRAINER {
 function ONECYCLE {
 #root -l -b -q "BDT_trainVariable_Mass_Distribution.C("$TS",1)"
 cd /home/vince402/Upsilon3S
-root -l -b -q "doConstraintFit_VALI_v3.cxx(13113,"$TS",3)"
+root -l -b -q "doConstraintFit_VALI_v3.cxx(1311,"$TS",3)"
 cd /home/vince402/Upsilon3S/BDT/Validation
 #root -l -b -q "BDTNominalProcess.cxx("$TS",1, {{0,30}})"
 #cd /home/vince402/Upsilon3S
@@ -18,14 +18,14 @@ cd /home/vince402/Upsilon3S/BDT/Validation
 #root -l -b -q "BDTNominalProcess.cxx("$TS",1, {{0,30}})"
 #
 cd /home/vince402/Upsilon3S/Macros
-./runYIeldRatio.sh "$TS" 1 3
-./runYIeldRatio.sh "$TS" 2 3
-./runYIeldRatio.sh "$TS" 3 3
-./runYIeldRatio.sh "$TS" 1 2
-./runYIeldRatio.sh "$TS" 2 2
-./runYIeldRatio.sh "$TS" 3 2
-root -l -b -q "DrawMass2.cxx("$TS", 1)"
-root -l -b -q "DrawMass2.cxx("$TS", 2)"
+#./runYIeldRatio.sh "$TS" 1 3
+#./runYIeldRatio.sh "$TS" 2 3
+#./runYIeldRatio.sh "$TS" 3 3
+#./runYIeldRatio.sh "$TS" 1 2
+#./runYIeldRatio.sh "$TS" 2 2
+#./runYIeldRatio.sh "$TS" 3 2
+#root -l -b -q "DrawMass2.cxx("$TS", 1)"
+#root -l -b -q "DrawMass2.cxx("$TS", 2)"
 root -l -b -q "DrawMass2.cxx("$TS", 3)"
 
 tar -zcvf result_"$TS".tar.gz  /home/vince402/Upsilon3S/BDT/Validation/../.past_source/_BDTClassifier_BLIND_BDT_"$TS".old ./FullMassBDT/FullMassBDTCompare_fullmass_m614_"$TS"_1.C ./FullMassBDT/FullMassBDTCompare_fullmass_m614_"$TS"_2.C ./FullMassBDT/FullMassBDTCompare_fullmass_m614_"$TS"_3.C BDTCorYield_plots_"$TS".root
@@ -68,40 +68,10 @@ mv result_"$TS".tar.gz /home/vince402/Upsilon3S/BDT/Validation
 #DATPREP=""\"SplitSeed=100:nTrain_Signal=50000:SplitMode=Alternate:NormMode=None:!V\"""
 #OPT=""\"\!H:\!V:NTrees=500:MaxDepth=3:MinNodeSize=5%:BoostType=AdaBoost:AdaBoostBeta=0.5:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D+G\"""
 #TRAINER
-#TS=8200000015
-#DATPREP=""\"SplitSeed=100:nTrain_Signal=50000:nTest_Signal=50000:SplitMode=Alternate:NormMode=None:!V\"""
-#OPT=""\"\!H:\!V:NTrees=1000:MaxDepth=3:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.4:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D+G\"""
+TS=8200000015
+DATPREP=""\"SplitSeed=100:nTrain_Signal=50000:nTest_Signal=50000:SplitMode=Alternate:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=1000:MaxDepth=3:MinNodeSize=5%:BoostType=Grad:UseBaggedBoost=True:AdaBoostBeta=0.4:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D+G\"""
 #TRAINER
-#TS=8200000016
-#DATPREP=""\"SplitSeed=100:nTrain_Signal=50000:nTest_Signal=50000:SplitMode=Alternate:NormMode=None:!V\"""
-#OPT=""\"\!H:\!V:NTrees=1000:MaxDepth=3:MinNodeSize=5%:BoostType=RealAdaBoost:UseYesNoLeaf=True:AdaBoostBeta=0.4:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D+G\"""
-#TRAINER &
-#TS=8200000017
-#DATPREP=""\"SplitSeed=100:nTrain_Signal=50000:nTest_Signal=50000:SplitMode=Alternate:NormMode=None:!V\"""
-#OPT=""\"\!H:\!V:NTrees=500:MaxDepth=3:MinNodeSize=5%:BoostType=Grad:Shrinkage=0.1:AdaBoostBeta=0.4:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D+G\"""
-#TRAINER &
-#TS=8200000018
-#DATPREP=""\"SplitSeed=100:nTrain_Signal=50000:nTest_Signal=50000:SplitMode=Alternate:NormMode=None:!V\"""
-#OPT=""\"\!H:\!V:NTrees=50:MaxDepth=3:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.4:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D+G\"""
-#TRAINER &
-############## NO FAKE EFFICIENCY ################################
-TS=8000000023
-DATPREP=""\"SplitSeed=100:nTrain_Signal=50000:nTest_Signal=50000:SplitMode=Alternate:NormMode=None:!V\"""
-OPT=""\"\!H:\!V:NTrees=500:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.6:UseBaggedBoost:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D+G+D+G+D+G+D+G+D+G\"""
-#TRAINER 
-##################################################################
-TS=8230000001
-DATPREP=""\"SplitSeed=100:nTrain_Signal=50000:nTest_Signal=50000:SplitMode=Alternate:NormMode=None:!V\"""
-OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.6:UseBaggedBoost=True:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D+G+D+G+D+G+D+G+D+G\"""
-TRAINER & 
-TS=8230000002
-DATPREP=""\"SplitSeed=100:nTrain_Signal=50000:nTest_Signal=50000:SplitMode=Alternate:NormMode=None:!V\"""
-OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.6:UseBaggedBoost:SeparationType=GiniIndexWithLaplace:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D+G+D+G+D+G+D+G+D+G\"""
-TRAINER &
-TS=8230000003
-DATPREP=""\"SplitSeed=100:nTrain_Signal=50000:nTest_Signal=50000:SplitMode=Alternate:NormMode=None:!V\"""
-OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.6:Shrinkage=0.05:UseBaggedBoost:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D+G+D+G+D+G+D+G+D+G\"""
-TRAINER &
 
 #TS=8200000006
 #ONECYCLE
@@ -113,8 +83,10 @@ TRAINER &
 #ONECYCLE
 #TS=8200000011
 #ONECYCLE
-#TS=8200000012
+#TS=8200000018
 #ONECYCLE
+TS=8000000023
+ONECYCLE
 #
 #cd Macros
 #root -l -b -q "DrawYield.C(8100000001)"
