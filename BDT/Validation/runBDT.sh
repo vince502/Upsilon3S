@@ -7,6 +7,10 @@ function TRAINER {
 	root -l -b -q "BDTClassifier_BLIND_BDT.C("$TS", "$OPT", "$DATPREP")" 2>&1| tee BDT"$TS".log
 	root -l -b -q "BDTNominalProcess.cxx("$TS",0, {{0,30}})"
 }
+function TRAINER2 {
+	root -l -b -q "BDTClassifier_BLIND_BDT2.C("$TS", "$OPT", "$DATPREP")" 2>&1| tee BDT"$TS".log
+	root -l -b -q "BDTNominalProcess.cxx("$TS",0, {{0,30}})"
+}
 function ONECYCLE {
 #root -l -b -q "BDT_trainVariable_Mass_Distribution.C("$TS",1)"
 cd /home/vince402/Upsilon3S
@@ -90,18 +94,39 @@ DATPREP=""\"SplitSeed=100:nTrain_Signal=50000:nTest_Signal=50000:SplitMode=Alter
 OPT=""\"\!H:\!V:NTrees=500:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.6:UseBaggedBoost:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D+G+D+G+D+G+D+G+D+G\"""
 #TRAINER 
 ##################################################################
-TS=8230000001
-DATPREP=""\"SplitSeed=100:nTrain_Signal=50000:nTest_Signal=50000:SplitMode=Alternate:NormMode=None:!V\"""
-OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.6:UseBaggedBoost=True:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D+G+D+G+D+G+D+G+D+G\"""
-TRAINER & 
-TS=8230000002
-DATPREP=""\"SplitSeed=100:nTrain_Signal=50000:nTest_Signal=50000:SplitMode=Alternate:NormMode=None:!V\"""
-OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.6:UseBaggedBoost:SeparationType=GiniIndexWithLaplace:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D+G+D+G+D+G+D+G+D+G\"""
-TRAINER &
-TS=8230000003
-DATPREP=""\"SplitSeed=100:nTrain_Signal=50000:nTest_Signal=50000:SplitMode=Alternate:NormMode=None:!V\"""
-OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.6:Shrinkage=0.05:UseBaggedBoost:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D+G+D+G+D+G+D+G+D+G\"""
-TRAINER &
+#TS=8230000001
+#DATPREP=""\"SplitSeed=100:nTrain_Signal=50000:nTest_Signal=50000:SplitMode=Alternate:NormMode=None:!V\"""
+#OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.6:UseBaggedBoost=True:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D+G+D+G+D+G+D+G+D+G\"""
+#TRAINER & 
+#TS=8230000002
+#DATPREP=""\"SplitSeed=100:nTrain_Signal=50000:nTest_Signal=50000:SplitMode=Alternate:NormMode=None:!V\"""
+#OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.6:UseBaggedBoost:SeparationType=GiniIndexWithLaplace:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D+G+D+G+D+G+D+G+D+G\"""
+#TRAINER &
+#TS=8230000003
+#DATPREP=""\"SplitSeed=100:nTrain_Signal=50000:nTest_Signal=50000:SplitMode=Alternate:NormMode=None:!V\"""
+#OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.6:Shrinkage=0.05:UseBaggedBoost:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D+G+D+G+D+G+D+G+D+G\"""
+#TRAINER &
+#TS=8230000004
+#DATPREP=""\"SplitSeed=100:nTrain_Signal=50000:nTest_Signal=50000:SplitMode=Alternate:NormMode=None:!V\"""
+#OPT=""\"\!H:\!V:NTrees=100:MaxDepth=2:MinNodeSize=20%:BoostType=RealAdaBoost:UseYesNoLeaf=True:AdaBoostBeta=0.2:Shrinkage=0.05:UseBaggedBoost:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=True:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
+#TRAINER2 
+#TS=8230000005
+#DATPREP=""\"SplitSeed=100:nTrain_Signal=50000:nTest_Signal=50000:SplitMode=Alternate:NormMode=None:!V\"""
+#OPT=""\"\!H:\!V:NTrees=2000:MaxDepth=2:MinNodeSize=10%:BoostType=RealAdaBoost:UseYesNoLeaf=True:AdaBoostBeta=0.3:Shrinkage=0.05:UseBaggedBoost:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=True:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
+#TRAINER2 
+#TS=8000000019
+#DATPREP=""\"SplitSeed=100:nTrain_Signal=50000:nTest_Signal=50000:SplitMode=Alternate:NormMode=None:!V\"""
+#OPT=""\"\!H:\!V:NTrees=300:MaxDepth=7:MinNodeSize=5%:BoostType=RealAdaBoost:AdaBoostBeta=0.4:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
+#TRAINER 
+#TS=8000000020
+#DATPREP=""\"SplitSeed=100:nTrain_Signal=300000:nTest_Signal=30000:SplitMode=Alternate:NormMode=None:!V\"""
+#OPT=""\"\!H:\!V:NTrees=400:MaxDepth=2:MinNodeSize=5%:BoostType=AdaBoost:AdaBoostBeta=0.4:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=True:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
+#TRAINER 
+TS=8000000021
+DATPREP=""\"SplitSeed=100:nTrain_Signal=100000:nTest_Signal=30000:SplitMode=Alternate:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=400:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:Shrinkage=0.05:UseBaggedBoost=True:AdaBoostBeta=0.4:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=True:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
+TRAINER 
+
 
 #TS=8200000006
 #ONECYCLE

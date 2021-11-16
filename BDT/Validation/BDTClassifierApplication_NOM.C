@@ -13,13 +13,16 @@
 
 
 void BDTClassifierApplication_NOM(long ts= 9999999999, int train_state =2, int target_state = 2, bool isMC = 0, bool isbbb = true, int ptLow =0, int ptHigh = 30, int mcmode= 0){
-  std::string info_blind;
-  if( !isbbb) info_blind = info_BDT(ts)[2];
-  if( isbbb ) info_blind = info_BDT(ts)[4];
-  std::pair<int,int> _bf= {stoi(info_blind.substr(6,1)),stoi(info_blind.substr(8,1)) };
-  int whichtree = _bf.second;
-  if (whichtree >5) {std::cout << "if BLIND, is tree selection wrong? " << std::endl; return; }
-  if (whichtree !=0 && whichtree <6) {std::cout <<"Application in BLIND tree"<<whichtree<< std::endl;}
+  std::cout <<"[BDT_APP] Initializing" << std::endl;
+//  std::string info_blind;
+//  if( !isbbb) info_blind = info_BDT(ts)[2];
+//  if( isbbb ) info_blind = info_BDT(ts)[4];
+//  std::cout << info_blind << std::endl;
+//  std::pair<int,int> _bf= {stoi(info_blind.substr(6,1)),stoi(info_blind.substr(8,1)) };
+//  int whichtree = _bf.second;
+    int whichtree = 1;
+//  if (whichtree >5) {std::cout << "if BLIND, is tree selection wrong? " << std::endl; return; }
+//  if (whichtree !=0 && whichtree <6) {std::cout <<"Application in BLIND tree"<<whichtree<< std::endl;}
 
 
   TMVA::Tools::Instance();
