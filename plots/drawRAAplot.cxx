@@ -424,3 +424,8 @@ void drawRAApt_plot(){
   hPbPb3S->Write();
   output->Close();
 };
+
+//RooRealVar getDoubleRatioValue(bool inc_pp_stat, std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC", double bdtlow_val = -2, int bdtptMin = 0 , int bdtptMax = 30, int state =3, int getPre = 0,long ts =9999999999, bool stdvcut = false, bool eff_old = false, int train_state=0){
+RooRealVar getDoubleRatioValue(long ts, string type, double bl, int state, int train_state){
+	return  getDoubleRatioValue(false, {0,181}, {0,30}, type, bl, 0, 30, state, 0, ts, 0,0,train_state);
+};

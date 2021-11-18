@@ -10,7 +10,9 @@ function TRAINER {
 function ONECYCLE {
 #root -l -b -q "BDT_trainVariable_Mass_Distribution.C("$TS",1)"
 cd /home/vince402/Upsilon3S
-root -l -b -q "doConstraintFit_VALI_v3.cxx(1311,"$TS",3)"
+root -l -b -q "doConstraintFit_VALI_v3.cxx(1311,"$TS",3)" 2>&1 | tee Fitresult.log
+root -l -b -q "doConstraintFit_VALI_v3.cxx(1311,"$TS",2)" 2>&1 | tee Fitresult2.log
+#root -l -b -q "doConstraintFit_VALI_v3.cxx(1311,"$TS",1)"
 cd /home/vince402/Upsilon3S/BDT/Validation
 #root -l -b -q "BDTNominalProcess.cxx("$TS",1, {{0,30}})"
 #cd /home/vince402/Upsilon3S
@@ -26,10 +28,36 @@ cd /home/vince402/Upsilon3S/Macros
 #./runYIeldRatio.sh "$TS" 3 2
 #root -l -b -q "DrawMass2.cxx("$TS", 1)"
 #root -l -b -q "DrawMass2.cxx("$TS", 2)"
-root -l -b -q "DrawMass2.cxx("$TS", 3)"
-
-tar -zcvf result_"$TS".tar.gz  /home/vince402/Upsilon3S/BDT/Validation/../.past_source/_BDTClassifier_BLIND_BDT_"$TS".old ./FullMassBDT/FullMassBDTCompare_fullmass_m614_"$TS"_1.C ./FullMassBDT/FullMassBDTCompare_fullmass_m614_"$TS"_2.C ./FullMassBDT/FullMassBDTCompare_fullmass_m614_"$TS"_3.C BDTCorYield_plots_"$TS".root
-mv result_"$TS".tar.gz /home/vince402/Upsilon3S/BDT/Validation
+#root -l -b -q "DrawMass2.cxx("$TS", 3)"
+#
+#tar -zcvf result_"$TS".tar.gz  /home/vince402/Upsilon3S/BDT/Validation/../.past_source/_BDTClassifier_BLIND_BDT_"$TS".old ./FullMassBDT/FullMassBDTCompare_fullmass_m614_"$TS"_1.C ./FullMassBDT/FullMassBDTCompare_fullmass_m614_"$TS"_2.C ./FullMassBDT/FullMassBDTCompare_fullmass_m614_"$TS"_3.C BDTCorYield_plots_"$TS".root
+#mv result_"$TS".tar.gz /home/vince402/Upsilon3S/BDT/Validation
+}
+function ONECYCLE2 {
+#root -l -b -q "BDT_trainVariable_Mass_Distribution.C("$TS",1)"
+cd /home/vince402/Upsilon3S
+root -l -b -q "doConstraintFit_VALI_v3.cxx(1312,"$TS",3)" 2>&1 | tee Fitresult.log
+root -l -b -q "doConstraintFit_VALI_v3.cxx(1312,"$TS",2)" 2>&1 | tee Fitresult2.log
+#root -l -b -q "doConstraintFit_VALI_v3.cxx(1311,"$TS",1)"
+cd /home/vince402/Upsilon3S/BDT/Validation
+#root -l -b -q "BDTNominalProcess.cxx("$TS",1, {{0,30}})"
+#cd /home/vince402/Upsilon3S
+#root -l -b -q "doConstraintFit_VALI_v3.cxx(13113,"$TS",2)"
+#root -l -b -q "BDTNominalProcess.cxx("$TS",1, {{0,30}})"
+#
+cd /home/vince402/Upsilon3S/Macros
+#./runYIeldRatio.sh "$TS" 1 3
+#./runYIeldRatio.sh "$TS" 2 3
+#./runYIeldRatio.sh "$TS" 3 3
+#./runYIeldRatio.sh "$TS" 1 2
+#./runYIeldRatio.sh "$TS" 2 2
+#./runYIeldRatio.sh "$TS" 3 2
+#root -l -b -q "DrawMass2.cxx("$TS", 1)"
+#root -l -b -q "DrawMass2.cxx("$TS", 2)"
+#root -l -b -q "DrawMass2.cxx("$TS", 3)"
+#
+#tar -zcvf result_"$TS".tar.gz  /home/vince402/Upsilon3S/BDT/Validation/../.past_source/_BDTClassifier_BLIND_BDT_"$TS".old ./FullMassBDT/FullMassBDTCompare_fullmass_m614_"$TS"_1.C ./FullMassBDT/FullMassBDTCompare_fullmass_m614_"$TS"_2.C ./FullMassBDT/FullMassBDTCompare_fullmass_m614_"$TS"_3.C BDTCorYield_plots_"$TS".root
+#mv result_"$TS".tar.gz /home/vince402/Upsilon3S/BDT/Validation
 }
 #TS=8200000002
 #DATPREP=""\"SplitSeed=100:nTrain_Signal=50000:SplitMode=Alternate:NormMode=None:!V\"""
@@ -85,7 +113,9 @@ OPT=""\"\!H:\!V:NTrees=1000:MaxDepth=3:MinNodeSize=5%:BoostType=Grad:UseBaggedBo
 #ONECYCLE
 #TS=8200000018
 #ONECYCLE
-TS=8000000023
+TS=8000000037
+#ONECYCLE2
+TS=8000000039
 ONECYCLE
 #
 #cd Macros

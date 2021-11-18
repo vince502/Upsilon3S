@@ -9,7 +9,7 @@ struct params_vhl{
   Double_t low;
   Double_t high;
 };
-void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 181, double cutQVP = 0.00, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1. ,int bdtptMin =0, int bdtptMax = 30, Double_t params[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {},Double_t paramslow[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {},Double_t paramshigh[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {}, std::map<std::string, params_vhl> map_params={}){
+void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 181, double cutQVP = 0.00, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1. ,int bdtptMin =0, int bdtptMax = 30, Double_t params[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {},Double_t paramslow[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {},Double_t paramshigh[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {}, std::map<std::string, params_vhl> map_params={}, int workers = 10){
   massfitter mf = massfitter();
 ////////////////////////////////////////////////////////////////////////
   int DDiter = 0;
@@ -25,26 +25,25 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
   std::string bkg_func = parsed[1];
   std::string fitdir = parsed[2];
   std::string name_fitmodel = "_"+sig_func+"_"+bkg_func;
+  dbg();
 
   SetStyle();
   double range_mass_low, range_mass_high;
   if (massrng.find(ts) == massrng.end()){
     range_mass_low = 8;
     range_mass_high = 14;
-    if(info_BDT(ts)[0]!="nan"){
-      auto _pair_mass = parser_symbol(info_BDT(ts)[1],",");
-      range_mass_low = stod(_pair_mass[0]);
-      range_mass_high = stod(_pair_mass[1]);
-    }
   }
   else{
+  dbg();
     range_mass_low = massrng[ts].first;
     range_mass_high = massrng[ts].second;
   }
   if( map_params.find("mass_range") != map_params.end()){
+  dbg();
     range_mass_low = map_params["mass_range"].low;
     range_mass_high = map_params["mass_range"].high;
   }
+  dbg();
 
 ///////////////////////////////////////////////////////////////////////
 //Need
@@ -136,7 +135,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
   RooFormulaVar *mean3S = new RooFormulaVar("mean3S", "mean1S*mratio3", RooArgSet(*mean1S, *mratio3));
   //RooRealVar mean3S("mean3S", "mean of Upsilon 1S", U3S_mass, U3S_mass-0.010, U3S_mass+0.010);
 
-  RooRealVar *sigma1S_1 = new RooRealVar("sigma1S_1", "sigma1 of 1S", 0.05, paramslow[0], paramshigh[0]);
+  RooRealVar *sigma1S_1 = new RooRealVar("sigma1S_1", "sigma1 of 1S", map_params["sigma1S1"].val, map_params["sigma1S1"].low,map_params["sigma1S1"].high);
 
 
   RooFormulaVar *sigma2S_1 = new RooFormulaVar("sigma2S_1", "@0*@1", RooArgList(*sigma1S_1, *mratio2));
@@ -156,10 +155,10 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
 
   RooRealVar k("k", "k of Gaus-Exp Pdf", 1.0, 0, 5.0);
   RooRealVar *alpha, *frac2;
-  alpha = new RooRealVar("alpha", "alpha of Crystal ball", 2.0, paramslow[1], paramshigh[1]);
+  alpha = new RooRealVar("alpha", "alpha of Crystal ball", map_params["alpha"].val, map_params["alpha"].low,map_params["alpha"].high);
 
-  RooRealVar* n = new RooRealVar("n", "n of Crystal ball", 2.0, paramslow[2], paramshigh[2]);
-  RooRealVar* frac = new RooRealVar("frac", "CB fraction", 0.5, paramslow[3], paramshigh[3]);
+  RooRealVar* n = new RooRealVar("n", "n of Crystal ball", map_params["var_n"].val, map_params["var_n"].low,map_params["var_n"].high);
+  RooRealVar* frac = new RooRealVar("frac", "CB fraction", map_params["frac"].val, map_params["frac"].low,map_params["frac"].high);
   if(sig_func=="CB3"|| sig_func=="CB2G" )
   {
     frac2 = new RooRealVar("frac2", "CB fraction", map_params["frac2"].val,  map_params["frac2"].low, map_params["frac2"].high);
@@ -174,10 +173,10 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
   }
   }
 
-  if(paramshigh[0]==-1){ sigma1S_1->setConstant(); sigma1S_1->setRange(0,999); sigma1S_1->setVal(params[0]); }
-  if(paramshigh[1]==-1){ alpha->setConstant(); alpha->setRange(0,999); alpha->setVal(params[1]); }
-  if(paramshigh[2]==-1){ n->setConstant(); n->setRange(0,999); n->setVal(params[2]); }
-  if(paramshigh[3]==-1){ frac->setConstant(); frac->setRange(0,999); frac->setVal(params[3]); }
+  if(map_params["sigma1S1"].high==-1){ sigma1S_1->setConstant(); sigma1S_1->setRange(0,999); sigma1S_1->setVal(map_params["sigma1S1"].val); }
+  if(map_params["alpha"].high==-1){ alpha->setConstant(); alpha->setRange(0,999); alpha->setVal(map_params["alpha"].val); }
+  if(map_params["var_n"].high==-1){ n->setConstant(); n->setRange(0,999); n->setVal(map_params["var_n"].val); }
+  if(map_params["frac"].high==-1){ frac->setConstant(); frac->setRange(0,999); frac->setVal(map_params["frac"].val); }
   if(map_params["frac2"].high == -1){ frac2->setConstant(); frac2->setRange(0,999); frac2->setVal(map_params["frac2"].val); };
   if(map_params["xNS"].high == -1){ x1S->setConstant(); x1S->setRange(0,999); x1S->setVal(map_params["xNS"].val); };
   if(map_params["xNS_2"].high == -1){ x1S_2->setConstant(); x1S_2->setRange(0,999); x1S_2->setVal(map_params["xNS_2"].val); };
@@ -233,14 +232,19 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
 
   if (sig_func == "CB3"){
     name_sig_pdf="threeCB";    
+	if(map_params.find("signal_separate") != map_params.end()){
+		if(map_params["signal_separate"].val == 1){
+    	cb3 = new fit_model_ups::CB3((mf.works->var("mass")), mean1S, mean2S, mean3S, sigma1S_1, sigma2S_1, sigma3S_1, sigma1S_2, sigma2S_2, sigma3S_2, sigma1S_3, sigma2S_3, sigma3S_3, alpha, n,frac, frac2); 
+		}
+    	else cb3 = new fit_model_ups::CB3((mf.works->var("mass")), mean1S, mean2S, mean3S, sigma1S_1, sigma2S_1, sigma3S_1, sigma1S_2, sigma2S_2, sigma3S_2, sigma1S_3, sigma2S_3, sigma3S_3, alpha, n,frac, frac2); 
+	}
+	else{
     cb3 = new fit_model_ups::CB3((mf.works->var("mass")), mean1S, mean2S, mean3S, sigma1S_1, sigma2S_1, sigma3S_1, sigma1S_2, sigma2S_2, sigma3S_2, sigma1S_3, sigma2S_3, sigma3S_3, alpha, n,frac, frac2); 
+	}
     Signal1S = (RooGenericPdf*) cb3->threeCB1S;
     Signal2S = (RooGenericPdf*) cb3->threeCB2S;
     Signal3S = (RooGenericPdf*) cb3->threeCB3S;
-    sigma1S_1->setVal(params[0]);
-    alpha->setVal(params[1]);
-    n->setVal(params[2]);
-    frac->setVal(params[3]);
+	
   }
 
   if (sig_func == "CB2G"){
@@ -249,84 +253,76 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
     Signal1S = (RooGenericPdf*) cb2g->CBG1S;
     Signal2S = (RooGenericPdf*) cb2g->CBG2S;
     Signal3S = (RooGenericPdf*) cb2g->CBG3S;
-    sigma1S_1->setVal(params[0]);
-    alpha->setVal(params[1]);
-    n->setVal(params[2]);
-    frac->setVal(params[3]);
   }
   if (sig_func == "CB2"){
     cb2 = new fit_model_ups::CB2((mf.works->var("mass")), mean1S, mean2S, mean3S, sigma1S_1, sigma2S_1, sigma3S_1, sigma1S_2, sigma2S_2, sigma3S_2, alpha, alpha, alpha, n, n, n, frac, frac, frac); 
     Signal1S = (RooGenericPdf*) cb2->twoCB1S;
     Signal2S = (RooGenericPdf*) cb2->twoCB2S;
     Signal3S = (RooGenericPdf*) cb2->twoCB3S;
-    sigma1S_1->setVal(params[0]);
-    alpha->setVal(params[1]);
-    n->setVal(params[2]);
-    frac->setVal(params[3]);
   }
 
   if (bkg_func.find("CC")!= std::string::npos){
     int order_CC = bkg_func[bkg_func.find_last_of("CC")+1] - 48;
     switch (order_CC){
       case 1 :
-        ch4_k1 = new RooRealVar("ch4_k1", "ch4_k1", 0.02, paramslow[4], paramshigh[4]);
+        ch4_k1 = new RooRealVar("ch4_k1", "ch4_k1", 0.02, paramslow[0], paramshigh[0]);
         cc = new fit_model_ups::ChebyChev((mf.works->var("mass")), ch4_k1);
-        ch4_k1->setVal(params[4]);
+        ch4_k1->setVal(params[0]);
 	break;
       case 2 :
-        ch4_k1 = new RooRealVar("ch4_k1", "ch4_k1", 0.02, paramslow[4], paramshigh[4]);
-        ch4_k2 = new RooRealVar("ch4_k2", "ch4_k2", 0.02, paramslow[5], paramshigh[5]);
+        ch4_k1 = new RooRealVar("ch4_k1", "ch4_k1", 0.02, paramslow[0], paramshigh[0]);
+        ch4_k2 = new RooRealVar("ch4_k2", "ch4_k2", 0.02, paramslow[1], paramshigh[1]);
         cc = new fit_model_ups::ChebyChev((mf.works->var("mass")), ch4_k1, ch4_k2);
-        ch4_k1->setVal(params[4]);
-        ch4_k2->setVal(params[5]);
+        ch4_k1->setVal(params[0]);
+        ch4_k2->setVal(params[1]);
 	break;
       case 3 :
-        ch4_k1 = new RooRealVar("ch4_k1", "ch4_k1", 0.02, paramslow[4], paramshigh[4]);
-        ch4_k2 = new RooRealVar("ch4_k2", "ch4_k2", 0.02, paramslow[5], paramshigh[5]);
-        ch4_k3 = new RooRealVar("ch4_k3", "ch4_k3", 0.02, paramslow[6], paramshigh[6]);
+        ch4_k1 = new RooRealVar("ch4_k1", "ch4_k1", 0.02, paramslow[0], paramshigh[0]);
+        ch4_k2 = new RooRealVar("ch4_k2", "ch4_k2", 0.02, paramslow[1], paramshigh[1]);
+        ch4_k3 = new RooRealVar("ch4_k3", "ch4_k3", 0.02, paramslow[2], paramshigh[2]);
         cc = new fit_model_ups::ChebyChev((mf.works->var("mass")), ch4_k1, ch4_k2, ch4_k3);
-        ch4_k1->setVal(params[4]);
-        ch4_k2->setVal(params[5]);
-        ch4_k3->setVal(params[6]);
+        ch4_k1->setVal(params[0]);
+        ch4_k2->setVal(params[1]);
+        ch4_k3->setVal(params[2]);
 	break;
       case 4 :
-        ch4_k1 = new RooRealVar("ch4_k1", "ch4_k1", 0.02, paramslow[4], paramshigh[4]);
-        ch4_k2 = new RooRealVar("ch4_k2", "ch4_k2", 0.02, paramslow[5], paramshigh[5]);
-        ch4_k3 = new RooRealVar("ch4_k3", "ch4_k3", 0.02, paramslow[6], paramshigh[6]);
-        ch4_k4 = new RooRealVar("ch4_k4", "ch4_k4", 0.02, paramslow[7], paramshigh[7]);
+        ch4_k1 = new RooRealVar("ch4_k1", "ch4_k1", 0.02, paramslow[0], paramshigh[0]);
+        ch4_k2 = new RooRealVar("ch4_k2", "ch4_k2", 0.02, paramslow[1], paramshigh[1]);
+        ch4_k3 = new RooRealVar("ch4_k3", "ch4_k3", 0.02, paramslow[2], paramshigh[2]);
+        ch4_k4 = new RooRealVar("ch4_k4", "ch4_k4", 0.02, paramslow[3], paramshigh[3]);
         cc = new fit_model_ups::ChebyChev((mf.works->var("mass")), ch4_k1, ch4_k2, ch4_k3, ch4_k4);
-        ch4_k1->setVal(params[4]);
-        ch4_k2->setVal(params[5]);
-        ch4_k3->setVal(params[6]);
-        ch4_k4->setVal(params[7]);
+        ch4_k1->setVal(params[0]);
+        ch4_k2->setVal(params[1]);
+        ch4_k3->setVal(params[2]);
+        ch4_k4->setVal(params[3]);
 	break;
       case 5 :
-        ch4_k1 = new RooRealVar("ch4_k1", "ch4_k1", 0.02, paramslow[4], paramshigh[4]);
-        ch4_k2 = new RooRealVar("ch4_k2", "ch4_k2", 0.02, paramslow[5], paramshigh[5]);
-        ch4_k3 = new RooRealVar("ch4_k3", "ch4_k3", 0.02, paramslow[6], paramshigh[6]);
-        ch4_k4 = new RooRealVar("ch4_k4", "ch4_k4", 0.02, paramslow[7], paramshigh[7]);
-        ch4_k5 = new RooRealVar("ch4_k5", "ch4_k5", 0.02, paramslow[8], paramshigh[8]);
+        ch4_k1 = new RooRealVar("ch4_k1", "ch4_k1", 0.02, paramslow[0], paramshigh[0]);
+        ch4_k2 = new RooRealVar("ch4_k2", "ch4_k2", 0.02, paramslow[1], paramshigh[1]);
+        ch4_k3 = new RooRealVar("ch4_k3", "ch4_k3", 0.02, paramslow[2], paramshigh[2]);
+        ch4_k4 = new RooRealVar("ch4_k4", "ch4_k4", 0.02, paramslow[3], paramshigh[3]);
+        ch4_k5 = new RooRealVar("ch4_k5", "ch4_k5", 0.02, paramslow[4], paramshigh[4]);
         cc = new fit_model_ups::ChebyChev((mf.works->var("mass")), ch4_k1, ch4_k2, ch4_k3, ch4_k4, ch4_k5);
-        ch4_k1->setVal(params[4]);
-        ch4_k2->setVal(params[5]);
-        ch4_k3->setVal(params[6]);
-        ch4_k4->setVal(params[7]);
-        ch4_k5->setVal(params[8]);
+        ch4_k1->setVal(params[0]);
+        ch4_k2->setVal(params[1]);
+        ch4_k3->setVal(params[2]);
+        ch4_k4->setVal(params[3]);
+        ch4_k5->setVal(params[4]);
 	break;
       case 6 :
-        ch4_k1 = new RooRealVar("ch4_k1", "ch4_k1", 0.02, paramslow[4], paramshigh[4]);
-        ch4_k2 = new RooRealVar("ch4_k2", "ch4_k2", 0.02, paramslow[5], paramshigh[5]);
-        ch4_k3 = new RooRealVar("ch4_k3", "ch4_k3", 0.02, paramslow[6], paramshigh[6]);
-        ch4_k4 = new RooRealVar("ch4_k4", "ch4_k4", 0.02, paramslow[7], paramshigh[7]);
-        ch4_k5 = new RooRealVar("ch4_k5", "ch4_k5", 0.02, paramslow[8], paramshigh[8]);
-        ch4_k6 = new RooRealVar("ch4_k6", "ch4_k6", 0.02, paramslow[9], paramshigh[9]);
+        ch4_k1 = new RooRealVar("ch4_k1", "ch4_k1", 0.02, paramslow[0], paramshigh[0]);
+        ch4_k2 = new RooRealVar("ch4_k2", "ch4_k2", 0.02, paramslow[1], paramshigh[1]);
+        ch4_k3 = new RooRealVar("ch4_k3", "ch4_k3", 0.02, paramslow[2], paramshigh[2]);
+        ch4_k4 = new RooRealVar("ch4_k4", "ch4_k4", 0.02, paramslow[3], paramshigh[3]);
+        ch4_k5 = new RooRealVar("ch4_k5", "ch4_k5", 0.02, paramslow[4], paramshigh[4]);
+        ch4_k6 = new RooRealVar("ch4_k6", "ch4_k6", 0.02, paramslow[5], paramshigh[5]);
         cc = new fit_model_ups::ChebyChev((mf.works->var("mass")), ch4_k1, ch4_k2, ch4_k3, ch4_k4, ch4_k5, ch4_k6);
-        ch4_k1->setVal(params[4]);
-        ch4_k2->setVal(params[5]);
-        ch4_k3->setVal(params[6]);
-        ch4_k4->setVal(params[7]);
-        ch4_k5->setVal(params[8]);
-        ch4_k5->setVal(params[9]);
+        ch4_k1->setVal(params[0]);
+        ch4_k2->setVal(params[1]);
+        ch4_k3->setVal(params[2]);
+        ch4_k4->setVal(params[3]);
+        ch4_k5->setVal(params[4]);
+        ch4_k5->setVal(params[5]);
 	break;
     }
     if( (bkg_func.find("ECC")!=std::string::npos)){
@@ -338,9 +334,9 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
     if( (bkg_func.find("ECC")==std::string::npos)) Background = (RooGenericPdf*) cc->bkg;
   }
   if (bkg_func.find("EE")!=std::string::npos){
-    Erfmean	= new RooRealVar("Erfmean", "Mean of Errfunction", params[4], paramslow[4], paramshigh[4]);
-    Erfp0	= new RooRealVar("Erfp0", "1st parameter of Errfunction", params[5], paramslow[5], paramshigh[5]);
-    Erfsigma	= new RooRealVar("Erfsigma", "Sigma of Errfunction", params[6], paramslow[6], paramshigh[6]);
+    Erfmean	= new RooRealVar("Erfmean", "Mean of Errfunction", params[0], paramslow[0], paramshigh[0]);
+    Erfp0	= new RooRealVar("Erfp0", "1st parameter of Errfunction", params[1], paramslow[1], paramshigh[1]);
+    Erfsigma	= new RooRealVar("Erfsigma", "Sigma of Errfunction", params[2], paramslow[2], paramshigh[2]);
     ee = new fit_model_ups::ErfExp((mf.works->var("mass")), Erfmean, Erfsigma, Erfp0);
     Background = (RooGenericPdf*) ee->bkgErf;
   }
@@ -435,9 +431,9 @@ dbg(1000);
   RooFitResult* Result;
   if(fitdir.find("GC")!=std::string::npos){
     std::cout << "Fitting with Gaussian Constraint" << std::endl;
-    Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), Constrain(list_var_for_gc), PrefitDataFraction(0.1), Minimizer("Minuit","minimize"), NumCPU(18), Range(mf.Range_fit_low, mf.Range_fit_high), SumW2Error(kTRUE), Extended(kTRUE));
+    Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), Constrain(list_var_for_gc), PrefitDataFraction(0.1), Minimizer("Minuit","minimize"), NumCPU(workers), Range(mf.Range_fit_low, mf.Range_fit_high), SumW2Error(kTRUE), Extended(kTRUE));
   }
-  else  {Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), PrefitDataFraction(0.1),  Minimizer("Minuit","minimize"), NumCPU(38), Range(mf.Range_fit_low, mf.Range_fit_high), SumW2Error(kTRUE), Extended(kTRUE));}
+  else  {Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), PrefitDataFraction(0.1),  Minimizer("Minuit","minimize"), NumCPU(workers), Range(mf.Range_fit_low, mf.Range_fit_high), SumW2Error(kTRUE), Extended(kTRUE));}
 dbg();
   mf.works->pdf(use_model.c_str())->plotOn(massPlot, Name("modelPlot"));
   mf.works->pdf(use_model.c_str())->plotOn(massPlot, Components(RooArgSet(*Signal1S)), LineColor(kRed), LineStyle(kDashed), MoveToBack());
@@ -615,6 +611,6 @@ dbg(i);i++;
   mf.fout->Close();
   int drawmag = (int) map_params["mag"].val; 
 
-  DrawHist(parsed, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, map_params["sb_ratio"].val, train_state, (bool) drawmag, aux );
+  DrawHist(parsed, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, map_params["sb_ratio"].val, train_state, (bool) drawmag, massMin, massMax, aux );
  
 }

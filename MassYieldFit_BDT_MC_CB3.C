@@ -122,8 +122,8 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   sigmaNS_3 = new RooFormulaVar("sigmaNS_3", "@0*@1", RooArgList(*sigmaNS_1, *xNS_2));
 
   RooRealVar *alpha, *n, *frac, *frac2;
-  alpha = new RooRealVar("alpha", "alpha of Crystal bal1", 1.96, 1.1, 2.2 );
-  n = new RooRealVar("n", "n of Crystal ball", 1.27, 1.1, 2.2);
+  alpha = new RooRealVar("alpha", "alpha of Crystal bal1", 1.96, 1.0, 2.2 );
+  n = new RooRealVar("n", "n of Crystal ball", 1.27, 1.0, 2.2);
   frac = new RooRealVar("frac", "CB fraction", 0.13, 0.01, 0.90);
   frac2 = new RooRealVar("frac2", "CB fraction 2", 0.25, 0.01, 0.90);
 //  if(bdtlow == -1.){
@@ -166,7 +166,7 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
 
   works1->import(*model);
 /////////////////////////////////////////////////////////////FITTING START//////////////////////////////////////////////////////////////////////////////////////////
-  RooAbsReal* nll = works1->pdf("model")->createNLL(*reducedDS, Save(), PrefitDataFraction(0.005), Minimizer("Minuit","minimize"), NumCPU(38), Range(RangeLow, RangeHigh), SumW2Error(kTRUE), Extended(kTRUE));
+  RooAbsReal* nll = works1->pdf("model")->createNLL(*reducedDS, Save(), PrefitDataFraction(0.005), Minimizer("Minuit","minimize"), NumCPU(38), Range(RangeLow, RangeHigh), AsymptoticError(kTRUE)/*SumW2Error(kTRUE)*/, Extended(kTRUE));
   RooMinuit m(*nll);
   RooFitResult* Result = m.fit("shr");
   Result->SetName("fitresult_model_reducedDS");

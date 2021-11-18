@@ -3,11 +3,11 @@
 //#include "MassYieldFit_BDT_MC_GE.C"
 #include "MassYieldFit_BDT_MC_CB3.C"
 //#include "MassYieldFit_BDT_MC.C"
-#include "MassYieldFit_data.cxx"
+#include "MassYieldFit_data_v2.cxx"
 #include "./BDT/yield_eff_signif.cxx"
 #include "script_tools.h"
 
-void doConstraintFit_VALI_v3(int step = 0, long input_ts=0, int aux_train_state=0, double aux_BDT_cut = 0){
+void doConstraintFit_VALI_v4(int step = 0, long input_ts=0, int aux_train_state=0, double aux_BDT_cut = 0){
   std::string type 			= "CB3:CC3:GC"	;
   std::string type2 			= "CB3:CC2:DR2FF"	;
   std::string type_r 			= "CB3:CC2:DRGC"	;
@@ -54,7 +54,9 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0) mutable {
 //	auto query_file =  getfileany(Form("%s/Yield", workdir.Data()), Form("Yield_9999999999_CB3_%dS_train:pt_%d-%d:cBin_%d-%d:BDT_-1.0000-1.0000:MC_0.root", state, (int) ptMin, (int) ptMax, cBinLow, cBinHigh ) );
 	string query_file = GetFit(__FITRESLATEST, true, "CB3", ts, train_state, state, (int) ptMin, (int) ptMax, cBinLow, cBinHigh, -1, 1, bdtptMin, bdtptMax, cutQVP_noBDT,"" ); 
 	if(_step == -1031 /*|| query_file.empty()*/){
-		std::cout << "Cannot find fitted data!" << std::endl;   MassYieldFit_BDT_MC_CB3(ts, "", fname, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, train_state, state, fixvar, swflag, cutQVP_noBDT, -1, cutBDThigh, bdtptMin, bdtptMax);
+		std::cout << "Cannot find fitted data!" << std::endl;   MassYieldFit_BDT_MC_CB3(ts, "", fname1S, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, train_state, state, fixvar, swflag, cutQVP_noBDT, -1, cutBDThigh, bdtptMin, bdtptMax);
+		std::cout << "Cannot find fitted data!" << std::endl;   MassYieldFit_BDT_MC_CB3(ts, "", fname2S, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, train_state, state, fixvar, swflag, cutQVP_noBDT, -1, cutBDThigh, bdtptMin, bdtptMax);
+		std::cout << "Cannot find fitted data!" << std::endl;   MassYieldFit_BDT_MC_CB3(ts, "", fname3S, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, train_state, state, fixvar, swflag, cutQVP_noBDT, -1, cutBDThigh, bdtptMin, bdtptMax);
 	}
 }
   dbg();
@@ -449,7 +451,6 @@ if(step ==1201){
 	sb_ratio.setVal(-1);
 	fitrange= {8, 14};
 	sb_ratio.setVal(-1);
-	Nworkers = 20;
     fname3S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC.root", ts, Trig.c_str());
     fname2S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC_2S.root", ts, Trig.c_str());
     fname1S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC_1S.root", ts, Trig.c_str());
@@ -487,13 +488,13 @@ if(step ==1201){
     ptMax = ptpair.second;
     type 			= "CB3:CC3:GC"	;
 //    std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);
-//	for(double xj : VALI_V3_BDTTESTCUT3/*}*/){
-	for(double xj : {0.8 } ){
+	for(double xj : VALI_V3_BDTTESTCUT3/*}*/){
+//	for(double xj : {0.1, -0.1 } ){
     	cutBDTlow = xj;
-    	type 			= "CB3:CC5:FF"	;
+    	type 			= "CB3:CC5:GC"	;
 //		if(xj < -0.2) type = "CB3:CC4:GC";
 
-    	METHOD_MCGCDATA(2);
+    	METHOD_MCGCDATA(1);
 //    	METHOD_FREEFIT("CB3:EE:FF");
 	}
   }

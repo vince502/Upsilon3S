@@ -12,7 +12,7 @@ using namespace RooFit;
 
 void DrawHist_(long ts,double ylim, float blow, float bhigh, float vcut, TString MupT = "3p5", string Trig = "S13", TString fittype = "freefit") {};
 void DrawHist__();
-void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 180, double cutQVP = 0.01, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1., int bdtptMin =0, int bdtptMax = 30, double signif_ratio = 0.02,  int train_state =3, bool draw_mag = false, string aux = ""){
+void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 180, double cutQVP = 0.01, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1., int bdtptMin =0, int bdtptMax = 30, double signif_ratio = 0.02,  int train_state =3, bool draw_mag = false, double massMin= 8, double massMax = 14, string aux = ""){
   setTDRStyle();
   int Nmassbins = 140;
 
@@ -102,7 +102,7 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
   RooDataSet* dataset = (RooDataSet*) works->data("reducedDS");
   if( dataset->sumEntries() <= 1000) Nmassbins = 35;
   RooRealVar* vmass = (RooRealVar*) works->var("mass");
-  vmass->setRange("analysis",8,11.5);
+  vmass->setRange("analysis",massMin,massMax);
   if(train_state ==3) vmass->setRange("signal",10,10.6);
   if(train_state ==2) vmass->setRange("signal",9.7,10.3);
 

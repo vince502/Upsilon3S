@@ -33,7 +33,7 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
   std::cout <<"time stamp---> " <<  tstamp << std::endl;
 //  if(strcmp(opt.c_str(),"NOMINAL")==0) _ts = (long) 9999999999;
 //  if(strcmp(opt.c_str(),"NOMINAL2")==0) _ts = (long) 99999999992;
-  std::system(Form("cat BDTClassifier_BLIND_BDT.C >> ../.past_source/_BDTClassifier_BLIND_BDT_%ld.old",(long) tstamp));
+  std::system(Form("cat BDTClassifier_BLIND_BDT_nS.C >> ../.past_source/_BDTClassifier_BLIND_BDT_%ld.old",(long) tstamp));
   ofstream log, log2;
 
 //  log << tstamp;
@@ -48,9 +48,7 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
   TFile* inputDATA = new TFile(Form("%s/%s", store.Data(), ONIABDTDATAB_LATEST.c_str()),"read");
 //  TFile* inputDATA = new TFile(Form("%s/%s", hfdir.Data(), SYS_HFDOWNDATA.c_str()),"read");
   TFile* inputMC   ;
-  if(state ==1) inputMC= new TFile(Form("%s/%s", store.Data(), ONIABDTMC1S_LATEST.c_str()),"read");
-  if(state ==2) inputMC= new TFile(Form("%s/%s", store.Data(), ONIABDTMC2S_LATEST.c_str()),"read");
-  if(state ==3) inputMC= new TFile(Form("%s/%s", store.Data(), ONIABDTMC_LATEST.c_str()),"read");
+  inputMC = TFile::Open(Form("%s/%s", store.Data(), ONIABDTMC_MERGED_LATEST.c_str() ));
   //new TFile("/home/samba.old/CMS_Files/UpsilonAnalysis/Ups3S_PbPb2018/ForBDT/OutputSkim_isMC1_v210416.root","read");
   TFile* output;
   if(strcmp(opt.c_str(), "NOMINAL") ==0 ) output = new TFile(Form("%s/BDTresultY3S_%ld_BLIND.root",BDTDir.Data(),_ts),"update");
@@ -181,7 +179,7 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
 }
 
 //Main Function
-void BDTClassifier_BLIND_BDT( long _inputts , string _bookOpt, string _datprep){
+void BDTClassifier_BLIND_BDT_nS( long _inputts , string _bookOpt, string _datprep){
   ofstream log;
   //log.open("BDT_description.log", std::ios_base::out|std::ios_base::app);
   //log << "Bin by Bin training start----------------------" <<std::endl; ; 
@@ -209,9 +207,7 @@ void BDTClassifier_BLIND_BDT( long _inputts , string _bookOpt, string _datprep){
 //  for( auto pair : bin1spt) 
 //  {
 //  	res = BDTClassifier_BLIND_Function(1,0,pair.first,pair.second, 0,181, "NOMINAL");
-  	res = BDTClassifier_BLIND_Function(1,0,0,30, 0,181, "", _inputts, _bookOpt, _datprep);
-  	res = BDTClassifier_BLIND_Function(2,0,0,30, 0,181, "continue", _inputts, _bookOpt, _datprep);
-  	res = BDTClassifier_BLIND_Function(3,0,0,30, 0,181, "continue", _inputts, _bookOpt, _datprep);
+  	res = BDTClassifier_BLIND_Function(3,0,0,30, 0,181, "", _inputts, _bookOpt, _datprep);
   	if(!res)std::system(Form("rm ../.past_source/_BDT_Blind_Classifier_BDT_%ld.old",(long) _real_time));
 //  }
 //  res = BDTClassifier_BLIND_Function(3,0,0,6, 0,181, "NOMINAL");

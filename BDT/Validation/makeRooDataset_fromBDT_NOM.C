@@ -85,7 +85,7 @@ void makeRooDataset_fromBDT_NOM(long ts, bool cutID, bool isMC, int train_state 
   RooArgSet* argSet    = new RooArgSet(*massVar, *ptVar, *yVar, *pt1Var, *pt2Var, *eta1Var, *eta2Var,*evtWeight);
   argSet->add(*cBinVar);argSet->add(*QQVPVar); argSet->add(*BDTVar);// argSet->add(*pBDTVar);//argSet->add(*ctau3D);
   
-  RooDataSet* dataSet  = new RooDataSet(Form("dataset_Y%dSpt%dto%d", train_state, ptLow, ptHigh), " a dataset", *argSet);
+  RooDataSet* dataSet  = new RooDataSet(Form("dataset_Y%dSpt%dto%d", train_state, ptLow, ptHigh), " a dataset", *argSet,"weight");
 
   //Begin Dimuon Loop
   Int_t nEvt = tree->GetEntries();
@@ -103,7 +103,7 @@ void makeRooDataset_fromBDT_NOM(long ts, bool cutID, bool isMC, int train_state 
       pt2Var->setVal(  (double)pt2  ) ;
       eta2Var->setVal( (double)eta2 ) ;
       cBinVar->setVal( (double)cBin ) ;
-      evtWeight->setVal( (double) 1.0) ;
+      evtWeight->setVal( (double) weight) ;
       QQVPVar->setVal( (double)QQVtxProb ) ;
       BDTVar-> setVal( (double)BDT ) ;
 //      pBDTVar->setVal( (double)pBDT ) ;

@@ -24,6 +24,7 @@ void BDTClassifierApplication_NOM(long ts= 9999999999, int train_state =2, int t
 //  if (whichtree >5) {std::cout << "if BLIND, is tree selection wrong? " << std::endl; return; }
 //  if (whichtree !=0 && whichtree <6) {std::cout <<"Application in BLIND tree"<<whichtree<< std::endl;}
 
+  ROOT::EnableImplicitMT(8);
 
   TMVA::Tools::Instance();
   TMVA::Reader *reader1 = new TMVA::Reader("V:!Silent");
