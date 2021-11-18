@@ -11,7 +11,7 @@ function ONECYCLE {
 #root -l -b -q "BDT_trainVariable_Mass_Distribution.C("$TS",1)"
 cd /home/vince402/Upsilon3S
 root -l -b -q "doConstraintFit_VALI_v3.cxx(1311,"$TS",3)" 2>&1 | tee Fitresult.log
-root -l -b -q "doConstraintFit_VALI_v3.cxx(1311,"$TS",2)" 2>&1 | tee Fitresult2.log
+#root -l -b -q "doConstraintFit_VALI_v3.cxx(1311,"$TS",2)" 2>&1 | tee Fitresult2.log
 #root -l -b -q "doConstraintFit_VALI_v3.cxx(1311,"$TS",1)"
 cd /home/vince402/Upsilon3S/BDT/Validation
 #root -l -b -q "BDTNominalProcess.cxx("$TS",1, {{0,30}})"
@@ -115,8 +115,10 @@ OPT=""\"\!H:\!V:NTrees=1000:MaxDepth=3:MinNodeSize=5%:BoostType=Grad:UseBaggedBo
 #ONECYCLE
 TS=8000000037
 #ONECYCLE2
-TS=8000000039
+TS=8000000042
 ONECYCLE
+TS=8000000040
+#ONECYCLE
 #
 #cd Macros
 #root -l -b -q "DrawYield.C(8100000001)"

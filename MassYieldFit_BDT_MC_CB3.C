@@ -166,12 +166,13 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
 
   works1->import(*model);
 /////////////////////////////////////////////////////////////FITTING START//////////////////////////////////////////////////////////////////////////////////////////
-  RooAbsReal* nll = works1->pdf("model")->createNLL(*reducedDS, Save(), PrefitDataFraction(0.005), Minimizer("Minuit","minimize"), NumCPU(38), Range(RangeLow, RangeHigh), AsymptoticError(kTRUE)/*SumW2Error(kTRUE)*/, Extended(kTRUE));
-  RooMinuit m(*nll);
-  RooFitResult* Result = m.fit("shr");
-  Result->SetName("fitresult_model_reducedDS");
+//  RooAbsReal* nll = works1->pdf("model")->createNLL(*reducedDS, Save(), PrefitDataFraction(0.005), Minimizer("Minuit","minimize"), NumCPU(38), Range(RangeLow, RangeHigh), AsymptoticError(kTRUE)/*SumW2Error(kTRUE)*/, Extended(kTRUE));
+//  RooMinuit m;//*nll);
+//  RooFitResult* Result = m.fit("shr");
+//  Result->SetName("fitresult_model_reducedDS");
 
-//  RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), NumCPU(16), Hesse(kTRUE), Range(RangeLow, RangeHigh), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));
+  RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), PrefitDataFraction(0.005), Minimizer("Minuit","minimize"), NumCPU(38), Range(RangeLow, RangeHigh), AsymptoticError(kTRUE)/*SumW2Error(kTRUE)*/, Extended(kTRUE));
+  Result->SetName("fitresult_model_reducedDS");
   works1->pdf("model")->plotOn(massPlot, Name("modelPlot"));
  {works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*SignalNS)), LineColor(kRed), LineStyle(kDashed), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CBNS_1)), LineColor(kGreen), LineStyle(kSolid), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CBNS_2)), LineColor(kRed), LineStyle(kSolid), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CBNS_3)), LineColor(kMagenta), LineStyle(kDashDotted), MoveToBack());}
   massPlot->SetTitle("");
@@ -184,7 +185,7 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
 
   bool GetCont_ = false;
   RooPlot* cont_plt;
-  if(GetCont_) cont_plt = m.contour(*works1->var("n"), *works1->var("alpha"), 1, 2, 3);
+ // if(GetCont_) cont_plt = m.contour(*works1->var("n"), *works1->var("alpha"), 1, 2, 3);
   pad_pull->cd();
   pad_pull->SetGrid(0,1);
   TLine* line_pull = new TLine(RangeLow,0.,RangeHigh, 0.);
@@ -285,12 +286,12 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
 
 //  c2->SaveAs(Form("%s/WithoutFit_%dS_pt_%d-%d_rap_%d-%d_%dbin_noWeight_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_fix%d.pdf",massDIR.Data(), state, (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10),  Nmassbins, MupT.Data(), Trig.c_str(),  bdtlow, bdthigh, cutQVP, (int) fixvar));
 
-  if(GetCont_){
-    TCanvas* cc = new TCanvas();
-    cc->cd();
-    cont_plt->Draw();
-    cc->SaveAs(Form("%s/cont.pdf",massDIRcont.Data()) );
-  }
+//  if(GetCont_){
+//    TCanvas* cc = new TCanvas();
+//    cc->cd();
+//    cont_plt->Draw();
+//    cc->SaveAs(Form("%s/cont.pdf",massDIRcont.Data()) );
+//  }
 
   TFile* fout;
   long outputts = ( bdtlow == -1) ? 9999999999 : ts;

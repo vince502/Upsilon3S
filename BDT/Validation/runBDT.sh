@@ -177,8 +177,12 @@ OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=10%:BoostType=Grad:AdaBoostBet
 TS=8000000041 #FROM 40
 DATPREP=""\"SplitSeed=100:nTrain_Signal=80000:nTest_Signal=50000:SplitMode=Random:NormMode=None:!V\"""
 OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=10%:BoostType=Grad:AdaBoostBeta=0.7:UseBaggedBoost=True:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
+#TRAINER3
+TS=8000000042 #FROM 41
+DATPREP=""\"SplitSeed=100:nTrain_Signal=80000:nTest_Signal=50000:SplitMode=Random:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:Shrinkage=0.1:AdaBoostBeta=0.7:UseBaggedBoost=True:SeparationType=MisClassificationError:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
 TRAINER3
-#./runBDTFit.sh ############CHECK THE CONSEQUENCES!###############
+./runBDTFit.sh ############CHECK THE CONSEQUENCES!###############
 
 #TS=8200000006
 #ONECYCLE
