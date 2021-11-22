@@ -30,7 +30,7 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
     return std::make_pair(theSig, cloneHist);
   }
 
-  int Nbins = (int) (1.5/interval_score);
+  int Nbins = (int) (2/interval_score);
   std::cout<< "Nbins: " <<Nbins<< std::endl;
   std::cout << interval_score << "interval, " << Nbins << "NBINS!!!!!" << std::endl;
   string tag_BLIND = "";
@@ -52,7 +52,7 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
   if(ts >= 1634636609) treedir = Form("/data/Y%dSpt%dto%d", train_state, bdtptMin, bdtptMax);
   tree_train_raw->Add(Form("%s%s/dataset1/TrainTree", name_input.c_str(), treedir.c_str()));
   tree_train_raw->Add(Form("%s%s/dataset2/TrainTree", name_input.c_str(), treedir.c_str()));
-  std::string theCut = Form("(mass<11.5 && mass>8.0) && (pt>%f) && (pt<%f) && (y>%f) && (y<%f) && (cBin>=%d) && (cBin<%d) && (QQVtxProb>%f)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP );
+  std::string theCut = Form("(mass<14 && mass>8.0) && (pt>%f) && (pt<%f) && (y>%f) && (y<%f) && (cBin>=%d) && (cBin<%d) && (QQVtxProb>%f)", ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP );
   TChain* tree_train;
   rd_data = (RooDataSet*) rd_data->reduce(theCut.c_str());
   tree_train = (TChain*) tree_train_raw->CopyTree(theCut.c_str());
@@ -70,7 +70,7 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
   TH1::AddDirectory(kFALSE);
   auto get_BDTcut_from_ratio = [&](double ratio)
   {
-    TH1D* hist_res = new TH1D("HISTO", "signifcance vs BDT", Nbins, -0.5, 1);
+    TH1D* hist_res = new TH1D("HISTO", "signifcance vs BDT", Nbins, -1.0, 1);
     double r = ratio;
   
 //    std::cout << r*(double) ent_bkg << " vs " << ent_sig << std::endl;
@@ -85,7 +85,7 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
     for ( int idx =0; idx < tree_train->GetEntries(); idx++){
       tree_train->GetEntry(idx);
       int counts =0;
-      for( double x = -0.5; x < 1; x+=interval_score){
+      for( double x = -1; x < 1; x+=interval_score){
         if(bool_classID==0){sig+=1; if(val_bdt> x) {tuple_pass_sig[counts]+=1;}}
         if(bool_classID==1){bkg+=1; if(val_bdt> x) {tuple_pass_bkg[counts]+=1;}}
         counts++;
@@ -102,8 +102,8 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
       pass_bkg = tuple_pass_bkg[idx];
       Double_t err_sig = TMath::Sqrt(pass_sig);
       Double_t err_bkg = TMath::Sqrt(pass_bkg);
- //     std::cout << Form("passing sig, bkg : %.4f, %.4f, err: %.4f, %.4f",(double) tuple_pass_sig[idx], pass_bkg, err_sig, err_bkg) << std::endl;
-//      std::cout << Form("passing sig, bkg : %.4f, %.4f, err: %.4f, %.4f",pass_sig, pass_bkg, err_sig, err_bkg) << std::endl;
+     std::cout << Form("passing sig, bkg : %.4f, %.4f, err: %.4f, %.4f",(double) tuple_pass_sig[idx], pass_bkg, err_sig, err_bkg) << std::endl;
+      std::cout << Form("passing sig, bkg : %.4f, %.4f, err: %.4f, %.4f",pass_sig, pass_bkg, err_sig, err_bkg) << std::endl;
      
       if( formula_significance=="S12"){
         _signif[idx] = 2*(TMath::Sqrt(pass_sig+pass_bkg)-TMath::Sqrt(pass_bkg));
@@ -121,6 +121,7 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
         else _signif_err[idx] = ( TMath::Sqrt(TMath::Power(pass_sig,2)+ 4*pass_sig*pass_bkg)/(2*(pass_sig+ pass_bkg) ) ); 
 	if (_signif_err[idx] > 5*_signif[idx]) _signif_err[idx] = 5*_signif[idx];
       }
+	  std::cout << "Significance : " << _signif[idx] << std::endl;
       hist_res->SetBinContent(idx+1,_signif[idx]);
       hist_res->SetBinError(idx+1,  _signif_err[idx]);
 
@@ -133,12 +134,12 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
     TF1* sig_model;
 //    if( formula_significance == "S12") sig_model = new TF1("Msignif", "[0]*(TMath::Sqrt([1]*TMath::Erf((-x-[2])/[4]) +TMath::Erf((-x-[3])/[5]) +[1]+1) - TMath::Sqrt(TMath::Erf((-x-[3])/[5]) +1 ) +[6]  )");
 //    if( formula_significance == "S2") sig_model = new TF1("Msignif", "[0]*([1]*(TMath::Erf((-x-[2])/[4])+[6])/TMath::Sqrt([1]*(TMath::Erf((-x-[2])/[4]) +[7]) +TMath::Erf((-x-[3])/[5]) +1) )");
-      sig_model = new TF1("Msignif","pol6",-0.5,interval_score*(zero_bin)-0.5);
+      sig_model = new TF1("Msignif","pol6",-0.8,1);//interval_score*(zero_bin)-0.5);
     
-    hist_res->Fit("Msignif","R","",-0.5,interval_score*(zero_bin)-0.5);
+    hist_res->Fit("Msignif","R","",-0.8,1);//interval_score*(zero_bin)-0.5);
     hist_res->Draw();
     auto res = hist_res->GetFunction("Msignif");
-    double max_signif_bdt= res->GetMaximumX(-0.5, 0.5);//  hist_res->GetBinCenter(hist_res->GetMaximumBin() );
+    double max_signif_bdt= res->GetMaximumX(-0.8, 1);//interval_score*(zero_bin)-0.5);//  hist_res->GetBinCenter(hist_res->GetMaximumBin() );
     max_signif_bdt = min(max_signif_bdt, sig_lim_bdt);
     double max_signif_val = hist_res->GetMaximum();
     return std::make_pair(std::make_pair(max_signif_bdt, max_signif_val),hist_res );
@@ -185,9 +186,9 @@ RooRealVar get_eff_acc(std::string type, std::string type2, long ts, long ts2, d
 dbg(123);
   RooRealVar eff22, eff21, eff1, eff2, nbkg;
 
-  binplotter* bp = new binplotter(type, ts, ylim,pl, ph, cl, ch, blow, bhigh, bdtptMin, bdtptMax, train_state, false, eff_old);
+  binplotter* bp = new binplotter(type, ts, ylim,pl, ph, cl, ch, blow, bhigh, bdtptMin, bdtptMax, train_state, train_state, false, eff_old);
 dbg(122);
-  binplotter* bp2 = new binplotter(type2, ts2, ylim,pl, ph, cl, ch, -1, bhigh, bdtptMin, bdtptMax, train_state, false, eff_old);
+  binplotter* bp2 = new binplotter(type2, ts2, ylim,pl, ph, cl, ch, 0.01, -1, bhigh, bdtptMin, bdtptMax, train_state, train_state, false, eff_old);
 dbg(121);
   std::cout << bp->res->GetName() << std::endl;
   bp->dump();
@@ -222,9 +223,37 @@ dbg(121);
   return res_var;
   
 };
+
 RooRealVar get_eff_acc(std::string type, std::string type2, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int bdtptMin= 0, int bdtptMax =30, int train_state = 3 ,int state1 =1, int state2 =3, bool eff_old = true){
 	return	get_eff_acc(type, type2, ts, ts, ylim, pl, ph, cl, ch, blow, bhigh,bdtptMin, bdtptMax,  train_state, state1, state2, eff_old);
 };
 RooRealVar get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh,  int bdtptMin= 0, int bdtptMax =30,int train_state = 3,int state1 =1, int state2 =3, bool eff_old = true){
 	return	get_eff_acc(type, "CB3:CC4:FF", ts, 9999999999, ylim, pl, ph, cl, ch, blow, bhigh, bdtptMin, bdtptMax, train_state, state1, state2, eff_old);
+};
+//Function to get BDT ratio //
+RooRealVar get_eff_acc_v2(std::string type, std::string type2, long ts, long ts2, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int bdtptMin= 0, int bdtptMax =30, int train_state = 3, int state1 =1, int state2 =3, bool eff_old = true){
+dbg(123);
+  RooRealVar eff22, eff21, eff1, eff2, nbkg;
+
+//  binplotter* bp = new binplotter(type, ts, ylim,pl, ph, cl, ch, blow, bhigh, bdtptMin, bdtptMax, train_state, train_state, false, eff_old);
+//dbg(122);
+  binplotter* bp2 = new binplotter(type2, ts2, ylim,pl, ph, cl, ch, 0.01, -1, bhigh, bdtptMin, bdtptMax, train_state, train_state, false, eff_old);
+dbg(121);
+  bp2->get_yield();
+  nbkg = bp2->get_bkg();
+  double nSigTot = bp2->yield3S.getVal() + bp2->yield2S.getVal() + bp2->yield1S.getVal(); 
+  double nSigTotErr = TMath::Sqrt(bp2->yield3S.getError() * bp2->yield3S.getError() + bp2->yield2S.getError() * bp2->yield2S.getError() + bp2->yield1S.getError()* bp2->yield1S.getError()); 
+  
+  double ratio_val = nSigTot/nbkg.getVal();
+  double ratio_err = ratio_val * TMath::Sqrt( (nSigTotErr/nSigTot)*(nSigTotErr/nSigTot) + (nbkg.getError()/nbkg.getVal())*(nbkg.getError()/nbkg.getVal())); 
+
+  RooRealVar res_var = RooRealVar("result","",ratio_val);
+  res_var.setError(ratio_err); 
+  return res_var;
+};
+RooRealVar get_eff_acc_v2(std::string type, std::string type2, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int bdtptMin= 0, int bdtptMax =30, int train_state = 3 ,int state1 =1, int state2 =3, bool eff_old = true){
+	return	get_eff_acc_v2(type, type2, ts, ts, ylim, pl, ph, cl, ch, blow, bhigh,bdtptMin, bdtptMax,  train_state, state1, state2, eff_old);
+};
+RooRealVar get_eff_acc_v2(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh,  int bdtptMin= 0, int bdtptMax =30,int train_state = 3,int state1 =1, int state2 =3, bool eff_old = true){
+	return	get_eff_acc_v2(type, "CB3:CC4:FF", ts, 9999999999, ylim, pl, ph, cl, ch, blow, bhigh, bdtptMin, bdtptMax, train_state, state1, state2, eff_old);
 };

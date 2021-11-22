@@ -16,6 +16,7 @@ void getEfficiencyBDT_V2(
   float yLow = -2.4, float yHigh = 2.4,
   int cLow = 0, int cHigh = 181, bool isTnP = true, bool isPtWeight = true, long  ts = 9999999999, double bdt_tsl = 0.0, double bdt_tsh =0.0, int bdtptMin =0, int bdtptMax = 1, int train_state = 3, int state= 3, double vcut = 0.00
   ) {
+	std::cout << Form("%d, %d", bdtptMin, bdtptMax) << std::endl;
 
   gStyle->SetOptStat(0);
 //  int kTrigSel_=0;
@@ -71,7 +72,7 @@ void getEfficiencyBDT_V2(
 
   //SetBranchAddress
   SetTreeBDT settree_;
-  settree_.TreeSetting(mytree, (ts >=1634636609), train_state,(int) ptLow, (int) ptHigh);
+  settree_.TreeSetting(mytree, (ts >=1634636609), train_state, bdtptMin, bdtptMax);
 
   //pT reweighting function
 //  TFile *fPtW = new TFile(Form("%s/Efficiency/Func_dNdpT_2S.root",workdir.Data()),"read");

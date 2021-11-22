@@ -3,6 +3,7 @@
 #include "../cutsAndBinUpsilonV2.h"
 #include "../Style_jaebeom.h"
 #include "../rootFitHeaders.h"
+#include "../.workdir.h"
 #include <RooGaussian.h>
 #include <RooCBShape.h>
 #include <RooWorkspace.h>
@@ -21,16 +22,17 @@ double getEffWeight(TH1D* h = 0, double pt = 0);
 void GetHistSqrt(TH1D* h1 =0, TH1D* h2=0);
 
 void makeRooDataset_fromBDT_NOM(long ts, bool cutID, bool isMC, int train_state = 3, int ptLow =0 , int ptHigh =30, std::string aux_opt = "nan"){
+  ROOT::EnableImplicitMT(8);
   string smc = "";
   if (isMC) smc = "_MC";
   if ( aux_opt!="nan") smc = "_"+aux_opt;
 
   TFile* rf; 
   if(aux_opt =="nan"){
-  if(!isMC) rf = new TFile(Form("./BDTAppliedData/BDTApp_%ld.root",ts), "OPEN");
-  else if(isMC) rf = new TFile(Form("./BDTAppliedData/BDTApp_%ld_MC.root",ts), "OPEN");
+  if(!isMC) rf = new TFile(Form("%s/BDT/BDTAppliedData/BDTApp_%ld.root",workdir.Data(), ts), "OPEN");
+  else if(isMC) rf = new TFile(Form("%s/BDT/BDTAppliedData/BDTApp_%ld_MC.root",workdir.Data(), ts), "OPEN");
   }
-  if(aux_opt !="nan") rf = new TFile(Form("./BDTAppliedData/BDTApp_%ld_%s.root",ts, aux_opt.c_str()), "OPEN");
+  if(aux_opt !="nan") rf = new TFile(Form("%s/BDT/BDTAppliedData/BDTApp_%ld_%s.root",workdir.Data(), ts, aux_opt.c_str()), "OPEN");
 
   TTree* tree = (TTree*) rf->Get("tree");
 
@@ -84,7 +86,7 @@ void makeRooDataset_fromBDT_NOM(long ts, bool cutID, bool isMC, int train_state 
   RooArgSet* argSet    = new RooArgSet(*massVar, *ptVar, *yVar, *pt1Var, *pt2Var, *eta1Var, *eta2Var,*evtWeight);
   argSet->add(*cBinVar);argSet->add(*QQVPVar); argSet->add(*BDTVar);// argSet->add(*pBDTVar);//argSet->add(*ctau3D);
   
-  RooDataSet* dataSet  = new RooDataSet(Form("dataset_Y%dSpt%dto%d", train_state, ptLow, ptHigh), " a dataset", *argSet);
+  RooDataSet* dataSet  = new RooDataSet(Form("dataset_Y%dSpt%dto%d", train_state, ptLow, ptHigh), " a dataset", *argSet,"weight");
 
   //Begin Dimuon Loop
   Int_t nEvt = tree->GetEntries();
@@ -92,7 +94,7 @@ void makeRooDataset_fromBDT_NOM(long ts, bool cutID, bool isMC, int train_state 
   for(int i=0; i < nEvt; i++){
     if((i%10000)==0)std::cout<< "Fetching index : " << i << "\n";
     tree->GetEntry(i);
-    if( !(fabs(dz1)<20&&fabs(dz2)<20&&fabs(dxy1)<0.3&&fabs(dxy2)<0.3&&nPixWMea1>0&&nPixWMea2>0&&nTrkWMea1>5&&nTrkWMea2>5 && pt1>3.5&&pt2>3.5 && pt >= ptLow && pt <= ptHigh) ) continue;
+    if( !(fabs(dz1)<20&&fabs(dz2)<20&&fabs(dxy1)<0.3&&fabs(dxy2)<0.3&&nPixWMea1>0&&nPixWMea2>0&&nTrkWMea1>5&&nTrkWMea2>5 && pt1>3.5&&pt2>3.5 ) ) continue;
   //  if(!strcmp(&className,"Background")){
       massVar->setVal( (double)mass ) ;
       ptVar->setVal(   (double)pt   ) ;
@@ -102,14 +104,14 @@ void makeRooDataset_fromBDT_NOM(long ts, bool cutID, bool isMC, int train_state 
       pt2Var->setVal(  (double)pt2  ) ;
       eta2Var->setVal( (double)eta2 ) ;
       cBinVar->setVal( (double)cBin ) ;
-      evtWeight->setVal( (double) 1.0) ;
+      evtWeight->setVal( (double) weight) ;
       QQVPVar->setVal( (double)QQVtxProb ) ;
       BDTVar-> setVal( (double)BDT ) ;
 //      pBDTVar->setVal( (double)pBDT ) ;
       dataSet->add( *argSet);
 //    }
   }
-  TFile* wf = new TFile(Form("roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT%s.root",ts,smc.c_str()),"update");
+  TFile* wf = new TFile(Form("%s/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT%s.root",workdir.Data(), ts,smc.c_str()),"update");
   wf->cd();
   dataSet->Write();
   wf->Write();

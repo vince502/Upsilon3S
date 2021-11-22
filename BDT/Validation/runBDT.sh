@@ -6,7 +6,7 @@
 function TRAINER {
 	root -l -b -q "BDTClassifier_BLIND_BDT.C("$TS", "$OPT", "$DATPREP")" 2>&1| tee BDT"$TS".log
 	root -l -b -q "BDTNominalProcess.cxx("$TS",0, {{0,30}})"
-	root -l -b -q "BDTNominalProcess.cxx("$TS",1, {{0,30}})"
+#	root -l -b -q "BDTNominalProcess.cxx("$TS",1, {{0,30}})"
 }
 function TRAINER2 {
 	root -l -b -q "BDTClassifier_BLIND_BDT2.C("$TS", "$OPT", "$DATPREP")" 2>&1| tee BDT"$TS".log
@@ -181,8 +181,72 @@ OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=10%:BoostType=Grad:AdaBoostBet
 TS=8000000042 #FROM 41
 DATPREP=""\"SplitSeed=100:nTrain_Signal=80000:nTest_Signal=50000:SplitMode=Random:NormMode=None:!V\"""
 OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:Shrinkage=0.1:AdaBoostBeta=0.7:UseBaggedBoost=True:SeparationType=MisClassificationError:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
-TRAINER3
-./runBDTFit.sh ############CHECK THE CONSEQUENCES!###############
+#TRAINER3
+TS=8000000043 #FROM 39
+DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=10%:BoostType=Grad:AdaBoostBeta=0.7:UseBaggedBoost=True:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
+#TRAINER
+TS=8000000044 #FROM 41
+DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.7:UseBaggedBoost=True:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
+#TRAINER #<< BETTER!
+TS=8000000045 #FROM 44
+DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=300:MaxDepth=3:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.7:UseBaggedBoost=True:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
+#TRAINER #<< Worse
+TS=8000000046 #FROM 41
+DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.7:UseBaggedBoost=False:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
+#TRAINER #<<
+TS=8000000047 #FROM 41
+DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:Shrinkage=0.1:AdaBoostBeta=0.7:UseBaggedBoost=True:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=200:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
+#TRAINER #<< 
+TS=8000000048 #FROM 41
+DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.7:UseBaggedBoost=True:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=200:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
+#TRAINER #<< GOOD 
+TS=8000000049 #FROM 48
+DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.7:UseBaggedBoost=True:SeparationType=GiniIndexWithLaplace:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=200:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
+#TRAINER #<< 
+TS=8000000050 #FROM 49 #With QQMassErr
+DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.7:UseBaggedBoost=True:SeparationType=GiniIndexWithLaplace:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=200:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
+#TRAINER #<< 
+TS=8000000051 #FROM 41 Found Error in Mass Range With QQMassErr
+DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.7:UseBaggedBoost=True:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
+#TRAINER #<< 
+TS=8000000052 #FROM 41 Found Error in Mass Range Without QQMassErr
+DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.7:UseBaggedBoost=True:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
+#TRAINER #<< GREAT!
+TS=8000000053 #FROM 42 Deep Tree
+DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=300:MaxDepth=6:MinNodeSize=5%:BoostType=Grad:Shrinkage=0.05:AdaBoostBeta=0.7:UseBaggedBoost=True:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
+#TRAINER #<< BETTER!
+TS=8000000054 #FROM 41 Found Error in Mass Range Without QQMassErr
+DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=AdaBoost:AdaBoostBeta=0.7:UseBaggedBoost=True:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
+#TRAINER #<< 
+TS=8000000055 #FROM 54 Found Error in Mass Range Without QQMassErr
+DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=15%:BoostType=AdaBoost:AdaBoostBeta=0.7:UseBaggedBoost:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D\"""
+#TRAINER #<<
+TS=8000000056 #FROM 55 Found Error in Mass Range Without QQMassErr
+DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=15%:BoostType=AdaBoost:AdaBoostBeta=0.7:UseBaggedBoost:SeparationType=GiniIndex:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:\"""
+#TRAINER #<<
+TS=8000000057 #FROM 56 Found Error in Mass Range Without QQMassErr
+DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.7:UseBaggedBoost=True:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=200:CreateMVAPdfs:DoBoostMonitor:\"""
+#TRAINER #<<
+TS=8000000058 #FROM 57 Found Error in Mass Range Without QQMassErr
+DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=500:MaxDepth=6:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.7:Shrinkage=0.1:UseBaggedBoost=True:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=200:CreateMVAPdfs:DoBoostMonitor:\"""
+TRAINER #<<
+./runBDTFit.sh $TS ############CHECK THE CONSEQUENCES!###############
 
 #TS=8200000006
 #ONECYCLE

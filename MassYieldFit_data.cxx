@@ -9,7 +9,8 @@ struct params_vhl{
   Double_t low;
   Double_t high;
 };
-void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 181, double cutQVP = 0.00, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1. ,int bdtptMin =0, int bdtptMax = 30, Double_t params[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {},Double_t paramslow[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {},Double_t paramshigh[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {}, std::map<std::string, params_vhl> map_params={}, int workers = 10){
+//void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 181, double cutQVP = 0.00, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1. ,int bdtptMin =0, int bdtptMax = 30, Double_t params[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {},Double_t paramslow[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {},Double_t paramshigh[/*sigma1S_1, alpha, n , frac, k1, k2, k3*/]= {}, std::map<std::string, params_vhl> map_params={}, int workers = 10){
+void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 181, double cutQVP = 0.00, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1. ,int bdtptMin =0, int bdtptMax = 30, std::vector<Double_t> params= {}, std::vector<Double_t> paramslow= {}, std::vector<Double_t> paramshigh= {}, std::map<std::string, params_vhl> map_params={}, int workers = 10){
   massfitter mf = massfitter();
 ////////////////////////////////////////////////////////////////////////
   int DDiter = 0;
@@ -141,17 +142,17 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
   RooFormulaVar *sigma2S_1 = new RooFormulaVar("sigma2S_1", "@0*@1", RooArgList(*sigma1S_1, *mratio2));
   RooFormulaVar *sigma3S_1 = new RooFormulaVar("sigma3S_1", "@0*@1", RooArgList(*sigma1S_1, *mratio3));
 
-  RooRealVar* x1S = new RooRealVar("x1S", "sigma ratio", 0.1, 0.01, 0.95);
-  RooRealVar* x1S_2 = new RooRealVar("x1S_2", "sigma ratio", 0.4, 0.01, 0.95);
+  RooRealVar* x1S = new RooRealVar("x1S", "sigma ratio", 0.1, 0.01, 2);
+  RooRealVar* x1S_2 = new RooRealVar("x1S_2", "sigma ratio", 0.4, 0.01, 2);
 
 
   RooFormulaVar *sigma1S_2 = new RooFormulaVar("sigma1S_2", "@0*@1", RooArgList(*sigma1S_1, *x1S));
-  RooFormulaVar *sigma2S_2 = new RooFormulaVar("sigma1S_2", "@0*@1", RooArgList(*sigma1S_2, *mratio2));
-  RooFormulaVar *sigma3S_2 = new RooFormulaVar("sigma1S_2", "@0*@1", RooArgList(*sigma1S_2, *mratio3));
+  RooFormulaVar *sigma2S_2 = new RooFormulaVar("sigma2S_2", "@0*@1", RooArgList(*sigma1S_2, *mratio2));
+  RooFormulaVar *sigma3S_2 = new RooFormulaVar("sigma3S_2", "@0*@1", RooArgList(*sigma1S_2, *mratio3));
 
   RooFormulaVar *sigma1S_3 = new RooFormulaVar("sigma1S_3", "@0*@1", RooArgList(*sigma1S_1, *x1S_2));
-  RooFormulaVar *sigma2S_3 = new RooFormulaVar("sigma1S_3", "@0*@1", RooArgList(*sigma1S_3, *mratio2));
-  RooFormulaVar *sigma3S_3 = new RooFormulaVar("sigma1S_3", "@0*@1", RooArgList(*sigma1S_3, *mratio3));
+  RooFormulaVar *sigma2S_3 = new RooFormulaVar("sigma2S_3", "@0*@1", RooArgList(*sigma1S_3, *mratio2));
+  RooFormulaVar *sigma3S_3 = new RooFormulaVar("sigma3S_3", "@0*@1", RooArgList(*sigma1S_3, *mratio3));
 
   RooRealVar k("k", "k of Gaus-Exp Pdf", 1.0, 0, 5.0);
   RooRealVar *alpha, *frac2;
@@ -579,7 +580,7 @@ dbg(i);i++;
   hfrac->SetBinContent(4, Bkgfc->Integral(9.3, 9.6));
   hfrac->SetBinContent(5, Sgnfc1S->Integral(9.1, 9.8));
   hfrac->SetBinContent(6, Bkgfc->Integral(9.1, 9.8));
-  hfrac->SetBinContent(7, Bkgfc->Integral(8.0, 8.6)+Bkgfc->Integral(10.8, 11.5));
+  hfrac->SetBinContent(7, Bkgfc->Integral(8.0, 8.6)+Bkgfc->Integral(10.8, mf.Range_fit_high));
   hfrac->SetBinContent(8, Bkgfc->Integral(mf.Range_fit_low, mf.Range_fit_high));
 
   dbg();

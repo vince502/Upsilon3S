@@ -338,6 +338,7 @@ std::vector<std::pair<int, int> >bin3spt = {{0,6}, {6,30}, {0,30},{0,4},{4,9},{9
 std::vector<double> VALI_V3_BDTTESTCUT = {0.8, 0.7, 0.5, 0.1, -0.1};
 std::vector<double> VALI_V3_BDTTESTCUT2 = {0.0, 0.1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.7};
 std::vector<double> VALI_V3_BDTTESTCUT3 = {0.25, 0.2, 0.15, 0.1, 0.05, -0.1, -0.2};
+std::vector<double> NOM_V2_BDTTESTCUT = {-0.9, -0.8, -0.7, -0.4, -0.3, -0.1, 0.0, 0.1, 0.2, 0.3, 0.4, 0.5};
 
 #include "yield_eff_signif.h"
 #endif

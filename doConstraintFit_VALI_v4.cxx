@@ -1,7 +1,7 @@
 //#include "./BDT/bininfo.h"
 //#include "MassYieldFit_BDT_MC.C"
 //#include "MassYieldFit_BDT_MC_GE.C"
-#include "MassYieldFit_BDT_MC_CB3_v2.C"
+#include "MassYieldFit_BDT_MC_CB3.C"
 //#include "MassYieldFit_BDT_MC.C"
 #include "MassYieldFit_data_v2.cxx"
 #include "./BDT/yield_eff_signif.cxx"
@@ -12,12 +12,8 @@ void doConstraintFit_VALI_v4(int step = 0, long input_ts=0, int aux_train_state=
   std::string type2 			= "CB3:CC2:DR2FF"	;
   std::string type_r 			= "CB3:CC2:DRGC"	;
   std::string typenobdt 		= "CB3:CC4:FF"	;
-  std::string constraints1S		="alpha1:n1:frac_1:frac2_1:xNS:xNS_2:sigmaNS_1"	;
-  std::string fixvars1S			="alpha1:n1:frac_1:frac2_1:x1S:x1S_2:sigma1S_1"	;
-  std::string constraints2S		="alpha2:n2:frac_2:frac2_2:xNS:xNS_2:sigmaNS_1"	;
-  std::string fixvars2S			="alpha2:n2:frac_2:frac2_2:x1S:x1S_2:sigma1S_1"	;
-  std::string constraints3S		="alpha3:n3:frac_3:frac2_3:xNS:xNS_2:sigmaNS_1"	;
-  std::string fixvars3S			="alpha3:n3:frac_3:frac2_3:x1S:x1S_2:sigma1S_1"	;
+  std::string constraints		="alpha:n:frac:frac2:xNS:xNS_2:sigmaNS_1"	;
+  std::string fixvars			="alpha:n:frac:frac2:x1S:x1S_2:sigma1S_1"	;
   long ts				= 1634894212;//1634805675	; 
   long ts_2				= 1634894212;//1634805675	;
   double ptMin				= 0		;
@@ -86,7 +82,7 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0) mutable {
       std::cout << keys << std::endl;
         RooRealVar* _var = (RooRealVar*) list_fit_final.find(keys.c_str());
         map_keyval[keys.c_str()] = {_var->getVal(), _var->getError()};
-        opt_params_gc+=Form(":%s;%.6f",keys.c_str(), _var->getError());
+        opt_params_gc+=Form(":%s%.6f;%.6f",keys.c_str(),_var->getVal(), _var->getError());
       std::cout << keys <<": "<< _var->getVal() << ", "<< _var->getError() << std::endl;
       }
       opt_params_gc+=":GCPEND";
@@ -99,7 +95,7 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0) mutable {
        if(state ==1) mean_sigma1S1 = map_keyval["sigmaNS_1"].first*(U1S_mass/U1S_mass);
       auto parsed = parser_symbol(type_,":");
       if(parsed[2].find("FF") ==std::string::npos){
-      MassYieldFit_data(type_, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, app_cutQVP, isBDT, ts, bl, cutBDThigh, bdtptMin, bdtptMax, 
+      MassYieldFit_data_v2(type_, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, app_cutQVP, isBDT, ts, bl, cutBDThigh, bdtptMin, bdtptMax, 
 	  (Double_t[]) { -0.02,0.0,0.1,0.1, -0.1},
 	  (Double_t[]) {-0.4, -0.5, -0.5,-0.3, -0.3}, 
 	  (Double_t[]) {0.1, 0.2, 0.3,0.3, 0.3}, 
@@ -119,7 +115,7 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0) mutable {
       }, Nworkers);
       }
       if(parsed[2].find("FF") !=std::string::npos){
-      MassYieldFit_data(type_, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, app_cutQVP, isBDT, ts, bl, cutBDThigh,  bdtptMin, bdtptMax, 
+      MassYieldFit_data_v2(type_, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, app_cutQVP, isBDT, ts, bl, cutBDThigh,  bdtptMin, bdtptMax, 
 	  (Double_t[]) { -0.02,0.0,0.1,0.1, -0.1},
 	  (Double_t[]) {-0.4, -0.5, -0.5,-0.3, -0.3}, 
 	  (Double_t[]) {0.1, 0.2, 0.3,0.3, 0.3}, 
@@ -186,7 +182,7 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0) mutable {
 };
 
 //////////////////////////////////////////STEP : GAUS CONSTRAIN FITTING/////////////////////////////////////////
-  auto METHOD_MCGCDATA = [&](int mode = 1) mutable {
+  auto METHOD_MCGCDATA = [&](int mode = 1, int submode =-1) mutable {
   std::cout << "cutBDTlow, sb_ratio in functoin : " << cutBDTlow << ", " << sb_ratio.getVal() << std::endl;
     std::string fname;
     if(state ==1) fname = fname1S;
@@ -194,16 +190,24 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0) mutable {
     if(state ==3) fname = fname3S;
 	std::cout << Form("%ld,%.4f, %.4f, %d, %d, %d, %d, %.4f, %.4f, %d, %d", ts, ptMin, ptMax, cBinLow, cBinHigh, train_state, state, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax) << std::endl;
     if(mode ==1 || mode ==0){
-       MassYieldFit_BDT_MC_CB3(ts, "", fname1S, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, train_state, state, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax);
-       MassYieldFit_BDT_MC_CB3(ts, "", fname2S, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, train_state, state, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax);
-       MassYieldFit_BDT_MC_CB3(ts, "", fname3S, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, train_state, state, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax);
+		if(submode == 1 || submode ==-1){
+       MassYieldFit_BDT_MC_CB3(ts, "", fname1S, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, train_state, 1, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax);
+		}
+		if(submode == 2 || submode ==-1){
+       MassYieldFit_BDT_MC_CB3(ts, "", fname2S, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, train_state, 2, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax);
+		}
+		if(submode == 3 || submode ==-1){
+       MassYieldFit_BDT_MC_CB3(ts, "", fname3S, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, train_state, 3, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax);
+		}
     }
 
     if(mode ==1 || mode ==2){
 	  std::string mcres_input_1S = GetFit(__FITRESLATEST, true, "CB3",ts, train_state, 1, (int)ptMin, (int)ptMax, cBinLow, cBinHigh, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP, "");
 	  std::string mcres_input_2S = GetFit(__FITRESLATEST, true, "CB3",ts, train_state, 2, (int)ptMin, (int)ptMax, cBinLow, cBinHigh, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP, "");
 	  std::string mcres_input_3S = GetFit(__FITRESLATEST, true, "CB3",ts, train_state, 3, (int)ptMin, (int)ptMax, cBinLow, cBinHigh, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP, "");
-	  std::cout << mcres_input << std::endl;
+	  std::cout << mcres_input_1S << std::endl;
+	  std::cout << mcres_input_2S << std::endl;
+	  std::cout << mcres_input_3S << std::endl;
 
 	  TFile* file_MCres_input_1S = TFile::Open(mcres_input_1S.c_str() );
 	  TFile* file_MCres_input_2S = TFile::Open(mcres_input_2S.c_str() );
@@ -216,55 +220,91 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0) mutable {
       std::cout << file_MCres_input_1S->GetName() << std::endl;
       std::cout << file_MCres_input_1S->GetName() << std::endl;
       std::cout << file_MCres_input_1S->GetName() << std::endl;
-      auto list_fit_initial = result_MC->floatParsInit();
-      auto list_fit_final = result_MC->floatParsFinal();
-      auto list_var_toConst = parser_symbol(constraints);
+	  int whatMC = 1;
       std::map< std::string,std::pair< double, double> > map_keyval;
-      std::string opt_params_gc;
-      for (auto keys : list_var_toConst){
-      std::cout << keys << std::endl;
-        RooRealVar* _var = (RooRealVar*) list_fit_final.find(keys.c_str());
-        map_keyval[keys.c_str()] = {_var->getVal(), _var->getError()};
-        opt_params_gc+=Form(":%s;%.6f",keys.c_str(), _var->getError());
-      std::cout << keys <<": "<< _var->getVal() << ", "<< _var->getError() << std::endl;
-      }
-      opt_params_gc+=":GCPEND";
-      type = type+opt_params_gc; 
+	  for(RooFitResult* result_MC : (std::vector<RooFitResult*>) {result_MC_1S,result_MC_2S,result_MC_3S}){
+    	  auto list_fit_initial = result_MC->floatParsInit();
+    	  auto list_fit_final = result_MC->floatParsFinal();
+    	  auto list_var_toConst = parser_symbol(constraints);
+    	  std::string opt_params_gc;
+    	  for (auto keys : list_var_toConst){
+    	  std::cout << keys << std::endl;
+    	    RooRealVar* _var = (RooRealVar*) list_fit_final.find(keys.c_str());
+    	    map_keyval[Form("%s_%dS",keys.c_str(),whatMC)] = {_var->getVal(), _var->getError()};
+    	    opt_params_gc+=Form(":%s_%dS;%.6f;%.6f",keys.c_str(),whatMC, _var->getVal(), _var->getError());
+    	  std::cout << keys <<": "<< _var->getVal() << ", "<< _var->getError() << std::endl;
+    	  }
+		  whatMC++;
+		  type = type+opt_params_gc;
+	  }
+      type = type+":GCPEND"; 
       std::cout << type << std::endl;
 
-       double mean_sigma1S1,mean_sigma2S1,mean_sigma3S1;
-       mean_sigma1S1 = map_keyval["sigma1S_1"].first*(U1S_mass/U3S_mass);
-       mean_sigma2S1 = map_keyval["sigma2S_1"].first*(U1S_mass/U2S_mass);
-       mean_sigma3S1 = map_keyval["sigma3S_1"].first*(U1S_mass/U1S_mass);
-      MassYieldFit_data(type, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax,  
-//      MassYieldFit_data(type, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh,  bdtptMin, bdtptMax,(Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, -0.09,-0.07,0.03,0.0017, -0.03}, (Double_t[]) {0.14, 1.4, 1.3, 0.05, -0.4, -0.3, -0.2,-0.1, -0.1}, (Double_t[]) {-1,-1,-1,-1, 0.40, 0.30, 0.2,0.1, 0.1}, 
- //     MassYieldFit_data(type, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh,  bdtptMin, bdtptMax,(Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 5.0,5.1,2.1,0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, -0.3, -0.3, -0.3,-0.3}, (Double_t[]) {0.31, (map_keyval["alpha"].first+map_keyval["alpha"].second)*2, (map_keyval["n"].first+map_keyval["n"].second)*4, 0.95, 9.1, 10.1, 2.3,0.3}, 
-//      MassYieldFit_data(type2, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh,  bdtptMin, bdtptMax,(Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 0.0,0.1,0.1,0.1, -0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, -0.3, -0.3, -0.3,-0.3, -0.3}, (Double_t[]) {-1, -1, -1, -1, 0.1, 0.1, 0.3,0.3, 0.3}, 
-//      MassYieldFit_data(type2, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh,  bdtptMin, bdtptMax,(Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 5.0,5.1,2.1,0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, 5.3, 1.3, 0.3,-0.3}, (Double_t[]) {-1, -1, -1, -1, 9.1, 7.1, 2.3,0.3}, 
+      MassYieldFit_data_v2(type, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax,  
+//      MassYieldFit_data_v2(type, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh,  bdtptMin, bdtptMax,(Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, -0.09,-0.07,0.03,0.0017, -0.03}, (Double_t[]) {0.14, 1.4, 1.3, 0.05, -0.4, -0.3, -0.2,-0.1, -0.1}, (Double_t[]) {-1,-1,-1,-1, 0.40, 0.30, 0.2,0.1, 0.1}, 
+ //     MassYieldFit_data_v2(type, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh,  bdtptMin, bdtptMax,(Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 5.0,5.1,2.1,0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, -0.3, -0.3, -0.3,-0.3}, (Double_t[]) {0.31, (map_keyval["alpha"].first+map_keyval["alpha"].second)*2, (map_keyval["n"].first+map_keyval["n"].second)*4, 0.95, 9.1, 10.1, 2.3,0.3}, 
+//      MassYieldFit_data_v2(type2, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh,  bdtptMin, bdtptMax,(Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 0.0,0.1,0.1,0.1, -0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, -0.3, -0.3, -0.3,-0.3, -0.3}, (Double_t[]) {-1, -1, -1, -1, 0.1, 0.1, 0.3,0.3, 0.3}, 
+//      MassYieldFit_data_v2(type2, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh,  bdtptMin, bdtptMax,(Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, 5.0,5.1,2.1,0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, 5.3, 1.3, 0.3,-0.3}, (Double_t[]) {-1, -1, -1, -1, 9.1, 7.1, 2.3,0.3}, 
 	  (Double_t[]) {0.09,-0.07,0.03,-0.001, -0.03},
 	  (Double_t[]) { -0.5, -0.5, -0.4,-0.55, -0.2}, 
 	  (Double_t[]) {0.50, 0.50, 0.5,0.45, 0.2}, 
       (std::map<string, params_vhl>) {
       {"massCut", { 0,fitrange.first,fitrange.second }},
-	  {"sigma1S1", {mean_sigma1S1, 0.11, 0.41}}, 
-	  {"alpha", {map_keyval["alpha"].first, 1.0, (map_keyval["alpha"].first+map_keyval["alpha"].second)}},
-	  {"var_n", {map_keyval["n"].first, 1.0, (map_keyval["n"].first+map_keyval["n"].second)*4}},
-	  {"frac", {map_keyval["frac"].first, 0.01, 0.99}},
-      {"frac2", {map_keyval["frac2"].first, 0, 1} }, 
-      {"xNS", {map_keyval["xNS"].first,0.01,1}}, 
-      {"xNS_2", {map_keyval["xNS_2"].first,0.01,1}},
-      {"sigmaNS_1", { mean_sigma1S1,0,1}},
+	  {"signal_separate", {1,0,0}},
+	  {"sigmaNS_1S", {map_keyval["sigmaNS_1_1S"].first, map_keyval["sigmaNS_1_1S"].first-(map_keyval["sigmaNS_1_1S"].second)*3,  map_keyval["sigmaNS_1_1S"].first+(map_keyval["sigmaNS_1_1S"].second)*3}}, 
+	  {"sigmaNS_2S", {map_keyval["sigmaNS_1_2S"].first, map_keyval["sigmaNS_1_2S"].first-(map_keyval["sigmaNS_1_2S"].second)*3,  map_keyval["sigmaNS_1_2S"].first+(map_keyval["sigmaNS_1_2S"].second)*3}}, 
+	  {"sigmaNS_3S", {map_keyval["sigmaNS_1_3S"].first, map_keyval["sigmaNS_1_3S"].first-(map_keyval["sigmaNS_1_3S"].second)*3,  map_keyval["sigmaNS_1_3S"].first+(map_keyval["sigmaNS_1_3S"].second)*3}}, 
+	  {"alpha_1S", {map_keyval["alpha_1S"].first,  map_keyval["alpha_1S"].first-(map_keyval["alpha_1S"].second)*3,  map_keyval["alpha_1S"].first+(map_keyval["alpha_1S"].second)*3}},
+	  {"alpha_2S", {map_keyval["alpha_2S"].first,  map_keyval["alpha_2S"].first-(map_keyval["alpha_2S"].second)*3,  map_keyval["alpha_2S"].first+(map_keyval["alpha_2S"].second)*3}},
+	  {"alpha_3S", {map_keyval["alpha_3S"].first,  map_keyval["alpha_3S"].first-(map_keyval["alpha_3S"].second)*3,  map_keyval["alpha_3S"].first+(map_keyval["alpha_3S"].second)*3}},
+	  {"var_n_1S", {map_keyval["n_1S"].first,  map_keyval["n_1S"].first-(map_keyval["n_1S"].second)*3,  map_keyval["n_1S"].first+(map_keyval["n_1S"].second)*3}},
+	  {"var_n_2S", {map_keyval["n_2S"].first,  map_keyval["n_2S"].first-(map_keyval["n_2S"].second)*3,  map_keyval["n_2S"].first+(map_keyval["n_2S"].second)*3}},
+	  {"var_n_3S", {map_keyval["n_3S"].first,  map_keyval["n_3S"].first-(map_keyval["n_3S"].second)*3,  map_keyval["n_3S"].first+(map_keyval["n_3S"].second)*3}},
+	  {"frac_1S", {map_keyval["frac_1S"].first,  map_keyval["frac_1S"].first-(map_keyval["frac_1S"].second)*3,  map_keyval["frac_1S"].first+(map_keyval["frac_1S"].second)*3}},
+	  {"frac_2S", {map_keyval["frac_2S"].first,  map_keyval["frac_2S"].first-(map_keyval["frac_2S"].second)*3,  map_keyval["frac_2S"].first+(map_keyval["frac_2S"].second)*3}},
+	  {"frac_3S", {map_keyval["frac_3S"].first,  map_keyval["frac_3S"].first-(map_keyval["frac_3S"].second)*3,  map_keyval["frac_3S"].first+(map_keyval["frac_3S"].second)*3}},
+      {"frac2_1S", {map_keyval["frac2_1S"].first, map_keyval["frac2_1S"].first-(map_keyval["frac2_1S"].second)*3,  map_keyval["frac2_1S"].first+(map_keyval["frac2_1S"].second)*3} }, 
+      {"frac2_2S", {map_keyval["frac2_2S"].first, map_keyval["frac2_2S"].first-(map_keyval["frac2_2S"].second)*3,  map_keyval["frac2_2S"].first+(map_keyval["frac2_2S"].second)*3} }, 
+      {"frac2_3S", {map_keyval["frac2_3S"].first, map_keyval["frac2_3S"].first-(map_keyval["frac2_3S"].second)*3,  map_keyval["frac2_3S"].first+(map_keyval["frac2_3S"].second)*3} }, 
+      {"xNS_1S", {map_keyval["xNS_1S"].first, map_keyval["xNS_1S"].first-(map_keyval["xNS_1S"].second)*3,  map_keyval["xNS_1S"].first+(map_keyval["xNS_1S"].second)*3}}, 
+      {"xNS_2S", {map_keyval["xNS_2S"].first, map_keyval["xNS_2S"].first-(map_keyval["xNS_2S"].second)*3,  map_keyval["xNS_2S"].first+(map_keyval["xNS_2S"].second)*3}}, 
+      {"xNS_3S", {map_keyval["xNS_3S"].first, map_keyval["xNS_3S"].first-(map_keyval["xNS_3S"].second)*3,  map_keyval["xNS_3S"].first+(map_keyval["xNS_3S"].second)*3}}, 
+      {"xNS_2_1S", {map_keyval["xNS_2_1S"].first, map_keyval["xNS_2_1S"].first-(map_keyval["xNS_2_1S"].second)*3,  map_keyval["xNS_2_1S"].first+(map_keyval["xNS_2_1S"].second)*3}},
+      {"xNS_2_2S", {map_keyval["xNS_2_2S"].first, map_keyval["xNS_2_2S"].first-(map_keyval["xNS_2_2S"].second)*3,  map_keyval["xNS_2_2S"].first+(map_keyval["xNS_2_2S"].second)*3}},
+      {"xNS_2_3S", {map_keyval["xNS_2_3S"].first, map_keyval["xNS_2_3S"].first-(map_keyval["xNS_2_3S"].second)*3,  map_keyval["xNS_2_3S"].first+(map_keyval["xNS_2_3S"].second)*3}},
+//
+//	  {"sigmaNS_1S", {map_keyval["sigmaNS_1_1S"].first, 0.11, -1}}, 
+//	  {"sigmaNS_2S", {map_keyval["sigmaNS_1_2S"].first, 0.11, -1}}, 
+//	  {"sigmaNS_3S", {map_keyval["sigmaNS_1_3S"].first, 0.11, 0.41}}, 
+//	  {"alpha_1S", {map_keyval["alpha_1S"].first, 0.3, -1}},
+//	  {"alpha_2S", {map_keyval["alpha_2S"].first, 0.3, -1}},
+//	  {"alpha_3S", {map_keyval["alpha_3S"].first, 0.3, 10}},
+//	  {"var_n_1S", {map_keyval["n_1S"].first, 0.3, -1}},
+//	  {"var_n_2S", {map_keyval["n_2S"].first, 0.3, -1}},
+//	  {"var_n_3S", {map_keyval["n_3S"].first, 0.3, 10}},
+//	  {"frac_1S", {map_keyval["frac_1S"].first, 0.01, -1}},
+//	  {"frac_2S", {map_keyval["frac_2S"].first, 0.01, -1}},
+//	  {"frac_3S", {map_keyval["frac_3S"].first, 0.01, 0.99}},
+//      {"frac2_1S", {map_keyval["frac2_1S"].first, 0, -1} }, 
+//      {"frac2_2S", {map_keyval["frac2_2S"].first, 0, -1} }, 
+//      {"frac2_3S", {map_keyval["frac2_3S"].first, 0, 1} }, 
+//      {"xNS_1S", {map_keyval["xNS_1S"].first,0.01,-1}}, 
+//      {"xNS_2S", {map_keyval["xNS_2S"].first,0.01,-1}}, 
+//      {"xNS_3S", {map_keyval["xNS_3S"].first,0.01,1}}, 
+//      {"xNS_2_1S", {map_keyval["xNS_2_1S"].first,0.01,-1}},
+//      {"xNS_2_2S", {map_keyval["xNS_2_2S"].first,0.01,-1}},
+//      {"xNS_2_3S", {map_keyval["xNS_2_3S"].first,0.01,1}},
       {"mag", { 1, 0, 0 }},
       {"sb_ratio", { sb_ratio.getVal(), 0, 0}},
       {"tmp", {0,0,0} },
       }, Nworkers);
     }
-
+	return 0;
 };
 /////////////////////////////////////////////STEP : FREEFIT////////////////////////////////////////
   auto METHOD_FREEFIT = [&](string typef = "CB3:CC5:FF") mutable {
   std::cout << "cutBDTlow, sb_ratio in functoin : " << cutBDTlow << ", " << sb_ratio.getVal() << std::endl;
-       MassYieldFit_data(typef, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax,  
+       MassYieldFit_data_v2(typef, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax,  
 	  (Double_t[]) {8, 5,0.4,-0.01, -0.03},
 	  (Double_t[]) { 5, 0, 0,-0.55, -0.2}, 
 	  (Double_t[]) {10, 10,2,0.45, 0.2}, 
@@ -342,7 +382,7 @@ auto fixfit = [&](int depth  = 5) mutable {
 //    sb_ratio = RooRealVar("ratio","",-1);
 //    for( int i = 11; i < 12; i++){
 //         cutBDTlow = -1.0 + 0.1*i;
- 	MassYieldFit_data(type2, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, xts, cutBDTlow, cutBDThigh,  bdtptMin, bdtptMax,
+ 	MassYieldFit_data_v2(type2, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, xts, cutBDTlow, cutBDThigh,  bdtptMin, bdtptMax,
 //(Double_t[]) {map_keyval_2["sigma1S_1"].first, map_keyval_2["alpha"].first, map_keyval_2["n"].first, map_keyval_2["frac"].first, -0.15,-0.1,0.1,0.1}, (Double_t[]) {0.05, 0.5, 0.4, 0.05, -0.3, -0.4, -0.4,-0.4}, (Double_t[]) {-1, -1, -1, -1, 0.2, 0.3, 0.35,0.35}, 
 	  (Double_t[]) {0.09,-0.07,0.03,-0.001, -0.03},
 	  (Double_t[]) { -0.5, -0.5, -0.4,-0.55, -0.2}, 
@@ -495,6 +535,7 @@ if(step ==1201){
 	sb_ratio.setVal(-1);
 	fitrange= {8, 14};
 	sb_ratio.setVal(-1);
+	Nworkers= 38;
     fname3S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC.root", ts, Trig.c_str());
     fname2S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC_2S.root", ts, Trig.c_str());
     fname1S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC_1S.root", ts, Trig.c_str());
@@ -502,13 +543,13 @@ if(step ==1201){
     ptMax = ptpair.second;
     type 			= "CB3:CC3:GC"	;
 //    std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);
-	for(double xj : VALI_V3_BDTTESTCUT3/*}*/){
-//	for(double xj : {0.1, -0.1 } ){
+//	for(double xj : VALI_V3_BDTTESTCUT3/*}*/){
+	for(double xj : {0.5 } ){
     	cutBDTlow = xj;
     	type 			= "CB3:CC5:GC"	;
 //		if(xj < -0.2) type = "CB3:CC4:GC";
 
-    	METHOD_MCGCDATA(1);
+    	METHOD_MCGCDATA(2, -1);
 //    	METHOD_FREEFIT("CB3:EE:FF");
 	}
   }
@@ -735,7 +776,7 @@ if(step == 4){
      if(state ==2) mean_sigma1S1 = map_keyval["sigmaNS_1"].first*(U1S_mass/U2S_mass);
      if(state ==1) mean_sigma1S1 = map_keyval["sigmaNS_1"].first*(U1S_mass/U1S_mass);
 
-     MassYieldFit_data(type_, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, bl, cutBDThigh, bdtptMin, bdtptMax, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, -0.02,0.0,0.1,0.1, -0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, -0.4, -0.5, -0.5,-0.3, -0.3}, (Double_t[]) {-1,-1,-1,-1, 0.1, 0.2, 0.3,0.3, 0.3}, 
+     MassYieldFit_data_v2(type_, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, bl, cutBDThigh, bdtptMin, bdtptMax, (Double_t[]) {mean_sigma1S1, map_keyval["alpha"].first, map_keyval["n"].first, map_keyval["frac"].first, -0.02,0.0,0.1,0.1, -0.1}, (Double_t[]) {0.11, 0.5, 0.4, 0.05, -0.4, -0.5, -0.5,-0.3, -0.3}, (Double_t[]) {-1,-1,-1,-1, 0.1, 0.2, 0.3,0.3, 0.3}, 
        (std::map<string, params_vhl>) {
          {"massCut", { 0,8,14 }},
        {"frac2", {0.3, 0, -1} }, 

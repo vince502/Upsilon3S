@@ -115,10 +115,10 @@ OPT=""\"\!H:\!V:NTrees=1000:MaxDepth=3:MinNodeSize=5%:BoostType=Grad:UseBaggedBo
 #ONECYCLE
 TS=8000000037
 #ONECYCLE2
-TS=8000000042
-ONECYCLE
-TS=8000000040
+#TS=8000000042
 #ONECYCLE
+TS=$1
+ONECYCLE
 #
 #cd Macros
 #root -l -b -q "DrawYield.C(8100000001)"

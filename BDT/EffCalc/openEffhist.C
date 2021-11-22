@@ -41,9 +41,10 @@ std::pair<double, double> getEffhist(float pl, float ph, float yl, float yh, int
 //    int a = system(command.c_str());
   TFile* histfile = nullptr;
   histfile = new TFile(Form("%s",fname.c_str()),"read");
+  std::cout << Form("%d, %d", bpl, bph) << std::endl;
   if(histfile == nullptr || histfile->IsZombie()){
     if (ts >= 1634636609 && !eff_old)getEfficiencyBDT_V2(pl, ph, yl, yh, cl, ch, istnp, wei, ts, bdt_low, bdt_high, bpl, bph, train_state, state, vcut); 
-    else getEfficiencyBDT(pl, ph, yl, yh, cl, ch, istnp, wei, ts, bdt_low, bdt_high, train_state, state, vcut); 
+    else{ std::cout << "Running Legacy" << std::endl; getEfficiencyBDT(pl, ph, yl, yh, cl, ch, istnp, wei, ts, bdt_low, bdt_high, train_state, state, vcut); }
     histfile = new TFile(Form("%s",fname.c_str()),"read");
   }
   //}

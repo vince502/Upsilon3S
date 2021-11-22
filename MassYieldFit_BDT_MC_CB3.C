@@ -113,8 +113,8 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
 
   RooRealVar* xNS;
 
-  xNS = new RooRealVar("xNS", "sigma ratio", 0.56, 0.01, 0.99);
-  RooRealVar* xNS_2 = new RooRealVar("xNS_2", "sigma ratio", 0.318, 0.01, 0.99);
+  xNS = new RooRealVar("xNS", "sigma ratio", 0.56, 0.01, 1.99);
+  RooRealVar* xNS_2 = new RooRealVar("xNS_2", "sigma ratio", 0.318, 0.01, 1.99);
   works1->import(*xNS);
 
   RooFormulaVar* sigmaNS_2, *sigmaNS_3;
@@ -124,8 +124,8 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   RooRealVar *alpha, *n, *frac, *frac2;
   alpha = new RooRealVar("alpha", "alpha of Crystal bal1", 1.96, 1.0, 2.2 );
   n = new RooRealVar("n", "n of Crystal ball", 1.27, 1.0, 2.2);
-  frac = new RooRealVar("frac", "CB fraction", 0.13, 0.01, 0.90);
-  frac2 = new RooRealVar("frac2", "CB fraction 2", 0.25, 0.01, 0.90);
+  frac = new RooRealVar("frac", "CB fraction", 0.13, 0.01, 0.96);
+  frac2 = new RooRealVar("frac2", "CB fraction 2", 0.25, 0.01, 0.96);
 //  if(bdtlow == -1.){
 //  PARAMSET FOR 2,3S
 //    alpha->setVal(1.866);
@@ -171,7 +171,7 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
 //  RooFitResult* Result = m.fit("shr");
 //  Result->SetName("fitresult_model_reducedDS");
 
-  RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), PrefitDataFraction(0.005), Minimizer("Minuit","minimize"), NumCPU(38), Range(RangeLow, RangeHigh), AsymptoticError(kTRUE)/*SumW2Error(kTRUE)*/, Extended(kTRUE));
+  RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), PrefitDataFraction(0.005), Minimizer("Minuit","minimize"), NumCPU(38), Range(RangeLow, RangeHigh), /*AsymptoticError(kTRUE)*/SumW2Error(kTRUE), Extended(kTRUE));
   Result->SetName("fitresult_model_reducedDS");
   works1->pdf("model")->plotOn(massPlot, Name("modelPlot"));
  {works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*SignalNS)), LineColor(kRed), LineStyle(kDashed), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CBNS_1)), LineColor(kGreen), LineStyle(kSolid), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CBNS_2)), LineColor(kRed), LineStyle(kSolid), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CBNS_3)), LineColor(kMagenta), LineStyle(kDashDotted), MoveToBack());}

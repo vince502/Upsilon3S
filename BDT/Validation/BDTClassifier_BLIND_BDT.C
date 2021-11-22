@@ -59,7 +59,7 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
 
   double ylim 		= 2.4;
   double massLow 	= 8;
-  double massHigh 	= 11.5;
+  double massHigh 	= 14;
   double Simucut  	= 3.5;
   string HybSoft 	= "&&nPixWMea1>0&&nPixWMea2>0&&nTrkWMea1>5&&nTrkWMea2>5&&fabs(dxy1)<0.3&&fabs(dxy2)<0.3&&fabs(dz1)<20&&fabs(dz2)<20";
   string rejectNAN 	= "&&!TMath::IsNaN(ctau)&&!TMath::IsNaN(ctau3D)&&!TMath::IsNaN(cosAlpha)&&!TMath::IsNaN(cosAlpha3D)";//"&&!TMath::IsNaN(QQMassErr)&&!TMath::IsNaN(dxyErr1)&&!TMath::IsNaN(dxyErr2)&&!TMath::IsNaN(QQVtxProb)&&!TMath::IsNaN(QQdca)&&!TMath::IsNaN(cosAlpha)&&!TMath::IsNaN(cosAlpha3D)";
@@ -82,6 +82,7 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
   TTree* BkgTreeTrain1 = BkgTreeTrain_primary1->CopyTree("(mass>8.&&mass<8.6)||(mass>10.8&&mass<14)");
   TTree* BkgTreeTrain2 = BkgTreeTrain_primary2->CopyTree("(mass>8.&&mass<8.6)||(mass>10.8&&mass<14)");
   std::cout << "Number of Events in Trees (Sig, BkgTest, BkgTrain) : ( " << SigTree->GetEntries(cut1) << ", "<< BkgTreeTest1->GetEntries(cut2) << ", " << BkgTreeTrain2->GetEntries(cut2) << " )" << std::endl;
+  int nBkg_Smpl = BkgTreeTest1->GetEntries(cut2) +  BkgTreeTest2->GetEntries(cut2);
   //Factory Call
   TMVA::Factory *factory1 = new TMVA::Factory(Form("TMVA_BDT_Classifier1_%ld",_ts),  output, "V:Color:DrawProgressBar:Transformations=G+D+G+D:AnalysisType=Classification");
   TMVA::Factory *factory2 = new TMVA::Factory(Form("TMVA_BDT_Classifier2_%ld",_ts),  output, "V:Color:DrawProgressBar:Transformations=G+D+G+D::AnalysisType=Classification");
@@ -130,6 +131,8 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
 
     loader1->SetSignalWeightExpression("weight");
     loader2->SetSignalWeightExpression("weight");
+
+	datprep = datprep+ Form(":nTrain_Signal=%d:nTest_Signal=%d", nBkg_Smpl*2, nBkg_Smpl*2 );
 
     loader1->PrepareTrainingAndTestTree( cut1, cut2, datprep.c_str());
     loader2->PrepareTrainingAndTestTree( cut1, cut2, datprep.c_str());
@@ -209,9 +212,9 @@ void BDTClassifier_BLIND_BDT( long _inputts , string _bookOpt, string _datprep){
 //  for( auto pair : bin1spt) 
 //  {
 //  	res = BDTClassifier_BLIND_Function(1,0,pair.first,pair.second, 0,181, "NOMINAL");
-  	res = BDTClassifier_BLIND_Function(1,0,0,30, 0,181, "", _inputts, _bookOpt, _datprep);
-  	res = BDTClassifier_BLIND_Function(2,0,0,30, 0,181, "continue", _inputts, _bookOpt, _datprep);
-  	res = BDTClassifier_BLIND_Function(3,0,0,30, 0,181, "continue", _inputts, _bookOpt, _datprep);
+  	res = BDTClassifier_BLIND_Function(3,0,0,30, 0,181, "", _inputts, _bookOpt, _datprep);
+//  	res = BDTClassifier_BLIND_Function(2,0,0,30, 0,181, "continue", _inputts, _bookOpt, _datprep);
+//  	res = BDTClassifier_BLIND_Function(3,0,0,30, 0,181, "continue", _inputts, _bookOpt, _datprep);
   	if(!res)std::system(Form("rm ../.past_source/_BDT_Blind_Classifier_BDT_%ld.old",(long) _real_time));
 //  }
 //  res = BDTClassifier_BLIND_Function(3,0,0,6, 0,181, "NOMINAL");

@@ -12,28 +12,42 @@
 #include "../.workdir.h"
 
 
-void BDTClassifierApplication_NOM(long ts= 9999999999, int train_state =2, int target_state = 2, int isMC = 0, bool isbbb = true, int ptLow =0, int ptHigh = 30){
-  std::string info_blind;
-  if( !isbbb) info_blind = info_BDT(ts)[2];
-  if( isbbb ) info_blind = info_BDT(ts)[4];
-  std::pair<int,int> _bf= {stoi(info_blind.substr(6,1)),stoi(info_blind.substr(8,1)) };
-  int whichtree = _bf.second;
-  if (whichtree >5) {std::cout << "if BLIND, is tree selection wrong? " << std::endl; return; }
-  if (whichtree !=0 && whichtree <6) {std::cout <<"Application in BLIND tree"<<whichtree<< std::endl;}
+void BDTClassifierApplication_NOM(long ts= 9999999999, int train_state =2, int target_state = 2, bool isMC = 0, bool isbbb = true, int ptLow =0, int ptHigh = 30, int mcmode= 0){
+  std::cout <<"[BDT_APP] Initializing" << std::endl;
+//  std::string info_blind;
+//  if( !isbbb) info_blind = info_BDT(ts)[2];
+//  if( isbbb ) info_blind = info_BDT(ts)[4];
+//  std::cout << info_blind << std::endl;
+//  std::pair<int,int> _bf= {stoi(info_blind.substr(6,1)),stoi(info_blind.substr(8,1)) };
+//  int whichtree = _bf.second;
+    int whichtree = 1;
+//  if (whichtree >5) {std::cout << "if BLIND, is tree selection wrong? " << std::endl; return; }
+//  if (whichtree !=0 && whichtree <6) {std::cout <<"Application in BLIND tree"<<whichtree<< std::endl;}
 
+  ROOT::EnableImplicitMT(8);
 
   TMVA::Tools::Instance();
-  TMVA::Reader *reader1 = new TMVA::Reader("!Silent");
-  TMVA::Reader *reader2 = new TMVA::Reader("!Silent");
+  TMVA::Reader *reader1 = new TMVA::Reader("V:!Silent");
+  TMVA::Reader *reader2 = new TMVA::Reader("V:!Silent");
   TXMLEngine xml;
   XMLDocPointer_t xmldoc = xml.ParseFile(Form("./data/Y%dSpt%dto%d/dataset1/weights/TMVA_BDT_Classifier1_%ld_BDT.weights.xml", train_state, ptLow, ptHigh, ts));
   XMLDocPointer_t mainnode = xml.DocGetRootElement(xmldoc);
 
   TString fname;
   if(isMC){
-    if(target_state==1) fname =Form("%s/%s", store.Data(), ONIABDTMC1S_LATEST.c_str());
-    if(target_state==2) fname =Form("%s/%s", store.Data(), ONIABDTMC2S_LATEST.c_str());
-    if(target_state==3) fname =Form("%s/%s", store.Data(), ONIABDTMC_LATEST.c_str());
+    if(target_state==1) {
+		if(mcmode==0) fname =Form("%s/%s", store.Data(), ONIABDTMC1S_LATEST.c_str());
+		if(mcmode==1) fname = Form("%s/BDT/BDTResults/BDTresultY3S_%ld_BLIND.root",workdir.Data(), ts);
+	}
+    if(target_state==2) {
+		if(mcmode==0) fname =Form("%s/%s", store.Data(), ONIABDTMC2S_LATEST.c_str());
+		if(mcmode==1) fname = Form("%s/BDT/BDTResults/BDTresultY3S_%ld_BLIND.root",workdir.Data(), ts);
+	
+	}
+    if(target_state==3) {
+		if(mcmode==0) fname =Form("%s/%s", store.Data(), ONIABDTMC_LATEST.c_str());
+		if(mcmode==1) fname = Form("%s/BDT/BDTResults/BDTresultY3S_%ld_BLIND.root",workdir.Data(), ts);
+	}
   }
   else if(!isMC){
     if(whichtree !=0){
@@ -48,11 +62,11 @@ void BDTClassifierApplication_NOM(long ts= 9999999999, int train_state =2, int t
   input = new TFile(fname.Data(), "open");
   TTree* tree1;
   TTree* tree2;
-  if(isMC==0){
+  if(!isMC){
   tree1 = (TTree*) input->Get("tree3");
   tree2 = (TTree*) input->Get("tree2");
   }
-  if(isMC!=0){
+  if(isMC){
   tree1 = (TTree*) input->Get("tree");
   tree2 = (TTree*) input->Get("tree");
   }
@@ -142,12 +156,12 @@ void BDTClassifierApplication_NOM(long ts= 9999999999, int train_state =2, int t
   int treeID;
 
   TFile *target;
-  if (isMC ==0) target =new TFile(Form("./BDTAppliedData/BDTApp_%ld.root",ts),"update");
+  if (isMC ==0) target =new TFile(Form("%s/BDT/BDTAppliedData/BDTApp_%ld.root",workdir.Data(),ts),"update");
   else if (isMC==1)
   {
-    if(target_state ==1 ) target =new TFile(Form("./BDTAppliedData/BDTApp_%ld_MC_1S.root",ts),"update");
-    if(target_state ==2 ) target =new TFile(Form("./BDTAppliedData/BDTApp_%ld_MC_2S.root",ts),"update");
-    if(target_state ==3 ) target =new TFile(Form("./BDTAppliedData/BDTApp_%ld_MC.root",ts),"update");
+    if(target_state ==1 ) target =new TFile(Form("%s/BDT/BDTAppliedData/BDTApp_%ld_MC_1S.root",workdir.Data(),ts),"update");
+    if(target_state ==2 ) target =new TFile(Form("%s/BDT/BDTAppliedData/BDTApp_%ld_MC_2S.root",workdir.Data(), ts),"update");
+    if(target_state ==3 ) target =new TFile(Form("%s/BDT/BDTAppliedData/BDTApp_%ld_MC.root",workdir.Data(),ts),"update");
   }
   TTree* outtree;
   bool isNew = true;
@@ -166,10 +180,14 @@ void BDTClassifierApplication_NOM(long ts= 9999999999, int train_state =2, int t
 
 
   int count = 0;
-  for(Long64_t ievt=0; ievt< tree1->GetEntries();ievt++){
+  int Nfirstloop;
+  if( isMC ) Nfirstloop = (int) (tree1->GetEntries() /2) ;
+  if( !isMC ) Nfirstloop = (int) tree1->GetEntries();
+  std::cout << "First Loop Entries : " << Nfirstloop << std::endl;
+  for(Long64_t ievt=0; ievt< Nfirstloop;ievt++){
     tree1->GetEntry(ievt);
     outtree->GetEntry(count);
-    if (ievt%10000 == 0) std::cout << "--- ... Processing event: " << ievt << "\r";
+    if (ievt%10000 == 0) std::cout << "--- ... Processing event: " << ievt << "\n";
     for( string name : dnamelist ){
       if( mvar[name] !=nullptr){
 	if( mdouble[name] !=nullptr) *mvar[name] = *mdouble[name];
@@ -192,42 +210,45 @@ void BDTClassifierApplication_NOM(long ts= 9999999999, int train_state =2, int t
   if(!isNew) bdt_branch->Fill();
   count ++;
   }
-  if(isMC==0){
-    for(Long64_t ievt=0; ievt< tree2->GetEntries();ievt++){
-      tree2->GetEntry(ievt);
-      outtree->GetEntry(count);
-      if (ievt%10000 == 0) std::cout << "--- ... Processing event: " << ievt << "\r";
-      for( string name : dnamelist ){
-        if( mvar[name] !=nullptr){
-          if( mdouble[name] !=nullptr) *mvar[name] = *mdouble[name];
-        }
-        if( mspc[name] !=nullptr){
-          if( mdouble[name] !=nullptr) *mspc[name] = *mdouble[name];
-        }
+  int Nstart, Nsecondloop;
+  if( isMC ) {Nstart = Nfirstloop; Nsecondloop = tree1->GetEntries(); }
+  if( !isMC) {Nstart = 0; Nsecondloop = tree2->GetEntries(); }
+  std::cout << "Nstart : " << Nstart << ", NsecondLoop : "<< Nsecondloop << std::endl;
+  for(Long64_t ievt= Nstart; ievt< Nsecondloop;ievt++){
+    tree2->GetEntry(ievt);
+    outtree->GetEntry(count);
+    if (ievt%10000 == 0) std::cout << "--- ... Processing event: " << ievt << "\n";
+    for( string name : dnamelist ){
+      if( mvar[name] !=nullptr){
+        if( mdouble[name] !=nullptr) *mvar[name] = *mdouble[name];
       }
-      for( string name : inamelist ){
-        if( mvar[name] !=nullptr){
-          if( mint[name] !=nullptr) *mvar[name] = *mint[name];
-        }
-        if( mspc[name] !=nullptr){
-          if( mint[name] !=nullptr) *mspc[name] = *mint[name];
-        }
+      if( mspc[name] !=nullptr){
+        if( mdouble[name] !=nullptr) *mspc[name] = *mdouble[name];
       }
-    BDT=reader2->EvaluateMVA( Form("BDT"));
-    treeID=2;
-    if(isNew)  outtree->Fill();
-    if(!isNew) bdt_branch->Fill();
-    count ++;
     }
+    for( string name : inamelist ){
+      if( mvar[name] !=nullptr){
+        if( mint[name] !=nullptr) *mvar[name] = *mint[name];
+      }
+      if( mspc[name] !=nullptr){
+        if( mint[name] !=nullptr) *mspc[name] = *mint[name];
+      }
+    }
+  BDT=reader2->EvaluateMVA( Form("BDT"));
+  treeID=2;
+  if(isNew)  outtree->Fill();
+  if(!isNew) bdt_branch->Fill();
+  count ++;
   }
   if(isbbb){
 //    std::vector<std::string> bdt_info = info_BDT(ts);
 //    auto ptpair = parser_symbol( bdt_info[2],",");
 //    auto cBinpair = parser_symbol( bdt_info[3],",");
 //    std::string cut = Form("pt>%s && pt <%s && cBin > %s && cBin < %s", ptpair[0].c_str(), ptpair[1].c_str(), cBinpair[0].c_str(), cBinpair[1].c_str() ) ;
-//    cut = cut+"&&"+MuIDHybridSoft2018;
+//    cut = cut+"&&"+MuIDHybridSoft2018;2
 //    outtree = (TTree*) outtree->CopyTree(cut.c_str());
   }
+  std::cout << "TOTAL ENTRIES: " <<   outtree->GetEntries() << std::endl;
   outtree->Write("", TObject::kOverwrite);
   std::cout << "done Writiing " << target->GetName()<< std::endl;
   target->Close();

@@ -2,7 +2,7 @@
 
 //For BDT Validation
 void DrawYield_Ratio(long ts, int yield_state, int train_state){
-	auto use_bins =  VALI_V3_BDTTESTCUT;
+	auto use_bins =  NOM_V2_BDTTESTCUT;
 	int NBDTbins = use_bins.size() +1;
 	TH1D* hist = new TH1D(Form("Y%dS_train%d",yield_state, train_state) ,"" ,NBDTbins ,0 , NBDTbins);
 	
@@ -18,8 +18,7 @@ void DrawYield_Ratio(long ts, int yield_state, int train_state){
 		{
 			std::cout << "BDTV VALUE: " << bdtv << std::endl;
 			hist->GetXaxis()->SetBinLabel(counter1,Form("%.2f",bdtv));
-			if(bdtv<-0.21) typestr="CB3:CC4:GC";
-			if(bdtv>=-0.21) typestr="CB3:CC5:GC";
+			typestr="CB3:CC5:GC";
 			RooRealVar cval;
 			try{	cval = getDoubleRatioValue(false, {0,181},{0,30}, typestr, bdtv, 0, 30, yield_state, 1, ts, false, false, train_state);
 			double theval = cval.getVal();
