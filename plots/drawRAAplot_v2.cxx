@@ -10,6 +10,8 @@ TH1D* getPbPbRAA(int state =3, double bdt_fix=-2);
 //////////////////////////////////////////////////////////////////////////////
 RooRealVar getDoubleRatioValue(bool inc_pp_stat, std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC", double bdtlow_val = -2, int bdtptMin = 0 , int bdtptMax = 30, int state =3, int getPre = 0,long ts =9999999999, bool stdvcut = false, bool eff_old = false, int train_state=0){
    // 1625503068; //1623391157; //BLIND Nominal
+  int target_state = state;
+  if(train_state ==0) train_state = target_state;
   double val_bdt_nom = Get_BDT(ts, train_state, bdtptMin, bdtptMax, (int) ptpair.first, (int) ptpair.second, cbpair.first, cbpair.second);
   std::cout << "[getDRV] val_bdt_nom : " << val_bdt_nom << std::endl;
 
@@ -20,8 +22,7 @@ RooRealVar getDoubleRatioValue(bool inc_pp_stat, std::pair <int, int> cbpair, st
   std::cout << val_bdt_nom << ", " << bdtpair.first << std::endl;
 
   binplotter* bp ;
-  int target_state = state;
-  if(train_state ==0) train_state = target_state;
+
   double app_cutQVP = (stdvcut) ? 0.01 : 0.0000;
   bp = new binplotter(type,ts, ylim, ptpair.first, ptpair.second, cbpair.first, cbpair.second, app_cutQVP, bdtpair.first, bdtpair.second, bdtptMin, bdtptMax, train_state, target_state, false, eff_old);
 
@@ -147,35 +148,34 @@ TH1D* getPbPbRAA(int state =3, double bdt_fix = -2, int shift =0){
 //////////////////////////////////////////////////////////////////////////////
 TH1D* getPbPbRAA_pt(int state =3, double bdt_fix = -2, int shift =0){
   TH1::SetDefaultSumw2();
-  Double_t* ptbintwo = new Double_t[3]{0,6,30};
-  Double_t* ptbintwo_rev = new Double_t[3]{30,6,0};
-  Double_t* ptbinthree = new Double_t[4]{0,4,9,30};
-  Double_t* ptbinthree_rev = new Double_t[4]{30,9,4,0};
-  
+  Double_t* ptbin = new Double_t[7]{0,4,6,9,12,20,30};
+  Double_t* ptbin_rev = new Double_t[7]{30,20,12,9,6,4,0};
 
   TH1D* h1;
-  if(state ==3) h1 =new TH1D("h3pt" , "PbPb 2 ratio cent 2S",2,  ptbintwo);
-  if(state ==2) h1 =new TH1D("h2pt" , "PbPb 2 ratio cent 3S",3,  ptbinthree);
+  if(state ==3) h1 =new TH1D("h3pt" , "PbPb 2 ratio cent 2S",6,  ptbin);
+  if(state ==2) h1 =new TH1D("h2pt" , "PbPb 2 ratio cent 3S",6,  ptbin);
   gStyle->SetOptStat(kFALSE);
   gStyle->SetOptTitle(kFALSE);
   if(state == 3){
-    for(int idx =0; idx <2; ++idx){
+    for(int idx =0; idx <6; ++idx){
+	  auto trainptpair = gettrainpt((int)ptbin[idx], (int)ptbin[idx+1]);
       std::cout << "take from value: " << bdt_tmp_val[idx+1] << std::endl;
       RooRealVar dr_bin;
-      if(bdt_fix != -2) dr_bin= getDoubleRatioValue(true, {0,181},{ptbintwo[idx],ptbintwo[idx+1]}, Form("CB3:CC%d:GC", getNomBkgO(state, ptbintwo[idx], ptbintwo[idx+1],0, 181) ), bdt_tmp_val[idx+1], state );
-      else dr_bin= getDoubleRatioValue(true, {0,181},{ptbintwo[idx],ptbintwo[idx+1]}, Form("CB3:CC%d:GC", getNomBkgO(state, ptbintwo[idx], ptbintwo[idx+1],0, 181) ), bdt_fix, state );
-      h1->SetBinContent(h1->FindBin( (ptbintwo[idx]+ptbintwo[idx+1])/2), dr_bin.getVal());
-      h1->SetBinError(h1->FindBin( (ptbintwo[idx]+ptbintwo[idx+1])/2), dr_bin.getError());
+      if(bdt_fix != -2) dr_bin= getDoubleRatioValue(true, {0,181},{ptbin[idx],ptbin[idx+1]}, Form("CB3:EE:GC" ), bdt_tmp_val[idx+1],trainptpair.first, trainptpair.second, state);
+      else dr_bin= getDoubleRatioValue(true, {0,181},{ptbin[idx],ptbin[idx+1]}, Form("CB3:EE:GC"), bdt_fix,  trainptpair.first, trainptpair.second, state );
+      h1->SetBinContent(h1->FindBin( (ptbin[idx]+ptbin[idx+1])/2), dr_bin.getVal());
+      h1->SetBinError(h1->FindBin( (ptbin[idx]+ptbin[idx+1])/2), dr_bin.getError());
     }
   }
   if(state == 2){
-    for(int idx =0; idx <3; ++idx){
+    for(int idx =0; idx <6; ++idx){
+	  auto trainptpair = gettrainpt((int)ptbin[idx], (int)ptbin[idx+1]);
       std::cout << "take from value: " << bdt_tmp_val[idx+1] << std::endl;
       RooRealVar dr_bin;
-      if(bdt_fix != -2) dr_bin= getDoubleRatioValue(true, {0,181},{ptbinthree[idx],ptbinthree[idx+1]}, Form("CB3:CC%d:GC", getNomBkgO(state, ptbinthree[idx], ptbinthree[idx+1],0, 181) ), bdt_tmp_val[idx+1], state );
-      else dr_bin= getDoubleRatioValue(true, {0,181},{ptbinthree[idx],ptbinthree[idx+1]}, Form("CB3:CC%d:GC", getNomBkgO(state, ptbinthree[idx], ptbinthree[idx+1],0, 181) ), bdt_fix, state );
-      h1->SetBinContent(h1->FindBin( (ptbinthree[idx]+ptbinthree[idx+1])/2), dr_bin.getVal());
-      h1->SetBinError(h1->FindBin( (ptbinthree[idx]+ptbinthree[idx+1])/2), dr_bin.getError());
+      if(bdt_fix != -2) dr_bin= getDoubleRatioValue(true, {0,181},{ptbin[idx],ptbin[idx+1]}, Form("CB3:EE:GC" ), bdt_tmp_val[idx+1],trainptpair.first, trainptpair.second, state);
+      else dr_bin= getDoubleRatioValue(true, {0,181},{ptbin[idx],ptbin[idx+1]}, Form("CB3:EE:GC"), bdt_fix,  trainptpair.first, trainptpair.second, state );
+      h1->SetBinContent(h1->FindBin( (ptbin[idx]+ptbin[idx+1])/2), dr_bin.getVal());
+      h1->SetBinError(h1->FindBin( (ptbin[idx]+ptbin[idx+1])/2), dr_bin.getError());
     }
   }
   h1->GetYaxis()->SetRangeUser(0,1.3);

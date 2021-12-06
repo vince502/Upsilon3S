@@ -134,12 +134,13 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
     TF1* sig_model;
 //    if( formula_significance == "S12") sig_model = new TF1("Msignif", "[0]*(TMath::Sqrt([1]*TMath::Erf((-x-[2])/[4]) +TMath::Erf((-x-[3])/[5]) +[1]+1) - TMath::Sqrt(TMath::Erf((-x-[3])/[5]) +1 ) +[6]  )");
 //    if( formula_significance == "S2") sig_model = new TF1("Msignif", "[0]*([1]*(TMath::Erf((-x-[2])/[4])+[6])/TMath::Sqrt([1]*(TMath::Erf((-x-[2])/[4]) +[7]) +TMath::Erf((-x-[3])/[5]) +1) )");
-      sig_model = new TF1("Msignif","pol6",-0.8,1);//interval_score*(zero_bin)-0.5);
+      sig_model = new TF1("Msignif","pol9",-0.9,1);//interval_score*(zero_bin)-0.5);
     
-    hist_res->Fit("Msignif","R","",-0.8,1);//interval_score*(zero_bin)-0.5);
+	ROOT::Math::MinimizerOptions::SetDefaultMinimizer("Minuit2", "Simplex");
+    hist_res->Fit("Msignif","MFR","",-0.9,1);//interval_score*(zero_bin)-0.5);
     hist_res->Draw();
     auto res = hist_res->GetFunction("Msignif");
-    double max_signif_bdt= res->GetMaximumX(-0.8, 1);//interval_score*(zero_bin)-0.5);//  hist_res->GetBinCenter(hist_res->GetMaximumBin() );
+    double max_signif_bdt= res->GetMaximumX(-0.9, 1);//interval_score*(zero_bin)-0.5);//  hist_res->GetBinCenter(hist_res->GetMaximumBin() );
     max_signif_bdt = min(max_signif_bdt, sig_lim_bdt);
     double max_signif_val = hist_res->GetMaximum();
     return std::make_pair(std::make_pair(max_signif_bdt, max_signif_val),hist_res );

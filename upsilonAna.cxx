@@ -44,4 +44,4 @@ RooRealVar upsi::getcrosssection(std::string type, long ts, double ptlow, double
 		RooRealVar branchFrac = RooRealVar("cs","cross section",bval);
 		branchFrac.setError(berr);
 		return branchFrac;
-	};
+};

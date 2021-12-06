@@ -440,7 +440,7 @@ if(step ==1201){
 }
 
  if( step == 1311){
-  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 30}/*, {0, 6}, {6, 30}*/}){ 
+  for( auto ptpair : (std::vector<std::pair<double, double> >) {{0, 4}/*, {0, 6}, {6, 30}*/}){ 
 //	ts = 9999999999;// 1635252097;// 1635139612;
 	ts = input_ts;
 	train_state =aux_train_state;
@@ -449,7 +449,9 @@ if(step ==1201){
 	sb_ratio.setVal(-1);
 	fitrange= {8, 14};
 	sb_ratio.setVal(-1);
-	Nworkers = 16;
+		    bdtptMax = 4; 
+		    bdtptMin = 0;
+	Nworkers = 32;
     fname3S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC.root", ts, Trig.c_str());
     fname2S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC_2S.root", ts, Trig.c_str());
     fname1S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC_1S.root", ts, Trig.c_str());
@@ -459,8 +461,8 @@ if(step ==1201){
 //    std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);
 //	for(double xj : {0.9, 0.8, 0.6, 0.1,-0.2}/*}*/){
 //	for(double xj : {0.0, 0.1, 0.2,0.25,0.3,0.35,0.4,0.6, 0.8}/*}*/){
-	for(double xj : VALI_V3_BDTTESTCUT/*}*/){
-//	for(double xj : {0.15, 0.2 } ){
+//	for(double xj : VALI_V3_BDTTESTCUT/*}*/){
+	for(double xj : {0.15, 0.2 } ){
     	cutBDTlow = xj;
     	type 			= "CB3:CC5:GC"	;
 //		if(xj < -0.2) type = "CB3:CC4:GC";

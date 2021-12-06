@@ -16,6 +16,11 @@ function TRAINER3 {
 	root -l -b -q "BDTClassifier_BLIND_BDT_nS.C("$TS", "$OPT", "$DATPREP")" 2>&1| tee BDT"$TS".log
 	root -l -b -q "BDTNominalProcess.cxx("$TS",0, {{0,30}})"
 }
+function TRAINER_LOWPT {
+	root -l -b -q "BDTClassifier_BLIND_BDT_LOWPT.C("$TS", "$OPT", "$DATPREP")" 2>&1| tee BDT"$TS".log
+	root -l -b -q "BDTNominalProcess.cxx("$TS",0, {{0,4}})"
+#	root -l -b -q "BDTNominalProcess.cxx("$TS",1, {{0,30}})"
+}
 function ONECYCLE {
 #root -l -b -q "BDT_trainVariable_Mass_Distribution.C("$TS",1)"
 cd /home/vince402/Upsilon3S
@@ -245,7 +250,15 @@ OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta
 TS=8000000058 #FROM 57 Found Error in Mass Range Without QQMassErr
 DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
 OPT=""\"\!H:\!V:NTrees=500:MaxDepth=6:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.7:Shrinkage=0.1:UseBaggedBoost=True:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=200:CreateMVAPdfs:DoBoostMonitor:\"""
-TRAINER #<<
+#TRAINER #<<
+TS=8000000061 #FROM 52 Found Error in Mass Range Without QQMassErr
+DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=AdaBoost:AdaBoostBeta=0.7:UseBaggedBoost=True:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
+#TRAINER_LOWPT #<< GREAT!
+TS=8000000062 #FROM 61 Found Error in Mass Range Without QQMassErr
+DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=AdaBoost:AdaBoostBeta=0.2:UseBaggedBoost=True:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
+TRAINER_LOWPT #<< GREAT!
 ./runBDTFit.sh $TS ############CHECK THE CONSEQUENCES!###############
 
 #TS=8200000006

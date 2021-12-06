@@ -225,6 +225,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
   fit_model_ups::ChebyChev* cc ;
   fit_model_ups::ExpChebyChev* ecc;
   fit_model_ups::ErfExp* ee;
+  RooExponential* expo; 
   RooGenericPdf* Signal1S;
   RooGenericPdf* Signal2S;
   RooGenericPdf* Signal3S;
@@ -341,6 +342,11 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, const D
     ee = new fit_model_ups::ErfExp((mf.works->var("mass")), Erfmean, Erfsigma, Erfp0);
     Background = (RooGenericPdf*) ee->bkgErf;
   }
+  if (bkg_func.find("EX")!=std::string::npos){
+  	  Erfp0	= new RooRealVar("Expp0", "1st parameter of Expfunction", params[0], paramslow[0], paramshigh[0]);
+	  expo = new RooExponential("Expo","Exponential Background", *(mf.works->var("mass")), *Erfp0);
+	  Background = (RooGenericPdf*) expo;
+  }
 
 dbg(1000);
   RooRealVar* nSig1S = new RooRealVar("nSig1S", "# of 1S signal", 900, -1000, 1000000);
@@ -348,7 +354,7 @@ dbg(1000);
   RooRealVar* nSig3S;
 
 dbg(1000);
-  RooRealVar* frac2over1 = new RooRealVar("frac_2sOver1s","2S/1S",0.15,-0.,0.4);
+  RooRealVar* frac2over1 = new RooRealVar("frac_2sOver1s","2S/1S",0.15,-0.,0.8);
   RooRealVar* frac3over1 = new RooRealVar("frac_3sOver1s","3S/1S",0.03,-0.02,0.20);
   RooRealVar* frac3over2 = new RooRealVar("frac_3sOver2s","3S/2S",0.3,-0.2,1);
   RooRealVar* nBkg = new RooRealVar("nBkg", "# of background signal", 300, -1000, 10000000);
@@ -373,8 +379,14 @@ dbg(1000);
 dbg(1000);
 
   if((fitdir.find("DR")==std::string::npos)&&(fitdir.find("FF")!=std::string::npos||fitdir.find("GC")!= std::string::npos||fitdir.find("DD") != std::string::npos)){
+	if( cutBDTlow == -1){
+    nSig2S = new RooRealVar("nSig2S", "# of 2S signal", 700, -1000, 10000);
+    nSig3S = new RooRealVar("nSig3S", "# of 3S signal", 500, -300, 10000);
+	}
+	else {
     nSig2S = new RooRealVar("nSig2S", "# of 2S signal", 100, -1000, 10000);
-    nSig3S = new RooRealVar("nSig3S", "# of 3S signal", 30, -100, 2000);
+    nSig3S = new RooRealVar("nSig3S", "# of 3S signal", 30, -300, 3000);
+	}
     std::cout << "added # of 2S, 3S signal as free parameter" << std::endl;
     model = new RooAddPdf("model", "1S+2S+3S+Bkg", RooArgList(*Signal1S, *Signal2S, *Signal3S, *Background), RooArgList(*nSig1S, *nSig2S, *nSig3S, *nBkg));
 
@@ -561,6 +573,9 @@ dbg(i);i++;
   }
   if(bkg_func.find("EE")!= std::string::npos){
     Bkgfc = mf.works->pdf("bkgErf")->asTF(*(mf.works->var("mass")));
+  }
+  if(bkg_func.find("EX")!= std::string::npos){
+    Bkgfc = mf.works->pdf("Expo")->asTF(*(mf.works->var("mass")));
   }
 
   dbg();

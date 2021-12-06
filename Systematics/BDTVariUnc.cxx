@@ -7,7 +7,7 @@ std::string findtype(int pl, int ph, int cl, int ch){
 	return fittype;
 };
 
-double getBDTVariUnc(int pl, int ph, int cl, int ch, int state){
+double getBDTVariUnc(int pl, int ph, int cl, int ch, int state, int bpl, int bph){
 	long ts = 9999999999;
 	const std::string type_r = "CB3:CC2:DRGC";
 	const std::string typenobdt = "CB3:CC4:FF";
@@ -54,20 +54,30 @@ double getBDTVariUnc(int pl, int ph, int cl, int ch, int state){
 	///////////////////////////////////////////////////
 
 	std::string type_nom = Form("CB3:CC%d:%s",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str());
-	std::string type_sys  = Form("CB3:CC%d:%sbdtup",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str());
+	std::string type_sys1  = Form("CB3:CC%d:%sbdtup",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str());
 	std::string type_sys2 = Form("CB3:CC%d:%sbdtdown",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str());
-	RooRealVar raa_nom, raa_sys, raa_sys2;
-	raa_nom = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_nom, -2, state, 1, ts, false, true);
-	std::cout << "CHECK" <<  prep_bdtval(1) << std::endl;
-	raa_sys = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_sys, prep_bdtval(1), state, 1, ts, false, true);
-	raa_sys2 = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_sys2, prep_bdtval(-1), state, 1, ts, false, true);
+	binplotter *bp_nom, *bp_sys1, *bp_sys2;
+	bp_nom  = new binplotter(type_nom , 2.4, pl, ph, cl, ch, 0, bl_nom, 1, bpl, bph, train_state, state, false, false);
+	bp_sys1 = new binplotter(type_sys1, 2.4, pl, ph, cl, ch, 0, prep_bdtval( 1), 1, bpl, bph, train_state, state, false, false);
+	bp_sys2 = new binplotter(type_sys2, 2.4, pl, ph, cl, ch, 0, prep_bdtval(-1), 1, bpl, bph, train_state, state, false, false);
+	RooRealVar raa_nom, raa_sys1, raa_sys2;
+	if( !isDR ){
+	raa_nom = bp_nom->get_yield(state);
+	raa_sys1 = bp_nom->get_yield(state);
+	raa_sys2 = bp_nom->get_yield(state);
+	}
+	if( isDR ){
+	raa_nom  = bp_nom->get_frac(state);
+	raa_sys1 = bp_nom->get_frac(state);
+	raa_sys2 = bp_nom->get_frac(state);
+	}
 
-	double unc_sys =  (raa_sys.getVal() - raa_nom.getVal())/(raa_nom.getVal());
-	double unc_sys2 =  (raa_sys.getVal() - raa_nom.getVal())/(raa_nom.getVal());
+	double unc_sys1 =  (raa_sys1.getVal() - raa_nom.getVal())/(raa_nom.getVal());
+	double unc_sys2 =  (raa_sys2.getVal() - raa_nom.getVal())/(raa_nom.getVal());
 	return max(fabs(unc_sys), fabs(unc_sys2));
 };
 double getBDTVariUnc(ana_bins k){
-	double unc_sys = getBDTVariUnc(k.pl, k.ph, k.cl, k.ch, k.state);
+	double unc_sys = getBDTVariUnc(k.pl, k.ph, k.cl, k.ch, k.state, k.bpl, k.bph);
 	return unc_sys;
 };
 
