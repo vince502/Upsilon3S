@@ -6,6 +6,7 @@ bool vecfind(std::vector<int> v_, int t){
 };
 
 std::string findtype(int pl, int ph, int cl, int ch, int ccorder);
+std::string findtype(ana_bins x, int ccorder);
 void LLR_report()
 {
   	long ts = 9999999999;
@@ -17,15 +18,15 @@ void LLR_report()
 	texout.open("LLR_result.tex");
 	texout << "\\subsection{Likelihood-ratio test}\n";
 
-	int table_cent_2S[10] = {0, 10, 20, 40, 60, 80, 100, 120, 140, 181};
-	int table_cent_3S[4] = {0, 40, 100, 181};
-	int table_pt_2S[4] = {0, 4, 9, 30};
-	int table_pt_3S[3] = {0, 6, 30};
-
 	int pl, ph, cl, ch;
+	ana_bins ab;
 	double pvalue;
 	double pvalue_t[7][7] = {{0}};
 	auto run_report = [&] (int state) {
+		pl = ab.pl;
+		ph = ab.ph;
+		cl = ab.cl;
+		ch = ab.ch;
 		texout << "\\begin{table}[htb]\n	\\begin{center}\n	\\cation{"<<Form("Result %dS, Centrality [%d, %d], $p_{T}$ [%d, %d]\n", state, cl, ch, pl, ph, state)<<"}\n{\\footnotesize\\renewcommand{\\arraystretch}{1.4}\n		\\begin{tabular}{cc||cccc}\n			N & NLL & p(H0: N = 1) & p(H0: N = 2) & p(H0: N = 3) & p(H0: N = 4)\\\\ \n		\\hline\n";
 	  	pvalue = 1;
 		vector<int> N1over= {};
@@ -35,78 +36,78 @@ void LLR_report()
 		vector<int> N5over= {};//only one element N=6;
 		std::pair<double, std::pair<double, double> > reg;
 		double NLLs[6] = {0,0,0,0,0,0};
-		reg = LLR_bkgPDF(findtype(pl,ph,cl,ch,1), findtype(pl,ph,cl,ch,2), ts, (double) pl, (double) ph, cl, ch, state);
+		reg = LLR_bkgPDF(findtype(ab,1), findtype(ab,2), ts, ab);
 		pvalue_t[1][2] = reg.first;
 		NLLs[0] = reg.second.first;
 		NLLs[1] = reg.second.second;
 		std::cout << Form("NLL : %f", NLLs[0]) << std::endl;
 		report << Form("p(H0: N=1), 2 : %2.2f %% \n", reg.first * 100); 
 		std::cout << "\n P-Value(%) : " << reg.first << "\n\n";
-		reg = LLR_bkgPDF(findtype(pl,ph,cl,ch,1), findtype(pl,ph,cl,ch,3), ts, (double) pl, (double) ph, cl, ch, state);
+		reg = LLR_bkgPDF(findtype(ab,1), findtype(ab,3), ts, ab);
 		pvalue_t[1][3] = reg.first;
 		NLLs[2] = reg.second.second;
 
 		std::cout << Form("NLL : %f", NLLs[1]) << std::endl;
 		report << Form("p(H0: N=1), 3: %2.2f %% \n", reg.first * 100); 
 		std::cout << "\n P-Value(%) : " << reg.first << "\n\n";
-		reg = LLR_bkgPDF(findtype(pl,ph,cl,ch,1), findtype(pl,ph,cl,ch,4), ts, (double) pl, (double) ph, cl, ch, state);
+		reg = LLR_bkgPDF(findtype(ab,1), findtype(ab,4), ts, ab);
 		pvalue_t[1][4] = reg.first;
 		NLLs[3] = reg.second.second;
 
 		std::cout << Form("NLL : %f", NLLs[2]) << std::endl;
 		report << Form("p(H0: N=1), 4: %2.2f %% \n", reg.first * 100); 
 		std::cout << "\n P-Value(%) : " << reg.first << "\n\n";
-		reg = LLR_bkgPDF(findtype(pl,ph,cl,ch,1), findtype(pl,ph,cl,ch,5), ts, (double) pl, (double) ph, cl, ch, state);
+		reg = LLR_bkgPDF(findtype(ab,1), findtype(ab,5), ts, ab);
 		pvalue_t[1][5] = reg.first;
 		NLLs[4] = reg.second.second;
 
 		std::cout << Form("NLL : %f", NLLs[3]) << std::endl;
 		report << Form("p(H0: N=1), 5: %2.2f %% \n", reg.first * 100); 
 		std::cout << "\n P-Value(%) : " << reg.first << "\n\n";
-		reg = LLR_bkgPDF(findtype(pl,ph,cl,ch,1), findtype(pl,ph,cl,ch,6), ts, (double) pl, (double) ph, cl, ch, state);
+		reg = LLR_bkgPDF(findtype(ab,1), findtype(ab,6), ts, ab);
 		pvalue_t[1][6] = reg.first;
 		NLLs[5] = reg.second.second;
 		std::cout << Form("NLL : %f", NLLs[4]) << std::endl;
 		std::cout << Form("NLL : %f", NLLs[5]) << std::endl;
 		report << Form("p(H0: N=1), 6: %2.2f %% \n", reg.first * 100); 
 		std::cout << "\n P-Value(%) : " << reg.first << "\n\n";
-		reg = LLR_bkgPDF(findtype(pl,ph,cl,ch,2), findtype(pl,ph,cl,ch,3), ts, (double) pl, (double) ph, cl, ch, state);
+		reg = LLR_bkgPDF(findtype(ab,2), findtype(ab,3), ts, ab);
 		pvalue_t[2][3] = reg.first;
 		report << Form("p(H0: N=2), 3 : %2.2f %% \n", reg.first * 100); 
 		std::cout << "\n P-Value(%) : " << reg.first << "\n\n";
-		reg = LLR_bkgPDF(findtype(pl,ph,cl,ch,2), findtype(pl,ph,cl,ch,4), ts, (double) pl, (double) ph, cl, ch, state);
+		reg = LLR_bkgPDF(findtype(ab,2), findtype(ab,4), ts, ab);
 		pvalue_t[2][4] = reg.first;
 		report << Form("p(H0: N=2), 4 : %2.2f %% \n", reg.first * 100); 
 		std::cout << "\n P-Value(%) : " << reg.first << "\n\n";
-		reg = LLR_bkgPDF(findtype(pl,ph,cl,ch,2), findtype(pl,ph,cl,ch,5), ts, (double) pl, (double) ph, cl, ch, state);
+		reg = LLR_bkgPDF(findtype(ab,2), findtype(ab,5), ts, ab);
 		pvalue_t[2][5] = reg.first;
 		report << Form("p(H0: N=2), 5 : %2.2f %% \n", reg.first * 100); 
 		std::cout << "\n P-Value(%) : " << reg.first << "\n\n";
-		reg = LLR_bkgPDF(findtype(pl,ph,cl,ch,2), findtype(pl,ph,cl,ch,6), ts, (double) pl, (double) ph, cl, ch, state);
+		reg = LLR_bkgPDF(findtype(ab,2), findtype(ab,6), ts, ab);
 		pvalue_t[2][6] = reg.first;
 		report << Form("p(H0: N=2), 6 : %2.2f %% \n", reg.first * 100); 
 		std::cout << "\n P-Value(%) : " << reg.first << "\n\n";
-		reg = LLR_bkgPDF(findtype(pl,ph,cl,ch,3), findtype(pl,ph,cl,ch,4), ts, (double) pl, (double) ph, cl, ch, state);
+		reg = LLR_bkgPDF(findtype(ab,3), findtype(ab,4), ts, ab);
 		pvalue_t[3][4] = reg.first;
 		report << Form("p(H0: N=3), 4 : %2.2f %% \n", reg.first * 100); 
 		std::cout << "\n P-Value(%) : " << reg.first << "\n\n";
-		reg = LLR_bkgPDF(findtype(pl,ph,cl,ch,3), findtype(pl,ph,cl,ch,5), ts, (double) pl, (double) ph, cl, ch, state);
+		reg = LLR_bkgPDF(findtype(ab,3), findtype(ab,5), ts, ab);
 		pvalue_t[3][5] = reg.first;
 		report << Form("p(H0: N=3), 5 : %2.2f %% \n", reg.first * 100); 
 		std::cout << "\n P-Value(%) : " << reg.first << "\n\n";
-		reg = LLR_bkgPDF(findtype(pl,ph,cl,ch,3), findtype(pl,ph,cl,ch,6), ts, (double) pl, (double) ph, cl, ch, state);
+		reg = LLR_bkgPDF(findtype(ab,3), findtype(ab,6), ts, ab);
 		pvalue_t[3][6] = reg.first;
 		report << Form("p(H0: N=3), 6 : %2.2f %% \n", reg.first * 100); 
 		std::cout << "\n P-Value(%) : " << reg.first << "\n\n";
-		reg = LLR_bkgPDF(findtype(pl,ph,cl,ch,4), findtype(pl,ph,cl,ch,5), ts, (double) pl, (double) ph, cl, ch, state);
+		reg = LLR_bkgPDF(findtype(ab,4), findtype(ab,5), ts, ab);
 		pvalue_t[4][5] = reg.first;
 		report << Form("p(H0: N=4), 5 : %2.2f %% \n", reg.first * 100); 
 		std::cout << "\n P-Value(%) : " << reg.first << "\n\n";
-		reg = LLR_bkgPDF(findtype(pl,ph,cl,ch,4), findtype(pl,ph,cl,ch,6), ts, (double) pl, (double) ph, cl, ch, state);
+		reg = LLR_bkgPDF(findtype(ab,4), findtype(ab,6), ts, ab);
 		pvalue_t[4][6] = reg.first;
 		report << Form("p(H0: N=4), 6 : %2.2f %% \n", reg.first * 100); 
 		std::cout << "\n P-Value(%) : " << reg.first << "\n\n";
-		reg = LLR_bkgPDF(findtype(pl,ph,cl,ch,5), findtype(pl,ph,cl,ch,6), ts, (double) pl, (double) ph, cl, ch, state);
+		reg = LLR_bkgPDF(findtype(ab,5), findtype(ab,6), ts, ab);
 		pvalue_t[5][6] = reg.first;
 		report << Form("p(H0: N=5), 6 : %2.2f %% \n", reg.first * 100); 
 		auto eligible = [&] (int st1, int st2) {
@@ -168,67 +169,51 @@ void LLR_report()
 	report << "===================================== \n";
 	report << "LLR test for 2S \n";
 	report << "===================================== \n\n";
-	for(int idx =0; idx<9; idx++){
+	for( auto x : ana_bm["2c"]){ 
 	  	report << "Centrality Bins, fit with FF \n";
-		cl = table_cent_2S[idx];
-		ch = table_cent_2S[idx+1];
-		pl = 0;
-		ph = 30;
-		report << Form("cBin %d ~ %d, pT %d ~ %d GeV/c \n", cl, ch, pl, ph) ;
+		report << Form("cBin %d ~ %d, pT %d ~ %d GeV/c \n", x.cl, x.ch, x.pl, x.ph) ;
+		if( strcmp(x.bin_attr.c_str(),"i")==0 ) continue;
+		ab = x;
 		run_report(2);
 		report << "\n";
 	}
 	report << "===================================== \n";
-	for(int idx =0; idx<3; idx++){
-	  	report << "pT Bins, fit with GC \n";
-		pl = table_pt_2S[idx];
-		ph = table_pt_2S[idx+1];
-		cl = 0;
-		ch = 181;
-		report << Form("cBin %d ~ %d, pT %d ~ %d GeV/c \n", cl, ch, pl, ph) ;
+	for( auto x : ana_bm["2p"]){ 
+	  	report << "Centrality Bins, fit with FF \n";
+		report << Form("cBin %d ~ %d, pT %d ~ %d GeV/c \n", x.cl, x.ch, x.pl, x.ph) ;
+		ab = x;
 		run_report(2);
 		report << "\n";
 	}
 	report << "===================================== \n";
 	report << "Integrated Bin, fit with GC \n";
-	cl =0;
-	ch = 181;
-	pl = 0 ;
-	ph = 30;
-	report << Form("cBin %d ~ %d, pT %d ~ %d GeV/c \n", cl, ch, pl, ph) ;
+	ab = ana_bm["2c"].back();
+	report << Form("cBin %d ~ %d, pT %d ~ %d GeV/c \n", ab.cl, ab.ch, ab.pl, ab.ph) ;
 	run_report(2);
 	report << "\n\n===================================== \n";
 
 	report << "LLR test for 3S \n";
 	report << "===================================== \n\n";
-	for(int idx =0; idx<3; idx++){
+	for( auto x : ana_bm["3c"]){ 
 	  	report << "Centrality Bins, fit with FF \n";
-		cl = table_cent_3S[idx];
-		ch = table_cent_3S[idx+1];
-		pl = 0;
-		ph = 30;
-		report << Form("cBin %d ~ %d, pT %d ~ %d GeV/c\n", cl, ch, pl, ph) ;
+		report << Form("cBin %d ~ %d, pT %d ~ %d GeV/c \n", x.cl, x.ch, x.pl, x.ph) ;
+		if( strcmp(x.bin_attr.c_str(),"i")==0 ) continue;
+		ab = x;
 		run_report(3);
 		report << "\n";
 	}
 	report << "===================================== \n";
-	for(int idx =0; idx<2; idx++){
-	  	report << "pT Bins, fit with GC \n";
-		pl = table_pt_3S[idx];
-		ph = table_pt_3S[idx+1];
-		cl = 0;
-		ch = 181;
-		report << Form("cBin %d ~ %d, pT %d ~ %d GeV/c \n", cl, ch, pl, ph) ;
+	for( auto x : ana_bm["3p"]){ 
+	  	report << "Centrality Bins, fit with FF \n";
+		report << Form("cBin %d ~ %d, pT %d ~ %d GeV/c \n", x.cl, x.ch, x.pl, x.ph) ;
+		ab = x;
 		run_report(3);
 		report << "\n";
 	}
 	report << "===================================== \n";
 	report << "Integrated Bin, fit with GC \n";
-	cl =0;
-	ch = 181;
-	pl = 0 ;
-	ph = 30;
-	report << Form("cBin %d ~ %d, pT %d ~ %d GeV/c \n", cl, ch, pl, ph) ;
+	ab = ana_bm["3c"].back();
+	report << Form("cBin %d ~ %d, pT %d ~ %d GeV/c \n", ab.cl, ab.ch, ab.pl, ab.ph) ;
 	run_report(3);
 	report << "===================================== ";
 	report.close();
@@ -245,3 +230,6 @@ std::string findtype(int pl, int ph, int cl, int ch, int ccorder){
 	else fittype = "FF";
 	return Form("%s%d:%s", base.c_str(), ccorder, fittype.c_str());
 };
+std::string findtype(ana_bins x, int ccorder){
+	return findtype(x.pl, x.ph, x.cl, x.ch, ccorder);
+}

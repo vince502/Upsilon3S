@@ -696,3 +696,5 @@ Bin by Bin training end::1623349594,1623350222
 9999999999::8.00,14.00::6.00,9.00::0,181::BLIND[1,1]::2S::ALIAS_TS->9000000052::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
 9999999999::8.00,14.00::0.00,5.00::0,181::BLIND[1,1]::3S::ALIAS_TS->9000000052::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
 9999999999::8.00,14.00::5.00,9.00::0,181::BLIND[1,1]::3S::ALIAS_TS->9000000052::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+9999999999::8.00,14.00::12.00,15.00::0,181::BLIND[1,1]::3S::ALIAS_TS->9000000052::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 
+9999999999::8.00,14.00::12.00,15.00::0,181::BLIND[1,1]::2S::ALIAS_TS->9000000052::NOMINAL, GAUS transformation, small Signal smaple, Gradboost5 fisher cuts 

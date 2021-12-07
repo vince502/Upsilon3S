@@ -27,10 +27,10 @@ std::pair<double, std::pair<double, double> > LLR_bkgPDF(RooFitResult* res1, Roo
 	return {1 - ROOT::Math::chisquared_cdf(LR, delta_ndf), nllp};
 };
 
-std::pair<double, std::pair<double, double> > LLR_bkgPDF(std::string type1, std::string type2, long ts, double pl, double ph, int cl, int ch, double blow, double bhigh, double state, double ylim =2.4, double vcut = 0.00){
+std::pair<double, std::pair<double, double> > LLR_bkgPDF(std::string type1, std::string type2, long ts, double pl, double ph, int cl, int ch, double blow, double bhigh, double state, int bpl, int bph, double ylim =2.4, double vcut = 0.00){
 	std::unique_ptr<binplotter> bnull, btest;
-	bnull.reset( new binplotter(type1, ts, ylim, pl, ph, cl, ch, blow, bhigh, state, false));
-	btest.reset( new binplotter(type2, ts, ylim, pl, ph, cl, ch, blow, bhigh, state, false));
+	bnull.reset( new binplotter(type1, ts, ylim, pl, ph, cl, ch, blow, bhigh, bpl, bph, state, false));
+	btest.reset( new binplotter(type2, ts, ylim, pl, ph, cl, ch, blow, bhigh, bpl, bph, state, false));
 
 	auto fitres_null = bnull->res;
 	auto fitres_test = btest->res;
@@ -41,9 +41,13 @@ std::pair<double, std::pair<double, double> > LLR_bkgPDF(std::string type1, std:
 
 };
 
-std::pair<double, std::pair<double, double> > LLR_bkgPDF(std::string type1, std::string type2, long ts, double pl, double ph, int cl, int ch, double state, double ylim =2.4, double vcut = 0.00){
-	double blow = Get_BDT(ts, state, (int) pl, (int) ph, cl, ch, vcut,  ylim, signif_formula);
+std::pair<double, std::pair<double, double> > LLR_bkgPDF(std::string type1, std::string type2, long ts, double pl, double ph, int cl, int ch, double state, int bpl, int bph, double ylim =2.4, double vcut = 0.00){
+	double blow = Get_BDT(ts, state, bpl, bph, (int) pl, (int) ph, cl, ch, vcut,  ylim, signif_formula);
 	double bhigh = 1;
-	auto res =  LLR_bkgPDF(type1, type2, ts, pl ,ph ,cl, ch, blow, bhigh, state, ylim, vcut);
+	auto res =  LLR_bkgPDF(type1, type2, ts, pl ,ph ,cl, ch, blow, bhigh, state, bpl, bph, ylim, vcut);
 	return res;
 };
+
+std::pair<double, std::pair<double, double> > LLR_bkgPDF(std::string type1, std::string type2, long ts, ana_bins x){
+	return LLR_bkgPDF(type1, type2, ts, x.pl, x.ph, x.cl, x.ch, x.state, x.bpl, x.bph, 2.4, 0.00);
+}

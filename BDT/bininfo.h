@@ -15,118 +15,6 @@ std::string MuIDHybridSoft2018 = "nPixWMea1>0&&nPixWMea2>0&&nTrkWMea1>5&&nTrkWMe
 
 std::map<long, std::map<int, std::vector<std::pair<double,double> > > >bdtbinsec =
 {
-	{1618900984, 
-		{
-			{ 3, {{-1.0, -0},{0, 0.34},{0.34, 1.0}}
-			},
-			{ 5, {{-1.0, -0.2},{-0.2, 0.0},{0.0, 0.2},{0.2, 0.34},{0.34, 1.0}}
-			}
-		}
-	},
-	{1619007178, 
-		{
-			{ 3, {{-1.0, -0},{0, 0.3},{0.3, 1.0}}
-			},
-			{ 5, {{-1.0, -0.2},{-0.2, 0.0},{0.0, 0.2},{0.2, 0.3},{0.3, 1.0}}
-			}
-		}
-	},
-	{1619021800, 
-		{
-			{ 3, {{-1.0, -0},{0, 0.2},{0.2, 1.0}}
-			},
-			{ 5, {{-1.0, -0.2},{-0.2, 0.0},{0.0, 0.1},{0.1, 0.2},{0.2, 1.0}}
-			}
-		}
-	},
-	{1618912058, 
-		{
-			{ 3, {{-1.0, -0},{0, 0.2},{0.2, 1.0}}
-			},
-			{ 5, {{-1.0, -0.2},{-0.2, 0.0},{0.0, 0.1},{0.1, 0.2},{0.2, 1.0}}
-			}
-		}
-	},
-	{1618913300, 
-		{
-			{ 3, {{-1.0, -0},{0, 0.2},{0.2, 1.0}}
-			},
-			{ 5, {{-1.0, -0.2},{-0.2, 0.0},{0.0, 0.1},{0.1, 0.2},{0.2, 1.0}}
-			}
-		}
-	},
-	{1620628282, 
-		{
-			{ 3, {{-1.0, -0},{0, 0.2},{0.2, 1.0}}
-			},
-			{ 5, {{-1.0, -0.2},{-0.2, 0.0},{0.0, 0.1},{0.1, 0.2},{0.2, 1.0}}
-			}
-		}
-	},
-	{1620630542, 
-		{
-			{ 3, {{-1.0, -0},{0, 0.2},{0.2, 1.0}}
-			},
-			{ 5, {{-1.0, -0.2},{-0.2, 0.0},{0.0, 0.1},{0.1, 0.2},{0.2, 1.0}}
-			}
-		}
-	},
-	{1620631235, 
-		{
-			{ 3, {{-1.0, -0},{0, 0.2},{0.2, 1.0}}
-			},
-			{ 5, {{-1.0, -0.2},{-0.2, 0.0},{0.0, 0.1},{0.1, 0.2},{0.2, 1.0}}
-			}
-		}
-	},
-	{1621568219, 
-		{
-			{ 3, {{-1.0, -0},{0, 0.2},{0.2, 1.0}}
-			},
-			{ 5, {{-1.0, -0.2},{-0.2, 0.0},{0.0, 0.1},{0.1, 0.2},{0.2, 1.0}}
-			}
-		}
-	},
-	{1621564724, 
-		{
-			{ 3, {{-1.0, -0},{0, 0.2},{0.2, 1.0}}
-			},
-			{ 5, {{-1.0, -0.2},{-0.2, 0.0},{0.0, 0.1},{0.1, 0.2},{0.2, 1.0}}
-			}
-		}
-	},
-	{1622517421, 
-		{
-			{ 3, {{-1.0, -0},{0, 0.2},{0.2, 1.0}}
-			},
-			{ 5, {{-1.0, -0.2},{-0.2, 0.0},{0.0, 0.1},{0.1, 0.2},{0.2, 1.0}}
-			}
-		}
-	},
-	{1621574030, 
-		{
-			{ 3, {{-1.0, -0},{0, 0.2},{0.2, 1.0}}
-			},
-			{ 5, {{-1.0, -0.2},{-0.2, 0.0},{0.0, 0.1},{0.1, 0.2},{0.2, 1.0}}
-			}
-		}
-	},
-	{1621570122, 
-		{
-			{ 3, {{-1.0, -0},{0, 0.2},{0.2, 1.0}}
-			},
-			{ 5, {{-1.0, -0.2},{-0.2, 0.0},{0.0, 0.1},{0.1, 0.2},{0.2, 1.0}}
-			}
-		}
-	},
-	{1621574976, 
-		{
-			{ 3, {{-1.0, -0},{0, 0.2},{0.2, 1.0}}
-			},
-			{ 5, {{-1.0, -0.2},{-0.2, 0.0},{0.0, 0.1},{0.1, 0.2},{0.2, 1.0}}
-			}
-		}
-	},
 	{1618900983, 
 		{
 			{ 3, {{-1.0, -0},{0, 0.34},{0.34, 1.0}}
@@ -139,23 +27,6 @@ std::map<long, std::map<int, std::vector<std::pair<double,double> > > >bdtbinsec
 
 std::map<long, std::pair<double,double> > massrng = 
 {
-	{1618913300, {8, 11.5} },
-	{1618930830, {8, 11.5} },
-	{1618912058, {8, 11.5} },
-	{1618913300, {8, 11.5} },
-	{1619007268, {8, 11.5} },
-	{1619021800, {8, 11.5} },
-	{1619742556, {8, 11.5} },
-	{1619743777, {8, 11.0} },
-	{1620628282, {8, 11.0} },
-	{1619007178, {8, 11.5} },
-	{1621564724, {8, 11.5} },
-	{1621570122, {8, 11.5} },
-	{1621574030, {8, 11.5} },
-	{1621574976, {8, 11.5} },
-	{1621568219, {8, 11.5} },
-	{1620631235, {8, 11.5} },
-	{1622517421, {8, 11.5} },
 	{1620630542, {8, 11.5} }
 };
 
@@ -259,6 +130,7 @@ double Get_BDT(long ts, int state, int bdtptMin, int bdtptMax, int ptMin, int pt
   return stod(key->GetTitle());
 };
 
+
 std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio =0.16, int train_state =3, int bdtptMin = 0, int bdtptMax = 30 , string name_input_opt = "", string formula_significance= "S2", string the_opt ="", bool save = true);
 std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, RooRealVar r_ratio, int train_state =3, int bdtptMin = 0, int bdtptMax = 30 , string name_input_opt = "", string formula_significance= "S2");
 
@@ -271,7 +143,7 @@ TH1D* func_hist_optimal_BDT();
 struct ana_bins{
 //	ana_bins() =default ;
 //	ana_bins(TString _bin_attr, int _pl, int _ph, int _cl, int _ch, int _centl, int _centh, int _plot_idx, int _state){ bin_attr = _bin_attr; pl = _pl ; ph = _ph; cl = _cl; ch = _ch; centl = _centl; centh = _centh; plot_idx =_plot_idx; state = _state;};
-	TString bin_attr;
+	string bin_attr;
 	int bpl, bph, pl, ph, cl, ch, centl, centh, plot_idx, state;
 	bool operator==( ana_bins a){
 		return ((a.pl==pl&&a.ph==ph&&a.cl==cl&&a.ch==ch&&a.state==state) || (a.pl==pl&&a.ph==ph&&a.centl==centl&&a.centh==centh&&a.state==state) );
@@ -288,17 +160,21 @@ struct ana_bins{
 double Get_BDT(long ts, ana_bins x, int bdtptMin, int bdtptMax, double vcut =0.00, double rap =2.4, int signif_ =2){
   return Get_BDT(ts, x.state, bdtptMin, bdtptMax, x.pl, x.ph, x.cl, x.ch, vcut, rap, signif_);
 };
+double Get_BDT(long ts, ana_bins x, double vcut =0.00, double rap =2.4, int signif_ =2){
+  return Get_BDT(ts, x.state, x.bpl, x.bph, x.pl, x.ph, x.cl, x.ch, vcut, rap, signif_);
+};
 
 std::map<std::string, std::vector<ana_bins> > ana_bm ={
 	{"2c", 	{
-		{"c", 0, 30, 0, 30,  0, 20, 0, 10, 7, 2},
-		{"c", 0, 30, 0, 30, 20, 40, 10, 20, 6, 2},
-		{"c", 0, 30, 0, 30, 40, 60, 20, 30, 5, 2},
-		{"c", 0, 30, 0, 30, 60, 80, 30, 40, 4, 2},
-		{"c", 0, 30, 0, 30, 80, 100, 40, 50, 3, 2},
-		{"c", 0, 30, 0, 30, 100, 140, 50, 70, 2, 2},
+		{"c", 0, 30, 0, 30,  0, 20, 0, 10, 8, 2},
+		{"c", 0, 30, 0, 30, 20, 40, 10, 20, 7, 2},
+		{"c", 0, 30, 0, 30, 40, 60, 20, 30, 6, 2},
+		{"c", 0, 30, 0, 30, 60, 80, 30, 40, 5, 2},
+		{"c", 0, 30, 0, 30, 80, 100, 40, 50, 4, 2},
+		{"c", 0, 30, 0, 30, 100, 120, 50, 60, 3, 2},
+		{"c", 0, 30, 0, 30, 120, 140, 60, 70, 2, 2},
 		{"c", 0, 30, 0, 30, 140, 181, 70, 90, 1, 2},
-		{"c", 0, 30, 0, 30, 0, 181, 0, 90, 8, 2},
+		{"i", 0, 30, 0, 30, 0, 181, 0, 90, 9, 2},
 		}
 	},
 	{"3c", 	{
@@ -309,7 +185,7 @@ std::map<std::string, std::vector<ana_bins> > ana_bm ={
 		{"c", 0, 30, 0, 30, 80, 100, 40, 50, 3, 3},
 		{"c", 0, 30, 0, 30, 100, 140, 50, 70, 2, 3},
 		{"c", 0, 30, 0, 30, 140, 181, 70, 90, 1, 3},
-		{"c", 0, 30, 0, 30, 0, 181, 0, 90, 8, 3},
+		{"i", 0, 30, 0, 30, 0, 181, 0, 90, 8, 3},
 		}
 	},
 	{"2p", 	{
@@ -338,15 +214,16 @@ std::string findtype(ana_bins x){
 	return fittype;
 }
 std::pair<int, int> gettrainpt(int pl, int ph){
-	if(pl <= ph)	{
-		if(pl >=0 && ph <=4) return {0,4};
-		else if(pl >=4 && ph <=9) return {4,9};
-		else if(pl >=9 && ph <=12) return {9, 12};
-		else if(pl >=12 && ph <=30) return {12, 30};
-		else if(pl >=12 && ph>30 && ph <=50) return {12, 50};
-		else return {-1, -1};
-	}
-	else return {-1, -1};
+//	if(pl <= ph)	{
+//		if(pl >=0 && ph <=4) return {0,4};
+//		else if(pl >=4 && ph <=9) return {4,9};
+//		else if(pl >=9 && ph <=12) return {9, 12};
+//		else if(pl >=12 && ph <=30) return {12, 30};
+//		else if(pl >=12 && ph>30 && ph <=50) return {12, 50};
+//		else return {-1, -1};
+//	}
+//	else return {-1, -1};
+	return {-1, -1};
 };
 
 std::vector<std::pair<int, int> >bin1spt = {{0,30},{0,1},{1,2},{2,3},{3,4},{4,5},{5,6},{6,8},{8,10},{10,12},{18,30},{12,18},{12,15},{15,30}};
@@ -357,6 +234,16 @@ std::vector<double> VALI_V3_BDTTESTCUT = {0.8, 0.7, 0.5, 0.1, -0.1};
 std::vector<double> VALI_V3_BDTTESTCUT2 = {0.0, 0.1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.7};
 std::vector<double> VALI_V3_BDTTESTCUT3 = {0.25, 0.2, 0.15, 0.1, 0.05, -0.1, -0.2};
 std::vector<double> NOM_V2_BDTTESTCUT = {-0.9, -0.8, -0.7, -0.4, -0.3, -0.1, 0.0, 0.1, 0.2, 0.3, 0.4, 0.5};
+
+#ifdef GETBKGO
+#define GETBKGO2
+int getNomBkgO(ana_bins x){
+	return getNomBkgO(x.state, x.pl, x.ph, x.cl, x.ch);
+};
+#endif
+double Get_BDT(long ts, ana_bins x, double vcut = 0.00, double rap = 2.4, int signif_ =2 ){
+	return Get_BDT(ts, x.state, x.bpl, x.bph, x.pl, x.ph, x.cl, x.ch, vcut, rap, signif_);
+}
 
 #include "yield_eff_signif.h"
 #endif
