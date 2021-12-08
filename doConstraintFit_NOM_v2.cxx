@@ -426,11 +426,11 @@ state =2;
 
   for( auto ptpair : (std::vector<std::pair<std::pair<double, double>, std::pair<double, double> > >) { 
 
-  {{0,3},{0,3}}, 
+/*  {{0,3},{0,3}}, 
   {{3,6},{3,6}}, {{6,9},{6,9}}
-  ,{{9,12},{9,12}}/*,
+  ,{{9,12},{9,12}},
   {{12,15}, {12,15}},
-  {{15,30},{15,30}}, {{0,30},{0,30}},   */
+  {{15,30},{15,30}},*/ {{0,30},{0,30}},   
   }){ 
     bkg_val  = {-0.4, -0.07, 0.03,  -0.001, -0.03, 0.0, 0.0, 0.0, 0.0};
     bkg_low  = {-0.8, -0.6, -0.6,  -0.6, -0.5, -0.5, -0.5, -0.5, -0.5};
@@ -442,7 +442,7 @@ state =2;
     std::pair<double, RooRealVar> res = prep_bdtval(0.2,5);
     cutBDTlow = res.first;
     sb_ratio = res.second;
-	bool fitdata = 1;
+	bool fitdata =false;
 	if(fitdata){
 		Nworkers = GLOBAL_NWORKERS;
 	    if(ptpair.first.first == 0 && ptpair.first.second == 30){ INTBIN_BDTLOW = res.first; }

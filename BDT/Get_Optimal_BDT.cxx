@@ -18,7 +18,7 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
   TList* lok =nullptr;
   lok= HISTFILE->GetListOfKeys();
   if (!(lok->FindObject(Form("r_%.6f", ratio))==nullptr) || !(lok->FindObject(Form("r_%.6f%s", ratio, the_opt.c_str()))==nullptr) ){
-    std::cout << "[INFO] Reading From HISTOFILE" << std::endl;
+    std::cout << "[INFO] Reading From HISTOFILE, key : " << the_opt.c_str() << std::endl;
     string dirname = Form("r_%.6f", ratio);
     if ( the_opt.find("SYS") != std::string::npos) { dirname = dirname+""+ the_opt; }
     std::cout << dirname.c_str() << std::endl;
@@ -166,11 +166,11 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
   TNamed* max_value = new TNamed("max_sig",Form("%.4f",bdt_res.first.first));
   max_value->Write();
 
-  if(the_opt.find("SYS") == std::string::npos){
-    HISTFILE->cd();
-    TNamed* latest = new TNamed("latest", max_value->GetTitle() );
-    latest->Write(0,TTree::kOverwrite);
-  }
+  string BDTkey = "latest";
+  if(the_opt.find("SYS") != std::string::npos) BDTkey += "_" + the_opt;
+  HISTFILE->cd();
+  TNamed* latest = new TNamed(BDTkey.c_str(), max_value->GetTitle() );
+  latest->Write(0,TTree::kOverwrite);
   HISTFILE->Close();
   cache_out->Close();
 
@@ -225,12 +225,20 @@ dbg(121);
   
 };
 
+
+
+
 RooRealVar get_eff_acc(std::string type, std::string type2, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int bdtptMin= 0, int bdtptMax =30, int train_state = 3 ,int state1 =1, int state2 =3, bool eff_old = true){
 	return	get_eff_acc(type, type2, ts, ts, ylim, pl, ph, cl, ch, blow, bhigh,bdtptMin, bdtptMax,  train_state, state1, state2, eff_old);
 };
 RooRealVar get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh,  int bdtptMin= 0, int bdtptMax =30,int train_state = 3,int state1 =1, int state2 =3, bool eff_old = true){
 	return	get_eff_acc(type, "CB3:CC4:FF", ts, 9999999999, ylim, pl, ph, cl, ch, blow, bhigh, bdtptMin, bdtptMax, train_state, state1, state2, eff_old);
 };
+
+
+
+
+
 //Function to get BDT ratio //
 RooRealVar get_eff_acc_v2(std::string type, std::string type2, long ts, long ts2, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int bdtptMin= 0, int bdtptMax =30, int train_state = 3, int state1 =1, int state2 =3, bool eff_old = true){
 dbg(123);

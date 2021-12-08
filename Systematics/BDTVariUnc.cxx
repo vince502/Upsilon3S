@@ -1,4 +1,5 @@
 #include "../plots/drawRAAplot.cxx"
+#include "Chi2GOF_test.cxx"
 #include "sys_wr_helper.cxx"
 bool isDR = false;
 
@@ -9,7 +10,10 @@ std::string findtype(int pl, int ph, int cl, int ch){
 	return fittype;
 };
 
-double getBDTVariUnc(int pl, int ph, int cl, int ch, int state, int bpl, int bph){
+double getBDTVariUnc(ana_bins x){
+	int pl, ph, cl, ch, state, bpl, bph;
+	pl = x.pl; ph = x.ph; cl = x.cl; ch = x.ch; state = x.state; bpl = x.bpl; bph = x.bph;
+	string fittype = (strcmp(x.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 	long ts = 9999999999;
     int train_state = state;
 	const std::string type_r = "CB3:CC2:DRGC";
@@ -18,8 +22,6 @@ double getBDTVariUnc(int pl, int ph, int cl, int ch, int state, int bpl, int bph
 	double rapMin = -2.4;
 	double cutQVP = 0.00;
 	double blow_ref, ratio;
-	if( findtype (pl, ph, cl, ch) != "FF") blow_ref = -0.0;
-	else if( findtype (pl, ph, cl, ch) != "GC") blow_ref = -0.1;
 	///////////////////////////////////////////////////
 	auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0) mutable {
   double cutQVP_noBDT= 0.01;
@@ -32,7 +34,7 @@ double getBDTVariUnc(int pl, int ph, int cl, int ch, int state, int bpl, int bph
     if( _step == 1) {ratio = sb_ratio.getVal() + sb_ratio.getError(); systype = "SYSUP"; }
     if( _step ==-1) {ratio = sb_ratio.getVal() - sb_ratio.getError(); systype = "SYSDOWN"; }
     std::cout << "sb_ratio: " << sb_ratio.getVal() << std::endl;
-  auto res_GOB = Get_Optimal_BDT(ts,pl, ph, rapMin, rapMax, cl, ch, cutQVP , sb_ratio.getVal(), train_state,bpl, bph, "", "S2", systype.c_str());
+  auto res_GOB = Get_Optimal_BDT(ts,pl, ph, rapMin, rapMax, cl, ch, cutQVP , ratio, train_state,bpl, bph, "", "S2", systype.c_str());
   auto res_GOB_ref = Get_Optimal_BDT(ts,pl, ph, rapMin, rapMax, cl, ch, cutQVP , sb_ratio.getVal(), train_state,bpl, bph, "", "S2", "SX");
   double res_blow = res_GOB.first;
   double res_blow_ref = res_GOB_ref.first;
@@ -43,7 +45,7 @@ double getBDTVariUnc(int pl, int ph, int cl, int ch, int state, int bpl, int bph
        double ratio_INT_ref = sb_ratio_INT.getVal();
        double ratio_INT = ratio_INT_ref + ((double) _step * sb_ratio.getError() );
     std::cout << "[DBG0831] " << Form(" INT RATIOS (SB, REF, ratio_INT) %.6f %.6f %.6f" , sb_ratio_INT.getVal(), ratio_INT_ref, ratio_INT) << std::endl;
-       double INT_BDT_ref = Get_Optimal_BDT(ts,pl, ph, rapMin, rapMax, cl, ch, cutQVP , ratio_INT_ref, train_state, 0, 30, "", "S2", "ST").first;
+       double INT_BDT_ref = Get_Optimal_BDT(ts,0, 30, rapMin, rapMax, 0, 181, cutQVP , ratio_INT_ref, train_state, 0, 30, "", "S2", "ST").first;
        double INT_BDT = Get_Optimal_BDT(ts,0, 30, rapMin, rapMax, 0, 181, cutQVP , ratio_INT, train_state, 0, 30 , "", "S2", "SYSNON2").first;
        double bdt_val_ratio = INT_BDT/INT_BDT_ref;
        std::cout << "[DBG0831] BDT_VAL_RATIO: " << bdt_val_ratio << std::endl;
@@ -52,7 +54,7 @@ double getBDTVariUnc(int pl, int ph, int cl, int ch, int state, int bpl, int bph
 
 
    std::cout <<"[INFO] " <<res_blow << " is the determined BDT \n\n\n" << std::endl;
-   return std::make_pair(res_blow,sb_ratio);
+   return std::make_pair(res_blow,ratio);
 
 };
 //	auto prep_bdtval = [&]  (int _step =0 ) mutable {
@@ -89,15 +91,19 @@ double getBDTVariUnc(int pl, int ph, int cl, int ch, int state, int bpl, int bph
 //	   return res_blow;
 //	};
 	///////////////////////////////////////////////////
-
-	std::string type_nom = Form("CB3:CC%d:%s",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str());
-	std::string type_sys1  = Form("CB3:CC%d:%sbdtup",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str());
-	std::string type_sys2 = Form("CB3:CC%d:%sbdtdown",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str());
+	
+	string bkgtype = Chi2GOF_test(x)[0].second;
+	std::string type_nom = 	Form("CB3:%s:%s",		 	bkgtype.c_str(),  fittype.c_str());
+	std::string type_sys1  =Form("CB3:%s:%sbdtup",		bkgtype.c_str(),  fittype.c_str());
+	std::string type_sys2 = Form("CB3:%s:%sbdtdown",	bkgtype.c_str(),  fittype.c_str());
 	binplotter *bp_nom, *bp_sys1, *bp_sys2;
 	double bl_nom = Get_BDT(ts, state, bpl, bph, pl, ph, cl, ch);
 	bp_nom  = new binplotter(type_nom , ts,  2.4, pl, ph, cl, ch, 0, bl_nom, 1, bpl, bph, train_state, state, false, false);
+	dbg(1209);
 	bp_sys1 = new binplotter(type_sys1, ts,  2.4, pl, ph, cl, ch, 0, prep_bdtval( 1).first, 1, bpl, bph, train_state, state, false, false);
+	dbg(1210);
 	bp_sys2 = new binplotter(type_sys2, ts,  2.4, pl, ph, cl, ch, 0, prep_bdtval(-1).first, 1, bpl, bph, train_state, state, false, false);
+	dbg(1211);
 	RooRealVar raa_nom, raa_sys1, raa_sys2;
 	if( !isDR ){
 	raa_nom = bp_nom->get_yield(state);
@@ -114,53 +120,8 @@ double getBDTVariUnc(int pl, int ph, int cl, int ch, int state, int bpl, int bph
 	double unc_sys2 =  (raa_sys2.getVal() - raa_nom.getVal())/(raa_nom.getVal());
 	return max(fabs(unc_sys1), fabs(unc_sys2));
 };
-double getBDTVariUnc(ana_bins k){
-	double unc_sys = getBDTVariUnc(k.pl, k.ph, k.cl, k.ch, k.state, k.bpl, k.bph);
-	return unc_sys;
-};
 
 void BDTVariUnc(){
 	sys_wr_helper("BDT_unc.root", getBDTVariUnc);
-//	TFile* output = new TFile("BDT_unc.root","recreate");
-//	TH1D *rc2s, *rc3s, *rp2s, *rp3s;
-//	rc2s = new TH1D("rc2S","",10,0,9); //include int. bin
-//	rc3s = new TH1D("rc3S","",4,0,3);  //include int. bin
-//	rp2s = new TH1D("rp2S","",3,1,3);
-//	rp3s = new TH1D("rp3S","",2,1,2);
-//
-//	std::vector<ana_bins> vc2, vc3, vp2, vp3;
-//	vc2 = ana_bm["2c"];
-//	vc3 = ana_bm["3c"];
-//	vp2 = ana_bm["2p"];
-//	vp3 = ana_bm["3p"];
-//
-//	int counter =1;
-//	for( auto item : vc2){
-//		rc2s->SetBinContent(counter, getBDTVariUnc(item));
-//		counter++;
-//	}
-//	counter =1;
-//	for( auto item : vc3){
-//		rc3s->SetBinContent(counter, getBDTVariUnc(item));
-//		counter++;
-//	}
-//	counter =1;
-//
-//	for( auto item : vp2){
-//		rp2s->SetBinContent(counter, getBDTVariUnc(item));
-//		counter++;
-//	}
-//	counter =1;
-//	
-//	for( auto item : vp3){
-//		rp3s->SetBinContent(counter, getBDTVariUnc(item));
-//		counter++;
-//	}
-//	output->cd();
-//	rc2s->Write();
-//	rc3s->Write();
-//	rp2s->Write();
-//	rp3s->Write();
-//	output->Close();
 }
 

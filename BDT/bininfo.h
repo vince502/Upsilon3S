@@ -116,13 +116,15 @@ std::vector< std::string > info_BDT(long ts, std::string aux = "")
 	}
 
 };
-double Get_BDT(long ts, int state, int bdtptMin, int bdtptMax, int ptMin, int ptMax, int cBinLow, int cBinHigh, double vcut =0.00, double rap = 2.4, int signif_ = 2){
+double Get_BDT(long ts, int state, int bdtptMin, int bdtptMax, int ptMin, int ptMax, int cBinLow, int cBinHigh, double vcut =0.00, double rap = 2.4, int signif_ = 2, string opt= ""){
   string name_file = Form("%s/BDT/Significance_hist/HIST_train%dS_bdtpt_%d_%d_%ld_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_vp_%.4f_S%d.root", workdir.Data(), state, bdtptMin, bdtptMax, ts, ptMin, ptMax, (int) (rap*10), (int) (rap*10), cBinLow, cBinHigh, vcut, signif_);
   TFile* input_file;
   TNamed* key;
+  string BDTkey = "latest";
+  if(strcmp(opt.c_str(),"")!=0) BDTkey += "_" +opt;
   try{
   input_file =TFile::Open(name_file.c_str());
-  key = (TNamed*) input_file->Get("latest");
+  key = (TNamed*) input_file->Get(BDTkey.c_str());
   input_file->Close();
   }
   catch(...){return -2;}
@@ -157,15 +159,16 @@ struct ana_bins{
 };
 //#endif
 
-double Get_BDT(long ts, ana_bins x, int bdtptMin, int bdtptMax, double vcut =0.00, double rap =2.4, int signif_ =2){
-  return Get_BDT(ts, x.state, bdtptMin, bdtptMax, x.pl, x.ph, x.cl, x.ch, vcut, rap, signif_);
+double Get_BDT(long ts, ana_bins x, int bdtptMin, int bdtptMax, double vcut =0.00, double rap =2.4, int signif_ =2, string opt_ = ""){
+  return Get_BDT(ts, x.state, bdtptMin, bdtptMax, x.pl, x.ph, x.cl, x.ch, vcut, rap, signif_, opt_);
 };
-double Get_BDT(long ts, ana_bins x, double vcut =0.00, double rap =2.4, int signif_ =2){
-  return Get_BDT(ts, x.state, x.bpl, x.bph, x.pl, x.ph, x.cl, x.ch, vcut, rap, signif_);
+double Get_BDT(long ts, ana_bins x, string opt_= "", double vcut =0.00, double rap =2.4, int signif_ =2){
+  return Get_BDT(ts, x.state, x.bpl, x.bph, x.pl, x.ph, x.cl, x.ch, vcut, rap, signif_, opt_);
 };
 
 std::map<std::string, std::vector<ana_bins> > ana_bm ={
 	{"2c", 	{
+		{"i", 0, 30, 0, 30, 0, 181, 0, 90, 9, 2},
 		{"c", 0, 30, 0, 30,  0, 20, 0, 10, 8, 2},
 		{"c", 0, 30, 0, 30, 20, 40, 10, 20, 7, 2},
 		{"c", 0, 30, 0, 30, 40, 60, 20, 30, 6, 2},
@@ -174,10 +177,10 @@ std::map<std::string, std::vector<ana_bins> > ana_bm ={
 		{"c", 0, 30, 0, 30, 100, 120, 50, 60, 3, 2},
 		{"c", 0, 30, 0, 30, 120, 140, 60, 70, 2, 2},
 		{"c", 0, 30, 0, 30, 140, 181, 70, 90, 1, 2},
-		{"i", 0, 30, 0, 30, 0, 181, 0, 90, 9, 2},
 		}
 	},
 	{"3c", 	{
+		{"i", 0, 30, 0, 30, 0, 181, 0, 90, 8, 3},
 		{"c", 0, 30, 0, 30,  0, 20, 0, 10, 7, 3},
 		{"c", 0, 30, 0, 30, 20, 40, 10, 20, 6, 3},
 		{"c", 0, 30, 0, 30, 40, 60, 20, 30, 5, 3},
@@ -185,7 +188,6 @@ std::map<std::string, std::vector<ana_bins> > ana_bm ={
 		{"c", 0, 30, 0, 30, 80, 100, 40, 50, 3, 3},
 		{"c", 0, 30, 0, 30, 100, 140, 50, 70, 2, 3},
 		{"c", 0, 30, 0, 30, 140, 181, 70, 90, 1, 3},
-		{"i", 0, 30, 0, 30, 0, 181, 0, 90, 8, 3},
 		}
 	},
 	{"2p", 	{
@@ -235,15 +237,7 @@ std::vector<double> VALI_V3_BDTTESTCUT2 = {0.0, 0.1, 0.2, 0.25, 0.3, 0.35, 0.4, 
 std::vector<double> VALI_V3_BDTTESTCUT3 = {0.25, 0.2, 0.15, 0.1, 0.05, -0.1, -0.2};
 std::vector<double> NOM_V2_BDTTESTCUT = {-0.9, -0.8, -0.7, -0.4, -0.3, -0.1, 0.0, 0.1, 0.2, 0.3, 0.4, 0.5};
 
-#ifdef GETBKGO
-#define GETBKGO2
-int getNomBkgO(ana_bins x){
-	return getNomBkgO(x.state, x.pl, x.ph, x.cl, x.ch);
-};
-#endif
-double Get_BDT(long ts, ana_bins x, double vcut = 0.00, double rap = 2.4, int signif_ =2 ){
-	return Get_BDT(ts, x.state, x.bpl, x.bph, x.pl, x.ph, x.cl, x.ch, vcut, rap, signif_);
-}
+
 
 #include "yield_eff_signif.h"
 #endif

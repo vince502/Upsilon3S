@@ -1,7 +1,7 @@
 #pragma once
 
 #include <map>
-
+#define GETBKGO
 int getNomBkgO(int state, int pl, int ph, int cl, int ch)
 {
 	if( (state == 2 && pl == 0 && ph == 30 && cl == 0 && ch == 20) ) return 2;
@@ -33,3 +33,10 @@ int getNomBkgO(int state, int pl, int ph, int cl, int ch)
 	if( (state == 3 && pl == 0 && ph == 30 && cl == 0 && ch == 181) ) return 4;
 	else return -1;
 };
+
+#ifdef GETBKGO
+#define GETBKGO2
+int getNomBkgO(ana_bins x){
+	return getNomBkgO(x.state, x.pl, x.ph, x.cl, x.ch);
+};
+#endif

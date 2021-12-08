@@ -6,7 +6,7 @@ using namespace RooFit;
 
 
 
-void MassYieldSingleStateMCFitCB2G( struct Y1Sfitvar *Y1S ,long ts, const string fname = "", const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "4", const string Trig = "",int cBinLow=0, int cBinHigh = 181, int train_state =3, int state = 1, bool fixvar = false, bool swflag = false, double cutQVP= 0.01, double bdtlow = -1., double bdthigh =1. ){
+void MassYieldSingleStateMCFitCB2G( struct Y1Sfitvar *Y1S ,long ts, const string fname = "", const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "4", const string Trig = "",int cBinLow=0, int cBinHigh = 181, int train_state =3, int state = 1, bool fixvar = false, bool swflag = false, double cutQVP= 0.01, double bdtlow = -1., double bdthigh =1., int bdtptMin = 0, int bdtptMax = 30 ){
   Double_t etaMax= 2.4;
   Double_t etaMin = -2.4;
 
@@ -47,10 +47,7 @@ void MassYieldSingleStateMCFitCB2G( struct Y1Sfitvar *Y1S ,long ts, const string
   }
   Int_t Nmassbins = (RangeHigh - RangeLow)*30;
   if(Trig == "Ups") Nmassbins = (RangeHigh -RangeLow)*30; 
-  TFile* fout;
-  std::string name_output = Form("Yield/Yield_%ld_CB2G_%dS_pt_%d-%d_rap_%d-%d_cBin_%d-%d_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_%d.root", ts, (int) state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), bdtlow, bdthigh, cutQVP,(int) fixvar);
-  if(ts >= 9999999990) name_output = Form("Yield/Yield_%ld_CB2G_%dS_train%dS_pt_%d-%d_rap_%d-%d_cBin_%d-%d_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_%d.root", ts, (int) state, train_state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), bdtlow, bdthigh, cutQVP,(int) fixvar);
-  fout = new TFile(name_output.c_str(), "RECREATE");
+
 
   Double_t MupTCut = single_LepPtCut(MupT);
 
@@ -58,7 +55,7 @@ void MassYieldSingleStateMCFitCB2G( struct Y1Sfitvar *Y1S ,long ts, const string
   fin = new TFile(Form("./BDT/roodatasets/%s", fname.c_str()),"READ");
   RooDataSet* dataset;
   std::string name_dataset = "dataset";
-  if(ts >= 9999999990) name_dataset= name_dataset + Form("_Y%dSpt%dto%d", train_state, (int) ptMin, (int) ptMax) ;
+  if(ts >= 1634636609) name_dataset= name_dataset + Form("_Y%dSpt%dto%d", train_state, bdtptMin, bdtptMax) ;
   dataset = (RooDataSet*) fin->Get(name_dataset.c_str());
 
   RooWorkspace* works1 = new RooWorkspace(Form("workspace"));
@@ -150,16 +147,22 @@ void MassYieldSingleStateMCFitCB2G( struct Y1Sfitvar *Y1S ,long ts, const string
   model = new RooAddPdf("model", "NS", RooArgList(*SignalNS), RooArgList(*nSigNS));
 
   works1->import(*model);
-/////////////////////////////////////////////////////////////FITTING START//////////////////////////////////////////////////////////////////////////////////////////
-  RooAbsReal* nll = works1->pdf("model")->createNLL(*reducedDS, Save(), NumCPU(16), Hesse(kTRUE), Range(RangeLow, RangeHigh), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));
-  RooMinuit m(*nll);
-  RooFitResult* Result = m.fit("shr");
-  Result->SetName("fitresult_model_reducedDS");
 
-//  RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), NumCPU(16), Hesse(kTRUE), Range(RangeLow, RangeHigh), Minos(0), SumW2Error(kTRUE), Extended(kTRUE));
+/////////////////////////////////////////////////////////////FITTING START//////////////////////////////////////////////////////////////////////////////////////////
+//  RooAbsReal* nll = works1->pdf("model")->createNLL(*reducedDS, Save(), PrefitDataFraction(0.005), Minimizer("Minuit","minimize"), NumCPU(38), Range(RangeLow, RangeHigh), AsymptoticError(kTRUE)/*SumW2Error(kTRUE)*/, Extended(kTRUE));
+//  RooMinuit m;//*nll);
+//  RooFitResult* Result = m.fit("shr");
+//  Result->SetName("fitresult_model_reducedDS");
+
+  RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), PrefitDataFraction(0.005), Minimizer("Minuit","minimize"), NumCPU(38), Range(RangeLow, RangeHigh), /*AsymptoticError(kTRUE)*/SumW2Error(kTRUE), Extended(kTRUE));
+
+  Result->SetName("fitresult_model_reducedDS");
   works1->pdf("model")->plotOn(massPlot, Name("modelPlot"));
  {works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*SignalNS)), LineColor(kRed), LineStyle(kDashed), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*(cb2g->G1S))), LineColor(kGreen), LineStyle(kSolid), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*(cb2g->CB1S_1))), LineColor(kRed), LineStyle(kSolid), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*(cb2g->CB1S_2))), LineColor(kMagenta), LineStyle(kDashDotted), MoveToBack());}
   massPlot->SetTitle("");
+  TLatex* tl = new TLatex();
+  FormLatex(tl, 42, 0.15);
+  tl->DrawLatex(0.15,0.65, Form("BDT train p_{T} #in [ %d, %d ] GeV", bdtptMin, bdtptMax));
   massPlot->SetXTitle("M (GeV/c^2)");
   massPlot->SetYTitle("Counts");
   massPlot->Draw();
@@ -169,7 +172,7 @@ void MassYieldSingleStateMCFitCB2G( struct Y1Sfitvar *Y1S ,long ts, const string
 
   bool GetCont_ = false;
   RooPlot* cont_plt;
-  if(GetCont_) cont_plt = m.contour(*works1->var("n"), *works1->var("alpha"), 1, 2, 3);
+//  if(GetCont_) cont_plt = m.contour(*works1->var("n"), *works1->var("alpha"), 1, 2, 3);
   pad_pull->cd();
   pad_pull->SetGrid(0,1);
   TLine* line_pull = new TLine(RangeLow,0.,RangeHigh, 0.);
@@ -251,8 +254,8 @@ void MassYieldSingleStateMCFitCB2G( struct Y1Sfitvar *Y1S ,long ts, const string
   
   //fout = new TFile(Form("Yield/Yield_%dS_pt_%d-%d_rap_%d-%d_noWeight_MupT%s_%s_BDT_%d-%d_vp_%d_MC_%d.root",(int) state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), MupT.Data(), Trig.c_str(), bdtlow, bdthigh, cutQVP,(int) fixvar), "RECREATE");
 
-  c1->SaveAs(Form("%s/CB2G_MassDistribution_%dS_pt_%d-%d_rap_%d-%d_%dbin_noWeight_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_fix%d.pdf",massDIR.Data(), state,(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, MupT.Data(), Trig.c_str(), bdtlow, bdthigh, cutQVP,(int) fixvar));
-  c1->SaveAs(Form("%s/png/MassDistribution_%dS_pt_%d-%d_rap_%d-%d_%dbin_noWeight_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_fix%d.png",massDIR.Data(), state,(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, MupT.Data(), Trig.c_str(), bdtlow, bdthigh, cutQVP, (int) fixvar));
+  c1->SaveAs(Form("%s/CB2G_MassDistribution_%dS_pt_%d-%d_rap_%d-%d_%dbin_noWeight_MupT%s_%s_BDT_%.4f-%.4f_bdtpt_%d_%d_vp_%.4f_MC_fix%d.pdf",massDIR.Data(), state,(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, MupT.Data(), Trig.c_str(), bdtlow, bdthigh, bdtptMin, bdtptMax, cutQVP,(int) fixvar));
+  c1->SaveAs(Form("%s/png/MassDistribution_%dS_pt_%d-%d_rap_%d-%d_%dbin_noWeight_MupT%s_%s_BDT_%.4f-%.4f__bdtpt_%d_%d_vp_%.4f_MC_fix%d.png",massDIR.Data(), state,(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, MupT.Data(), Trig.c_str(), bdtlow, bdthigh, bdtptMin, bdtptMax, cutQVP, (int) fixvar));
   TH1D* hmass = new TH1D("hmass", ";M (GeV/c^2);Counts", Nmassbins, RangeLow, RangeHigh);
 
   reducedDS->fillHistogram(hmass, (*works1->var("mass")));
@@ -267,12 +270,17 @@ void MassYieldSingleStateMCFitCB2G( struct Y1Sfitvar *Y1S ,long ts, const string
 
 //  c2->SaveAs(Form("%s/WithoutFit_%dS_pt_%d-%d_rap_%d-%d_%dbin_noWeight_MupT%s_%s_BDT_%.4f-%.4f_vp_%.4f_MC_fix%d.pdf",massDIR.Data(), state, (int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10),  Nmassbins, MupT.Data(), Trig.c_str(),  bdtlow, bdthigh, cutQVP, (int) fixvar));
 
-  if(GetCont_){
-    TCanvas* cc = new TCanvas();
-    cc->cd();
-    cont_plt->Draw();
-    cc->SaveAs(Form("%s/cont.pdf",massDIRcont.Data()) );
-  }
+//  if(GetCont_){
+//    TCanvas* cc = new TCanvas();
+//    cc->cd();
+//    cont_plt->Draw();
+//    cc->SaveAs(Form("%s/cont.pdf",massDIRcont.Data()) );
+//  }
+
+  TFile* fout;
+  long outputts = ( bdtlow = -1) ? 9999999999 : ts;
+  std::string name_output = GetFit(__FITRESLATEST, true, "CB2G", outputts, train_state, state,  (int) ptMin, (int) ptMax, cBinLow, cBinHigh, bdtlow, bdthigh, bdtptMin, bdtptMax, cutQVP, "");
+  fout = new TFile(name_output.c_str(), "RECREATE");
 
   fout->cd();
   works1->Write();
@@ -288,7 +296,7 @@ void MassYieldSingleStateMCFitCB2G( struct Y1Sfitvar *Y1S ,long ts, const string
   fout->Close(); 
 };
 
-void MassYieldFit_BDT_MC_CB2G(long _ts, const string _fname1s = "", const string _fname3s = "", const Double_t _ptMin = 0, const Double_t _ptMax = 30, const Double_t _rapMin = -2.4, const Double_t _rapMax = 2.4, const TString _MupT = "4", const string _Trig = "", int _cBinLow = 0, int _cBinHigh = 180, int _train_state =3, int _state = 1, bool _fixvar =false, bool _swflag = false, double _cutQVP = 0.01, double _bdtlow =-1., double _bdthigh = 1.){
+void MassYieldFit_BDT_MC_CB2G(long _ts, const string _fname1s = "", const string _fname3s = "", const Double_t _ptMin = 0, const Double_t _ptMax = 30, const Double_t _rapMin = -2.4, const Double_t _rapMax = 2.4, const TString _MupT = "4", const string _Trig = "", int _cBinLow = 0, int _cBinHigh = 180, int _train_state =3, int _state = 1, bool _fixvar =false, bool _swflag = false, double _cutQVP = 0.01, double _bdtlow =-1., double _bdthigh = 1., int _bdtptMin = 0, int _bdtptMax = 30){
   struct Y1Sfitvar Y1Svar;
 //  if( _fixvar == true){
 //    MassYieldSingleStateMCFit( &Y1Svar, _fname1s, _ptMin, _ptMax, _rapMin, _rapMax, _MupT , _Trig, _cBinHigh, 1, _fixvar);
@@ -296,7 +304,7 @@ void MassYieldFit_BDT_MC_CB2G(long _ts, const string _fname1s = "", const string
 //    MassYieldSingleStateMCFit( &Y1Svar, _fname3s, _ptMin, _ptMax, _rapMin, _rapMax, _MupT , _Trig, _cBinHigh, 3, _fixvar);
 //  }
 //  else if( _fixvar ==false){
-    {MassYieldSingleStateMCFitCB2G( &Y1Svar,_ts, _fname3s, _ptMin, _ptMax, _rapMin, _rapMax, _MupT , _Trig, _cBinLow, _cBinHigh, _train_state, _state, _fixvar, _swflag, _cutQVP, _bdtlow, _bdthigh);}
+    {MassYieldSingleStateMCFitCB2G( &Y1Svar,_ts, _fname3s, _ptMin, _ptMax, _rapMin, _rapMax, _MupT , _Trig, _cBinLow, _cBinHigh, _train_state, _state, _fixvar, _swflag, _cutQVP, _bdtlow, _bdthigh, _bdtptMin, _bdtptMax);}
 //  }
 }
 

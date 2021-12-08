@@ -242,8 +242,8 @@ void drawRAAplot(){
   y3_int->GetYaxis()->SetLabelOffset(0);
   y3_int->GetYaxis()->SetRangeUser(0,1.3);
 
-  auto raa2_int = getDoubleRatioValue(true, {0,181}, {0,30},Form("CB3:CC%d:GC", getNomBkgO(2, 0, 30,0, 181) ), -2, 2);
-  auto raa3_int = getDoubleRatioValue(true, {0,181}, {0,30},Form("CB3:CC%d:GC", getNomBkgO(3, 0, 30,0, 181) ), -2, 3);
+  auto raa2_int = getDoubleRatioValue(true, {0,181}, {0,30},Form("CB3:%s:GC", Chi2GOF_test(ana_bm["2c"].back())[0].second.c_str() ), -2, 2);
+  auto raa3_int = getDoubleRatioValue(true, {0,181}, {0,30},Form("CB3:%s:GC", Chi2GOF_test(ana_bm["3c"].back())[0].second.c_str() ), -2, 3);
 //  auto hPbPb1S = getPbPbRAA(1, -0.1, 2);
   auto hPbPb2S = getPbPbRAA(2, -2, 0);
   auto hPbPb3S = getPbPbRAA(3, -2, 0 );

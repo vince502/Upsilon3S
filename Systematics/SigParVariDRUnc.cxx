@@ -12,6 +12,29 @@ double getSigParVariUnc(int pl, int ph, int cl, int ch, int state){
 	std::string type_nom = Form("CB3:CC%d:DR%s",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str());
 	std::string type_sys = Form("CB3:CC%d:DR%sXMC1P",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str());
 
+	binplotter *bp_nom, *bp_sys1, *bp_sys2;
+	double bl_nom = Get_BDT(ts, state, bpl, bph, pl, ph, cl, ch);
+	bp_nom  = new binplotter(type_nom , ts,  2.4, pl, ph, cl, ch, 0, bl_nom, 1, bpl, bph, train_state, state, false, false);
+	dbg(1209);
+	bp_sys1 = new binplotter(type_sys1, ts,  2.4, pl, ph, cl, ch, 0, prep_bdtval( 1).first, 1, bpl, bph, train_state, state, false, false);
+	dbg(1210);
+	bp_sys2 = new binplotter(type_sys2, ts,  2.4, pl, ph, cl, ch, 0, prep_bdtval(-1).first, 1, bpl, bph, train_state, state, false, false);
+	dbg(1211);
+	RooRealVar raa_nom, raa_sys1, raa_sys2;
+	if( !isDR ){
+	raa_nom = bp_nom->get_yield(state);
+	raa_sys1 = bp_nom->get_yield(state);
+	raa_sys2 = bp_nom->get_yield(state);
+	}
+	if( isDR ){
+	raa_nom  = bp_nom->get_frac(state);
+	raa_sys1 = bp_nom->get_frac(state);
+	raa_sys2 = bp_nom->get_frac(state);
+	}
+
+	double unc_sys1 =  (raa_sys1.getVal() - raa_nom.getVal())/(raa_nom.getVal());
+	double unc_sys2 =  (raa_sys2.getVal() - raa_nom.getVal())/(raa_nom.getVal());
+	return max(fabs(unc_sys1), fabs(unc_sys2));
 	RooRealVar raa_nom, raa_sys, raa_sys2;
 	raa_nom = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_nom,{ -2,1}, state, 1, ts);
 	raa_sys = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_sys,{ -2,1}, state, 1, ts);

@@ -14,7 +14,7 @@ void LLR_report()
 	report.open("LLR_Result_UPSILON_ChebyChev_poly.txt", std::ios_base::out);
 	report << "Likelihood Ratio test for Upsilon 2S and 3S for ChevyChev Background PDF ordrering" << std::endl;
 	value_header.open("../LLR_CCorder.h", std::ios_base::out);
-	value_header << "#pragma once\n\n#include <map>\n\nint getNomBkgO(int state, int pl, int ph, int cl, int ch)\n{\n";
+	value_header << "#pragma once\n\n#include <map>\n#define GETBKGO\nint getNomBkgO(int state, int pl, int ph, int cl, int ch)\n{\n";
 	texout.open("LLR_result.tex");
 	texout << "\\subsection{Likelihood-ratio test}\n";
 
@@ -217,7 +217,7 @@ void LLR_report()
 	run_report(3);
 	report << "===================================== ";
 	report.close();
-	value_header << "	else return -1;\n};";
+	value_header << "	else return -1;\n};\n#ifdef GETBKGO\n#define GETBKGO2\nint getNomBkgO(ana_bins x){\n	return getNomBkgO(x.state, x.pl, x.ph, x.cl, x.ch);\n};\n#endif";
 	value_header.close();
 	texout.close();
 		

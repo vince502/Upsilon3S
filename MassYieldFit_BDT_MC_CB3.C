@@ -52,21 +52,16 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   Double_t MupTCut = single_LepPtCut(MupT);
 
   TFile* fin;
-  std::cout << "[INFO] Input file : " <<fname.c_str() << std::endl;
   fin = new TFile(Form("./BDT/roodatasets/%s", fname.c_str()),"READ");
-  dbg();
   RooDataSet* dataset;
   std::string name_dataset = "dataset";
   if(ts >= 1634636609) name_dataset= name_dataset + Form("_Y%dSpt%dto%d", train_state, bdtptMin, bdtptMax) ;
   std::cout << "[INFO] Importing dataset : " << name_dataset.c_str() << std::endl;
   dataset = (RooDataSet*) fin->Get(name_dataset.c_str());
-  dbg();
 
   RooWorkspace* works1 = new RooWorkspace(Form("workspace"));
-  dbg();
   works1->import(*dataset);
 
-  dbg();
   RooArgSet* argRD  = new RooArgSet(*(works1->var("mass")), *(works1->var("pt")), *(works1->var("y")), *(works1->var("cBin")), *(works1->var("pt1")), *(works1->var("pt2")), *(works1->var("eta1")), *(works1->var("eta2")), *(works1->var("QQVtxProb")));
   argRD->add(*(works1->var("BDT")));
   RooDataSet* initialDS = (RooDataSet*) dataset->reduce(*argRD);
@@ -176,6 +171,9 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   works1->pdf("model")->plotOn(massPlot, Name("modelPlot"));
  {works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*SignalNS)), LineColor(kRed), LineStyle(kDashed), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CBNS_1)), LineColor(kGreen), LineStyle(kSolid), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CBNS_2)), LineColor(kRed), LineStyle(kSolid), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CBNS_3)), LineColor(kMagenta), LineStyle(kDashDotted), MoveToBack());}
   massPlot->SetTitle("");
+  TLatex* tl = new TLatex();
+  FormLatex(tl, 42, 0.15);
+  tl->DrawLatex(0.15,0.65, Form("BDT train p_{T} #in [ %d, %d ] GeV", bdtptMin, bdtptMax));
   massPlot->SetXTitle("M (GeV/c^2)");
   massPlot->SetYTitle("Counts");
   massPlot->Draw();
@@ -211,9 +209,7 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   std::cout << " CB3S NLL : " << NLL << std::endl;
   Int_t ndf = Npullbin - Nfitpar;
 
-  TLatex* tl = new TLatex();
-  FormLatex(tl, 42, 0.2);
-  tl->DrawLatex(0.15,0.65, Form("BDT train p_{T} #in [ %d, %d ]", bdtptMin, bdtptMax));
+
   TLatex* NormChi2tex = new TLatex();
   FormLatex(NormChi2tex, 42, 0.13);
   NormChi2tex->DrawLatex(0.15, 0.95, Form("#chi^{2}/ndf: %3.f/%d", chi2, ndf));
