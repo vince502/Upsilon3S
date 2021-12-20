@@ -14,3 +14,4 @@ MassDist
 plots/CrossSection/*.cxx
 BDT/Validation/BDT*.log
 BDT/Validation/*.tar.gz
+BDT/data/*
