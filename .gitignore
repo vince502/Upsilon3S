@@ -12,3 +12,4 @@ MassDist
 .workdir.h
 
 plots/CrossSection/*.cxx
+BDT/Validataion/BDT*.log
