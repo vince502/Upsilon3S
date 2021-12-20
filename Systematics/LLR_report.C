@@ -14,7 +14,7 @@ void LLR_report()
 	report.open("LLR_Result_UPSILON_ChebyChev_poly.txt", std::ios_base::out);
 	report << "Likelihood Ratio test for Upsilon 2S and 3S for ChevyChev Background PDF ordrering" << std::endl;
 	value_header.open("../LLR_CCorder.h", std::ios_base::out);
-	value_header << "#pragma once\n\n#include <map>\n#define GETBKGO\nint getNomBkgO(int state, int pl, int ph, int cl, int ch)\n{\n";
+	value_header << "#pragma once\n#include\"./BDT/bininfo.h\"\n#include <map>\n#define GETBKGO\nint getNomBkgO(int state, int pl, int ph, int cl, int ch)\n{\n";
 	texout.open("LLR_result.tex");
 	texout << "\\subsection{Likelihood-ratio test}\n";
 
@@ -122,12 +122,12 @@ void LLR_report()
 			if(idx1 ==1) continue;
 			if(eligible(1,idx1) != 1) N1over.push_back(idx1);
 		}
-		if((N1over.empty() || !(vecfind(N1over, 2)|| vecfind(N1over,3)))&& selected_deg == 0) selected_deg =1;
+		if((N1over.empty() || !(vecfind(N1over, 2)|| vecfind(N1over,3) || vecfind(N1over, 4)))&& selected_deg == 0) selected_deg =1;
 		for(int idx1 =1; idx1 < 6; idx1++){
 			if(idx1 ==2) continue;
 			if(eligible(2,idx1) != 2) N2over.push_back(idx1);
 		}
-		if((N2over.empty() || !(vecfind(N2over, 3)|| vecfind(N2over,4)))&& selected_deg == 0) selected_deg =2;
+		if((N2over.empty() || !(vecfind(N2over, 3)|| vecfind(N2over,4) ))&& selected_deg == 0) selected_deg =2;
 		for(int idx1 =1; idx1 < 6; idx1++){
 			if(idx1 ==3) continue;
 			if(eligible(3,idx1) != 3) N3over.push_back(idx1);
@@ -187,7 +187,7 @@ void LLR_report()
 	}
 	report << "===================================== \n";
 	report << "Integrated Bin, fit with GC \n";
-	ab = ana_bm["2c"].back();
+	ab = ana_bm["2c"].front();
 	report << Form("cBin %d ~ %d, pT %d ~ %d GeV/c \n", ab.cl, ab.ch, ab.pl, ab.ph) ;
 	run_report(2);
 	report << "\n\n===================================== \n";
@@ -212,7 +212,7 @@ void LLR_report()
 	}
 	report << "===================================== \n";
 	report << "Integrated Bin, fit with GC \n";
-	ab = ana_bm["3c"].back();
+	ab = ana_bm["3c"].front();
 	report << Form("cBin %d ~ %d, pT %d ~ %d GeV/c \n", ab.cl, ab.ch, ab.pl, ab.ph) ;
 	run_report(3);
 	report << "===================================== ";

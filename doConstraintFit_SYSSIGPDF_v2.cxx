@@ -6,6 +6,7 @@
 #include "MassYieldFit_data.cxx"
 #include "./BDT/yield_eff_signif.cxx"
 #include "script_tools.h"
+#include "Systematics/GOF_test.cxx"
 
 void doConstraintFit_SYSSIGPDF_v2(int step = 0){
   std::string type 			= "CB2G:CC3:GC"	;
@@ -185,8 +186,9 @@ state =3;
  if(step == 1 || step == 99 || step == 11 || step == 111){
   for( auto ap : ana_bm){
 	  for( auto ab : ap.second){
-//		if( !((ab.bin_attr.find("i")!=std::string::npos && ab.state ==2))) continue;
-//		if( !(ab.cl==140&&ab.ch==181&&(ab.bin_attr.find("c")!=std::string::npos && ab.state ==2))) continue;
+//		if( !((ab.bin_attr.find("i")!=std::string::npos && ab.state ==3))) continue;
+//		if( !(ab.cl==100&&ab.ch==140&&(ab.bin_attr.find("c")!=std::string::npos && ab.state ==3))) continue;
+		if( !(ab.pl==0&&ab.ph==4&&(ab.bin_attr.find("p")!=std::string::npos && ab.state ==3))) continue;
 		string fittype = (strcmp(ab.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 	  	ptMin = ab.pl;
 		ptMax = ab.ph;
@@ -201,15 +203,16 @@ state =3;
 	    sb_ratio = RooRealVar("sb_ratio", "",-1);
 		bool fitdata = true;
 		if(fitdata){
-			string bkgNom = Chi2GOF_test(ab)[0].second;
+			auto CTEST = AICGOF_test(ab);
+			string bkgNom = CTEST[0].second;
 			Nworkers = 40;
 		    std::cout << "cutBDTlow, sb_ratio: " << cutBDTlow << ", "<< sb_ratio.getVal() << std::endl;
 			type			= "CB2G:"+ bkgNom  + ":" + fittype.c_str();
 			type2			= "CB2G:"+ bkgNom  + ":" + fittype.c_str();
 			if(strcmp(ab.bin_attr.c_str(),"c")==0){
 				double cbl = cutBDTlow;
-				cutBDTlow = Get_BDT(ts, ab.state, 0, 30, 0, 30, 0, 181, 0.00, 2.4, 2, systype); 
-				string bkgNomREF = Chi2GOF_test(ana_bm[Form("%dc",ab.state)][0])[0].second;
+				cutBDTlow = Get_BDT(ts, ab.state, 0, 30, 0, 30, 0, 181, 0.00, 2.4, 2); 
+				string bkgNomREF = AICGOF_test(ana_bm[Form("%dc",ab.state)][0])[0].second;
 				type			= "CB2G:"+ bkgNomREF  + ":" + "GC";
 				if(bkgNom.find("CC")!=std::string::npos){
 	    			bkg_val  = {-0.4, -0.07, 0.03,  -0.001, -0.03, 0.0, 0.0, 0.0, 0.0};
@@ -219,9 +222,9 @@ state =3;
 
 					}
 				if(bkgNom.find("EE")!=std::string::npos){
-		    		bkg_val  = {7.0, 4.0, 1.5,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-		    		bkg_low  = {5.0, 2.0, 0.2,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
-		    		bkg_high = {8.5, 20.0, 3.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
+		    		bkg_val  = {13.5, 4.0, 1.3,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		    		bkg_low  = {4.0, 1.0, 0.3,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
+		    		bkg_high = {18, 10.0, 6.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
 					fixfit(cbl);
 					}
 				if(bkgNom.find("EX")!=std::string::npos){
@@ -236,19 +239,19 @@ state =3;
 	    			bkg_val  = {-0.4, -0.07, 0.03,  -0.001, -0.03, 0.0, 0.0, 0.0, 0.0};
 	    			bkg_low  = {-0.8, -0.6, -0.6,  -0.6, -0.5, -0.5, -0.5, -0.5, -0.5};
 	    			bkg_high = {0.6, 0.6, 0.6, 0.6, 0.6, 0.5, 0.5, 0.5, 0.5};
-		    		METHOD_MCGCDATA(1);
+		    		METHOD_MCGCDATA(2);
 					}
 				if(bkgNom.find("EE")!=std::string::npos){
-		    		bkg_val  = {7.0, 4.0, 1.5,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-		    		bkg_low  = {5.0, 2.0, 0.2,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
-		    		bkg_high = {8.5, 20.0, 3.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
-		    		METHOD_MCGCDATA(1);
+		    		bkg_val  = {8.185, 3.88, 1.45,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		    		bkg_low  = {5.0, 2.0, 0.51,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
+		    		bkg_high = {9.3, 10.0, 2.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
+		    		METHOD_MCGCDATA(2);
 					}
 				if(bkgNom.find("EX")!=std::string::npos){
 			    	bkg_val  = {-1.1, 4.0, 1.5,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 			    	bkg_low  = {-10.0, 2.0, 0.2,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
 			    	bkg_high = {0.1 , 20.0, 3.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
-		    		METHOD_MCGCDATA(1);
+		    		METHOD_MCGCDATA(2);
 					}
 			}
 		}

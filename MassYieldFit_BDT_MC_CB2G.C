@@ -1,5 +1,6 @@
 #include <TROOT.h>
 #include "fitter.h"
+#include "fitreslib.h"
 
 using namespace std;
 using namespace RooFit;
@@ -116,10 +117,10 @@ void MassYieldSingleStateMCFitCB2G( struct Y1Sfitvar *Y1S ,long ts, const string
   sigmaNS_3 = new RooFormulaVar("sigmaNS_3", "@0*@1", RooArgList(*sigmaNS_1, *xNS_2));
 
   RooRealVar *alpha, *n, *frac, *frac2;
-  alpha = new RooRealVar("alpha", "alpha of Crystal bal1", 1.96, 1.1, 2.2 );
-  n = new RooRealVar("n", "n of Crystal ball", 1.27, 1.1, 2.5);
-  frac = new RooRealVar("frac", "CB fraction", 0.13, 0.01, 0.90);
-  frac2 = new RooRealVar("frac2", "CB fraction 2", 0.25, 0.01, 0.90);
+  alpha = new RooRealVar("alpha", "alpha of Crystal bal1", 1.96, 0.5, 3.2 );
+  n = new RooRealVar("n", "n of Crystal ball", 1.27, 0.5, 3.5);
+  frac = new RooRealVar("frac", "CB fraction", 0.13, 0.03, 0.95);
+  frac2 = new RooRealVar("frac2", "CB fraction 2", 0.25, 0.03, 0.95);
 //  if(bdtlow == -1.){
     alpha->setVal(1.866);
     n->setVal(1.40);
@@ -278,7 +279,7 @@ void MassYieldSingleStateMCFitCB2G( struct Y1Sfitvar *Y1S ,long ts, const string
 //  }
 
   TFile* fout;
-  long outputts = ( bdtlow = -1) ? 9999999999 : ts;
+  long outputts = ( bdtlow == -1) ? 9999999999 : ts;
   std::string name_output = GetFit(__FITRESLATEST, true, "CB2G", outputts, train_state, state,  (int) ptMin, (int) ptMax, cBinLow, cBinHigh, bdtlow, bdthigh, bdtptMin, bdtptMax, cutQVP, "");
   fout = new TFile(name_output.c_str(), "RECREATE");
 

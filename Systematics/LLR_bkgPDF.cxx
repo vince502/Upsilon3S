@@ -4,12 +4,15 @@
 #include "TFile.h"
 #include "RooFit.h"
 #include "../BDT/yield_eff_signif.cxx"
+#include "stat.cxx"
 
 static int signif_formula = 2;
 
 std::pair<double, std::pair<double, double> > LLR_bkgPDF(RooFitResult* res1, RooFitResult* res2);
 std::pair<double, std::pair<double, double> >  LLR_bkgPDF(std::string type1, std::string type2, long ts, double pl, double ph, int cl, int ch, double blow, double bhigh, double state, double ylim =2.4);
 std::pair<double, std::pair<double, double> > LLR_bkgPDF(std::string type1, std::string type2, long ts, double pl, double ph, int cl, int ch, double state, double ylim =2.4, double vcut = 0.00);
+
+
 std::pair<double, std::pair<double, double> > LLR_bkgPDF(RooFitResult* res1, RooFitResult* res2)
 {
 

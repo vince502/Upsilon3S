@@ -21,19 +21,27 @@
 #root -l -b -q 'getEfficiency.C(6,9, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 1)' & 2>/dev/null
 #root -l -b -q 'getEfficiency.C(6,9, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
 #root -l -b -q 'getEfficiency.C(6,9, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 3)' & 2>/dev/null
+#wait  && 2>/dev/null
+#root -l -b -q 'getEfficiency.C(0, 30, -2.4, 2.4, 100., 140, true, true, false, kTrigUps, true, 1)' & 2>/dev/null
+#root -l -b -q 'getEfficiency.C(0, 30, -2.4, 2.4, 100., 140, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
+#root -l -b -q 'getEfficiency.C(0, 30, -2.4, 2.4, 100., 140, true, true, false, kTrigUps, true, 3)' & 2>/dev/null
+#wait  && 2>/dev/null
+#root -l -b -q 'getEfficiency.C(3,6, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 1)' & 2>/dev/null
+#root -l -b -q 'getEfficiency.C(3,6, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
+#root -l -b -q 'getEfficiency.C(3,6, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 3)' & 2>/dev/null
+#wait  && 2>/dev/null
+#root -l -b -q 'getEfficiency.C(6,9, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 1)' & 2>/dev/null
+#root -l -b -q 'getEfficiency.C(6,9, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
+#root -l -b -q 'getEfficiency.C(6,9, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 3)' & 2>/dev/null
+#wait  && 2>/dev/null
+root -l -b -q 'getEfficiency.C(9, 15, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 1)' & 2>/dev/null
+root -l -b -q 'getEfficiency.C(9, 15, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
+root -l -b -q 'getEfficiency.C(9, 15, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 3)' & 2>/dev/null
 wait  && 2>/dev/null
-root -l -b -q 'getEfficiency.C(9,12, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 1)' & 2>/dev/null
-root -l -b -q 'getEfficiency.C(9,12, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
-root -l -b -q 'getEfficiency.C(9,12, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 3)' & 2>/dev/null
-wait  && 2>/dev/null
-root -l -b -q 'getEfficiency.C(12, 15, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 1)' & 2>/dev/null
-root -l -b -q 'getEfficiency.C(12, 15, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
-root -l -b -q 'getEfficiency.C(12, 15, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 3)' & 2>/dev/null
-wait  && 2>/dev/null
-root -l -b -q 'getEfficiency.C(15, 30, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 1)' & 2>/dev/null
-root -l -b -q 'getEfficiency.C(15, 30, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
-root -l -b -q 'getEfficiency.C(15, 30, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 3)' & 2>/dev/null
-wait  && 2>/dev/null
+#root -l -b -q 'getEfficiency.C(15, 30, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 1)' & 2>/dev/null
+#root -l -b -q 'getEfficiency.C(15, 30, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 2)' & 2>/dev/null
+#root -l -b -q 'getEfficiency.C(15, 30, -2.4, 2.4, 0., 181, true, true, false, kTrigUps, true, 3)' & 2>/dev/null
+#wait  && 2>/dev/null
 
 #root -l -b -q 'getEfficiency.C(0.0, 30.0, -2.4, 2.4, 0., 10, true, true, false, kTrigUps, true, 3)' & 2>/dev/null
 #root -l -b -q 'getEfficiency.C(0.0, 30.0, -2.4, 2.4, 10., 20, true, true, false, kTrigUps, true, 3)' & 2>/dev/null

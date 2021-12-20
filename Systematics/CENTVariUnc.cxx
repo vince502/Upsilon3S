@@ -1,79 +1,55 @@
 #include "../plots/drawRAAplot.cxx"
+#include "GOF_test.cxx"
+#include "sys_wr_helper.cxx"
+bool isDR = false;
 
-std::string findtype(int pl, int ph, int cl, int ch){
-	std::string fittype = "";
-	if( cl ==0 && ch == 181) fittype = "GC";
-	else fittype = "FF";
-	return fittype;
-};
+#ifndef pp
+#define pp std::pair<std::pair<double, string>, std::pair<double, string> >
+#endif
 
-double getCENTVariUnc(int pl, int ph, int cl, int ch, int state){
+pp getCENTVariUnc_2item(ana_bins x){
+	int pl, ph, cl, ch, state, bpl, bph;
+	pl = x.pl; ph = x.ph; cl = x.cl; ch = x.ch; state = x.state; bpl = x.bpl; bph = x.bph;
+	int train_state = state;
 	long ts = 9999999999;
-	long ts_sys_up   = 9999999998;
-	long ts_sys_down = 9999999997;
-	std::string type_nom = Form("CB3:CC%d:%s",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str());
-	std::string type_sys = Form("CB3:CC%d:%s",getNomBkgO(state, pl, ph, cl, ch), findtype(pl, ph, cl, ch).c_str());
+	long ts_sys_up = 9999999998;
+	long ts_sys_do = 9999999997;
+	string fittype = (strcmp(x.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
+	auto AICres = AICGOF_test(x);
+	string bkgNom = AICres[0].second;
+	std::string type_nom = Form("CB3:%s:%s",	bkgNom.c_str(), fittype.c_str());
 
-	RooRealVar raa_nom, raa_sys_up, raa_sys_down;
-	double bl = Get_BDT(ts, state, pl, ph, cl, ch);
-	raa_nom = getDoubleRatioValue({cl, ch}, {(double) pl, (double) ph},type_nom, bl, state, 2, ts);
-	binplotter *bp_up, *bp_down;
-	bp_up   = new binplotter(type_sys, ts_sys_up  , 2.4, (double) pl, (double) ph, cl, ch, bl, 1.,state, false);
-	bp_down = new binplotter(type_sys, ts_sys_down, 2.4, (double) pl, (double) ph, cl, ch, bl, 1.,state, false);
-	raa_sys_up   = bp_up->get_yield(state);
-	raa_sys_down = bp_down->get_yield(state);
-	
-	double large_sys = ( (fabs(raa_sys_up.getVal() - raa_nom.getVal() ) - fabs(raa_sys_down.getVal() - raa_nom.getVal())) > 0) ? raa_sys_up.getVal() : raa_sys_down.getVal();
+	binplotter *bp_nom, *bp_sys1, *bp_sys2;
+	double bl_nom = Get_BDT(ts, x);
+	bp_nom  = new binplotter(type_nom, ts       ,  2.4, pl, ph, cl, ch, 0, bl_nom, 1, bpl, bph, train_state, state, false, false);
+	bp_sys1 = new binplotter(type_nom, ts_sys_up,  2.4, pl, ph, cl, ch, 0, bl_nom, 1, bpl, bph, train_state, state, false, false);
+	bp_sys2 = new binplotter(type_nom, ts_sys_do,  2.4, pl, ph, cl, ch, 0, bl_nom, 1, bpl, bph, train_state, state, false, false);
+	RooRealVar raa_nom, raa_sys1, raa_sys2;
+	if( !isDR ){
+	raa_nom = bp_nom->get_yield(state);
+	raa_sys1 = bp_sys1->get_yield(state);
+	raa_sys2 = bp_sys2->get_yield(state);
+	}
+	if( isDR ){
+	raa_nom  = bp_nom->get_frac(state);
+	raa_sys1 = bp_sys1->get_frac(state);
+	raa_sys2 = bp_sys2->get_frac(state);
+	}
 
-	double unc_sys = (large_sys - raa_nom.getVal())/(raa_nom.getVal());
-	return unc_sys;
+	double unc_sys1 =  (raa_sys1.getVal() - raa_nom.getVal())/(raa_nom.getVal());
+	double unc_sys2 =  (raa_sys2.getVal() - raa_nom.getVal())/(raa_nom.getVal());
+	std::cout << "[SigPdfVariUnc] unc_sys1 : " << unc_sys1 << std::endl;
+	std::cout << "[SigPdfVariUnc] unc_sys2 : " << unc_sys2 << std::endl;
+	return pp { { unc_sys1, "Up" }, { unc_sys2, "Down" } };
 };
-double getCENTVariUnc(ana_bins k){
-	double unc_sys = getCENTVariUnc(k.pl, k.ph, k.cl, k.ch, k.state);
-	return unc_sys;
+
+double getCENTVariUnc(ana_bins x){
+	pp res = getCENTVariUnc_2item(x);
+	return max(fabs(res.first.first), fabs(res.second.first));
 };
 
-void  CENTVariUnc(){
-	TFile* output = new TFile("CENT_unc.root","recreate");
-	TH1D *rc2s, *rc3s, *rp2s, *rp3s;
-	rc2s = new TH1D("rc2S","",10,0,9); //include int. bin
-	rc3s = new TH1D("rc3S","",4,0,3);  //include int. bin
-	rp2s = new TH1D("rp2S","",3,1,3);
-	rp3s = new TH1D("rp3S","",2,1,2);
-
-	std::vector<ana_bins> vc2, vc3, vp2, vp3;
-	vc2 = ana_bm["2c"];
-	vc3 = ana_bm["3c"];
-	vp2 = ana_bm["2p"];
-	vp3 = ana_bm["3p"];
-
-	int counter =1;
-	for( auto item : vc2){
-		rc2s->SetBinContent(counter, getCENTVariUnc(item));
-		counter++;
-	}
-	counter =1;
-	for( auto item : vc3){
-		rc3s->SetBinContent(counter, getCENTVariUnc(item));
-		counter++;
-	}
-	counter =1;
-
-	for( auto item : vp2){
-		rp2s->SetBinContent(counter, getCENTVariUnc(item));
-		counter++;
-	}
-	counter =1;
-	
-	for( auto item : vp3){
-		rp3s->SetBinContent(counter, getCENTVariUnc(item));
-		counter++;
-	}
-	output->cd();
-	rc2s->Write();
-	rc3s->Write();
-	rp2s->Write();
-	rp3s->Write();
-	output->Close();
+void CENTVariUnc(){
+	sys_wr_helper("CENT_unc.root", getCENTVariUnc);
+	sys_wr_helper_2item("CENT_unc_2item.root", getCENTVariUnc_2item);
 }
 

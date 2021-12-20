@@ -4,6 +4,8 @@ LLR test for 2S
 ===================================== 
 
 Centrality Bins, fit with FF 
+cBin 0 ~ 181, pT 0 ~ 30 GeV/c 
+Centrality Bins, fit with FF 
 cBin 0 ~ 20, pT 0 ~ 30 GeV/c 
 p(H0: N=1), 2 : 1.83 % 
 p(H0: N=1), 3: 1.76 % 
@@ -211,8 +213,6 @@ p(H0: N=5), 6 : 90.68 %
 Selected N = 1
 
 
-Centrality Bins, fit with FF 
-cBin 0 ~ 181, pT 0 ~ 30 GeV/c 
 ===================================== 
 Centrality Bins, fit with FF 
 cBin 0 ~ 181, pT 0 ~ 3 GeV/c 
@@ -293,50 +293,24 @@ Selected N = 1
 
 
 Centrality Bins, fit with FF 
-cBin 0 ~ 181, pT 9 ~ 12 GeV/c 
-p(H0: N=1), 2 : 67.70 % 
-p(H0: N=1), 3: 7.55 % 
-p(H0: N=1), 4: 15.47 % 
-p(H0: N=1), 5: 26.14 % 
-p(H0: N=1), 6: 34.29 % 
-p(H0: N=2), 3 : 2.54 % 
-p(H0: N=2), 4 : 7.92 % 
-p(H0: N=2), 5 : 16.54 % 
-p(H0: N=2), 6 : 24.28 % 
-p(H0: N=3), 4 : 78.13 % 
-p(H0: N=3), 5 : 95.37 % 
-p(H0: N=3), 6 : 92.52 % 
-p(H0: N=4), 5 : 89.39 % 
-p(H0: N=4), 6 : 82.12 % 
-p(H0: N=5), 6 : 53.96 % 
- X 0 0 0 0 0 
- X X 3 0 0 0 
- X X X 0 0 0 
- X X X X 0 0 
- X X X X X 0 
- X X X X X X 
-Selected N = 1
-
-
-Centrality Bins, fit with FF 
-cBin 0 ~ 181, pT 12 ~ 15 GeV/c 
-p(H0: N=1), 2 : 97.71 % 
-p(H0: N=1), 3: 3.85 % 
-p(H0: N=1), 4: 8.81 % 
-p(H0: N=1), 5: 10.57 % 
-p(H0: N=1), 6: 17.10 % 
-p(H0: N=2), 3 : 1.07 % 
-p(H0: N=2), 4 : 3.80 % 
-p(H0: N=2), 5 : 5.41 % 
-p(H0: N=2), 6 : 10.15 % 
-p(H0: N=3), 4 : 88.01 % 
-p(H0: N=3), 5 : 57.00 % 
-p(H0: N=3), 6 : 74.65 % 
-p(H0: N=4), 5 : 29.39 % 
-p(H0: N=4), 6 : 54.76 % 
-p(H0: N=5), 6 : 74.84 % 
- X 0 3 0 0 0 
- X X 3 4 0 0 
+cBin 0 ~ 181, pT 9 ~ 15 GeV/c 
+p(H0: N=1), 2 : 77.30 % 
+p(H0: N=1), 3: 1.20 % 
+p(H0: N=1), 4: 2.06 % 
+p(H0: N=1), 5: 4.48 % 
+p(H0: N=1), 6: 8.10 % 
+p(H0: N=2), 3 : 0.31 % 
+p(H0: N=2), 4 : 0.79 % 
+p(H0: N=2), 5 : 2.16 % 
+p(H0: N=2), 6 : 4.54 % 
+p(H0: N=3), 4 : 33.38 % 
+p(H0: N=3), 5 : 63.50 % 
+p(H0: N=3), 6 : 81.10 % 
+p(H0: N=4), 5 : 100.00 % 
+p(H0: N=4), 6 : 98.72 % 
+p(H0: N=5), 6 : 82.10 % 
+ X 0 3 4 5 0 
+ X X 3 4 5 0 
  X X X 0 0 0 
  X X X X 0 0 
  X X X X X 0 
@@ -402,6 +376,8 @@ Selected N = 4
 LLR test for 3S 
 ===================================== 
 
+Centrality Bins, fit with FF 
+cBin 0 ~ 181, pT 0 ~ 30 GeV/c 
 Centrality Bins, fit with FF 
 cBin 0 ~ 20, pT 0 ~ 30 GeV/c 
 p(H0: N=1), 2 : 0.88 % 
@@ -503,7 +479,7 @@ p(H0: N=5), 6 : 36.84 %
  X X X X 0 0 
  X X X X X 0 
  X X X X X X 
-Selected N = 1
+Selected N = 4
 
 
 Centrality Bins, fit with FF 
@@ -584,8 +560,6 @@ p(H0: N=5), 6 : 84.55 %
 Selected N = 1
 
 
-Centrality Bins, fit with FF 
-cBin 0 ~ 181, pT 0 ~ 30 GeV/c 
 ===================================== 
 Centrality Bins, fit with FF 
 cBin 0 ~ 181, pT 0 ~ 4 GeV/c 
