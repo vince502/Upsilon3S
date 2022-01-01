@@ -5,12 +5,12 @@
 #include "yield_eff_signif.h"
 #include "TApplication.h"
 
-std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio =0.16 , int train_state =3, int bdtptMin =0, int bdtptMax = 30, string name_input_opt = "", string formula_significance= "S2", string the_opt="", bool save = true)
+std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio =0.16 , int train_state =3, int sig_state = 2, int bdtptMin =0, int bdtptMax = 30, string name_input_opt = "", string formula_significance= "S2", string the_opt="", bool save = true)
 {
   
   std::string st_opt;
   if(strcmp(name_input_opt.c_str(),"")!=0) st_opt = "_"+name_input_opt;
-  std::string output_fname = Form("%s/BDT/Significance_hist/HIST_train%dS_bdtpt_%d_%d_%ld_pt_%d-%d_rap_%d-%d_cbin_%d-%d_vp_%.4f_%s%s", workdir.Data(), train_state, bdtptMin, bdtptMax, ts, (int) ptMin, (int) ptMax, (int) (rapMin*10), (int) (rapMax*10), cBinLow, cBinHigh, cutQVP, formula_significance.c_str(), st_opt.c_str() );
+  std::string output_fname = Form("%s/BDT/Significance_hist/HIST_train%dS_for%dS_bdtpt_%d_%d_%ld_pt_%d-%d_rap_%d-%d_cbin_%d-%d_vp_%.4f_%s%s", workdir.Data(), train_state, sig_state, bdtptMin, bdtptMax, ts, (int) ptMin, (int) ptMax, (int) (rapMin*10), (int) (rapMax*10), cBinLow, cBinHigh, cutQVP, formula_significance.c_str(), st_opt.c_str() );
   TFile* HISTFILE = nullptr;
   HISTFILE = new TFile(Form("%s.root",output_fname.c_str()), "update" );
   std::cout << static_cast<void*>(HISTFILE) << std::endl;
@@ -33,9 +33,9 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
   int Nbins = (int) (2/interval_score);
   std::cout<< "Nbins: " <<Nbins<< std::endl;
   std::cout << interval_score << "interval, " << Nbins << "NBINS!!!!!" << std::endl;
-  string tag_BLIND = "";
-  if(info_BDT(ts)[2].find("BLIND")!=std::string::npos) tag_BLIND = "BLIND";
-  if(info_BDT(ts)[4].find("BLIND")!=std::string::npos) tag_BLIND = "BLIND";
+  string tag_BLIND = "BLIND";
+//  if(info_BDT(ts)[2].find("BLIND")!=std::string::npos) tag_BLIND = "BLIND";
+//  if(info_BDT(ts)[4].find("BLIND")!=std::string::npos) tag_BLIND = "BLIND";
   std::cout << tag_BLIND << std::endl;
 
   std::string name_input = Form("%s/BDT/BDTResult/BDTresultY3S_%ld_%s%s.root", workdir.Data(), ts, name_input_opt.c_str(), tag_BLIND.c_str());
@@ -184,13 +184,10 @@ std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, dou
 
 //Function to get BDT ratio //
 RooRealVar get_eff_acc(std::string type, std::string type2, long ts, long ts2, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int bdtptMin= 0, int bdtptMax =30, int train_state = 3, int state1 =1, int state2 =3, bool eff_old = true){
-dbg(123);
   RooRealVar eff22, eff21, eff1, eff2, nbkg;
 
   binplotter* bp = new binplotter(type, ts, ylim,pl, ph, cl, ch, blow, bhigh, bdtptMin, bdtptMax, train_state, train_state, false, eff_old);
-dbg(122);
   binplotter* bp2 = new binplotter(type2, ts2, ylim,pl, ph, cl, ch, 0.01, -1, bhigh, bdtptMin, bdtptMax, train_state, train_state, false, eff_old);
-dbg(121);
   std::cout << bp->res->GetName() << std::endl;
   bp->dump();
   bp2->dump();
@@ -241,19 +238,21 @@ RooRealVar get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, i
 
 //Function to get BDT ratio //
 RooRealVar get_eff_acc_v2(std::string type, std::string type2, long ts, long ts2, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int bdtptMin= 0, int bdtptMax =30, int train_state = 3, int state1 =1, int state2 =3, bool eff_old = true){
-dbg(123);
   RooRealVar eff22, eff21, eff1, eff2, nbkg;
 
 //  binplotter* bp = new binplotter(type, ts, ylim,pl, ph, cl, ch, blow, bhigh, bdtptMin, bdtptMax, train_state, train_state, false, eff_old);
-//dbg(122);
   binplotter* bp2 = new binplotter(type2, ts2, ylim,pl, ph, cl, ch, 0.01, -1, bhigh, bdtptMin, bdtptMax, train_state, train_state, false, eff_old);
-dbg(121);
   bp2->get_yield();
   nbkg = bp2->get_bkg();
+  RooWorkspace* wsp = (RooWorkspace*) bp2->file1->Get("workspace");
+  auto ccpdf = (TF1*) wsp->pdf("CCBkg")->asTF(*(wsp->var("mass")));
+  double bkg_under_sig_ratio = ccpdf->Integral(8.8,10.7)/ccpdf->Integral(8,14);
+  std::cout << "[get_eff_acc_v2] bkg tot: " <<  ccpdf->Integral(8,14) <<", bkg under sig: " << ccpdf->Integral(8.8,10.7) << std::endl;
+  std::cout << "[get_eff_acc_v2] bkg ratio " <<  bkg_under_sig_ratio << std::endl;
   double nSigTot = bp2->yield3S.getVal() + bp2->yield2S.getVal() + bp2->yield1S.getVal(); 
   double nSigTotErr = TMath::Sqrt(bp2->yield3S.getError() * bp2->yield3S.getError() + bp2->yield2S.getError() * bp2->yield2S.getError() + bp2->yield1S.getError()* bp2->yield1S.getError()); 
   
-  double ratio_val = nSigTot/nbkg.getVal();
+  double ratio_val = nSigTot/(nbkg.getVal()*bkg_under_sig_ratio);
   double ratio_err = ratio_val * TMath::Sqrt( (nSigTotErr/nSigTot)*(nSigTotErr/nSigTot) + (nbkg.getError()/nbkg.getVal())*(nbkg.getError()/nbkg.getVal())); 
 
   RooRealVar res_var = RooRealVar("result","",ratio_val);
@@ -265,4 +264,28 @@ RooRealVar get_eff_acc_v2(std::string type, std::string type2, long ts, double y
 };
 RooRealVar get_eff_acc_v2(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh,  int bdtptMin= 0, int bdtptMax =30,int train_state = 3,int state1 =1, int state2 =3, bool eff_old = true){
 	return	get_eff_acc_v2(type, "CB3:CC4:FF", ts, 9999999999, ylim, pl, ph, cl, ch, blow, bhigh, bdtptMin, bdtptMax, train_state, state1, state2, eff_old);
+};
+
+RooRealVar get_eff_acc_v3(std::string type, std::string type2, long ts, long ts2, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int bdtptMin= 0, int bdtptMax =30, int train_state = 3, int state1 =1, int state2 =3, bool eff_old = true){
+  RooRealVar eff22, eff21, eff1, eff2, nbkg;
+
+//  binplotter* bp = new binplotter(type, ts, ylim,pl, ph, cl, ch, blow, bhigh, bdtptMin, bdtptMax, train_state, train_state, false, eff_old);
+  binplotter* bp2 = new binplotter(type2, ts2, ylim,pl, ph, cl, ch, 0.01, -1, bhigh, bdtptMin, bdtptMax, train_state, train_state, false, eff_old);
+  bp2->get_yield();
+  nbkg = bp2->get_bkg();
+  double nSigTot = bp2->yield3S.getVal() + bp2->yield2S.getVal(); 
+  double nSigTotErr = TMath::Sqrt(bp2->yield3S.getError() * bp2->yield3S.getError() + bp2->yield2S.getError() * bp2->yield2S.getError() ); 
+  
+  double ratio_val = nSigTot/nbkg.getVal();
+  double ratio_err = ratio_val * TMath::Sqrt( (nSigTotErr/nSigTot)*(nSigTotErr/nSigTot) + (nbkg.getError()/nbkg.getVal())*(nbkg.getError()/nbkg.getVal())); 
+
+  RooRealVar res_var = RooRealVar("result","",ratio_val);
+  res_var.setError(ratio_err); 
+  return res_var;
+};
+RooRealVar get_eff_acc_v3(std::string type, std::string type2, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh, int bdtptMin= 0, int bdtptMax =30, int train_state = 3 ,int state1 =1, int state2 =3, bool eff_old = true){
+	return	get_eff_acc_v3(type, type2, ts, ts, ylim, pl, ph, cl, ch, blow, bhigh,bdtptMin, bdtptMax,  train_state, state1, state2, eff_old);
+};
+RooRealVar get_eff_acc_v3(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh,  int bdtptMin= 0, int bdtptMax =30,int train_state = 3,int state1 =1, int state2 =3, bool eff_old = true){
+	return	get_eff_acc_v3(type, "CB3:CC4:FF", ts, 9999999999, ylim, pl, ph, cl, ch, blow, bhigh, bdtptMin, bdtptMax, train_state, state1, state2, eff_old);
 };

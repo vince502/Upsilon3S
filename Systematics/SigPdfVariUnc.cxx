@@ -4,10 +4,10 @@
 bool isDR = false;
 
 double getSigPdfVariUnc(ana_bins x){
-	int pl, ph, cl, ch, state, bpl, bph;
-	pl = x.pl; ph = x.ph; cl = x.cl; ch = x.ch; state = x.state; bpl = x.bpl; bph = x.bph;
-	int train_state = state;
+	int pl, ph, cl, ch, train_state, state, bpl, bph;
+	pl = x.pl; ph = x.ph; cl = x.cl; ch = x.ch; train_state = x.train_state; state = x.state; bpl = x.bpl; bph = x.bph;
 	long ts = 9999999999;
+	if( ts == 9999999999 ) train_state = state;
 	string fittype = (strcmp(x.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 	auto AICres = AICGOF_test(x);
 	string bkgNom = AICres[0].second;

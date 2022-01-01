@@ -116,8 +116,8 @@ std::vector< std::string > info_BDT(long ts, std::string aux = "")
 	}
 
 };
-double Get_BDT(long ts, int state, int bdtptMin, int bdtptMax, int ptMin, int ptMax, int cBinLow, int cBinHigh, double vcut =0.00, double rap = 2.4, int signif_ = 2, string opt= ""){
-  string name_file = Form("%s/BDT/Significance_hist/HIST_train%dS_bdtpt_%d_%d_%ld_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_vp_%.4f_S%d.root", workdir.Data(), state, bdtptMin, bdtptMax, ts, ptMin, ptMax, (int) (rap*10), (int) (rap*10), cBinLow, cBinHigh, vcut, signif_);
+double Get_BDT(long ts, int train_state, int state, int bdtptMin, int bdtptMax, int ptMin, int ptMax, int cBinLow, int cBinHigh, double vcut =0.00, double rap = 2.4, int signif_ = 2, string opt= ""){
+  string name_file = Form("%s/BDT/Significance_hist/HIST_train%dS_for%dS_bdtpt_%d_%d_%ld_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_vp_%.4f_S%d.root", workdir.Data(), train_state, state, bdtptMin, bdtptMax, ts, ptMin, ptMax, (int) (rap*10), (int) (rap*10), cBinLow, cBinHigh, vcut, signif_);
   TFile* input_file;
   TNamed* key;
   string BDTkey = "latest";
@@ -133,8 +133,8 @@ double Get_BDT(long ts, int state, int bdtptMin, int bdtptMax, int ptMin, int pt
 };
 
 
-std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio =0.16, int train_state =3, int bdtptMin = 0, int bdtptMax = 30 , string name_input_opt = "", string formula_significance= "S2", string the_opt ="", bool save = true);
-std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, RooRealVar r_ratio, int train_state =3, int bdtptMin = 0, int bdtptMax = 30 , string name_input_opt = "", string formula_significance= "S2");
+std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio =0.16, int train_state =3, int sig_state = 2, int bdtptMin = 0, int bdtptMax = 30 , string name_input_opt = "", string formula_significance= "S2", string the_opt ="", bool save = true);
+std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, RooRealVar r_ratio, int train_state =3, int sig_state =2, int bdtptMin = 0, int bdtptMax = 30 , string name_input_opt = "", string formula_significance= "S2");
 
 RooRealVar get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh,int train_state =3 , int bdtptMin = 0, int bdtptMax = 30,  int state1 =1, int state2 = 3, bool eff_old = false);
 
@@ -146,7 +146,7 @@ struct ana_bins{
 //	ana_bins() =default ;
 //	ana_bins(TString _bin_attr, int _pl, int _ph, int _cl, int _ch, int _centl, int _centh, int _plot_idx, int _state){ bin_attr = _bin_attr; pl = _pl ; ph = _ph; cl = _cl; ch = _ch; centl = _centl; centh = _centh; plot_idx =_plot_idx; state = _state;};
 	string bin_attr, bkgopt;
-	int bpl, bph, pl, ph, cl, ch, centl, centh, plot_idx, state;
+	int bpl, bph, pl, ph, cl, ch, centl, centh, plot_idx, state, train_state;
 	bool operator==( ana_bins a){
 		return ((a.pl==pl&&a.ph==ph&&a.cl==cl&&a.ch==ch&&a.state==state) || (a.pl==pl&&a.ph==ph&&a.centl==centl&&a.centh==centh&&a.state==state) );
 	};
@@ -160,51 +160,93 @@ struct ana_bins{
 //#endif
 
 double Get_BDT(long ts, ana_bins x, int bdtptMin, int bdtptMax, double vcut =0.00, double rap =2.4, int signif_ =2, string opt_ = ""){
-  return Get_BDT(ts, x.state, bdtptMin, bdtptMax, x.pl, x.ph, x.cl, x.ch, vcut, rap, signif_, opt_);
+  return Get_BDT(ts, x.train_state, x.state, bdtptMin, bdtptMax, x.pl, x.ph, x.cl, x.ch, vcut, rap, signif_, opt_);
 };
 double Get_BDT(long ts, ana_bins x, string opt_= "", double vcut =0.00, double rap =2.4, int signif_ =2){
-  return Get_BDT(ts, x.state, x.bpl, x.bph, x.pl, x.ph, x.cl, x.ch, vcut, rap, signif_, opt_);
+  return Get_BDT(ts, x.train_state, x.state, x.bpl, x.bph, x.pl, x.ph, x.cl, x.ch, vcut, rap, signif_, opt_);
 };
 
 //bkgopt : 1 (EE), 2(EX), 3(CC)
 std::map<std::string, std::vector<ana_bins> > ana_bm ={
 	{"2c", 	{
-		{"i", "", 0, 30, 0, 30, 0, 181, 0, 90, 9, 2},
-		{"c", "", 0, 30, 0, 30,  0, 20, 0, 10, 8, 2},
-		{"c", "", 0, 30, 0, 30, 20, 40, 10, 20, 7, 2},
-		{"c", "", 0, 30, 0, 30, 40, 60, 20, 30, 6, 2},
-		{"c", "", 0, 30, 0, 30, 60, 80, 30, 40, 5, 2},
-		{"c", "", 0, 30, 0, 30, 80, 100, 40, 50, 4, 2},
-		{"c", "", 0, 30, 0, 30, 100, 120, 50, 60, 3, 2},
-		{"c", "", 0, 30, 0, 30, 120, 140, 60, 70, 2, 2},
-		{"c", "", 0, 30, 0, 30, 140, 181, 70, 90, 1, 2},
+		{"i", "", 0, 30, 0, 30, 0, 181, 0, 90, 9, 2,2},
+		{"c", "", 0, 30, 0, 30,  0, 20, 0, 10, 8, 2,2},
+		{"c", "", 0, 30, 0, 30, 20, 40, 10, 20, 7, 2,2},
+		{"c", "", 0, 30, 0, 30, 40, 60, 20, 30, 6, 2,2},
+		{"c", "", 0, 30, 0, 30, 60, 80, 30, 40, 5, 2,2},
+		{"c", "", 0, 30, 0, 30, 80, 100, 40, 50, 4, 2,2},
+		{"c", "", 0, 30, 0, 30, 100, 120, 50, 60, 3, 2,2},
+		{"c", "", 0, 30, 0, 30, 120, 140, 60, 70, 2, 2,2},
+		{"c", "", 0, 30, 0, 30, 140, 181, 70, 90, 1, 2,2},
 		}
 	},
 	{"3c", 	{
-		{"i", "", 0, 30, 0, 30, 0, 181, 0, 90, 8, 3},
-		{"c", "", 0, 30, 0, 30,  0, 20, 0, 10, 7, 3},
-		{"c", "", 0, 30, 0, 30, 20, 40, 10, 20, 6, 3},
-		{"c", "", 0, 30, 0, 30, 40, 60, 20, 30, 5, 3},
-		{"c", "", 0, 30, 0, 30, 60, 80, 30, 40, 4, 3},
-		{"c", "", 0, 30, 0, 30, 80, 100, 40, 50, 3, 3},
-		{"c", "", 0, 30, 0, 30, 100, 140, 50, 70, 2, 3},
-		{"c", "", 0, 30, 0, 30, 140, 181, 70, 90, 1, 3},
+		{"i", "", 0, 30, 0, 30, 0, 181, 0, 90, 7, 3,3},
+		{"c", "", 0, 30, 0, 30,  0, 40, 0, 20, 6, 3,3},
+//		{"c", "", 0, 30, 0, 30, 20, 40, 10, 20, 6, 3,3},
+		{"c", "", 0, 30, 0, 30, 40, 60, 20, 30, 5, 3,3},
+		{"c", "", 0, 30, 0, 30, 60, 80, 30, 40, 4, 3,3},
+		{"c", "", 0, 30, 0, 30, 80, 100, 40, 50, 3, 3,3},
+		{"c", "", 0, 30, 0, 30, 100, 140, 50, 70, 2, 3,3},
+		{"c", "", 0, 30, 0, 30, 140, 181, 70, 90, 1, 3,3},
 		}
 	},
 	{"2p", 	{
-		{"p", "", 0, 3, 0, 3,  0, 181, 0, 90, 1, 2},
-		{"p", "", 3, 6, 3, 6,  0, 181, 0, 90, 2, 2},
-		{"p", "", 6, 9, 6, 9,  0, 181, 0, 90, 3, 2},
-//		{"p", "", 9, 12, 9, 12,  0, 181, 0, 90, 4, 2},
-		{"p", "notuse2", 9, 15, 9, 15,  0, 181, 0, 90, 4, 2},
-		{"p", "", 15, 30, 15, 30,  0, 181, 0, 90, 5, 2},
+		{"p", "", 0, 3, 0, 3,  0, 181, 0, 90, 1, 2,2},
+		{"p", "", 3, 6, 3, 6,  0, 181, 0, 90, 2, 2,2},
+		{"p", "", 6, 9, 6, 9,  0, 181, 0, 90, 3, 2,2},
+//		{"p", "", 9, 12, 9, 12,  0, 181, 0, 90, 4, 2,2},
+		{"p", "notuse2", 9, 15, 9, 15,  0, 181, 0, 90, 4, 2,2},
+		{"p", "", 15, 30, 15, 30,  0, 181, 0, 90, 5, 2,2},
 		}
 	},
 	{"3p", 	{
-		{"p", "", 0, 4, 0, 4,  0, 181, 0, 90, 1, 3},
-		{"p", "", 4, 9, 4, 9,  0, 181, 0, 90, 2, 3},
-		{"p", "", 9, 15, 9, 15,  0, 181, 0, 90, 3, 3},
-		{"p", "", 15, 30, 15, 30,  0, 181, 0, 90, 4, 3},
+		{"p", "", 0, 4, 0, 4,  0, 181, 0, 90, 1, 3,3},
+		{"p", "", 4, 9, 4, 9,  0, 181, 0, 90, 2, 3,3},
+		{"p", "", 9, 15, 9, 15,  0, 181, 0, 90, 3, 3,3},
+		{"p", "", 15, 30, 15, 30,  0, 181, 0, 90, 4, 3,3},
+		}
+	},
+
+};
+std::map<std::string, std::vector<ana_bins> > ana_bm_comb ={
+	{"2c", 	{
+		{"i", "", 0, 30, 0, 30, 0, 181, 0, 90, 9, 2,3},
+		{"c", "", 0, 30, 0, 30,  0, 20, 0, 10, 8, 2,3},
+		{"c", "", 0, 30, 0, 30, 20, 40, 10, 20, 7, 2,3},
+		{"c", "", 0, 30, 0, 30, 40, 60, 20, 30, 6, 2,3},
+		{"c", "", 0, 30, 0, 30, 60, 80, 30, 40, 5, 2,3},
+		{"c", "", 0, 30, 0, 30, 80, 100, 40, 50, 4, 2,3},
+		{"c", "", 0, 30, 0, 30, 100, 120, 50, 60, 3, 2,3},
+		{"c", "", 0, 30, 0, 30, 120, 140, 60, 70, 2, 2,3},
+		{"c", "", 0, 30, 0, 30, 140, 181, 70, 90, 1, 2,3},
+		}
+	},
+	{"3c", 	{
+		{"i", "", 0, 30, 0, 30, 0, 181, 0, 90, 7, 3,3},
+		{"c", "", 0, 30, 0, 30,  0, 40, 0, 20, 6, 3,3},
+//		{"c", "", 0, 30, 0, 30, 20, 40, 10, 20, 6, 3,3},
+		{"c", "", 0, 30, 0, 30, 40, 60, 20, 30, 5, 3,3},
+		{"c", "", 0, 30, 0, 30, 60, 80, 30, 40, 4, 3,3},
+		{"c", "", 0, 30, 0, 30, 80, 100, 40, 50, 3, 3,3},
+		{"c", "", 0, 30, 0, 30, 100, 140, 50, 70, 2, 3,3},
+		{"c", "", 0, 30, 0, 30, 140, 181, 70, 90, 1, 3,3},
+		}
+	},
+	{"2p", 	{
+		{"p", "", 0, 3, 0, 3,  0, 181, 0, 90, 1, 2,3},
+		{"p", "", 3, 6, 3, 6,  0, 181, 0, 90, 2, 2,3},
+		{"p", "", 6, 9, 6, 9,  0, 181, 0, 90, 3, 2,3},
+//		{"p", "", 9, 12, 9, 12,  0, 181, 0, 90, 4, 2,3},
+		{"p", "notuse2", 9, 15, 9, 15,  0, 181, 0, 90, 4, 2,3},
+		{"p", "", 15, 30, 15, 30,  0, 181, 0, 90, 5, 2,3},
+		}
+	},
+	{"3p", 	{
+		{"p", "", 0, 4, 0, 4,  0, 181, 0, 90, 1, 3,3},
+		{"p", "", 4, 9, 4, 9,  0, 181, 0, 90, 2, 3,3},
+		{"p", "", 9, 15, 9, 15,  0, 181, 0, 90, 3, 3,3},
+		{"p", "", 15, 30, 15, 30,  0, 181, 0, 90, 4, 3,3},
 		}
 	},
 

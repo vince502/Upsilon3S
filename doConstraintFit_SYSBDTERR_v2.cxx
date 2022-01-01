@@ -61,7 +61,7 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0) mutable {
 	if( _step ==-1) {ratio = sb_ratio.getVal() - sb_ratio.getError(); systype = "SYSDOWN";}
 	std::cout << "sb_ratio: " << sb_ratio.getVal() <<", err: " << sb_ratio.getError()<< std::endl;
 	std::cout << "ratio: " << ratio << std::endl;
-  auto res_GOB = Get_Optimal_BDT(ts,ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP , ratio, train_state,bdtptMin, bdtptMax, "", "S2", systype.c_str());
+  auto res_GOB = Get_Optimal_BDT(ts,ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP , ratio, train_state, state, bdtptMin, bdtptMax, "", "S2", systype.c_str());
   auto res_GOB_ref = Get_Optimal_BDT(ts,ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP , sb_ratio.getVal(), train_state,bdtptMin, bdtptMax, "", "S2", "SX");
   double res_blow = res_GOB.first;
   double res_blow_ref = res_GOB_ref.first;

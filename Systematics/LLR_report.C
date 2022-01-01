@@ -1,6 +1,11 @@
 #include "LLR_bkgPDF.cxx"
 #include <fstream>
 
+#define _TS_LLRINTERNAL 10000000002
+#if _TS_LLRINTERAL != 9999999999
+#	define ana_bm ana_bm_comb
+#endif
+
 bool vecfind(std::vector<int> v_, int t){
 	return (bool) (std::find(v_.begin(), v_.end(), t) !=v_.end());
 };
@@ -9,13 +14,13 @@ std::string findtype(int pl, int ph, int cl, int ch, int ccorder);
 std::string findtype(ana_bins x, int ccorder);
 void LLR_report()
 {
-  	long ts = 9999999999;
+  	long ts = _TS_LLRINTERNAL;
 	ofstream report, value_header, texout;
-	report.open("LLR_Result_UPSILON_ChebyChev_poly.txt", std::ios_base::out);
+	report.open(Form("LLR_Result_UPSILON_ChebyChev_poly_%ld.txt", ts), std::ios_base::out);
 	report << "Likelihood Ratio test for Upsilon 2S and 3S for ChevyChev Background PDF ordrering" << std::endl;
-	value_header.open("../LLR_CCorder.h", std::ios_base::out);
-	value_header << "#pragma once\n#include\"./BDT/bininfo.h\"\n#include <map>\n#define GETBKGO\nint getNomBkgO(int state, int pl, int ph, int cl, int ch)\n{\n";
-	texout.open("LLR_result.tex");
+	value_header.open(Form("../LLR_CCorder_%ld.h",ts), std::ios_base::out);
+	value_header << "#pragma once\n#include\"./BDT/bininfo.h\"\n#include <map>\n#define GETBKGO\nint getNomBkgO_"<< ts<<"(int state, int pl, int ph, int cl, int ch)\n{\n";
+	texout.open(Form("LLR_result_%ld.tex",ts));
 	texout << "\\subsection{Likelihood-ratio test}\n";
 
 	int pl, ph, cl, ch;
@@ -217,7 +222,7 @@ void LLR_report()
 	run_report(3);
 	report << "===================================== ";
 	report.close();
-	value_header << "	else return -1;\n};\n#ifdef GETBKGO\n#define GETBKGO2\nint getNomBkgO(ana_bins x){\n	return getNomBkgO(x.state, x.pl, x.ph, x.cl, x.ch);\n};\n#endif";
+	value_header << "	else return -1;\n};\n#ifdef GETBKGO\n#define GETBKGO2\nint getNomBkgO_"<<ts<<"(ana_bins x){\n	return getNomBkgO_"<<ts<<"(x.state, x.pl, x.ph, x.cl, x.ch);\n};\n#endif";
 	value_header.close();
 	texout.close();
 		

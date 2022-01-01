@@ -158,7 +158,7 @@ auto fixfit = [&](double cBinBDTcut) mutable {
 	{"alpha", {map_keyval_2["alpha"].first, 1.0, -1}},
 	{"var_n", {map_keyval_2["n"].first, 1.0, -1}},
 	{"frac", {map_keyval_2["frac"].first, 0.01, -1}},
-	{"massCut", { 0,8,11.5 }},
+//	{"massCut", { 0,8,11.5 }},
 	{"frac2", {map_keyval_2["frac2"].first, 0, -1} }, 
 	{"xNS", {map_keyval_2["x1S"].first,0,-1}}, 
 	{"xNS_2", {map_keyval_2["x1S_2"].first,0,-1}},
@@ -178,7 +178,7 @@ state =3;
   for( auto ap : ana_bm){
 	  for( auto ab : ap.second){
 //		if( !((ab.bin_attr.find("i")!=std::string::npos && ab.state ==3))) continue;
-		if( !(ab.cl==80&&ab.ch==100&&(ab.bin_attr.find("c")!=std::string::npos && ab.state ==3))) continue;
+		if( !(ab.cl==20&&ab.ch==40&&(ab.bin_attr.find("c")!=std::string::npos && ab.state ==3))) continue;
 //		if( !(ab.pl==0&&ab.ph==4&&(ab.bin_attr.find("p")!=std::string::npos && ab.state ==3))) continue;
 		string fittype = (strcmp(ab.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 	  	ptMin = ab.pl;
@@ -213,9 +213,9 @@ state =3;
 
 					}
 				if(bkgNom.find("EE")!=std::string::npos){
-		    		bkg_val  = {2.5, 8.0, 1.3,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-		    		bkg_low  = {1.0, 1.0, 0.1,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
-		    		bkg_high = {19, 10.0, 9.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
+		    		bkg_val  = {7.5, 6.0, 1.3,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		    		bkg_low  = {1.0, 1.0, 0.3,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
+		    		bkg_high = {9, 10.0, 4.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
 					fixfit(cbl);
 					}
 				if(bkgNom.find("EX")!=std::string::npos){

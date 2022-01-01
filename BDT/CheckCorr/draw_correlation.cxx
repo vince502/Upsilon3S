@@ -47,29 +47,29 @@ void draw_correlation(){
     int __v1i, __v2i;
     switch(var1_type){
       case "F":
-        t0-SetBranchAddress(var1.c_str(),&_v1d);
-        t1-SetBranchAddress(var1.c_str(),&__v1d);
+        t0->SetBranchAddress(var1.c_str(),&_v1d);
+        t1->SetBranchAddress(var1.c_str(),&__v1d);
 	break;
       case "I":
-        t0-SetBranchAddress(var1.c_str(),&_v1i);
-        t1-SetBranchAddress(var1.c_str(),&__v1i);
+        t0->SetBranchAddress(var1.c_str(),&_v1i);
+        t1->SetBranchAddress(var1.c_str(),&__v1i);
 	break;
       case "B":
-        t0-SetBranchAddress(var1.c_str(),&_v1b);
-        t1-SetBranchAddress(var1.c_str(),&__v1b);
+        t0->SetBranchAddress(var1.c_str(),&_v1b);
+        t1->SetBranchAddress(var1.c_str(),&__v1b);
 	break;
     switch(var2_type){
       case "F":
-        t0-SetBranchAddress(var1.c_str(),&_v2d);
-        t1-SetBranchAddress(var1.c_str(),&__v2d);
+        t0->SetBranchAddress(var1.c_str(),&_v2d);
+        t1->SetBranchAddress(var1.c_str(),&__v2d);
 	break;
       case "I":
-        t0-SetBranchAddress(var1.c_str(),&_v2i);
-        t1-SetBranchAddress(var1.c_str(),&__v2i);
+        t0->SetBranchAddress(var1.c_str(),&_v2i);
+        t1->SetBranchAddress(var1.c_str(),&__v2i);
 	break;
       case "B":
-        t0-SetBranchAddress(var1.c_str(),&_v2b);
-        t1-SetBranchAddress(var1.c_str(),&__v2b);
+        t0->SetBranchAddress(var1.c_str(),&_v2b);
+        t1->SetBranchAddress(var1.c_str(),&__v2b);
 	break;
 
     const int i0 = t0->GetEntries();

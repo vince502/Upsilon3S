@@ -4,7 +4,7 @@
 #cd Macros
 #root -l -b -q 'DrawYield.C(80000000027)'
 function TRAINER {
-	root -l -b -q "BDTClassifier_BLIND_BDT.C("$TS", "$OPT", "$DATPREP")" 2>&1| tee BDT"$TS".log
+	root -l -b -q "BDTClassifier_BLIND_BDTCENT.C("$TS", "$OPT", "$DATPREP")" 2>&1| tee BDT"$TS".log
 	root -l -b -q "BDTNominalProcess.cxx("$TS",0, {{0,30}})"
 #	root -l -b -q "BDTNominalProcess.cxx("$TS",1, {{0,30}})"
 }
@@ -258,9 +258,18 @@ OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=AdaBoost:AdaBoost
 TS=8000000062 #FROM 61 Found Error in Mass Range Without QQMassErr
 DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
 OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=AdaBoost:AdaBoostBeta=0.2:UseBaggedBoost=True:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=-1:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
-TRAINER_LOWPT #<< GREAT!
+#TRAINER_LOWPT #<< GREAT!
+#./runBDTFit.sh $TS 
+TS=8000000100 #FROM 61 Found Error in Mass Range Without QQMassErr
+DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.7:UseBaggedBoost=True:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=200:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
+#TRAINER
+#./runBDTFit.sh $TS ############CHECK THE CONSEQUENCES!###############
+TS=8000000101 #FROM 61 Found Error in Mass Range Without QQMassErr
+DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
+OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta=0.7:UseBaggedBoost=True:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=200:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D+G+D\"""
+TRAINER
 ./runBDTFit.sh $TS ############CHECK THE CONSEQUENCES!###############
-
 #TS=8200000006
 #ONECYCLE
 #TS=8200000008

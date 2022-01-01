@@ -1,15 +1,14 @@
 #pragma once
 #include "yield_eff_signif.h"
 #include "Get_Optimal_BDT.cxx"
-#include "../LLR_CCorder.h"
 #include "../script_tools.h"
 
 binplotter::binplotter(){};
 
 #ifdef GETBKGOX
-binplotter::binplotter(ana_bins x, int _train_state, int _bdtptMin, int _bdtptMax ){
+binplotter::binplotter(ana_bins x, int _bdtptMin, int _bdtptMax ){
   type = Form("CB3:CC%d:%s", getNomBkgO(x), findtype(x).c_str()) ;
-  ts = 9999999999; ylim = 2.4, pl = (double) x.pl; ph = (double) x.ph; cl = x.cl; ch = x.ch; blow = Get_BDT(ts, x.state, pl, ph, cl, ch, 0., ylim, 2); bhigh = 1; bdtptMin = _bdtptMin; bdtptMax = _bdtptMax; train_state = x.state; eff_old = false; train_state = _train_state;
+  ts = 9999999999; ylim = 2.4, pl = (double) x.pl; ph = (double) x.ph; cl = x.cl; ch = x.ch; blow = Get_BDT(ts, x.train_state, x.state, pl, ph, cl, ch, 0., ylim, 2); bhigh = 1; bdtptMin = _bdtptMin; bdtptMax = _bdtptMax; train_state = x.state; eff_old = false; train_state = x.train_state;
   init(false);
 };
 #endif
@@ -22,9 +21,9 @@ binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _
   init(find_bdt);
 };
 
-binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _bdtptMin, int _bdtptMax, int _train_state =3, int _target_state=3,  bool find_bdt = false, bool _eff_old = false) : binplotter( _type, _ts, _ylim, _pl, _ph, _cl, _ch, 0, _blow, _bhigh, _bdtptMin, _bdtptMax, _train_state, _train_state, find_bdt, _eff_old){};
+//binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _bdtptMin, int _bdtptMax, int _train_state =3, int _target_state=3,  bool find_bdt = false, bool _eff_old = false) : binplotter( _type, _ts, _ylim, _pl, _ph, _cl, _ch, 0, _blow, _bhigh, _bdtptMin, _bdtptMax, _train_state, _target_state, find_bdt, _eff_old){};
 
-binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _bdtptMin, int _bdtptMax, int _train_state =3, bool find_bdt = false, bool _eff_old = false) : binplotter( _type, _ts, _ylim, _pl, _ph, _cl, _ch, 0., _blow, _bhigh, _bdtptMin, _bdtptMax, _train_state, _train_state, find_bdt, _eff_old){};
+binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _bdtptMin, int _bdtptMax, int _train_state =3, int _target_state =3,  bool find_bdt = false, bool _eff_old = false) : binplotter( _type, _ts, _ylim, _pl, _ph, _cl, _ch, 0., _blow, _bhigh, _bdtptMin, _bdtptMax, _train_state, _target_state, find_bdt, _eff_old){};
 
 binplotter::~binplotter(){ 
 	std::cout << "[bp][Deconstruct] call" << std::endl;
@@ -167,8 +166,8 @@ RooRealVar binplotter::get_bkg(int state = 3)
       std::cout << "BKG YIELD: " <<  nBkg.getVal() << ", frac: " << bkg_frac << std::endl;
     }
   }
-  RooRealVar res_var = RooRealVar(Form("%dSBKG", state),"", bkg_frac*nBkg.getVal());
-  res_var.setError(bkg_frac*nBkg.getError());
+  RooRealVar res_var = RooRealVar(Form("%dSBKG", state),"", nBkg.getVal());
+  res_var.setError(nBkg.getError());
   return res_var;
 };
 
