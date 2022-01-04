@@ -134,9 +134,13 @@ std::vector<std::pair<double, string> > AICGOF_function(ana_bins ab, string test
 	);
 	// step 1 results
 	////Winner
-	statw stat_step1 = (AIC_res_step1[0] > AIC_res_step1[1]) ? statw{stat1, AIC_res_step1[0]} : statw{stat2, AIC_res_step1[1]};
+	statw stat_step1 = (AIC_res_step1[1] > 0.68) ? statw{stat2, AIC_res_step1[1]} : statw{stat1, AIC_res_step1[0]};
 	////Looser
-	statw stat_step1NOT = (AIC_res_step1[0] <= AIC_res_step1[1]) ? statw{stat1, AIC_res_step1[0]} : statw{stat2, AIC_res_step1[1]};
+	statw stat_step1NOT = (AIC_res_step1[1] <= 0.68 ) ? statw{stat2, AIC_res_step1[1]} : statw{stat1, AIC_res_step1[0]};
+//	statw stat_step1 = (AIC_res_step1[0] > AIC_res_step1[1]) ? statw{stat1, AIC_res_step1[0]} : statw{stat2, AIC_res_step1[1]};
+//	////Looser
+//	statw stat_step1NOT = (AIC_res_step1[0] <= AIC_res_step1[1]) ? statw{stat1, AIC_res_step1[0]} : statw{stat2, AIC_res_step1[1]};
+	std::cout << Form("[GOF] AIC test 1. : %.5f & %.5f : %s & %s", stat_step1.second, stat_step1NOT.second, stat_step1.first.first.c_str(), stat_step1NOT.first.first.c_str()) << std::endl;
 
 	//# step 2. Test step 1 vs. ChebyShev ( > 95 % significance ) (Nominal)
 	dat AIC_res_step2 = AIC_statistic(

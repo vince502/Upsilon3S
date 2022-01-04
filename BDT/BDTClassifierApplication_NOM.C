@@ -184,10 +184,11 @@ void BDTClassifierApplication_NOM(long ts= 9999999999, int train_state =2, int t
   if( isMC ) Nfirstloop = (int) (tree1->GetEntries() /2) ;
   if( !isMC ) Nfirstloop = (int) tree1->GetEntries();
   std::cout << "First Loop Entries : " << Nfirstloop << std::endl;
+  std::cout << "Processing event : " << std::endl;
   for(Long64_t ievt=0; ievt< Nfirstloop;ievt++){
     tree1->GetEntry(ievt);
     outtree->GetEntry(count);
-    if (ievt%10000 == 0) std::cout << "--- ... Processing event: " << ievt << "\n";
+    if (ievt%10000 == 0) std::cout <<  ievt << " -> -> ";
     for( string name : dnamelist ){
       if( mvar[name] !=nullptr){
 	if( mdouble[name] !=nullptr) *mvar[name] = *mdouble[name];
@@ -210,14 +211,16 @@ void BDTClassifierApplication_NOM(long ts= 9999999999, int train_state =2, int t
   if(!isNew) bdt_branch->Fill();
   count ++;
   }
+  std::cout << std::endl;
   int Nstart, Nsecondloop;
   if( isMC ) {Nstart = Nfirstloop; Nsecondloop = tree1->GetEntries(); }
   if( !isMC) {Nstart = 0; Nsecondloop = tree2->GetEntries(); }
   std::cout << "Nstart : " << Nstart << ", NsecondLoop : "<< Nsecondloop << std::endl;
+  std::cout << "Processing event : " << std::endl;
   for(Long64_t ievt= Nstart; ievt< Nsecondloop;ievt++){
     tree2->GetEntry(ievt);
     outtree->GetEntry(count);
-    if (ievt%10000 == 0) std::cout << "--- ... Processing event: " << ievt << "\n";
+    if (ievt%10000 == 0) std::cout <<  ievt << " -> -> ";
     for( string name : dnamelist ){
       if( mvar[name] !=nullptr){
         if( mdouble[name] !=nullptr) *mvar[name] = *mdouble[name];
@@ -240,6 +243,7 @@ void BDTClassifierApplication_NOM(long ts= 9999999999, int train_state =2, int t
   if(!isNew) bdt_branch->Fill();
   count ++;
   }
+  std::cout << std::endl;
   if(isbbb){
 //    std::vector<std::string> bdt_info = info_BDT(ts);
 //    auto ptpair = parser_symbol( bdt_info[2],",");

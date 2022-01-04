@@ -1,7 +1,10 @@
 #pragma once
 #include "../BDT/bininfo.h"
 
-const string save_dir = Form("%s/Systemtics/data/", workdir.Data() );
+#ifndef _SAVEDIR_
+#define _SAVEDIR_
+const string save_dir = Form("%s/Systematics/data/", workdir.Data() );
+#endif
 
 void sys_wr_helper(string fout, double (*x)(ana_bins)){
 	

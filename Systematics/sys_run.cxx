@@ -1,7 +1,6 @@
 #pragma once
 #define __SYSDEF__
-//#define _TS 9999999999
-#define _TS 10000000002
+#define _TS 9999999999
 //#define _TS 10000000003
 
 #if _TS == 9999999999 && __has_include("../LLR_CCorder_9999999999.h")
@@ -22,3 +21,11 @@
 #endif
 
 #include "GOF_test.cxx"
+
+#include "NominalBKG.cxx"
+#include "BkgVariUnc.cxx"
+
+void sys_run(){
+	NominalBKG();
+	BkgVariUnc();
+}

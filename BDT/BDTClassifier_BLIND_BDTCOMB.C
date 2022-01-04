@@ -23,12 +23,16 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
 ///////////////
   binplotter *bp2s = new binplotter("CB3:CC4:FF", 9999999999, 2.4, (int) ptLow, (int) ptHigh, cBinLow, cBinHigh,0.01, -1,1, (int) ptLow, (int) ptHigh, 0, 0,false,false );
   binplotter *bp3s = new binplotter("CB3:CC4:FF", 9999999999, 2.4, (int) ptLow, (int) ptHigh, cBinLow, cBinHigh,0.01, -1,1, (int) ptLow, (int) ptHigh, 0, 0,false,false );
+  RooWorkspace* wsp = (RooWorkspace*) bp3s->file1->Get("workspace");
+  auto ccpdf = (TF1*) wsp->pdf("CCBkg")->asTF(*(wsp->var("mass")));
+  double yieldBkg = ccpdf->Integral(8.8,10.7);
   double yield2S =bp2s->get_yield(2).getVal();
   if(yield2S <=0) yield2S= bp2s->get_yield(2).getVal()+ bp2s->get_yield(2).getError();
   if(yield2S <=0) yield2S = 0;
   double yield3S =bp3s->get_yield(3).getVal();
   if(yield3S <=0) yield3S= bp3s->get_yield(3).getVal()+ bp3s->get_yield(3).getError();
   if(yield3S <=0) yield3S = 0;
+  std::cout << Form("[GOB] raw 2S, 3S yield : %.2f, %.2f ",yield2S, yield3S) << std::endl;
 
 ///////////////
   int traintree, testtree;
@@ -43,7 +47,7 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
   _ts_buf = _ts;
   _real_time = (long) tstamp;
   std::cout <<"time stamp---> " <<  tstamp << std::endl;
-  if(strcmp(opt.c_str(),"NOMINAL")==0) _ts = (long) 10000000003;
+  if(strcmp(opt.c_str(),"NOMINAL")==0) _ts = (long) 10000000004;
   std::system(Form("cat BDTClassifier_BLIND_BDTCOMB.C >> ./.past_source/_BDTClassifier_BLIND_BDTCOMB_%ld.old",(long) tstamp));
   ofstream log, log2;
 
@@ -130,24 +134,24 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
 
   }
     Double_t signalWeight     = 1;// 1.4e-6 ;
-    Double_t backgroundWeight = 0.5; //1e-3;
-	double nSigTree2S = SigTree2S->GetEntries();
-	double nSigTree3S = SigTree3S->GetEntries();
+    Double_t backgroundWeight = 1; //1e-3;
+	double nSigTree2S = 43098464.;
+	double nSigTree3S = 2.7599700e+08;
     loader1->AddSignalTree     (SigTree2S, (double) (yield2S/nSigTree2S));
     loader1->AddSignalTree     (SigTree3S, (double) (yield3S/nSigTree3S));
     loader2->AddSignalTree     (SigTree2S, (double) (yield2S/nSigTree2S));
     loader2->AddSignalTree     (SigTree3S, (double) (yield3S/nSigTree3S));
-    loader1->AddBackgroundTree (BkgTreeTrain1, backgroundWeight, "Train");
-    loader1->AddBackgroundTree (BkgTreeTest1, backgroundWeight, "Test");
-    loader2->AddBackgroundTree (BkgTreeTrain2, backgroundWeight, "Train");
-    loader2->AddBackgroundTree (BkgTreeTest2, backgroundWeight, "Test");
+    loader1->AddBackgroundTree (BkgTreeTrain1,	yieldBkg/BkgTreeTrain1->GetEntries(), "Train");
+    loader1->AddBackgroundTree (BkgTreeTest1,	yieldBkg/BkgTreeTest1->GetEntries(), "Test");
+    loader2->AddBackgroundTree (BkgTreeTrain2,	yieldBkg/BkgTreeTrain2->GetEntries(), "Train");
+    loader2->AddBackgroundTree (BkgTreeTest2,	yieldBkg/BkgTreeTest2->GetEntries(), "Test");
 
-	int nBkg_Smpl = 2*(BkgTreeTrain2->GetEntries(cut2)+ BkgTreeTrain1->GetEntries(cut2)) ;
+//	int nBkg_Smpl = 2*(BkgTreeTrain2->GetEntries(cut2)+ BkgTreeTrain1->GetEntries(cut2)) ;
 
     loader1->SetSignalWeightExpression("weight");
     loader2->SetSignalWeightExpression("weight");
 
-	datprep = datprep+ Form(":nTrain_Signal=%d:nTest_Signal=%d", nBkg_Smpl*2, nBkg_Smpl*2 );
+//	datprep = datprep+ Form(":nTrain_Signal=%d:nTest_Signal=%d", nBkg_Smpl*2, nBkg_Smpl*2 );
 
     loader1->PrepareTrainingAndTestTree( cut1, cut2, datprep.c_str());
     loader2->PrepareTrainingAndTestTree( cut1, cut2, datprep.c_str());
@@ -214,12 +218,14 @@ void BDTClassifier_BLIND_BDTCOMB( long _inputts , string _bookOpt, string _datpr
 
   std::vector<std::pair<int, int> >bin1spt = {{0,30},{0, 4},{4, 9},{9, 12},{12,30},{12, 50}};//{/*{0,30},{0,1},{1,2},{2,3},{3,4},{4,5},{5,6},{6,8},{8,10},{10,12},{18,30}*/{12,18},{12,15},{15,30}};
   std::vector<std::pair<int, int> >bin2spt = {{0,30},{9, 15},{15,30}};//{/*{0,2},{2,4},{4,6},{6,9},{9,12},{12,15},{15,20},{12,20},{12,24},{20,50},{24,50},{30,50}*/{12,50}, {15, 50}};
-  std::vector<std::pair<int, int> >bin3spt = {{0,30}/*,{0,3},{3,6},{6,9},{0, 4},{4, 9},{9, 15},{15,30}*/};//{/*{0,4},{4,9},{9,12},{12,15},{15,50},{12,24},{24,50},{12,20},{20,50},{12,30},{30,50},{15,30}*/};
+  std::vector<std::pair<int, int> >bin3spt = {{0,30}};//{/*{0,4},{4,9},{9,12},{12,15},{15,50},{12,24},{24,50},{12,20},{20,50},{12,30},{30,50},{15,30}*/};
+//  std::vector<std::pair<int, int> >bin3spt = {/*{0,30},*/{0,3},{3,6},{6,9},{0, 4},{4, 9},{9, 15},{15,30}};//{/*{0,4},{4,9},{9,12},{12,15},{15,50},{12,24},{24,50},{12,20},{20,50},{12,30},{30,50},{15,30}*/};
   if(!nomonly){
   for( auto pair : bin3spt) 
   {
   	res = BDTClassifier_BLIND_Function(3,0,pair.first,pair.second, 0,181, "NOMINAL", _inputts, _bookOpt, _datprep);
   	if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier__BDT%ld.old",(long) _real_time));
+	break;
   }
 //  for( auto pair : bin2spt) 
 //  {

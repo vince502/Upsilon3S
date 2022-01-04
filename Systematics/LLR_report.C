@@ -1,10 +1,13 @@
-#include "LLR_bkgPDF.cxx"
-#include <fstream>
+#include "../BDT/bininfo.h"
 
-#define _TS_LLRINTERNAL 10000000002
-#if _TS_LLRINTERAL != 9999999999
+#define _TS_LLRINTERNAL 10000000003
+//#define _TS_LLRINTERNAL 9999999999
+#if _TS_LLRINTERNAL != 9999999999
 #	define ana_bm ana_bm_comb
 #endif
+
+#include "LLR_bkgPDF.cxx"
+#include <fstream>
 
 bool vecfind(std::vector<int> v_, int t){
 	return (bool) (std::find(v_.begin(), v_.end(), t) !=v_.end());
@@ -127,12 +130,12 @@ void LLR_report()
 			if(idx1 ==1) continue;
 			if(eligible(1,idx1) != 1) N1over.push_back(idx1);
 		}
-		if((N1over.empty() || !(vecfind(N1over, 2)|| vecfind(N1over,3) || vecfind(N1over, 4)))&& selected_deg == 0) selected_deg =1;
+		if((N1over.empty() || !(vecfind(N1over, 2)|| vecfind(N1over,3) || vecfind(N1over,4)|| vecfind(N1over, 5)))&& selected_deg == 0) selected_deg =1;
 		for(int idx1 =1; idx1 < 6; idx1++){
 			if(idx1 ==2) continue;
 			if(eligible(2,idx1) != 2) N2over.push_back(idx1);
 		}
-		if((N2over.empty() || !(vecfind(N2over, 3)|| vecfind(N2over,4) ))&& selected_deg == 0) selected_deg =2;
+		if((N2over.empty() || !(vecfind(N2over, 3)|| vecfind(N2over,4) || vecfind(N2over,5)))&& selected_deg == 0) selected_deg =2;
 		for(int idx1 =1; idx1 < 6; idx1++){
 			if(idx1 ==3) continue;
 			if(eligible(3,idx1) != 3) N3over.push_back(idx1);

@@ -9,6 +9,8 @@ void BDTSYSHFProcess_function(long ts=1635139612, int mode =0, std::vector<std::
 		if(  mode ==0){
 			BDTClassifierApplication_SYSHF2(ts, 3, 9, 0, true, ptpair.first, ptpair.second);
 			makeRooDataset_fromBDT_NOM(ts, true, false, 3,  ptpair.first, ptpair.second );
+//			BDTClassifierApplication_SYSHF2(ts, 2, 9, 0, true, ptpair.first, ptpair.second);
+//			makeRooDataset_fromBDT_NOM(ts, true, false, 3,  ptpair.first, ptpair.second );
 		}
 		if(mode ==0){
 			BDTClassifierApplication_SYSHF2(ts, 2, 9, 0, true, ptpair.first, ptpair.second);
@@ -42,8 +44,8 @@ void BDTSYSHFProcess(int sys_step ){
 		{	9,15	},
 		{	15,30	},
 	};
-	if( sys_step == 1 ) BDTSYSHFProcess_function(ts_up,0, ptp);
-	if( sys_step == -1 ) BDTSYSHFProcess_function(ts_do,0, ptp);
+	if( sys_step == 1 || sys_step == 0 ) BDTSYSHFProcess_function(ts_up,0, ptp);
+	if( sys_step == -1 || sys_step == 0 ) BDTSYSHFProcess_function(ts_do,0, ptp);
 };
 
 

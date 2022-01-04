@@ -1,3 +1,4 @@
+#pragma once
 #include <TROOT.h>
 #include "fitter.h"
 #include "fitreslib.h"
@@ -106,12 +107,12 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   }
 
   RooRealVar* sigmaNS_1;
-  sigmaNS_1  = new RooRealVar("sigmaNS_1", "sigma of NS", 0.22, 0.02, 0.45);
+  sigmaNS_1  = new RooRealVar("sigmaNS_1", "sigma of NS", 0.12, 0.12, 0.35);
 
   RooRealVar* xNS;
 
-  xNS = new RooRealVar("xNS", "sigma ratio", 0.56, 0.01, 0.95);
-  RooRealVar* xNS_2 = new RooRealVar("xNS_2", "sigma ratio", 0.318, 0.01, 0.95);
+  xNS = new RooRealVar("xNS", "sigma ratio", 0.56, 0.01, 0.98);
+  RooRealVar* xNS_2 = new RooRealVar("xNS_2", "sigma ratio", 0.318, 0.01, 0.98);
   works1->import(*xNS);
 
   RooFormulaVar* sigmaNS_2, *sigmaNS_3;
@@ -120,9 +121,9 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
 
   RooRealVar *alpha, *n, *frac, *frac2;
   alpha = new RooRealVar("alpha", "alpha of Crystal bal1", 1.96, 1.0, 2.5 );
-  n = new RooRealVar("n", "n of Crystal ball", 1.27, 0.8, 2.2);
+  n = new RooRealVar("n", "n of Crystal ball", 1.27, 1.0, 2.7);
   frac = new RooRealVar("frac", "CB fraction", 0.13, 0.01, 0.95);
-  frac2 = new RooRealVar("frac2", "CB fraction 2", 0.25, 0.001, 0.95);
+  frac2 = new RooRealVar("frac2", "CB fraction 2", 0.25, 0.01, 0.95);
 //  if(bdtlow == -1.){
 //  PARAMSET FOR 2,3S
 //    alpha->setVal(1.866);
@@ -152,11 +153,11 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
 
   SignalNS = (RooGenericPdf*) threeCBNS;
 
-  RooRealVar* nSigNS = new RooRealVar("nSigNS", "# of NS signal", 30, 0, 10000000);
+  RooRealVar* nSigNS = new RooRealVar("nSigNS", "# of NS signal", 30, 0, 1000000000);
   if (Trig == "Ups"){
-    if(state ==1) {nSigNS->setMax(200000000); nSigNS->setVal(21000000);}
-    if(state ==2) {nSigNS->setMax(40000000); nSigNS->setVal(1000000);}
-    if(state ==3) {nSigNS->setMax(10000000); nSigNS->setVal(100000);}
+    if(state ==1) {nSigNS->setMax(20000000000); nSigNS->setVal(2100000000);}
+    if(state ==2) {nSigNS->setMax(4000000000); nSigNS->setVal(100000000);}
+    if(state ==3) {nSigNS->setMax(1000000000); nSigNS->setVal(10000000);}
   }
   RooAddPdf* model;
   model = new RooAddPdf("model", "NS", RooArgList(*SignalNS), RooArgList(*nSigNS));
@@ -167,6 +168,7 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
 //  RooMinuit m;//*nll);
 //  RooFitResult* Result = m.fit("shr");
 //  Result->SetName("fitresult_model_reducedDS");
+std::cout << "[Mass Fit MC] Is dataset Weighted? : " << reducedDS->isWeighted()<< std::endl;
 
   RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), PrefitDataFraction(0.005), Minimizer("Minuit","minimize"), NumCPU(38), Range(RangeLow, RangeHigh), /*AsymptoticError(kTRUE)*/SumW2Error(kTRUE), Extended(kTRUE));
   Result->SetName("fitresult_model_reducedDS");

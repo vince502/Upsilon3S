@@ -86,7 +86,7 @@ void makeRooDataset_fromBDT_NOM(long ts, bool cutID, bool isMC, int train_state 
   RooArgSet* argSet    = new RooArgSet(*massVar, *ptVar, *yVar, *pt1Var, *pt2Var, *eta1Var, *eta2Var,*evtWeight);
   argSet->add(*cBinVar);argSet->add(*QQVPVar); argSet->add(*BDTVar);// argSet->add(*pBDTVar);//argSet->add(*ctau3D);
   
-  RooDataSet* dataSet  = new RooDataSet(Form("dataset_Y%dSpt%dto%d", train_state, ptLow, ptHigh), " a dataset", *argSet,"weight");
+  RooDataSet* dataSet  = new RooDataSet(Form("dataset_Y%dSpt%dto%d", train_state, ptLow, ptHigh), " a dataset", *argSet);
 
   //Begin Dimuon Loop
   Int_t nEvt = tree->GetEntries();
@@ -105,15 +105,17 @@ void makeRooDataset_fromBDT_NOM(long ts, bool cutID, bool isMC, int train_state 
       eta2Var->setVal( (double)eta2 ) ;
       cBinVar->setVal( (double)cBin ) ;
       evtWeight->setVal( (double) weight) ;
+//	  std::cout << evtWeight->getVal() << std::endl;
       QQVPVar->setVal( (double)QQVtxProb ) ;
       BDTVar-> setVal( (double)BDT ) ;
 //      pBDTVar->setVal( (double)pBDT ) ;
       dataSet->add( *argSet);
 //    }
   }
+  RooDataSet* WdataSet  = new RooDataSet(Form("dataset_Y%dSpt%dto%d", train_state, ptLow, ptHigh), " a dataset", dataSet, *dataSet->get(),0,"weight");
   TFile* wf = new TFile(Form("%s/BDT/roodatasets/OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT%s.root",workdir.Data(), ts,smc.c_str()),"update");
   wf->cd();
-  dataSet->Write();
+  WdataSet->Write();
   wf->Write();
   wf->Close();
   rf->Close();

@@ -36,6 +36,7 @@ void doConstraintFit_SYSSIGPDF_v2(int step = 0){
   double cutBDTlow				= 0.0859	;
   double cutBDThigh				= 1.0		;
   RooRealVar sb_ratio					;
+  string plot_dir_opt			= "";
    std::string fname3S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC.root", ts, Trig.c_str());
    std::string fname2S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC_2S.root", ts, Trig.c_str());
    std::string fname1S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC_1S.root", ts, Trig.c_str());
@@ -55,7 +56,7 @@ void doConstraintFit_SYSSIGPDF_v2(int step = 0){
     if(state ==3) fname = fname3S;
 	std::cout << Form("%ld,%.4f, %.4f, %d, %d, %d, %d, %.4f, %.4f, %d, %d", ts, ptMin, ptMax, cBinLow, cBinHigh, train_state, state, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax) << std::endl;
     if(mode ==1 || mode ==0){
-       MassYieldFit_BDT_MC_CB2G(ts, "", fname, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, train_state, state, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax);
+       MassYieldFit_BDT_MC_CB2G(ts, "", fname, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, train_state, state, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, plot_dir_opt);
     }
 
     if(mode ==1 || mode ==2){
@@ -86,7 +87,7 @@ void doConstraintFit_SYSSIGPDF_v2(int step = 0){
        if(state ==3) mean_sigma1S1 = map_keyval["sigmaNS_1"].first*(U1S_mass/U3S_mass);
        if(state ==2) mean_sigma1S1 = map_keyval["sigmaNS_1"].first*(U1S_mass/U2S_mass);
        if(state ==1) mean_sigma1S1 = map_keyval["sigmaNS_1"].first*(U1S_mass/U1S_mass);
-      MassYieldFit_data(type, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax,  
+      MassYieldFit_data(type, train_state, state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax,  
 	  bkg_val, bkg_low, bkg_high,
       (std::map<string, params_vhl>) {
       {"massCut", { 0,fitrange.first,fitrange.second }},
@@ -101,14 +102,14 @@ void doConstraintFit_SYSSIGPDF_v2(int step = 0){
       {"mag", { 1, 0, 0 }},
       {"sb_ratio", { sb_ratio.getVal(), 0, 0}},
       {"tmp", {0,0,0} },
-      }, Nworkers);
+      }, Nworkers, plot_dir_opt);
     }
 
 };
 /////////////////////////////////////////////STEP : FREEFIT////////////////////////////////////////
   auto METHOD_FREEFIT = [&](string typef = "CB3:CC5:FF") mutable {
   std::cout << "cutBDTlow, sb_ratio in functoin : " << cutBDTlow << ", " << sb_ratio.getVal() << std::endl;
-       MassYieldFit_data(typef, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax,  
+       MassYieldFit_data(typef, train_state, state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax,  
 	  (std::vector<Double_t>) {8, 5,0.4,-0.01, -0.03},
 	  (std::vector<Double_t>) { 5, 0, 0,-0.55, -0.2}, 
 	  (std::vector<Double_t>) {10, 10,2,0.45, 0.2}, 
@@ -130,7 +131,7 @@ void doConstraintFit_SYSSIGPDF_v2(int step = 0){
       {"sb_ratio", { -1, 0, 0}},
       {"tmp", {0,0,0} },
 	  {"signal_separate", {0,0,0}},
-      }, Nworkers);
+      }, Nworkers, plot_dir_opt);
 };
 
 //////////////////////////////////////////STEP : FREE FITTING CENTRALITY/////////////////////////////////////////
@@ -159,7 +160,7 @@ auto fixfit = [&](double cBinBDTcut) mutable {
 	  map_keyval_2[keys.c_str()] = {_var->getVal(), _var->getError()};
 	}
 	long xts = ts;
-	MassYieldFit_data(type2, train_state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, xts, cBinBDTcut, cutBDThigh,  bdtptMin, bdtptMax,
+	MassYieldFit_data(type2, train_state, state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, xts, cBinBDTcut, cutBDThigh,  bdtptMin, bdtptMax,
 	bkg_val, bkg_low, bkg_high,
 	(std::map<string, params_vhl>) {
 	{"massCut", { 0,fitrange.first,fitrange.second }},
@@ -174,9 +175,11 @@ auto fixfit = [&](double cBinBDTcut) mutable {
 	{"sigmaNS_1", { map_keyval_2["sigma1S_1"].first,0,-1}},
 	{"mag", { 0, 0, 0 }},
 	{"sb_ratio", { sb_ratio.getVal(), 0, 0}},
-	}, Nworkers);
+	}, Nworkers, plot_dir_opt);
 };
   //##########################################EXECUTION CODE#########################################//
+
+plot_dir_opt = "Sys_changed_signif_v7";
 
 //Step1, First reference integrated bin fit.
 double INTBIN_BDTLOW = 0.1825;// =0.16;
@@ -187,8 +190,8 @@ state =3;
   for( auto ap : ana_bm){
 	  for( auto ab : ap.second){
 //		if( !((ab.bin_attr.find("i")!=std::string::npos && ab.state ==3))) continue;
-//		if( !(ab.cl==100&&ab.ch==140&&(ab.bin_attr.find("c")!=std::string::npos && ab.state ==3))) continue;
-		if( !(ab.pl==0&&ab.ph==4&&(ab.bin_attr.find("p")!=std::string::npos && ab.state ==3))) continue;
+		if( !(ab.cl==0&&ab.ch==20&&(ab.bin_attr.find("c")!=std::string::npos && ab.state ==3))) continue;
+//		if( !(ab.pl==0&&ab.ph==4&&(ab.bin_attr.find("p")!=std::string::npos && ab.state ==3))) continue;
 		string fittype = (strcmp(ab.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 	  	ptMin = ab.pl;
 		ptMax = ab.ph;
@@ -196,10 +199,12 @@ state =3;
 		bdtptMax = ab.bph;
 		cBinLow = ab.cl;
 		cBinHigh = ab.ch;
-		train_state = ab.state;
+		train_state = ab.train_state;
 		state = ab.state;
 
+dbg();
 	  	cutBDTlow = Get_BDT(ts, ab);
+		dbg();
 	    sb_ratio = RooRealVar("sb_ratio", "",-1);
 		bool fitdata = true;
 		if(fitdata){
@@ -211,7 +216,7 @@ state =3;
 			type2			= "CB2G:"+ bkgNom  + ":" + fittype.c_str();
 			if(strcmp(ab.bin_attr.c_str(),"c")==0){
 				double cbl = cutBDTlow;
-				cutBDTlow = Get_BDT(ts, ab.state, 0, 30, 0, 30, 0, 181, 0.00, 2.4, 2); 
+				cutBDTlow = Get_BDT(ts, ab.train_state, ab.state, 0, 30, 0, 30, 0, 181, 0.00, 2.4, 2); 
 				string bkgNomREF = AICGOF_test(ana_bm[Form("%dc",ab.state)][0])[0].second;
 				type			= "CB2G:"+ bkgNomREF  + ":" + "GC";
 				if(bkgNom.find("CC")!=std::string::npos){
@@ -239,19 +244,19 @@ state =3;
 	    			bkg_val  = {-0.4, -0.07, 0.03,  -0.001, -0.03, 0.0, 0.0, 0.0, 0.0};
 	    			bkg_low  = {-0.8, -0.6, -0.6,  -0.6, -0.5, -0.5, -0.5, -0.5, -0.5};
 	    			bkg_high = {0.6, 0.6, 0.6, 0.6, 0.6, 0.5, 0.5, 0.5, 0.5};
-		    		METHOD_MCGCDATA(2);
+		    		METHOD_MCGCDATA(1);
 					}
 				if(bkgNom.find("EE")!=std::string::npos){
 		    		bkg_val  = {8.185, 3.88, 1.45,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 		    		bkg_low  = {5.0, 2.0, 0.51,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
 		    		bkg_high = {9.3, 10.0, 2.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
-		    		METHOD_MCGCDATA(2);
+		    		METHOD_MCGCDATA(1);
 					}
 				if(bkgNom.find("EX")!=std::string::npos){
 			    	bkg_val  = {-1.1, 4.0, 1.5,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 			    	bkg_low  = {-10.0, 2.0, 0.2,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
 			    	bkg_high = {0.1 , 20.0, 3.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
-		    		METHOD_MCGCDATA(2);
+		    		METHOD_MCGCDATA(1);
 					}
 			}
 		}

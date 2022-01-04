@@ -89,8 +89,9 @@ void makeRooDataset_fromBDT(long ts, bool cutID, bool isMC, std::string aux_opt 
   //Begin Dimuon Loop
   Int_t nEvt = tree->GetEntries();
   std::cout << "nEvt :" << nEvt<< std::endl;
+  std::cout << "Fetching index : " << std::endl;
   for(int i=0; i < nEvt; i++){
-    if((i%10000)==0)std::cout<< "Fetching index : " << i << "\n";
+    if((i%10000)==0)std::cout<< i << "-> -> ";
     tree->GetEntry(i);
     if( !(fabs(dz1)<0.3&&fabs(dz2)<0.3&&fabs(dxy1)<20&&fabs(dxy2)<20&&nPixWMea1>0&&nPixWMea2>0&&nTrkWMea1>5&&nTrkWMea2>5 && pt1>3.5&&pt2>3.5) ) continue;
   //  if(!strcmp(&className,"Background")){

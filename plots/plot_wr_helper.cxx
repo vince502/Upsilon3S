@@ -1,11 +1,11 @@
 #pragma once
 #include "../BDT/bininfo.h"
 
-const string save_dir = Form("%s/plots/result/", workdir.Data() );
+const string plt_save_dir = Form("%s/plots/result/", workdir.Data() );
 
 void plot_wr_helper(string fout, RooRealVar (*x)(ana_bins, long), long ts){
 	
-	TFile* output = new TFile( (save_dir + fout).c_str(), "recreate");
+	TFile* output = new TFile( (plt_save_dir + fout).c_str(), "recreate");
 	std::vector<ana_bins> vc2, vc3, vp2, vp3;
 	vc2 = ana_bm["2c"];
     vc3 = ana_bm["3c"];
