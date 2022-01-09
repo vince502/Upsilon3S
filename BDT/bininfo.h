@@ -7,7 +7,7 @@
 #include "../fitter.h"
 #include "../fitreslib.h"
 
-static TH1D* Get_Optimal_BDT_HIST; 
+static TGraph* Get_Optimal_BDT_HIST; 
 const double interval_score = 0.05;
 
 std::string MuIDHybridSoft2018 = "nPixWMea1>0&&nPixWMea2>0&&nTrkWMea1>5&&nTrkWMea2>5&&fabs(dxy1)<0.3&&fabs(dxy2)<0.3&&fabs(dz1)<20&&fabs(dz2)<20";
@@ -132,8 +132,8 @@ double Get_BDT(long ts, int train_state, int state, int bdtptMin, int bdtptMax, 
 };
 
 
-std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio =0.16, int train_state =3, int sig_state = 2, int bdtptMin = 0, int bdtptMax = 30 , string name_input_opt = "", string formula_significance= "S2", string the_opt ="", bool save = true);
-std::pair<double,TH1D*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, RooRealVar r_ratio, int train_state =3, int sig_state =2, int bdtptMin = 0, int bdtptMax = 30 , string name_input_opt = "", string formula_significance= "S2");
+std::pair<double,TGraph*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio =0.16, int train_state =3, int sig_state = 2, int bdtptMin = 0, int bdtptMax = 30 , string name_input_opt = "", string formula_significance= "S2", string the_opt ="", bool save = true);
+std::pair<double,TGraph*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, RooRealVar r_ratio, int train_state =3, int sig_state =2, int bdtptMin = 0, int bdtptMax = 30 , string name_input_opt = "", string formula_significance= "S2");
 
 RooRealVar get_eff_acc(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh,int train_state =3 , int bdtptMin = 0, int bdtptMax = 30,  int state1 =1, int state2 = 3, bool eff_old = false);
 
@@ -194,7 +194,7 @@ std::map<std::string, std::vector<ana_bins> > ana_bm ={
 		{"p", "", 3, 6, 3, 6,  0, 181, 0, 90, 2, 2,2},
 		{"p", "", 6, 9, 6, 9,  0, 181, 0, 90, 3, 2,2},
 //		{"p", "", 9, 12, 9, 12,  0, 181, 0, 90, 4, 2,2},
-		{"p", "notuse2", 9, 15, 9, 15,  0, 181, 0, 90, 4, 2,2},
+		{"p", "", 9, 15, 9, 15,  0, 181, 0, 90, 4, 2,2},
 		{"p", "", 15, 30, 15, 30,  0, 181, 0, 90, 5, 2,2},
 		}
 	},

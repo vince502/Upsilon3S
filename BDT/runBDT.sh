@@ -93,26 +93,26 @@ OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=5%:BoostType=Grad:AdaBoostBeta
 
 function TRAINER4 {
 #	root -l -b -q "BDTClassifier_BLIND_BDTCOMB.C("$TS", "$OPT", "$DATPREP", false)" 2>&1| tee BDT"$TS".log
-	root -l -b -q "BDTNominalProcess.cxx(10000000004,0, {{0,30}})"
-#	root -l -b -q "BDTNominalProcess.cxx(10000000004,0, {{0,3}})"
-#	root -l -b -q "BDTNominalProcess.cxx(10000000004,0, {{0,4}})"
-#	root -l -b -q "BDTNominalProcess.cxx(10000000004,0, {{3,6}})"
-#	root -l -b -q "BDTNominalProcess.cxx(10000000004,0, {{6,9}})"
-#	root -l -b -q "BDTNominalProcess.cxx(10000000004,0, {{9,15}})"
-#	root -l -b -q "BDTNominalProcess.cxx(10000000004,0, {{9,15}})"
-#	root -l -b -q "BDTNominalProcess.cxx(10000000004,0, {{15,30}})"
-#	root -l -b -q "BDTNominalProcess.cxx(10000000004,0, {{0,30}})"
-#	root -l -b -q "BDTNominalProcess.cxx(10000000004,0, {{4,9}})"
-#	root -l -b -q "BDTNominalProcess.cxx(10000000004,0, {{15,30}})"
-##	root -l -b -q "BDTNominalProcess.cxx("$TS",0, {{0,30}})"
+#	root -l -b -q "BDTNominalProcess.cxx(10000000015,0, {{0,30}})"
+	root -l -b -q "BDTNominalProcess.cxx(10000000015,0, {{0,3}})"
+	root -l -b -q "BDTNominalProcess.cxx(10000000015,0, {{0,4}})"
+	root -l -b -q "BDTNominalProcess.cxx(10000000015,0, {{3,6}})"
+	root -l -b -q "BDTNominalProcess.cxx(10000000015,0, {{6,9}})"
+	root -l -b -q "BDTNominalProcess.cxx(10000000015,0, {{9,15}})"
+	root -l -b -q "BDTNominalProcess.cxx(10000000015,0, {{9,15}})"
+	root -l -b -q "BDTNominalProcess.cxx(10000000015,0, {{15,30}})"
+	root -l -b -q "BDTNominalProcess.cxx(10000000015,0, {{0,30}})"
+	root -l -b -q "BDTNominalProcess.cxx(10000000015,0, {{4,9}})"
+	root -l -b -q "BDTNominalProcess.cxx(10000000015,0, {{15,30}})"
+##	root -l -b -q "BDTNominalProcess.cxx("$TS",0, {10,30}})"
 ##	root -l -b -q "BDTNominalProcess.cxx("$TS",0, {{0,4}})"
 ##	root -l -b -q "BDTNominalProcess.cxx("$TS",0, {{4,9}})"
 ##	root -l -b -q "BDTNominalProcess.cxx("$TS",0, {{9,12}})"
 ##	root -l -b -q "BDTNominalProcess.cxx("$TS",0, {{12,30}})"
 ##	root -l -b -q "BDTNominalProcess.cxx("$TS",0, {{12,50}})"
 }
-TS=90000001043 #FROM 40
+TS=90000001053 #FROM 40
 DATPREP=""\"SplitSeed=100:SplitMode=Random:NormMode=None:!V\"""
-OPT=""\"\!H:\!V:NTrees=150:MaxDepth=2:MinNodeSize=10%:BoostType=AdaBoost:AdaBoostBeta=0.5:UseBaggedBoost=True:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=200:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D\"""
+OPT=""\"\!H:\!V:NTrees=300:MaxDepth=2:MinNodeSize=10%:BoostType=AdaBoost:AdaBoostBeta=0.4:UseBaggedBoost=True:SeparationType=CrossEntropy:PruneMethod=CostComplexity:PruneStrength=1:PruningValFraction=0.3:UseRandomisedTrees=False:BaggedSampleFraction=0.4:nCuts=200:CreateMVAPdfs:DoBoostMonitor:VarTransform=G+D\"""
 TRAINER4
 #./runBDTFit.sh ############CHECK THE CONSEQUENCES!###############

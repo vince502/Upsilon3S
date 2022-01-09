@@ -56,14 +56,14 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
 
   int ylim10 = (int) (rapMax*10);
   int DDiter =0;
-  std::pair<double, TH1D*> _hist_;
-  TH1D* signif_hist;
+  std::pair<double, TGraph*> _hist_;
+  TGraph* signif_hist;
   if( signif_ratio != -1){
     _hist_ = Get_Optimal_BDT(ts, ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP, signif_ratio, train_state, sig_state, bdtptMin, bdtptMax, "", "S2", s_bdtupdown.c_str()); 
     signif_hist = _hist_.second;
     if (signif_hist ==nullptr) {
       std::cout << "[Error] Significance plot not loaded, returning with null histogram" << std::endl;
-      new(signif_hist) TH1D("NULLPATCH", "", 1,0,1);
+      new(signif_hist) TGraph();
     }
   }
 
@@ -206,9 +206,11 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
   if(signif_ratio != -1){
 
   std::cout << "[INFO] Drawing significance HISTOgram" << std::endl;
-  signif_hist->SetStats(kFALSE);
+//  signif_hist->SetStats(kFALSE);
   signif_hist->SetFillColor(kRed);
-  signif_hist->Draw();
+  signif_hist->SetMarkerStyle(kFullCircle);
+  signif_hist->SetMarkerSize(0.5);
+  signif_hist->Draw("AP");
 
 //  signif_hist->GetXaxis()->SetRange(num_bin_signif, num_bin_signif);
   }

@@ -14,8 +14,8 @@ void doConstraintFit_NOM_combv2(int step = 0){
   std::string typenobdt 		= "CB3:CC4:FF"	;
   std::string constraints		="alpha:n:frac:frac2:xNS:xNS_2:sigmaNS_1"	;
   std::string fixvars			="alpha:n:frac:frac2:x1S:x1S_2:sigma1S_1"	;
-  long ts						= 10000000003	; 
-  long ts_2						= 10000000003	;
+  long ts						= 10000000015	; 
+  long ts_2						= 10000000015	;
   double ptMin					= 0		;
   double ptMax					= 30 		;
   int bdtptMin					= 0		;
@@ -35,6 +35,7 @@ void doConstraintFit_NOM_combv2(int step = 0){
   double cutBDTlow				= 0.0859	;
   double cutBDThigh				= 1.0		;
   RooRealVar sb_ratio					;
+  double drawonly					= 0;
    std::string fname3S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC.root", ts, Trig.c_str());
    std::string fname2S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC_2S.root", ts, Trig.c_str());
    std::string fname1S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC_1S.root", ts, Trig.c_str());
@@ -146,7 +147,7 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0, bool redo_nobdt =f
   }
   dbg();
   double res_blow;
-  std::pair<double, TH1D*> res_GOB;
+  std::pair<double, TGraph*> res_GOB;
   RooRealVar sb_ratio;
   dbg(100);
     if( _step > -10 ){
@@ -230,7 +231,8 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0, bool redo_nobdt =f
       {"sigmaNS_1", { mean_sigma1S1,0,1}},
       {"mag", { 1, 0, 0 }},
       {"sb_ratio", { sb_ratio.getVal(), 0, 0}},
-      {"tmp", {0,0,0} },
+      {"tmp", {0,0,0}},
+	  {"DrawOnly", {drawonly, 0, 0}},
       }, Nworkers, plot_dir_opt);
     }
 
@@ -260,6 +262,7 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0, bool redo_nobdt =f
       {"sb_ratio", { -1, 0, 0}},
       {"tmp", {0,0,0} },
 	  {"signal_separate", {0,0,0}},
+	  {"DrawOnly", {drawonly, 0, 0}},
       }, Nworkers, plot_dir_opt);
 };
 
@@ -323,9 +326,9 @@ state =3;
   for( auto ptpair : (std::vector<std::pair<std::pair<double, double>, std::pair<double, double> > >) {
 //  {{0,30},{0,30}},
   {{0,4}, {0,4}},
-//  {{4,9},{4,9}},
-//  {{9,15 },{9,15}} ,
-//  {{15,30},{15,30}}
+  {{4,9},{4,9}},
+  {{9,15 },{9,15}} ,
+  {{15,30},{15,30}}
   }){ 
 
     bkg_val  = {-0.4, -0.07, 0.03,  -0.001, -0.03, 0.0, 0.0, 0.0, 0.0};
@@ -338,23 +341,24 @@ state =3;
     std::pair<double, RooRealVar> res = prep_bdtval(0.2,5);
     cutBDTlow = res.first;
     sb_ratio = res.second;
-	bool fitdata = 1;
+	bool fitdata = true;
+	drawonly = 0;
 	if(fitdata){
 		Nworkers = GLOBAL_NWORKERS;
 	    if(ptpair.first.first == 0 && ptpair.first.second == 30){ INTBIN_BDTLOW = res.first; }
 	    std::cout << "cutBDTlow, sb_ratio: " << cutBDTlow << ", "<< sb_ratio.getVal() << std::endl;
 	    type 			= "CB3:CC1:GC"	;
-//	    METHOD_MCGCDATA(2);
-//	    type 			= "CB3:CC2:GC"	;
-//	    METHOD_MCGCDATA(2);
-//	    type 			= "CB3:CC3:GC"	;
-//	    METHOD_MCGCDATA(2);
-//	    type 			= "CB3:CC4:GC"	;
-//	    METHOD_MCGCDATA(2);
-//	    type 			= "CB3:CC5:GC"	;
-//	    METHOD_MCGCDATA(2);
-//	    type 			= "CB3:CC6:GC"	;
-//	    METHOD_MCGCDATA(2);
+	    METHOD_MCGCDATA(1);
+	    type 			= "CB3:CC2:GC"	;
+	    METHOD_MCGCDATA(2);
+	    type 			= "CB3:CC3:GC"	;
+	    METHOD_MCGCDATA(2);
+	    type 			= "CB3:CC4:GC"	;
+	    METHOD_MCGCDATA(2);
+	    type 			= "CB3:CC5:GC"	;
+	    METHOD_MCGCDATA(2);
+	    type 			= "CB3:CC6:GC"	;
+	    METHOD_MCGCDATA(2);
 	    type 			= "CB3:EE:GC"	;
 	    bkg_val  = {7.5, 7.0, 1.5,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 	    bkg_low  = {7.0, 3.0, 0.11,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
@@ -378,15 +382,17 @@ bdtptMin = 0;
 bdtptMax = 30;
 cutBDTlow = Get_BDT(ts, train_state, state, bdtptMin, bdtptMax, (int) ptMin, (int) ptMax, 0, 181); 
 for( auto cbinpair : (std::vector<std::pair<int, int> >) {
-//{0,20}, 
-//{0,40}, 
-//{40,80}, 
-//{20,40},
-//{40, 60},
-//{60, 80}, 
-//{80, 100},
-//{100, 140},
-{140, 181} 
+{0,20}, 
+{0,40}, 
+{40,80}, 
+{20,40},
+{40, 60},
+{60, 80}, 
+{80, 100},
+{80, 120},
+{100, 140},
+{140, 181}, 
+{120, 181} 
 }){ 
     bkg_val  = {-0.4, -0.07, 0.03,  -0.001, -0.03, 0.0, 0.0, 0.0, 0.0};
     bkg_low  = {-0.8, -0.6, -0.6,  -0.6, -0.5, -0.5, -0.5, -0.5, -0.5};
@@ -403,17 +409,17 @@ for( auto cbinpair : (std::vector<std::pair<int, int> >) {
 	if(fitdata){
 		Nworkers = GLOBAL_NWORKERS;
 	    type2			= "CB3:CC1:FF"	;
-//		fixfit(CBINBDTLOW);
-//	    type2			= "CB3:CC2:FF"	;
-//		fixfit(CBINBDTLOW);
-//	    type2			= "CB3:CC3:FF"	;
-//		fixfit(CBINBDTLOW);
-//	    type2			= "CB3:CC4:FF"	;
-//		fixfit(CBINBDTLOW);
-//	    type2			= "CB3:CC5:FF"	;
-//		fixfit(CBINBDTLOW);
-//	    type2			= "CB3:CC6:FF"	;
-//		fixfit(CBINBDTLOW);
+		fixfit(CBINBDTLOW);
+	    type2			= "CB3:CC2:FF"	;
+		fixfit(CBINBDTLOW);
+	    type2			= "CB3:CC3:FF"	;
+		fixfit(CBINBDTLOW);
+	    type2			= "CB3:CC4:FF"	;
+		fixfit(CBINBDTLOW);
+	    type2			= "CB3:CC5:FF"	;
+		fixfit(CBINBDTLOW);
+	    type2			= "CB3:CC6:FF"	;
+		fixfit(CBINBDTLOW);
 	    type2			= "CB3:EE:FF"	;
 	    bkg_val  = {2.5, 3.01, 4.111,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 	    bkg_low  = {1.0, 0.1, 0.1,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
@@ -444,8 +450,8 @@ cBinHigh = 181;
 //  {{0,30},{0,30}},
 //  {{0,3},{0,3}}, 
 //  {{3,6},{3,6}},
-//  {{6,9},{6,9}},
-//  {{9,15},{9,15}},
+  {{6,9},{6,9}},
+  {{9,15},{9,15}},
   {{15,30},{15,30}}
   }){ 
     bkg_val  = {-0.4, -0.07, 0.03,  -0.001, -0.03, 0.0, 0.0, 0.0, 0.0};
@@ -463,7 +469,7 @@ cBinHigh = 181;
 		Nworkers = GLOBAL_NWORKERS;
 	    std::cout << "cutBDTlow, sb_ratio: " << cutBDTlow << ", "<< sb_ratio.getVal() << std::endl;
 	    type 			= "CB3:CC1:GC"	;
-	    METHOD_MCGCDATA(2);
+	    METHOD_MCGCDATA(1);
 	    type 			= "CB3:CC2:GC"	;
 	    METHOD_MCGCDATA(2);
 	    type 			= "CB3:CC3:GC"	;
@@ -497,15 +503,16 @@ bdtptMin = 0;
 bdtptMax = 30;
 cutBDTlow = Get_BDT(ts, train_state, state, bdtptMin, bdtptMax, (int) ptMin, (int) ptMax, 0, 181); 
 for( auto cbinpair : (std::vector<std::pair<int, int> >) {
-//{0, 10}, 
+{0, 10}, 
 {10, 20}, 
-//{0, 20}, 
-//{20, 40},
-//{40, 60},
-//{60, 80},
-//{80, 100},
-//{100, 120},
-//{120, 140},
+{0, 20}, 
+{20, 40},
+{40, 60},
+{60, 80},
+{80, 100},
+{100, 120},
+{120, 140},
+{140, 181},
 /*{140, 160},
 {160, 181} -> too small stats*/
 }){
@@ -522,17 +529,17 @@ for( auto cbinpair : (std::vector<std::pair<int, int> >) {
 	if(fitdata){
 		Nworkers = GLOBAL_NWORKERS;
 	    type2			= "CB3:CC1:FF"	;
-//		fixfit(CBINBDTLOW);
-//	    type2			= "CB3:CC2:FF"	;
-//		fixfit(CBINBDTLOW);
-//	    type2			= "CB3:CC3:FF"	;
-//		fixfit(CBINBDTLOW);
-//	    type2			= "CB3:CC4:FF"	;
-//		fixfit(CBINBDTLOW);
-//	    type2			= "CB3:CC5:FF"	;
-//		fixfit(CBINBDTLOW);
-//	    type2			= "CB3:CC6:FF"	;
-//		fixfit(CBINBDTLOW);
+		fixfit(CBINBDTLOW);
+	    type2			= "CB3:CC2:FF"	;
+		fixfit(CBINBDTLOW);
+	    type2			= "CB3:CC3:FF"	;
+		fixfit(CBINBDTLOW);
+	    type2			= "CB3:CC4:FF"	;
+		fixfit(CBINBDTLOW);
+	    type2			= "CB3:CC5:FF"	;
+		fixfit(CBINBDTLOW);
+	    type2			= "CB3:CC6:FF"	;
+		fixfit(CBINBDTLOW);
 	    type2			= "CB3:EE:FF"	;
 	    bkg_val  = {9.8, 3.01, 3.111,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 	    bkg_low  = {1.0, 0.1, 0.1,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};

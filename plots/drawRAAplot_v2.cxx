@@ -29,10 +29,15 @@ TH1D* getPbPbRAA(int state =3, double bdt_fix=-2);
 
 // Double Ratio Finding Function
 //////////////////////////////////////////////////////////////////////////////
-RooRealVar getDoubleRatioValue(bool inc_pp_stat, std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC", double bdtlow_val = -2, int bdtptMin = 0 , int bdtptMax = 30, int train_state = 3, int state =3, int getPre = 0,long ts =9999999999, bool stdvcut = false, bool eff_old = false){
-
+//RooRealVar getDoubleRatioValue(bool inc_pp_stat, std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC", double bdtlow_val = -2, int bdtptMin = 0 , int bdtptMax = 30, int train_state = 3, int state =3, int getPre = 0,long ts =9999999999, bool stdvcut = false, bool eff_old = false){
+RooRealVar getDoubleRatioValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC2:GC" int getPre = 0,long ts =9999999999, bool stdvcut = false, bool eff_old = false){
+	int cl, ch, pl, ph, state, train_state, bpl, bph;
+	cl = ab.cl; ch = ab.ch;
+	pl = ab.pl; ph = ab.ph;
+	bpl = ab.bpl; bph = ab.bph;
+	state = ab.state; train_state = ab.train_state
    // 1625503068; //1623391157; //BLIND Nominal
-  double val_bdt_nom = Get_BDT(ts, train_state, state, bdtptMin, bdtptMax, (int) ptpair.first, (int) ptpair.second, cbpair.first, cbpair.second);
+  double val_bdt_nom = Get_BDT(ts, ab);
   std::cout << "[getDRV] val_bdt_nom : " << val_bdt_nom << std::endl;
 
   double ylim = 2.4;
@@ -44,11 +49,11 @@ RooRealVar getDoubleRatioValue(bool inc_pp_stat, std::pair <int, int> cbpair, st
   binplotter* bp ;
 
   double app_cutQVP = (stdvcut) ? 0.01 : 0.0000;
-  bp = new binplotter(type,ts, ylim, ptpair.first, ptpair.second, cbpair.first, cbpair.second, app_cutQVP, bdtpair.first, bdtpair.second, bdtptMin, bdtptMax, train_state, state, false, eff_old);
+  bp = new binplotter(type,ts, ylim, (double) pl, (double) ph, cl, ch, app_cutQVP, bdtpair.first, bdtpair.second, bpl, bph, train_state, state, false, eff_old);
 
   RooRealVar _y = bp->get_yield(state);
   if(getPre==2) return _y;
-  RooRealVar _yacc = upsi::getacceptance(ptpair.first, ptpair.second, (double) -1*ylim, ylim, 3.5, state);
+  RooRealVar _yacc = upsi::getacceptance(pl,ph, (double) -1*ylim, ylim, 3.5, state);
   auto _yeff_pair = bp->get_eff(state);
   double _yeff = _yeff_pair.first;
   RooRealVar yAA, yPP ;
@@ -56,43 +61,52 @@ RooRealVar getDoubleRatioValue(bool inc_pp_stat, std::pair <int, int> cbpair, st
   std::cout <<"##Yield "<<state<<"S Corrected y/acc eff: "<< yAA.getVal() << ", Efficiency: " << _yeff << ", Acceptance: " << _yacc.getVal() << std::endl;
   yAA.setError(_y.getError()/(_yacc.getVal()*_yeff ));
   if(getPre==1) return yAA;
-  TFile* file_pp = TFile::Open(Form("%s/fitresults_upsilon_fixParm1_seed2_DoubleCB_PP_DATA_pt%.1f-%.1f_y0.0-2.4_muPt4.0.root",hin16023.Data(), ptpair.first, ptpair.second ));
-  TFile* file_pp_eff = TFile::Open(Form("%s/efficiency_ups%ds_useDataPtWeight1_tnp_trgId0_trkId0_muId-100_staId-100.root", hin16023.Data(), state ));
-  TFile* file_pp_acc = TFile::Open(Form("%s/acceptance_wgt_norm_%dS.root", hin16023.Data(), state ));
+  TFile* file_pp =TFile::Open(Form("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/results_%dS.root",state));// TFile::Open(Form("%s/fitresults_upsilon_fixParm1_seed2_DoubleCB_PP_DATA_pt%.1f-%.1f_y0.0-2.4_muPt4.0.root",hin16023.Data(), ptpair.first, ptpair.second ));
+//  TFile* file_pp_eff = TFile::Open(Form("%s/efficiency_ups%ds_useDataPtWeight1_tnp_trgId0_trkId0_muId-100_staId-100.root", hin16023.Data(), state ));
+//  TFile* file_pp_acc = TFile::Open(Form("%s/acceptance_wgt_norm_%dS.root", hin16023.Data(), state ));
 
-  TH1D *hYpp = (TH1D*) file_pp->Get("fitResults");
-  TH1D *hApp, *hEpp, *hEpp_pt;
-  hApp = (TH1D*) file_pp_acc->Get(Form("hIntAccPP%dS",state));
-  hEpp = (TH1D*) file_pp_eff->Get("hcentintEffPP");
-  hEpp_pt = (TH1D*) file_pp_eff->Get("hptEffPP");
+  TH1D *h_cs_pp = () ? (TH1D*) file_pp->Get("hptData") : (TH1D*) file_pp->Get("hintData");
+//  TH1D *hApp, *hEpp, *hEpp_pt;
+//  hApp = (TH1D*) file_pp_acc->Get(Form("hIntAccPP%dS",state));
+//  hEpp = (TH1D*) file_pp_eff->Get("hcentintEffPP");
+//  hEpp_pt = (TH1D*) file_pp_eff->Get("hptEffPP");
 
-  double _Ypp = hYpp->GetBinContent(state);
-  double _Ypp_err = hYpp->GetBinError(state);
-  double _Ypp_acc = hApp->GetBinContent(1);
-  double _Ypp_eff = hEpp->GetBinContent(1);
-  std::cout << Form("\n[BIN] pp attrib. %.0f-%.0f GeV/c, %d-%d(/2 %%) -> yield : %.3f $\\pm$ %.3f, acc : %.3f, eff : %.3f", ptpair.first, ptpair.second, cbpair.first, cbpair.second, _Ypp, _Ypp_err, _Ypp_acc, _Ypp_eff) << std::endl;
-  if(!(ptpair.first ==0 && ptpair.second ==30 )){
-    _Ypp_eff = hEpp_pt->GetBinContent(hEpp_pt->FindBin((ptpair.first+ptpair.second)/2));
+  double cs_pp, cs_err;
+  if((ptpair.first == 0 && ptpair.second == 30 )){
+    cs_pp = h_cs_pp->GetBinContent(1);
+    cs_err = hYpp->GetBinError(1);
   }
-  yPP = RooRealVar(Form("corrY%dyieldPP", state) , Form("corrected %dS yield pp", state), _Ypp/(_Ypp_eff*_Ypp_acc));
-  yPP.setError(_Ypp_err/(_Ypp_eff*_Ypp_acc));
-  Double_t cs_pp = 28*TMath::Power(10,9);
+  else{
+    cs_pp = h_cs_pp->GetBinContent(ab.plot_idx);
+    cs_err = hYpp->GetBinError(ab.plot_idx);
+  }
+
+//  double _Ypp_acc = hApp->GetBinContent(1);
+//  double _Ypp_eff = hEpp->GetBinContent(1);
+//  std::cout << Form("\n[BIN] pp attrib. %.0f-%.0f GeV/c, %d-%d(/2 %%) -> yield : %.3f $\\pm$ %.3f, acc : %.3f, eff : %.3f", ptpair.first, ptpair.second, cbpair.first, cbpair.second, _Ypp, _Ypp_err, _Ypp_acc, _Ypp_eff) << std::endl;
+//  if(!(ptpair.first ==0 && ptpair.second ==30 )){
+//    _Ypp_eff = hEpp_pt->GetBinContent(hEpp_pt->FindBin((ptpair.first+ptpair.second)/2));
+//  }
+//  yPP = RooRealVar(Form("corrY%dyieldPP", state) , Form("corrected %dS yield pp", state), _Ypp/(_Ypp_eff*_Ypp_acc));
+//  yPP.setError(_Ypp_err/(_Ypp_eff*_Ypp_acc));
+//  Double_t cs_pp = 28*TMath::Power(10,9);
   Double_t Nmb = 11968044281.;
-  auto taa =glp::Taa[{(int) (cbpair.first/2), (int) (cbpair.second/2)}];
+  auto taa =glp::Taa[{ab.centl,ab.centh}];
 
   Double_t tirg_presc = 1.0684;
   Double_t taa_Nmb = taa.first*Nmb/tirg_presc;
-  Double_t step_one = (cs_pp)/(taa_Nmb);
-  Double_t step_two = step_one * (180./(cbpair.second - cbpair.first) );
-  Double_t val_RAA = 4.*step_two*yAA.getVal()/yPP.getVal();
-
+  Double_t step_one = (1)/(taa_Nmb * cs_pp);
+  Double_t step_one_err  = -(cs_err)/(taa_Nmb * cs_pp * cs_pp );
+  Double_t step_two = step_one * (180./(ch-cl) );
+  Double_t step_two_err = step_one_err * (180./ch-cl
+  Double_t val_RAA = 4.*step_two*yAA.getVal();
+  Double_t val_RAA_err;
+  if(inc_pp_stat) val_RAA_err = TMath::sqrt(TMath::Power(step_two_err* yAA.getVal(),2) + TMath::Power(step_two * yAA.getError(),2)); 
+  if(!inc_pp_stat) val_RAA_err = step_two * yAA.getError(); 
   std::cout << std::endl << std::endl << "RAAAAA : " << val_RAA << std::endl << std::endl;
-  Double_t err_RAA;
-  if(inc_pp_stat) err_RAA= 4*step_two*((1/yPP.getVal())*TMath::Sqrt( (yAA.getError()*yAA.getError()+ TMath::Power( (yAA.getVal()/yPP.getVal())*yPP.getError(), 2) )) ); 
-  if(!inc_pp_stat) err_RAA= 4*step_two*( yAA.getError() / yPP.getVal() ); 
 
   RooRealVar val_return = RooRealVar("raa","", val_RAA);
-  val_return.setError(err_RAA);
+  val_return.setError(val_RAA_err);
 
   return val_return;
 };
@@ -101,8 +115,8 @@ RooRealVar getDoubleRatioValue(ana_bins ab, long ts){
 	string fittype = (strcmp(ab.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 	string bkgtype = AICGOF_test(ab)[0].second;
 	string type = Form("CB3:%s:%s", bkgtype.c_str() ,fittype.c_str());
-	double bl = Get_BDT(ts, ab);
-	return getDoubleRatioValue(true, {ab.cl, ab.ch}, {(double) ab.pl, (double) ab.ph}, type, bl, ab.bpl, ab.bph, ab.train_state, ab.state, 0, ts, false, false);
+//	double bl = Get_BDT(ts, ab);
+	return getDoubleRatioValue(true, ab, type, 0, ts false, false);
 };
 
 // Centrality RAA function

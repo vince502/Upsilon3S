@@ -107,12 +107,12 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   }
 
   RooRealVar* sigmaNS_1;
-  sigmaNS_1  = new RooRealVar("sigmaNS_1", "sigma of NS", 0.12, 0.12, 0.35);
+  sigmaNS_1  = new RooRealVar("sigmaNS_1", "sigma of NS", 0.12, 0.01, 0.35);
 
   RooRealVar* xNS;
 
-  xNS = new RooRealVar("xNS", "sigma ratio", 0.56, 0.01, 0.98);
-  RooRealVar* xNS_2 = new RooRealVar("xNS_2", "sigma ratio", 0.318, 0.01, 0.98);
+  xNS = new RooRealVar("xNS", "sigma ratio", 0.56, 0.01, 0.99);
+  RooRealVar* xNS_2 = new RooRealVar("xNS_2", "sigma ratio", 0.318, 0.01, 0.99);
   works1->import(*xNS);
 
   RooFormulaVar* sigmaNS_2, *sigmaNS_3;
@@ -120,10 +120,10 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   sigmaNS_3 = new RooFormulaVar("sigmaNS_3", "@0*@1", RooArgList(*sigmaNS_1, *xNS_2));
 
   RooRealVar *alpha, *n, *frac, *frac2;
-  alpha = new RooRealVar("alpha", "alpha of Crystal bal1", 1.96, 1.0, 2.5 );
-  n = new RooRealVar("n", "n of Crystal ball", 1.27, 1.0, 2.7);
-  frac = new RooRealVar("frac", "CB fraction", 0.13, 0.01, 0.95);
-  frac2 = new RooRealVar("frac2", "CB fraction 2", 0.25, 0.01, 0.95);
+  alpha = new RooRealVar("alpha", "alpha of Crystal bal1", 1.96, 1.00, 2.50 );
+  n = new RooRealVar("n", "n of Crystal ball", 1.27, 0.80, 3.50);
+  frac = new RooRealVar("frac", "CB fraction", 0.58,	 0.01, 1.00);
+  frac2 = new RooRealVar("frac2", "CB fraction 2", 0.05, 0.01, 1.00);
 //  if(bdtlow == -1.){
 //  PARAMSET FOR 2,3S
 //    alpha->setVal(1.866);
@@ -135,19 +135,21 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
 //    xNS_2->setVal(0.30);
 //    PARAMSET FOR 1S
     alpha->setVal(1.866);
-    n->setVal(1.50);
+    n->setVal(1.80);
     sigmaNS_1->setVal(0.217);
-    frac->setVal(0.1);
-    frac2->setVal(0.32);
-    xNS->setVal(0.54);
-    xNS_2->setVal(0.30);
+    frac->setVal(0.580);
+    frac2->setVal(0.09);
+    xNS->setVal(0.541);
+    xNS_2->setVal(0.301);
 //  }
 
-  RooCBShape* CBNS_1 = new RooCBShape("CBNS_1", "NS Crystal ball function1", *(works1->var("mass")), meanNS, *sigmaNS_1, *alpha, *n);
-  RooCBShape* CBNS_2 = new RooCBShape("CBNS_2", "NS Crystal ball function2", *(works1->var("mass")), meanNS, *sigmaNS_2, *alpha, *n);
-  RooCBShape* CBNS_3 = new RooCBShape("CBNS_3", "NS Crystal ball function3", *(works1->var("mass")), meanNS, *sigmaNS_3, *alpha, *n);
+  RooCBShape *CBNS_1, *CBNS_2, *CBNS_3;
+  CBNS_1 = new RooCBShape("CBNS_1", "NS Crystal ball function1", *(works1->var("mass")), meanNS, *sigmaNS_1, *alpha, *n);
+  CBNS_2 = new RooCBShape("CBNS_2", "NS Crystal ball function2", *(works1->var("mass")), meanNS, *sigmaNS_2, *alpha, *n);
+  CBNS_3 = new RooCBShape("CBNS_3", "NS Crystal ball function3", *(works1->var("mass")), meanNS, *sigmaNS_3, *alpha, *n);
 
   RooAddPdf* threeCBNS = new RooAddPdf("threeCBNS", "Sum of NS Crystal ball", RooArgList(*CBNS_1, *CBNS_2, *CBNS_3), RooArgList(*frac, *frac2));
+  threeCBNS->fixAddCoefNormalization(RooArgList(*frac, *frac2), kTRUE);
 
   RooGenericPdf* SignalNS;
 
@@ -168,9 +170,10 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
 //  RooMinuit m;//*nll);
 //  RooFitResult* Result = m.fit("shr");
 //  Result->SetName("fitresult_model_reducedDS");
-std::cout << "[Mass Fit MC] Is dataset Weighted? : " << reducedDS->isWeighted()<< std::endl;
+//std::cout << "[Mass Fit MC] Is dataset Weighted? : " << reducedDS->isWeighted()<< std::endl;
 
-  RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), PrefitDataFraction(0.005), Minimizer("Minuit","minimize"), NumCPU(38), Range(RangeLow, RangeHigh), /*AsymptoticError(kTRUE)*/SumW2Error(kTRUE), Extended(kTRUE));
+  RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), PrefitDataFraction(0.080), Minimizer("Minuit","minimize"), NumCPU(38), Range(RangeLow, RangeHigh), /*AsymptoticError(kTRUE)*/SumW2Error(kTRUE), Extended(kTRUE));
+
   Result->SetName("fitresult_model_reducedDS");
   works1->pdf("model")->plotOn(massPlot, Name("modelPlot"));
  {works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*SignalNS)), LineColor(kRed), LineStyle(kDashed), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CBNS_1)), LineColor(kGreen), LineStyle(kSolid), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CBNS_2)), LineColor(kRed), LineStyle(kSolid), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CBNS_3)), LineColor(kMagenta), LineStyle(kDashDotted), MoveToBack());}
