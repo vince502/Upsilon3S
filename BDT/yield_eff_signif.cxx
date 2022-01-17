@@ -13,7 +13,6 @@ binplotter::binplotter(ana_bins x, int _bdtptMin, int _bdtptMax ){
 };
 #endif
 binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _vcut, double _blow, double _bhigh, int _bdtptMin, int _bdtptMax, int _train_state =3, int _target_state=3,  bool find_bdt = false, bool _eff_old = false){
-  dbg(50);
   type = _type; ts = _ts; ylim = _ylim;  pl = _pl; ph = _ph; cl = _cl; ch = _ch; blow = _blow; bhigh = _bhigh; bdtptMin = _bdtptMin; bdtptMax = _bdtptMax;train_state = _train_state; target_state = _target_state; eff_old = _eff_old; vcut= _vcut;
 
   int nbin = 120;
@@ -57,7 +56,6 @@ void binplotter::init(bool get_bdt= true){
   fittype =fitdir;
   
   if(get_bdt){ blow = Get_BDT(ts, train_state, bdtptMin, bdtptMax, pl, ph, cl, ch, vcut, (double)ylim);}//Get_Optimal_BDT(ts, pl, ph,(double) -1*ylim, ylim, cl, ch, vcut, train_state).first; }
-  dbg(51);
   filename = GetFit(__FITRESLATEST, false, type, ts, train_state, target_state, pl, ph, cl, ch, blow, bhigh, bdtptMin, bdtptMax, vcut,"");  
 //  filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_bdtpt_%d_%d_vp%.4f.root", ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10,nbin, cl, ch, blow, bhigh,  bdtptMin, bdtptMax, vcut);
 //  if(ts >= 1634636609) filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_bdtpt_%d_%d_vp%.4f.root", train_state, ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10, cl, ch, blow, bhigh, bdtptMin, bdtptMax, vcut);

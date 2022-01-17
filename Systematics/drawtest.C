@@ -1,5 +1,5 @@
 void drawtest(long ts, TFile* f3, TFile* f2){
-	TFile* f1 = TFile::Open(Form("NominalBKG_%ld.root", ts));
+	TFile* f1 = TFile::Open(Form("./data/NominalBKG_%ld.root", ts));
 //	TFile* f2 = TFile::Open("./data/bkgPDF_unc_.root");
 //	TFile* f3 = TFile::Open("./data/bkgPDF_unc_2item.root");
 

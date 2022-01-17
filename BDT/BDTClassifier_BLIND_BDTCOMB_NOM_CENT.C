@@ -47,7 +47,7 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
   _ts_buf = _ts;
   _real_time = (long) tstamp;
   std::cout <<"time stamp---> " <<  tstamp << std::endl;
-  if(strcmp(opt.c_str(),"NOMINAL")==0) _ts = (long) inputts;
+  if(strcmp(opt.c_str(),"NOMINAL")==0) _ts = (long) 100000000161;
   std::system(Form("cat BDTClassifier_BLIND_BDTCOMB.C >> ./.past_source/_BDTClassifier_BLIND_BDTCOMB_%ld.old",(long) tstamp));
   ofstream log, log2;
 
@@ -81,8 +81,8 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
   TCut cut1 = Form("mass>%f&&mass<%f&&pt<%f&&pt>%f&&cBin>%d&&cBin<%d&&pt1>%f&&pt2>%f&&fabs(y)<%f%s%s", massLow, massHigh, ptHigh, ptLow, cBinLow, cBinHigh, Simucut, Simucut, ylim, HybSoft.c_str(),rejectNAN.c_str());
   TCut cut2 = Form("mass>%f&&mass<%f&&pt<%f&&pt>%f&&cBin>%d&&cBin<%d&&pt1>%f&&pt2>%f&&fabs(y)<%f%s%s", massLow, massHigh, ptHigh, ptLow, cBinLow, cBinHigh, Simucut, Simucut, ylim, HybSoft.c_str(),rejectNAN.c_str());
 
-  TMVA::DataLoader *loader1 = new TMVA::DataLoader(Form("data/Y%dSpt%dto%d/dataset1", state, (int) ptLow, (int) ptHigh));
-  TMVA::DataLoader *loader2 = new TMVA::DataLoader(Form("data/Y%dSpt%dto%d/dataset2", state, (int) ptLow, (int) ptHigh));
+  TMVA::DataLoader *loader1 = new TMVA::DataLoader(Form("data/Y%dScbin%dto%dpt%dto%d/dataset1", state, cBinLow, cBinHigh, (int) ptLow, (int) ptHigh));
+  TMVA::DataLoader *loader2 = new TMVA::DataLoader(Form("data/Y%dScbin%dto%dpt%dto%d/dataset2", state, cBinLow, cBinHigh, (int) ptLow, (int) ptHigh));
   TTree* SigTree2S =(TTree*) inputMC2S->Get("tree");
   TTree* SigTree3S =(TTree*) inputMC3S->Get("tree");
   TTree* BkgTreeTest_primary1 =(TTree*) inputDATA->Get(Form("tree3"));
@@ -219,7 +219,7 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
 }
 
 //Main Function
-void BDTClassifier_BLIND_BDTCOMB( long _inputts , string _bookOpt, string _datprep, bool nomonly = false){
+void BDTClassifier_BLIND_BDTCOMB_NOM_CENT( long _inputts , string _bookOpt, string _datprep, bool nomonly = false){
   ofstream log;
   //log.open("BDT_description.log", std::ios_base::out|std::ios_base::app);
   //log << "Bin by Bin training start----------------------" <<std::endl; ; 
@@ -232,14 +232,14 @@ void BDTClassifier_BLIND_BDTCOMB( long _inputts , string _bookOpt, string _datpr
   bool res; 
 
 
-  std::vector<std::pair<int, int> >bin1spt = {{0,30},{0, 4},{4, 9},{9, 12},{12,30},{12, 50}};//{/*{0,30},{0,1},{1,2},{2,3},{3,4},{4,5},{5,6},{6,8},{8,10},{10,12},{18,30}*/{12,18},{12,15},{15,30}};
+//  std::vector<std::pair<int, int> >bin1spt = {{0,30},{0, 4},{4, 9},{9, 12},{12,30},{12, 50}};//{/*{0,30},{0,1},{1,2},{2,3},{3,4},{4,5},{5,6},{6,8},{8,10},{10,12},{18,30}*/{12,18},{12,15},{15,30}};
   std::vector<std::pair<int, int> >bin2spt = {{0,30},{9, 15},{15,30}};//{/*{0,2},{2,4},{4,6},{6,9},{9,12},{12,15},{15,20},{12,20},{12,24},{20,50},{24,50},{30,50}*/{12,50}, {15, 50}};
-  std::vector<std::pair<int, int> >bin3spt = {{0,30}};//{/*{0,4},{4,9},{9,12},{12,15},{15,50},{12,24},{24,50},{12,20},{20,50},{12,30},{30,50},{15,30}*/};
-//  std::vector<std::pair<int, int> >bin3spt = {/*{0,30},*/{0,3},{3,6},{6,9},{0, 4},{4, 9},{9, 15},{15,30}};//{/*{0,4},{4,9},{9,12},{12,15},{15,50},{12,24},{24,50},{12,20},{20,50},{12,30},{30,50},{15,30}*/};
+//  std::vector<std::pair<int, int> >bin3spt = {{0,3}};//{/*{0,4},{4,9},{9,12},{12,15},{15,50},{12,24},{24,50},{12,20},{20,50},{12,30},{30,50},{15,30}*/};
+  std::vector<std::pair<int, int> >bin3spt = {{0,40},{40,80}, {80,100}, {100, 140}, {140,181}, {0,60}, {60,120}, {120, 181}};
   if(!nomonly){
   for( auto pair : bin3spt) 
   {
-  	res = BDTClassifier_BLIND_Function(3,0,pair.first,pair.second, 0,181, "NOMINAL", _inputts, _bookOpt, _datprep);
+  	res = BDTClassifier_BLIND_Function(3,0, 0, 30, pair.first, pair.second, "NOMINAL", _inputts, _bookOpt, _datprep);
   	if(!res)std::system(Form("rm ./.past_source/_BDT_Blind_Classifier__BDT%ld.old",(long) _real_time));
   }
 

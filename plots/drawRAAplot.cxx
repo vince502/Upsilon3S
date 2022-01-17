@@ -61,7 +61,7 @@ RooRealVar getDoubleRatioValue(bool inc_pp_stat, std::pair <int, int> cbpair, st
 
   Double_t tirg_presc = 1.0684;
   Double_t taa_Nmb = taa.first*Nmb/tirg_presc;
-  Double_t step_one = (cs_pp)/(taa_Nmb);
+  Double_t step_one = cs_pp/(taa_Nmb);
   Double_t step_two = step_one * (180./(cbpair.second - cbpair.first) );
   Double_t val_RAA = 4.*step_two*yAA.getVal()/yPP.getVal();
 

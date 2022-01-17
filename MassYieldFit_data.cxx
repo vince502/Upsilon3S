@@ -27,7 +27,6 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, int sig
   std::string bkg_func = parsed[1];
   std::string fitdir = parsed[2];
   std::string name_fitmodel = "_"+sig_func+"_"+bkg_func;
-  dbg();
 
   SetStyle();
   double range_mass_low, range_mass_high;
@@ -36,16 +35,13 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, int sig
     range_mass_high = 14;
   }
   else{
-  dbg();
     range_mass_low = massrng[ts].first;
     range_mass_high = massrng[ts].second;
   }
   if( map_params.find("mass_range") != map_params.end()){
-  dbg();
     range_mass_low = map_params["mass_range"].low;
     range_mass_high = map_params["mass_range"].high;
   }
-  dbg();
 
   Double_t MupTCut = single_LepPtCut(MupT);
   Double_t etaMax= 2.4;
@@ -109,7 +105,14 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, int sig
 		  ds_pl = altpar.low;
 		  ds_ph = altpar.high;
 	  }
-	  if( ts >= 1634636609 ) name_dataset = name_dataset + Form("_Y%dSpt%dto%d", ds_state, ds_pl, ds_ph);
+	  string ds_id = Form("_Y%dSpt%dto%d", ds_state, ds_pl, ds_ph);
+	  if( map_params.find("CentTrain") != map_params.end()){
+		  if(map_params["CentTrain"].val == 1){
+			  ds_id = Form("_Y%dScent%dto%dpt0to30", ds_state, (int) map_params["CentTrain"].low, (int) map_params["CentTrain"].high);
+			  std::cout << "[Fitter] dataset : " << ds_id.c_str() << std::endl;
+		  }
+	  }
+	  if( ts >= 1634636609 ) name_dataset = name_dataset + ds_id;
 	  mf.ws_init(name_dataset.c_str(),mf.list_arg, "mass");
 	  mf.works->var("mass")->Print();
 	
@@ -380,7 +383,6 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, int sig
 	    model = new RooAddPdf("model", "1S+2S+3S", RooArgList(*model_sig, *Background), RooArgList(*nSig1S, *nBkg));
 	    }
 	  }
-	dbg(1000);
 	
 	  if((fitdir.find("DR")==std::string::npos)&&(fitdir.find("FF")!=std::string::npos||fitdir.find("GC")!= std::string::npos||fitdir.find("DD") != std::string::npos)){
 		if( cutBDTlow == -1){

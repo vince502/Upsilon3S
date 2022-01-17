@@ -110,17 +110,31 @@ std::vector<std::pair<double, string> > AICGOF_function(ana_bins ab, string test
 	statc stat4 = {test4, getAICcomp(fit4)};
 	//# 'notuse' option calls positive likelihood to fail every test, if ChebyShev is off +1 order is also cancelled
 	if(opt.find("notuse")!=std::string::npos){
-		if(opt.find("1")!=std::string::npos){
+		if(opt.find("notuse1")!=std::string::npos){
 			stat1 = {test1, {999,999}};
 			if(test1.find("CC") != std::string::npos ) stat4 = {test4, {999,999}};
 		}
-		if(opt.find("2")!=std::string::npos){
+		if(opt.find("notuse2")!=std::string::npos){
 			stat2 = {test2, {999,999}};
 			if(test2.find("CC") != std::string::npos ) stat4 = {test4, {999,999}};
 		}
-		if(opt.find("3")!=std::string::npos){
+		if(opt.find("notuse3")!=std::string::npos){
 			stat3 = {test3, {999,999}};
 			if(test3.find("CC") != std::string::npos ) stat4 = {test4, {999,999}};
+		}
+	}
+	if(opt.find("force")!=std::string::npos){
+		if(opt.find("force1")!=std::string::npos){
+			stat1 = {test1, {-9999999,0}};
+//			if(test1.find("CC") != std::string::npos ) stat4 = {test4, {-9999999,0}};
+		}
+		if(opt.find("force2")!=std::string::npos){
+			stat2 = {test2, {-9999999,0}};
+//			if(test2.find("CC") != std::string::npos ) stat4 = {test4, {-9999999,0}};
+		}
+		if(opt.find("force3")!=std::string::npos){
+			stat3 = {test3, {-9999999,0}};
+//			if(test3.find("CC") != std::string::npos ) stat4 = {test4, {-9999999,0}};
 		}
 
 	}
@@ -143,15 +157,20 @@ std::vector<std::pair<double, string> > AICGOF_function(ana_bins ab, string test
 	std::cout << Form("[GOF] AIC test 1. : %.5f & %.5f : %s & %s", stat_step1.second, stat_step1NOT.second, stat_step1.first.first.c_str(), stat_step1NOT.first.first.c_str()) << std::endl;
 
 	//# step 2. Test step 1 vs. ChebyShev ( > 95 % significance ) (Nominal)
+	std::cout << "[AIC] step 1 EX/EE: " << stat_step1.first.second.first << ", " << stat_step1.first.second.second << std::endl;
+	std::cout << "[AIC] step 1 CC: " << stat3.second.first << ", " << stat3.second.second << std::endl;
 	dat AIC_res_step2 = AIC_statistic(
 		stat_step1.first.second.first, stat_step1.first.second.second,
 		stat3.second.first, stat3.second.second
 	);
+	std::cout << "[AIC] win ; lose : " << AIC_res_step2[0] << ", " << AIC_res_step2[1] << std::endl;
 	// step 2 results
 	////Winner
 	statw stat_step2 = ( AIC_res_step2[1] < 0.95) ? statw{stat_step1.first, AIC_res_step2[0]} : statw{stat3, AIC_res_step2[1]};
 	////Looser
 	statw stat_step2NOT = (AIC_res_step2[1] >= 0.95 ) ? statw{stat_step1.first, AIC_res_step2[0]} : statw{stat3, AIC_res_step2[1]};
+
+	std::cout << Form("[GOF] AIC test 2. : %.5f & %.5f : %s & %s", stat_step2.second, stat_step2NOT.second, stat_step2.first.first.c_str(), stat_step2NOT.first.first.c_str()) << std::endl;
 
 	//# step 3. Test step 1 looser vs. step 2 winner (Nominal)
 	dat AIC_res_step3 = AIC_statistic(

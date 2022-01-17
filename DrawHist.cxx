@@ -183,6 +183,18 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
   TLine* line_pull = new TLine(8.,0., 14, 0.);
   line_pull->SetLineColorAlpha(kRed, 0.5);
   RooHist* hpull = plot1->pullHist("massPlot", "modelPlot");
+
+  Double_t chi2 = 0.;
+  Double_t *ypull = hpull->GetY();
+  Double_t Npullbin = 0;
+  for(Int_t ibin = 0; ibin < Nmassbins; ibin++){
+    if(ypull[ibin] ==0) continue;
+    chi2 += TMath::Power(ypull[ibin],2);
+    Npullbin++;
+  }
+  Int_t Nfitpar = Result->floatParsFinal().getSize();
+  Int_t ndf = Npullbin - Nfitpar;
+
   RooPlot* pullPlot = works->var("mass")->frame(Title("Pull Distribution"));
   pullPlot->addPlotable(hpull, "P");
   pullPlot->GetYaxis()->SetLabelSize(0.13);
@@ -190,6 +202,9 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
   pullPlot->GetXaxis()->SetTitleSize(0.10);
   pullPlot->Draw();
   line_pull->Draw("same");
+  TLatex* NormChi2tex = new TLatex();
+  FormLatex(NormChi2tex, 42, 0.10);
+  NormChi2tex->DrawLatex(0.16, 0.15, Form("#chi^{2}/ndf: %3.f/%d", chi2, ndf));
 
   pad_mag->cd();
   pad_mag->SetTopMargin(0);
@@ -209,8 +224,20 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
 //  signif_hist->SetStats(kFALSE);
   signif_hist->SetFillColor(kRed);
   signif_hist->SetMarkerStyle(kFullCircle);
+  auto ycol = signif_hist->GetY();
+  double ymax = TMath::MaxElement(signif_hist->GetN(), ycol);
   signif_hist->SetMarkerSize(0.5);
   signif_hist->Draw("AP");
+
+//  TLine histL(cutBDTlow, signif_hist->GetYaxis()->GetXmin(), cutBDTlow, ymax);
+  TLine histL(cutBDTlow, 0, cutBDTlow, 1);
+  TMarker histP(cutBDTlow, ymax, kFullCircle);
+  histL.SetLineStyle(kDashDotted);
+  histP.SetMarkerSize(0.6);
+  histP.SetMarkerColor(kRed);
+
+  histP.Draw("same");
+  histL.Draw("same");
 
 //  signif_hist->GetXaxis()->SetRange(num_bin_signif, num_bin_signif);
   }
