@@ -8,6 +8,7 @@
 #include "script_tools.h"
 #include "Systematics/GOF_test.cxx"
 
+#if defined _TS
 void doConstraintFit_SYSSIGPAR_v2(int step = 0){
   std::string type 			= "CB3:CC3:GC"	;
   std::string type2 			= "CB3:CC4:DR2FF"	;
@@ -15,8 +16,8 @@ void doConstraintFit_SYSSIGPAR_v2(int step = 0){
   std::string typenobdt 		= "CB3:CC4:FF"	;
   std::string constraints		="alpha:n:frac:frac2:xNS:xNS_2:sigmaNS_1"	;
   std::string fixvars			="alpha:n:frac:frac2:x1S:x1S_2:sigma1S_1"	;
-  long ts						= 9999999999	; 
-  long ts_2						= 9999999999	;
+  long ts						= _TS	; 
+  long ts_2						= _TS	;
   double ptMin					= 0		;
   double ptMax					= 30 		;
   int bdtptMin					= 0		;
@@ -180,7 +181,7 @@ auto fixfit = [&](double cBinBDTcut) mutable {
 };
   //##########################################EXECUTION CODE#########################################//
 
-  plot_dir_opt = "Sys_changed_signif_v7";
+  plot_dir_opt = "Sys_SIG_PAR_MC1S_v7";
 
 //Step1, First reference integrated bin fit.
 double INTBIN_BDTLOW = 0.1825;// =0.16;
@@ -191,7 +192,9 @@ state =3;
   for( auto ap : ana_bm){
 	  for( auto ab : ap.second){
 //		if( !((ab.bin_attr.find("c")!=std::string::npos && ab.state ==3))) continue;
-//		if( !(ab.cl==140&&ab.ch==181&&(ab.bin_attr.find("c")!=std::string::npos && ab.state ==3))) continue;
+//		if( !((ab.bin_attr.find("c")!=std::string::npos &&true ))) continue;
+//		if( !(ab.cl==140&&ab.ch==181&&(ab.bin_attr.find("c")!=std::string::npos && ab.state ==2))) continue;
+		if( !(ab.cl==140&&ab.ch==181&&(ab.bin_attr.find("c")!=std::string::npos && true))) continue;
 //		if( !(ab.pl==9&&ab.ph==15&&(ab.bin_attr.find("p")!=std::string::npos && ab.state ==3))) continue;
 		string fittype = (strcmp(ab.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 	  	ptMin = ab.pl;
@@ -227,9 +230,9 @@ state =3;
 
 					}
 				if(bkgNom.find("EE")!=std::string::npos){
-		    		bkg_val  = {15.5, 2.0, 3.3,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-		    		bkg_low  = {4.0, 0.1, 1.01,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
-		    		bkg_high = {19, 10.0, 6.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
+		    		bkg_val  = {7.5, 1.0, 3.3,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		    		bkg_low  = {6.0, 0.01, 1.1,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
+		    		bkg_high = {48, 3.0, 9.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
 					fixfit(cbl);
 					}
 				if(bkgNom.find("EX")!=std::string::npos){
@@ -248,8 +251,8 @@ state =3;
 					}
 				if(bkgNom.find("EE")!=std::string::npos){
 		    		bkg_val  = {7.0, 6.0, 1.2,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-		    		bkg_low  = {5.0, 2.0, 0.1,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
-		    		bkg_high = {9.2, 10.0, 3.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
+		    		bkg_low  = {5.0, 1.0, 0.1,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
+		    		bkg_high = {8.6, 10.0, 9.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
 		    		METHOD_MCGCDATA(2);
 					}
 				if(bkgNom.find("EX")!=std::string::npos){
@@ -264,7 +267,8 @@ state =3;
   }
 }
 
-}
+};
+#endif
 
 
 

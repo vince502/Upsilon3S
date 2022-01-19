@@ -3,7 +3,6 @@
 #include "../.workdir.h"
 #include "../upsilonAna.h"
 #include "yield_eff_signif.h"
-#include "TApplication.h"
 
 
 std::pair<double,TGraph*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio =0.16 , int train_state =3, int sig_state = 2, int bdtptMin =0, int bdtptMax = 30, string name_input_opt = "", string formula_significance= "S2", string the_opt="", bool save = true)
@@ -31,7 +30,6 @@ std::pair<double,TGraph*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, d
 		HISTFILE->Close();
 		return std::make_pair(theSig, cloneHist);
 	}
-
   
 	string tag_BLIND = "BLIND";
 	std::string name_input = Form("%s/BDT/BDTResult/BDTresultY3S_%ld_%s%s.root", workdir.Data(), ts, name_input_opt.c_str(), tag_BLIND.c_str());
@@ -54,6 +52,10 @@ std::pair<double,TGraph*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, d
 	int nbins_tot = h_effS_1->GetNbinsX() + h_effS_2->GetNbinsX();
 
 	TGraph* g_signif = new TGraph();
+	TGraph* g_signif_x = new TGraph();
+	TGraph* g_signif_1 = new TGraph();
+	TGraph* g_signif_2 = new TGraph();
+
 	double sig_lim_bdt1 = 2;
 	double sig_lim_bdt2 = 2;
 	double sample_rate = 0.1;
@@ -62,33 +64,41 @@ std::pair<double,TGraph*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, d
 		return ((sig*ratio)/(TMath::Sqrt(sig*ratio + bkg)));
 	};
 	for(int idx =1; idx < h_effS_1->GetNbinsX() +1; idx ++){
+		double effS_1 = h_effS_1->GetBinContent(idx);
+		double effB_1 = h_effB_1->GetBinContent(idx);
+		double effS_2 = h_effS_2->GetBinContent(idx);
+		double effB_2 = h_effB_2->GetBinContent(idx);
+		double bc_1 = h_effS_1->GetBinCenter(idx);
+		double bc_2 = h_effS_2->GetBinCenter(idx);
+
+		double signif_1 = signif(effS_1, effB_1); 
+		double signif_2 = signif(effS_2, effB_2); 
+		g_signif_1->AddPoint(bc_1,signif_1);
+		g_signif_2->AddPoint(bc_2,signif_2);
 		if((idx%(int) (1/sample_rate)==0)){
 			nPoints_sampled ++;
-			double effS_1 = h_effS_1->GetBinContent(idx);
-			double bc_1 = h_effS_1->GetBinCenter(idx);
-			double effS_2 = h_effS_2->GetBinContent(idx);
-			double bc_2 = h_effS_2->GetBinCenter(idx);
+
 //			std::cout << "[GOB] 1 graph x, y : " << bc_1 << ", " << signif(effS_1, h_effB_1->GetBinContent(idx)) << std::endl;
-			g_signif->AddPoint((bc_1 + bc_2)/2, (signif(effS_1, h_effB_1->GetBinContent(idx)) + signif(effS_2, h_effB_2->GetBinContent(idx)))/2 );
+			g_signif->AddPoint((bc_1 + bc_2)/2, (signif_1 + signif_2)/2 );
 			if((effS_1 +effS_2)/2 <0.1 && sig_lim_bdt1 > 1 ) sig_lim_bdt1 = ( h_effS_1->GetBinCenter(idx) + h_effS_2->GetBinCenter(idx) )/2;
 //			std::cout << "[GOB] 2 graph x, y : " << bc_2 << ", " << signif(effS_2, h_effB_2->GetBinContent(idx)) << std::endl;
 //			g_signif->AddPoint(bc_2,signif(effS_2, h_effB_2->GetBinContent(idx)));
 //			if(effS_2 <0.1 && sig_lim_bdt2 > 1 ) sig_lim_bdt2 = h_effS_2->GetBinCenter(idx);
 		}
 	}
-//	for(int idx =1; idx < h_effS_2->GetNbinsX() +1; idx ++){
-//		double effS = h_effS_2->GetBinContent(idx);
-//		double bc = h_effS_2->GetBinCenter(idx);
-//
-//	}
+	double bdt = h_eff_xmin;
+	for( bdt; bdt < h_eff_xmax; bdt+=0.0001){
+		int idx1 = h_effS_1->FindBin(bdt);
+		int idx2 = h_effS_2->FindBin(bdt);
+		double effS_1 = h_effS_1->GetBinContent(idx1);
+		double effB_1 = h_effB_1->GetBinContent(idx1);
+		double effS_2 = h_effS_2->GetBinContent(idx2);
+		double effB_2 = h_effB_2->GetBinContent(idx2);
+		double ret_signif = ( signif(effS_1, effB_1) + signif(effS_2, effB_2) ) / 2;
+		g_signif_x->AddPoint( bdt, ret_signif);
 
-//	TF1* sig_model = new TF1("Msignif","pol9",h_eff_xmin, h_eff_xmax);//interval_score*(zero_bin)-0.5);
-//	ROOT::Math::MinimizerOptions::SetDefaultMinimizer("Minuit2", "Simplex");
-//
-//	g_signif->Fit("Msignif","MFR","",h_eff_xmin, h_eff_xmax);//interval_score*(zero_bin)-0.5);
-//	g_signif->Draw();
-//	auto res = g_signif->GetFunction("Msignif");
-//	double max_signif_bdt= res->GetMaximumX(h_eff_xmin, h_eff_xmax);//interval_score*(zero_bin)-0.5);//  h_signif->GetBinCenter(h_signif->GetMaximumBin() );
+	}
+
 
 	//Find X value of maximum significance
 	auto findmax = [](TGraph* g){
@@ -108,6 +118,7 @@ std::pair<double,TGraph*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, d
 		return std::pair<double, double>(max_x, max_y);
 	};
 	auto findres = findmax(g_signif);
+	std::cout << Form("\n\n\n Graph SIGNIF Max X(x, 1, 2) : %.4f, %.4f, %.4f \n\n",findmax(g_signif_x).first, findmax(g_signif_1).first, findmax(g_signif_2).first) << std::endl;
 	double max_signif_bdt = findres.first;
 	max_signif_bdt = min(max_signif_bdt, sig_lim_bdt1);
 	max_signif_bdt = min(max_signif_bdt, sig_lim_bdt2);
@@ -134,8 +145,18 @@ std::pair<double,TGraph*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, d
 	  dir_ratio = HISTFILE->mkdir(Form("r_%.6f", ratio), "");
 	}
 	
-
+	dbg();
+	TCanvas* c0 =new TCanvas("two_signif");
 	TCanvas* c1= new TCanvas("canvas");
+	c0->cd();
+	g_signif_1->SetLineColor(kRed);
+	g_signif_2->SetLineColor(kBlue);
+	g_signif_1->SetMarkerColor(kRed);
+	g_signif_2->SetMarkerColor(kBlue);
+	g_signif_1->Draw("APL");
+	g_signif_2->Draw("PL same");
+	g_signif_x->Draw("PL same");
+
 	c1->cd();
 	g_signif->Draw();
 	histP.Draw();
@@ -146,7 +167,11 @@ std::pair<double,TGraph*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, d
 	g_signif->SetName("HISTO");
 	g_signif->SetTitle("significance vs BDT");
 	g_signif->Write();
+
+
+	dbg();
 	c1->Write();
+	c0->Write();
 	TNamed* max_value = new TNamed("max_sig",Form("%.4f",max_signif_bdt));
 	max_value->Write();
 	
@@ -256,10 +281,17 @@ RooRealVar get_eff_acc_v2(std::string type, std::string type2, long ts, long ts2
 //  double nSigTotErr = TMath::Sqrt(bp2->yield3S.getError() * bp2->yield3S.getError() + bp2->yield2S.getError() * bp2->yield2S.getError() + bp2->yield1S.getError()* bp2->yield1S.getError()); 
   
   std::cout << Form("Values: y1, y2, y3 nbkg bkgr : %.4f, %.4f, %.4f, %.4f, %.4f", y1.getVal(), y2.getVal(), y3.getVal(), nbkg.getVal(), bkg_under_sig_ratio) << std::endl;
-  double ratio_val = (y1.getVal() + y2.getVal() + y3.getVal())/(nbkg.getVal()*bkg_under_sig_ratio);
+  double num_val = (y1.getVal() + y2.getVal() + y3.getVal());
+  double den_val = (nbkg.getVal()*bkg_under_sig_ratio);
+  double ratio_val = num_val  / den_val;
+  
   std::cout << "ratio_val : " << ratio_val << std::endl;
   auto lsqrt = [](double arg){ return TMath::Power(arg,2);};
-  double ratio_err = ratio_val * TMath::Sqrt( lsqrt(y1.getError()/y1.getVal()) + lsqrt(y2.getError()/y2.getVal()) + lsqrt(y3.getError()/y3.getVal()) + lsqrt(nbkg.getError()/nbkg.getVal()) +2* ( -( cov_01/(nbkg.getVal()*y1.getVal()) + cov_02/(nbkg.getVal()*y2.getVal())+ cov_03/(nbkg.getVal()*y3.getVal()) )+ cov_12/(y1.getVal()*y2.getVal())+ cov_13/(y1.getVal()*y3.getVal())+ cov_23/(y2.getVal()*y2.getVal())) );
+  double ratio_err = ratio_val * TMath::Sqrt( 
+  		lsqrt(y1.getError()/ num_val) + lsqrt(y2.getError()/num_val) + lsqrt(y3.getError()/num_val) + lsqrt(nbkg.getError()/nbkg.getVal()) 
+  		+ 2.* ( -( cov_01/(nbkg.getVal()*num_val) + cov_02/(nbkg.getVal()*num_val) + cov_03/(nbkg.getVal()*num_val) )+ cov_12/(num_val*num_val)+ cov_13/(num_val*num_val)+ cov_23/(num_val*num_val))
+  );
+  std::cout << "[GOB] ratio_err : " << ratio_err << std::endl;
 //  double ratio_err = ratio_val * TMath::Sqrt( (nSigTotErr/nSigTot)*(nSigTotErr/nSigTot) + (nbkg.getError()/nbkg.getVal())*(nbkg.getError()/nbkg.getVal())); 
 
   RooRealVar res_var = RooRealVar("result","",ratio_val);
@@ -296,3 +328,5 @@ RooRealVar get_eff_acc_v3(std::string type, std::string type2, long ts, double y
 RooRealVar get_eff_acc_v3(std::string type, long ts, double ylim, int pl, int ph, int cl, int ch, double blow, double bhigh,  int bdtptMin= 0, int bdtptMax =30,int train_state = 3,int state1 =1, int state2 =3, bool eff_old = true){
 	return	get_eff_acc_v3(type, "CB3:CC4:FF", ts, 9999999999, ylim, pl, ph, cl, ch, blow, bhigh, bdtptMin, bdtptMax, train_state, state1, state2, eff_old);
 };
+
+

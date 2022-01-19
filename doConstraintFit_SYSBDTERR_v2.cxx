@@ -55,7 +55,7 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0) mutable {
   double cutQVP_noBDT= 0.01;
   std::string fname;
   RooRealVar sb_ratio;
-    sb_ratio = get_eff_acc_v2(type_r, ts, rapMax, ptMin, ptMax, cBinLow, cBinHigh, blow_ref, 1.0, bdtptMin, bdtptMax, train_state, 1, state, false);
+    sb_ratio = get_eff_acc_v2(typenobdt, ts, rapMax, ptMin, ptMax, cBinLow, cBinHigh, -1, 1.0, bdtptMin, bdtptMax, train_state, 1, state, false);
 	double ratio;
 	if( _step == 1) {ratio = sb_ratio.getVal() + sb_ratio.getError(); systype = "SYSUP";}
 	if( _step ==-1) {ratio = sb_ratio.getVal() - sb_ratio.getError(); systype = "SYSDOWN";}
@@ -68,7 +68,7 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0) mutable {
   if( res_blow == res_blow_ref ){
 	   std::cout << "[DBG0831] " <<res_blow << " , " << res_blow_ref<< std::endl;;
        std::cout << "[BDT val Getter] Referencing BDT ratio from Integrated Bin" << std::endl;
-       auto sb_ratio_INT = get_eff_acc_v2(type_r, ts, rapMax, 0, 30, 0, 181, blow_ref, 1.0, 0, 30, train_state, 1, state, false);
+       auto sb_ratio_INT = get_eff_acc_v2(typenobdt, ts, rapMax, 0, 30, 0, 181, -1, 1.0, 0, 30, train_state, 1, state, false);
        double ratio_INT_ref = sb_ratio_INT.getVal();
        double ratio_INT = ratio_INT_ref + ((double) _step * sb_ratio.getError() );
     std::cout << "[DBG0831] " << Form(" INT RATIOS (SB, REF, ratio_INT) %.6f %.6f %.6f" , sb_ratio_INT.getVal(), ratio_INT_ref, ratio_INT) << std::endl;
@@ -217,7 +217,7 @@ auto fixfit = [&](double cBinBDTcut) mutable {
 };
   //##########################################EXECUTION CODE#########################################//
   	
-	plot_dir_opt = "Sys_changed_signif_v7";
+	plot_dir_opt = "Sys_BDT_ERR_v7";
 
 
 //Step1, First reference integrated bin fit.
@@ -229,7 +229,7 @@ double INTBIN_BDTLOW = 0.1825;// =0.16;
 //		if( !((ab.bin_attr.find("i")!=std::string::npos && ab.state ==2))) continue;
 //		if( !((ab.bin_attr.find("c")!=std::string::npos && ab.state ==3))) continue;
 //		if( !(ab.cl==0&&ab.ch==20&&(ab.bin_attr.find("c")!=std::string::npos && ab.state ==3))) continue;
-		if( !(ab.pl==15&&ab.ph==30&&(ab.bin_attr.find("p")!=std::string::npos && ab.state ==3))) continue;
+//		if( !(ab.pl==15&&ab.ph==30&&(ab.bin_attr.find("p")!=std::string::npos && ab.state ==3))) continue;
 		string fittype = (strcmp(ab.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 	  	ptMin = ab.pl;
 		ptMax = ab.ph;

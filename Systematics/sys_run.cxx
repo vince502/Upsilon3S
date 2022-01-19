@@ -1,4 +1,6 @@
 #pragma once
+
+#define ISDR 0
 #define __SYSDEF__
 //#define _TS 9999999999
 #define _TS 10000000016
@@ -19,6 +21,9 @@
 
 #include "NominalBKG.cxx"
 #include "BkgVariUnc.cxx"
+#include "SEFFVariUnc.cxx"
+#include "BDTPropVariUnc.cxx"
+#include "ACCVariRMS_Unc.cxx"
 
 void sys_run(){
 	NominalBKG();

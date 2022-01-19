@@ -106,7 +106,7 @@ void MassYieldSingleStateMCFitCB2G( struct Y1Sfitvar *Y1S ,long ts, const string
   }
 
   RooRealVar* sigmaNS_1;
-  sigmaNS_1  = new RooRealVar("sigmaNS_1", "sigma of NS", 0.20, 0.08, 0.35);
+  sigmaNS_1  = new RooRealVar("sigmaNS_1", "sigma of NS", 0.20, 0.15, 0.33);
 
   RooRealVar* xNS;
 
@@ -119,15 +119,15 @@ void MassYieldSingleStateMCFitCB2G( struct Y1Sfitvar *Y1S ,long ts, const string
   sigmaNS_3 = new RooFormulaVar("sigmaNS_3", "@0*@1", RooArgList(*sigmaNS_1, *xNS_2));
 
   RooRealVar *alpha, *n, *frac, *frac2;
-  alpha = new RooRealVar("alpha", "alpha of Crystal bal1", 1.96, 0.5, 3.2 );
-  n = new RooRealVar("n", "n of Crystal ball", 1.27, 0.5, 3.5);
-  frac = new RooRealVar("frac", "CB fraction", 0.13, 0.03, 0.95);
-  frac2 = new RooRealVar("frac2", "CB fraction 2", 0.25, 0.03, 0.95);
+  alpha = new RooRealVar("alpha", "alpha of Crystal bal1", 1.96, 0.6, 3.5 );
+  n = new RooRealVar("n", "n of Crystal ball", 1.27, 0.200, 3.100);
+  frac = new RooRealVar("frac", "CB fraction", 0.13, 0.0001, 0.999);
+  frac2 = new RooRealVar("frac2", "CB fraction 2", 0.25, 0.0001, 0.999);
 //  if(bdtlow == -1.){
-    alpha->setVal(1.866);
-    n->setVal(1.40);
-    sigmaNS_1->setVal(0.217);
-    frac->setVal(0.1);
+    alpha->setVal(1.753);
+    n->setVal(1.675);
+    sigmaNS_1->setVal(0.247);
+    frac->setVal(0.12);
     frac2->setVal(0.52);
     xNS->setVal(0.54);
     xNS_2->setVal(0.30);

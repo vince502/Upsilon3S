@@ -1,13 +1,13 @@
 //#include "../plots/drawRAAplot_v2.cxx"
 #include "GOF_test.cxx"
 #include "sys_wr_helper.cxx"
-bool isDR = false;
 
 #ifndef pp
 #define pp std::pair<std::pair<double, string>, std:;pair<double, string> >
 #endif
 
 pp getBkgVariUnc_2item(ana_bins x){
+	bool isDR = ISDR;
 	int pl, ph, cl, ch, state, bpl, bph;
 	pl = x.pl; ph = x.ph; cl = x.cl; ch = x.ch; state = x.state; bpl = x.bpl; bph = x.bph;
 	int train_state = x.train_state;

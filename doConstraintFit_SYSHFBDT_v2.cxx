@@ -84,8 +84,8 @@ void doConstraintFit_SYSHFBDT_v2(int sys_step, int step = 111){
       (std::map<string, params_vhl>) {
       {"massCut", { 0,fitrange.first,fitrange.second }},
 	  {"sigma1S1", {mean_sigma1S1, 0.03, 0.41}}, 
-	  {"alpha", {map_keyval["alpha"].first, 1.0, (map_keyval["alpha"].first+map_keyval["alpha"].second)}},
-	  {"var_n", {map_keyval["n"].first, 0.6, (map_keyval["n"].first+map_keyval["n"].second)*4}},
+	  {"alpha", {map_keyval["alpha"].first, 0.6, (map_keyval["alpha"].first+map_keyval["alpha"].second)*5}},
+	  {"var_n", {map_keyval["n"].first, 0.6, (map_keyval["n"].first+map_keyval["n"].second)*5}},
 	  {"frac", {map_keyval["frac"].first, 0.01, 0.99}},
       {"frac2", {map_keyval["frac2"].first, 0, 1} }, 
       {"xNS", {map_keyval["xNS"].first,0.01,2}}, 

@@ -12,8 +12,9 @@
 #include "../.workdir.h"
 
 
+#if defined NOMINAL_TS
 void BDTClassifierApplication_SYSHF2(long ts= 9999999999, int train_state =2, int target_state = 2, bool isMC = 0, bool isbbb = true, int ptLow =0, int ptHigh = 30, int mcmode= 0){
-	if( ts == 9999999999) return;
+	if( ts == NOMINAL_TS) return;
   std::cout <<"[BDT_APP] Initializing" << std::endl;
 //  std::string info_blind;
 //  if( !isbbb) info_blind = info_BDT(ts)[2];
@@ -29,7 +30,8 @@ void BDTClassifierApplication_SYSHF2(long ts= 9999999999, int train_state =2, in
   TMVA::Reader *reader1 = new TMVA::Reader("V:!Silent");
   TMVA::Reader *reader2 = new TMVA::Reader("V:!Silent");
   TXMLEngine xml;
-  XMLDocPointer_t xmldoc = xml.ParseFile(Form("./data/Y%dSpt%dto%d/dataset1/weights/TMVA_BDT_Classifier1_%ld_BDT.weights.xml", train_state, ptLow, ptHigh, 9999999999));
+  long nominal_ts = NOMINAL_TS;
+  XMLDocPointer_t xmldoc = xml.ParseFile(Form("./data/Y%dSpt%dto%d/dataset1/weights/TMVA_BDT_Classifier1_%ld_BDT.weights.xml", train_state, ptLow, ptHigh, nominal_ts));
   XMLDocPointer_t mainnode = xml.DocGetRootElement(xmldoc);
 
   TString fname;
@@ -131,8 +133,8 @@ void BDTClassifierApplication_SYSHF2(long ts= 9999999999, int train_state =2, in
   }
   
 
-  TString weightfile1 = Form("./data/Y%dSpt%dto%d/dataset1/weights/TMVA_BDT_Classifier1_%ld_BDT.weights.xml", train_state, ptLow, ptHigh, 9999999999);
-  TString weightfile2 = Form("./data/Y%dSpt%dto%d/dataset2/weights/TMVA_BDT_Classifier2_%ld_BDT.weights.xml", train_state, ptLow, ptHigh, 9999999999);
+  TString weightfile1 = Form("./data/Y%dSpt%dto%d/dataset1/weights/TMVA_BDT_Classifier1_%ld_BDT.weights.xml", train_state, ptLow, ptHigh, nominal_ts);
+  TString weightfile2 = Form("./data/Y%dSpt%dto%d/dataset2/weights/TMVA_BDT_Classifier2_%ld_BDT.weights.xml", train_state, ptLow, ptHigh, nominal_ts);
   TString methodName1 = (Form("BDT"));
   TString methodName2 = (Form("BDT"));
   reader1->BookMVA( methodName1, weightfile1);
@@ -253,3 +255,4 @@ void BDTClassifierApplication_SYSHF2(long ts= 9999999999, int train_state =2, in
   target->Close();
 
 }
+#endif

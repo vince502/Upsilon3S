@@ -107,12 +107,12 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   }
 
   RooRealVar* sigmaNS_1;
-  sigmaNS_1  = new RooRealVar("sigmaNS_1", "sigma of NS", 0.12, 0.01, 0.35);
+  sigmaNS_1  = new RooRealVar("sigmaNS_1", "sigma of NS", 0.12, 0.12, 0.33);
 
   RooRealVar* xNS;
 
-  xNS = new RooRealVar("xNS", "sigma ratio", 0.56, 0.01, 0.99);
-  RooRealVar* xNS_2 = new RooRealVar("xNS_2", "sigma ratio", 0.318, 0.01, 0.99);
+  xNS = new RooRealVar("xNS", "sigma ratio", 0.56, 0.001, 1.000);
+  RooRealVar* xNS_2 = new RooRealVar("xNS_2", "sigma ratio", 0.318, 0.001, 1.000);
   works1->import(*xNS);
 
   RooFormulaVar* sigmaNS_2, *sigmaNS_3;
@@ -121,9 +121,9 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
 
   RooRealVar *alpha, *n, *frac, *frac2;
   alpha = new RooRealVar("alpha", "alpha of Crystal bal1", 1.96, 1.00, 2.50 );
-  n = new RooRealVar("n", "n of Crystal ball", 1.27, 0.80, 3.50);
-  frac = new RooRealVar("frac", "CB fraction", 0.58,	 0.001, 1.00);
-  frac2 = new RooRealVar("frac2", "CB fraction 2", 0.05, 0.001, 1.00);
+  n = new RooRealVar("n", "n of Crystal ball", 1.27, 0.800, 2.700);
+  frac = new RooRealVar("frac", "CB fraction", 0.58,	 0.0001, 1.00);
+  frac2 = new RooRealVar("frac2", "CB fraction 2", 0.05, 0.0001, 1.00);
 //  if(bdtlow == -1.){
 //  PARAMSET FOR 2,3S
 //    alpha->setVal(1.866);
@@ -135,12 +135,12 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
 //    xNS_2->setVal(0.30);
 //    PARAMSET FOR 1S
     alpha->setVal(1.766);
-    n->setVal(2.01);
+    n->setVal(1.675);
     sigmaNS_1->setVal(0.207);
-    frac->setVal(0.580);
-    frac2->setVal(0.17);
-    xNS->setVal(0.541);
-    xNS_2->setVal(0.301);
+    frac->setVal(0.061);
+    frac2->setVal(0.455);
+    xNS->setVal(0.301);
+    xNS_2->setVal(0.541);
 //  }
 
   RooCBShape *CBNS_1, *CBNS_2, *CBNS_3;
@@ -159,7 +159,7 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   if (Trig == "Ups"){
     if(state ==1) {nSigNS->setMax(20000000000); nSigNS->setVal(2100000000);}
     if(state ==2) {nSigNS->setMax(4000000000); nSigNS->setVal(100000000);}
-    if(state ==3) {nSigNS->setMax(1000000000); nSigNS->setVal(10000000);}
+    if(state ==3) {nSigNS->setMax(1000000000); nSigNS->setVal(100000000);}
   }
   RooAddPdf* model;
   model = new RooAddPdf("model", "NS", RooArgList(*SignalNS), RooArgList(*nSigNS));
