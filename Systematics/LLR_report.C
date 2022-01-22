@@ -35,7 +35,7 @@ void LLR_report()
 		ph = ab.ph;
 		cl = ab.cl;
 		ch = ab.ch;
-		texout << "\\begin{table}[htb]\n	\\begin{center}\n	\\cation{"<<Form("Result %dS, Centrality [%d, %d], $p_{T}$ [%d, %d]\n", state, cl, ch, pl, ph, state)<<"}\n{\\footnotesize\\renewcommand{\\arraystretch}{1.4}\n		\\begin{tabular}{cc||cccc}\n			N & NLL & p(H0: N = 1) & p(H0: N = 2) & p(H0: N = 3) & p(H0: N = 4)\\\\ \n		\\hline\n";
+		texout << "\\begin{table}[htb]\n	\\begin{center}\n	\\caption{"<<Form("Result %dS, Centrality [%d, %d], $p_{T}$ [%d, %d]\n", state, cl, ch, pl, ph, state)<<"}\n{\\footnotesize\\renewcommand{\\arraystretch}{1.4}\n		\\begin{tabular}{cc||cccc}\n			N & NLL & p(H0: N = 1) & p(H0: N = 2) & p(H0: N = 3) & p(H0: N = 4)\\\\ \n		\\hline\n";
 	  	pvalue = 1;
 		vector<int> N1over= {};
 		vector<int> N2over= {};

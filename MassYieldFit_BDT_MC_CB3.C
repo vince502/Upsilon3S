@@ -111,8 +111,8 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
 
   RooRealVar* xNS;
 
-  xNS = new RooRealVar("xNS", "sigma ratio", 0.56, 0.001, 1.000);
-  RooRealVar* xNS_2 = new RooRealVar("xNS_2", "sigma ratio", 0.318, 0.001, 1.000);
+  xNS = new RooRealVar("xNS", "sigma ratio", 0.56, 0.001, 0.999);
+  RooRealVar* xNS_2 = new RooRealVar("xNS_2", "sigma ratio", 0.318, 0.001, 0.999);
   works1->import(*xNS);
 
   RooFormulaVar* sigmaNS_2, *sigmaNS_3;
@@ -136,7 +136,7 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
 //    PARAMSET FOR 1S
     alpha->setVal(1.766);
     n->setVal(1.675);
-    sigmaNS_1->setVal(0.207);
+    sigmaNS_1->setVal(0.217);
     frac->setVal(0.061);
     frac2->setVal(0.455);
     xNS->setVal(0.301);

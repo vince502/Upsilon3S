@@ -168,6 +168,14 @@ std::pair<double,TGraph*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, d
 	g_signif->SetTitle("significance vs BDT");
 	g_signif->Write();
 
+	g_signif_1->SetName("TR1_HISTO");
+	g_signif_1->SetTitle("significance vs BDT train1");
+	g_signif_1->Write();
+
+	g_signif_2->SetName("TR2_HISTO");
+	g_signif_2->SetTitle("significance vs BDT train2");
+	g_signif_2->Write();
+
 
 	dbg();
 	c1->Write();
@@ -186,6 +194,11 @@ std::pair<double,TGraph*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, d
 	Get_Optimal_BDT_HIST = g_signif;
 	return std::make_pair(max_signif_bdt, g_signif);
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
 
 

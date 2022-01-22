@@ -23,7 +23,13 @@
 #include "BkgVariUnc.cxx"
 #include "SEFFVariUnc.cxx"
 #include "BDTPropVariUnc.cxx"
+#include "BDTDiffVariUnc.cxx"
 #include "ACCVariRMS_Unc.cxx"
+#include "TNPUnc.cxx"
+#include "DPTUnc.cxx"
+#include "CENTVariUnc.cxx"
+#include "SigParVariUnc.cxx"
+#include "SigPdfVariUnc.cxx"
 
 void sys_run(){
 	NominalBKG();

@@ -190,9 +190,9 @@ state =3;
  if(step == 1 || step == 99 || step == 11 || step == 111){
   for( auto ap : ana_bm){
 	  for( auto ab : ap.second){
-		if( !((ab.bin_attr.find("i")!=std::string::npos && ab.state ==3))) continue;
-//		if( !(ab.cl==0&&ab.ch==20&&(ab.bin_attr.find("c")!=std::string::npos && ab.state ==3))) continue;
-//		if( !(ab.pl==15&&ab.ph==30&&(ab.bin_attr.find("p")!=std::string::npos && ab.state ==3))) continue;
+//		if( !((ab.bin_attr.find("i")!=std::string::npos && ab.state ==3))) continue;
+		if( !(ab.cl==100&&ab.ch==140&&(ab.bin_attr.find("c")!=std::string::npos && ab.state ==3))) continue;
+//		if( !(ab.pl==3&&ab.ph==6&&(ab.bin_attr.find("p")!=std::string::npos && ab.state ==2))) continue;
 		string fittype = (strcmp(ab.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 	  	ptMin = ab.pl;
 		ptMax = ab.ph;
@@ -228,9 +228,9 @@ dbg();
 
 					}
 				if(bkgNom.find("EE")!=std::string::npos){
-		    		bkg_val  = {13.5, 4.0, 1.3,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-		    		bkg_low  = {4.0, 1.0, 0.3,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
-		    		bkg_high = {18, 10.0, 6.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
+		    		bkg_val  = {7.5, 4.0, 1.3,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		    		bkg_low  = {6.0, 2.0, 0.01,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
+		    		bkg_high = {9, 9.0, 4.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
 					fixfit(cbl);
 					}
 				if(bkgNom.find("EX")!=std::string::npos){
@@ -245,7 +245,7 @@ dbg();
 	    			bkg_val  = {-0.4, -0.07, 0.03,  -0.001, -0.03, 0.0, 0.0, 0.0, 0.0};
 	    			bkg_low  = {-0.8, -0.6, -0.6,  -0.6, -0.5, -0.5, -0.5, -0.5, -0.5};
 	    			bkg_high = {0.6, 0.6, 0.6, 0.6, 0.6, 0.5, 0.5, 0.5, 0.5};
-		    		METHOD_MCGCDATA(0);
+		    		METHOD_MCGCDATA(2);
 					}
 				if(bkgNom.find("EE")!=std::string::npos){
 		    		bkg_val  = {8.185, 3.88, 1.45,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};

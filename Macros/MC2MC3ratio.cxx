@@ -42,6 +42,6 @@ RooRealVar effratio(ana_bins ab, long ts = 10000000016){
 }
 
 void MC2MC3ratio(){
-	plot_wr_helper("MCratio_test.root", effratio, 10000000016);	
+	plot_wr_helper("MCratio_220121.root", effratio, 10000000016);	
 	
 }

@@ -52,7 +52,7 @@ void doConstraintFit_SYSHFBDT_v2(int sys_step, int step = 111){
   auto METHOD_MCGCDATA = [&](int mode = 1) mutable {
   std::cout << "cutBDTlow, sb_ratio in functoin : " << cutBDTlow << ", " << sb_ratio.getVal() << std::endl;
     if(mode ==1 || mode ==2){
-	  std::string mcres_input = GetFit(__FITRESLATEST, true, "CB3",(long) 9999999999, train_state, state, (int)ptMin, (int)ptMax, cBinLow, cBinHigh, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP, "");
+	  std::string mcres_input = GetFit(__FITRESLATEST, true, "CB3",_TS, train_state, state, (int)ptMin, (int)ptMax, cBinLow, cBinHigh, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP, "");
 	  std::cout << mcres_input << std::endl;
 
 	  TFile* file_MCres_input = TFile::Open(mcres_input.c_str() );
@@ -135,7 +135,7 @@ auto fixfit = [&](double cBinBDTcut) mutable {
 	SetStyle();
        //////////////////////////////////////////////////////////////////
 //       std::string name_file_data = Form("%s/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_bdtpt_%d_%d_vp%.4f.root" ,workdir.Data(), train_state, ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP );
-	  std::string name_file_data = GetFit(__FITRESLATEST, false, type, 9999999999, train_state, (int) state, 0, 30, 0, 181, cutBDTlow, cutBDThigh, 0, 30, cutQVP, "");
+	  std::string name_file_data = GetFit(__FITRESLATEST, false, type, _TS, train_state, (int) state, 0, 30, 0, 181, cutBDTlow, cutBDThigh, 0, 30, cutQVP, "");
 	std::cout << name_file_data << std::endl;
 	TFile* file_DATAres_input = new TFile(name_file_data.c_str(), "OPEN");
 	 //////////////////////////////////////////////////////////////////
@@ -171,7 +171,7 @@ auto fixfit = [&](double cBinBDTcut) mutable {
 };
   //##########################################EXECUTION CODE#########################################//
 
-  plot_dir_opt = "Sys_changed_signif_v7";
+  plot_dir_opt = "Sys_HF_CENT_v7";
 
 //Step1, First reference integrated bin fit.
 double INTBIN_BDTLOW = 0.1825;// =0.16;
@@ -182,8 +182,10 @@ state =3;
   for( auto ap : ana_bm){
 	  for( auto ab : ap.second){
 //		if( !((ab.bin_attr.find("i")!=std::string::npos && ab.state ==3))) continue;
-//		if( !(ab.cl==20&&ab.ch==40&&(ab.bin_attr.find("c")!=std::string::npos && ab.state ==3))) continue;
-//		if( !(ab.pl==0&&ab.ph==4&&(ab.bin_attr.find("p")!=std::string::npos && ab.state ==3))) continue;
+//		if( !((ab.bin_attr.find("c")!=std::string::npos && ab.state ==2))) continue;
+//		if( !(((ab.bin_attr.find("p")!=std::string::npos|| ab.bin_attr.find("i")!=std::string::npos) && true))) continue;
+//		if( !(ab.cl==120&&ab.ch==140&&(ab.bin_attr.find("c")!=std::string::npos && ab.state ==2))) continue;
+		if( !(ab.pl==3&&ab.ph==6&&(ab.bin_attr.find("p")!=std::string::npos && ab.state ==2))) continue;
 		string fittype = (strcmp(ab.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 	  	ptMin = ab.pl;
 		ptMax = ab.ph;
@@ -191,10 +193,10 @@ state =3;
 		bdtptMax = ab.bph;
 		cBinLow = ab.cl;
 		cBinHigh = ab.ch;
-		train_state = ab.state;
+		train_state = ab.train_state;
 		state = ab.state;
 
-	  	cutBDTlow = Get_BDT((long) 9999999999, ab);
+	  	cutBDTlow = Get_BDT(_TS, ab);
 	    sb_ratio = RooRealVar("sb_ratio", "",-1);
 		bool fitdata = true;
 		if(fitdata){
@@ -206,7 +208,7 @@ state =3;
 			type2			= "CB3:"+ bkgNom  + ":" + fittype.c_str();
 			if(strcmp(ab.bin_attr.c_str(),"c")==0){
 				double cbl = cutBDTlow;
-				cutBDTlow = Get_BDT((long) 9999999999, ab.train_state, ab.state, 0, 30, 0, 30, 0, 181, 0.00, 2.4, 2); 
+				cutBDTlow = Get_BDT(_TS, ab.train_state, ab.state, 0, 30, 0, 30, 0, 181, 0.00, 2.4, 2); 
 				string bkgNomREF = AICGOF_test(ana_bm[Form("%dc",ab.state)][0])[0].second;
 				type			= "CB3:"+ bkgNomREF  + ":" + "GC";
 				if(bkgNom.find("CC")!=std::string::npos){
@@ -218,8 +220,8 @@ state =3;
 					}
 				if(bkgNom.find("EE")!=std::string::npos){
 		    		bkg_val  = {7.5, 6.0, 1.3,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-		    		bkg_low  = {1.0, 1.0, 0.3,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
-		    		bkg_high = {9, 10.0, 4.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
+		    		bkg_low  = {2.0, 1.1, 0.1,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
+		    		bkg_high = {15.5, 11.0, 5.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
 					fixfit(cbl);
 					}
 				if(bkgNom.find("EX")!=std::string::npos){
@@ -234,19 +236,19 @@ state =3;
 	    			bkg_val  = {-0.4, -0.07, 0.03,  -0.001, -0.03, 0.0, 0.0, 0.0, 0.0};
 	    			bkg_low  = {-0.8, -0.6, -0.6,  -0.6, -0.5, -0.5, -0.5, -0.5, -0.5};
 	    			bkg_high = {0.6, 0.6, 0.6, 0.6, 0.6, 0.5, 0.5, 0.5, 0.5};
-		    		METHOD_MCGCDATA(2);
+		    		METHOD_MCGCDATA(1);
 					}
 				if(bkgNom.find("EE")!=std::string::npos){
-		    		bkg_val  = {8.185, 3.88, 1.45,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-		    		bkg_low  = {5.0, 2.0, 0.51,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
-		    		bkg_high = {9.3, 10.0, 2.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
-		    		METHOD_MCGCDATA(2);
+		    		bkg_val  = {9.185, 3.88, 2.45,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		    		bkg_low  = {7.0, 1.0, 1.11,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
+		    		bkg_high = {9.7, 7.0, 7.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
+		    		METHOD_MCGCDATA(1);
 					}
 				if(bkgNom.find("EX")!=std::string::npos){
 			    	bkg_val  = {-1.1, 4.0, 1.5,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 			    	bkg_low  = {-10.0, 2.0, 0.2,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
 			    	bkg_high = {0.1 , 20.0, 3.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
-		    		METHOD_MCGCDATA(2);
+		    		METHOD_MCGCDATA(1);
 					}
 			}
 		}

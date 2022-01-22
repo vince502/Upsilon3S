@@ -1,5 +1,6 @@
 #pragma once
 #define FITRESLIB_H 
+#include "cutsAndBinUpsilonV2.h"
 #include <string>
 #include "TString.h"
 #include ".workdir.h"
@@ -69,11 +70,22 @@ string GetFit(int version, bool isMC, string type, long ts, int train_state, int
 
 string GetEffNum(int version, long ts, int train_state, int target_state, int bpl, int bph, double yl, double yh, double muptcut, double masslow, double masshigh, int clow, int chigh, double vcut, bool istnp, bool isptw ){
 	string wanted_string_eff;
-	if( version == 10 || version == 11){
+	if( version == 10 ){
 		wanted_string_eff = Form("%s/BDT/EffCalc/mc_eff_BDT_%dS_train_%dS_bdtpt%d_%d_%ld_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID_fix_test.root", workdir.Data(), target_state, train_state, bpl, bph, ts, yl, yh, muptcut, masslow, masshigh, clow, chigh, vcut, istnp, isptw);
+	}
+	if( version == 11 ){
+		wanted_string_eff = Form("%s/BDT/EffCalc/mc_eff_BDT_%dS_train_%dS_bdtpt%d_%d_%ld_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_vp_%.4f_ID.root", workdir.Data(), target_state, train_state, bpl, bph, ts, yl, yh, muptcut, masslow, masshigh, vcut);
 	}
 	return wanted_string_eff;
 };
+
+string GetEffDen(int version, int target_state, double masslow, double masshigh, int trig = kTrigUps , double muptcut = 3.5,double yl = -2.4, double yh =2.4){
+	string wanted_string_eff;
+	if( version == 11 ){
+		wanted_string_eff = Form("%s/BDT/EffCalc/mc_eff_%dS_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_TrigSel%d.root", workdir.Data(), target_state, yl, yh, muptcut, masslow, masshigh, trig);
+	}
+	return wanted_string_eff;
+	};
 
 
 #if defined BININFO_H

@@ -13,13 +13,16 @@
 
 
 void BDTClassifierApplication_SYSEFFTNP(long ts= 9999999999, int train_state =2, int target_state = 2, int isMC = 0, bool isbbb = true, int ptLow =0, int ptHigh = 30){
-  std::string info_blind;
-  if( !isbbb) info_blind = info_BDT(ts)[2];
-  if( isbbb ) info_blind = info_BDT(ts)[4];
-  std::pair<int,int> _bf= {stoi(info_blind.substr(6,1)),stoi(info_blind.substr(8,1)) };
-  int whichtree = _bf.second;
-  if (whichtree >5) {std::cout << "if BLIND, is tree selection wrong? " << std::endl; return; }
-  if (whichtree !=0 && whichtree <6) {std::cout <<"Application in BLIND tree"<<whichtree<< std::endl;}
+//  std::string info_blind;
+//  if( !isbbb) info_blind = info_BDT(ts)[2];
+//  if( isbbb ) info_blind = info_BDT(ts)[4];
+//  std::pair<int,int> _bf= {stoi(info_blind.substr(6,1)),stoi(info_blind.substr(8,1)) };
+//  int whichtree = _bf.second;
+//  if (whichtree >5) {std::cout << "if BLIND, is tree selection wrong? " << std::endl; return; }
+//  if (whichtree !=0 && whichtree <6) {std::cout <<"Application in BLIND tree"<<whichtree<< std::endl;}
+  int whichtree =1;
+
+  ROOT::EnableImplicitMT(8);
 
 
   TMVA::Tools::Instance();
@@ -160,7 +163,12 @@ void BDTClassifierApplication_SYSEFFTNP(long ts= 9999999999, int train_state =2,
 
 
   int count = 0;
-  for(Long64_t ievt=0; ievt< tree1->GetEntries();ievt++){
+  int Nfirstloop;
+  if( isMC ) Nfirstloop = (int)  (tree1->GetEntries() /2) ;
+  if( !isMC ) Nfirstloop = (int) tree1->GetEntries();
+  std::cout << "First Loop Entries : " << Nfirstloop << std::endl;
+  std::cout << "Processing event : " << std::endl;
+  for(Long64_t ievt=0; ievt< Nfirstloop;ievt++){
     tree1->GetEntry(ievt);
     outtree->GetEntry(count);
     if (ievt%10000 == 0) std::cout << "--- ... Processing event: " << ievt << "\r";
@@ -186,33 +194,37 @@ void BDTClassifierApplication_SYSEFFTNP(long ts= 9999999999, int train_state =2,
   if(!isNew) bdt_branch->Fill();
   count ++;
   }
-  if(isMC==0){
-    for(Long64_t ievt=0; ievt< tree2->GetEntries();ievt++){
-      tree2->GetEntry(ievt);
-      outtree->GetEntry(count);
-      if (ievt%10000 == 0) std::cout << "--- ... Processing event: " << ievt << "\r";
-      for( string name : dnamelist ){
-        if( mvar[name] !=nullptr){
-          if( mdouble[name] !=nullptr) *mvar[name] = *mdouble[name];
-        }
-        if( mspc[name] !=nullptr){
-          if( mdouble[name] !=nullptr) *mspc[name] = *mdouble[name];
-        }
+  std::cout << std::endl;
+  int Nstart, Nsecondloop;
+  if( isMC ) {Nstart = Nfirstloop; Nsecondloop = tree1->GetEntries(); }
+  if( !isMC) {Nstart = 0; Nsecondloop = tree2->GetEntries(); }
+  std::cout << "Nstart : " << Nstart << ", NsecondLoop : "<< Nsecondloop << std::endl;
+  std::cout << "Processing event : " << std::endl;
+  for(Long64_t ievt=Nstart; ievt< Nsecondloop;ievt++){
+    tree2->GetEntry(ievt);
+    outtree->GetEntry(count);
+    if (ievt%10000 == 0) std::cout << "--- ... Processing event: " << ievt << "\r";
+    for( string name : dnamelist ){
+      if( mvar[name] !=nullptr){
+        if( mdouble[name] !=nullptr) *mvar[name] = *mdouble[name];
       }
-      for( string name : inamelist ){
-        if( mvar[name] !=nullptr){
-          if( mint[name] !=nullptr) *mvar[name] = *mint[name];
-        }
-        if( mspc[name] !=nullptr){
-          if( mint[name] !=nullptr) *mspc[name] = *mint[name];
-        }
+      if( mspc[name] !=nullptr){
+        if( mdouble[name] !=nullptr) *mspc[name] = *mdouble[name];
       }
-    BDT=reader2->EvaluateMVA( Form("BDT"));
-    treeID=2;
-    if(isNew)  outtree->Fill();
-    if(!isNew) bdt_branch->Fill();
-    count ++;
     }
+    for( string name : inamelist ){
+      if( mvar[name] !=nullptr){
+        if( mint[name] !=nullptr) *mvar[name] = *mint[name];
+      }
+      if( mspc[name] !=nullptr){
+        if( mint[name] !=nullptr) *mspc[name] = *mint[name];
+      }
+    }
+  BDT=reader2->EvaluateMVA( Form("BDT"));
+  treeID=2;
+  if(isNew)  outtree->Fill();
+  if(!isNew) bdt_branch->Fill();
+  count ++;
   }
   if(isbbb){
 //    std::vector<std::string> bdt_info = info_BDT(ts);
@@ -222,6 +234,7 @@ void BDTClassifierApplication_SYSEFFTNP(long ts= 9999999999, int train_state =2,
 //    cut = cut+"&&"+MuIDHybridSoft2018;
 //    outtree = (TTree*) outtree->CopyTree(cut.c_str());
   }
+  std::cout << "TOTAL ENTREIS: " << outtree->GetEntries() << std::endl;
   outtree->Write("", TObject::kOverwrite);
   std::cout << "done Writiing " << target->GetName()<< std::endl;
   target->Close();

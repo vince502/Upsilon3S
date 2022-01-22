@@ -6,6 +6,7 @@
 #include "TROOT.h"
 #include "RooFit.h"
 #include "./EffCalc/openEffhist.C"
+#include "./EffCalc/openEffhist_SYS.C"
 #include "./EffCalc/DNDPT/openEffhist_SYSDPT.C"
 #include "./EffCalc/DNDPT/openEffhist_SYSDPT_NN.C"
 #include "./EffCalc/noDNDPT/openEffhist_SYSNODPT.C"

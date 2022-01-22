@@ -132,6 +132,7 @@ double Get_BDT(long ts, int train_state, int state, int bdtptMin, int bdtptMax, 
 };
 
 
+std::pair<double,double> BDTtraindiff(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio =0.16, int train_state =3, int sig_state = 2, int bdtptMin = 0, int bdtptMax = 30 , string name_input_opt = "", string formula_significance= "S2", string the_opt ="", bool save = true);
 std::pair<double,TGraph*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, double ratio =0.16, int train_state =3, int sig_state = 2, int bdtptMin = 0, int bdtptMax = 30 , string name_input_opt = "", string formula_significance= "S2", string the_opt ="", bool save = true);
 std::pair<double,TGraph*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, double rapMin, double rapMax, int cBinLow, int cBinHigh, double cutQVP, RooRealVar r_ratio, int train_state =3, int sig_state =2, int bdtptMin = 0, int bdtptMax = 30 , string name_input_opt = "", string formula_significance= "S2");
 
@@ -165,6 +166,16 @@ double Get_BDT(long ts, ana_bins x, int bdtptMin, int bdtptMax, double vcut =0.0
 };
 double Get_BDT(long ts, ana_bins x, string opt_= "", double vcut =0.00, double rap =2.4, int signif_ =2){
   return Get_BDT(ts, x.train_state, x.state, x.bpl, x.bph, x.pl, x.ph, x.cl, x.ch, vcut, rap, signif_, opt_);
+};
+
+std::pair<double, double> Get_BDTTD(long ts, int pl, int ph, int cl, int ch, int train_state, int state, int bpl, int bph, double ratio, double vcut =0.00, double rap =2.4, int signif_ =2, string opt_ = ""){
+	return BDTtraindiff(ts, (double) pl, (double) ph, -2.4, 2.4, cl, ch, vcut, ratio, train_state, state, bpl, bph);  
+//  return BDTtraindiff(ts, x.train_state, x.state, bdtptMin, bdtptMax, x.pl, x.ph, x.cl, x.ch, vcut, rap, signif_, opt_);
+};
+
+std::pair<double, double> Get_BDTTD(long ts, ana_bins x, double ratio, double vcut =0.00, double rap =2.4, int signif_ =2, string opt_ = ""){
+	return BDTtraindiff(ts, (double) x.pl, (double) x.ph, -2.4, 2.4, x.cl, x.ch, vcut, ratio, x.train_state, x.state, x.bpl, x.bph);  
+//  return BDTtraindiff(ts, x.train_state, x.state, bdtptMin, bdtptMax, x.pl, x.ph, x.cl, x.ch, vcut, rap, signif_, opt_);
 };
 
 
@@ -255,7 +266,7 @@ std::map<std::string, std::vector<ana_bins> > ana_bm_comb ={
 	{"3p", 	{
 		{"p", kPt, "", 0, 4, 0, 4,  0, 181, 0, 90, 1, 3,3},
 		{"p", kPt, "", 4, 9, 4, 9,  0, 181, 0, 90, 2, 3,3},
-		{"p", kPt, "force2", 9, 15, 9, 15,  0, 181, 0, 90, 3, 3,3},
+		{"p", kPt, "notuse1;force2", 9, 15, 9, 15,  0, 181, 0, 90, 3, 3,3},
 		{"p", kPt, "", 15, 30, 15, 30,  0, 181, 0, 90, 4, 3,3},
 		}
 	},

@@ -19,6 +19,7 @@
 #	define ana_bm ana_bm_comb
 #endif
 #include "../BDT/bininfo.h"
+#include "../BDT/BDTtraindiff.cxx"
 #include "../glauberparams_PbPb5TeV.h"
 
 TGraphAsymmErrors analysis_plot(TFile* hf){
@@ -50,7 +51,7 @@ TGraphAsymmErrors analysis_plot(TFile* hf){
 				point_y = {hist.GetBinContent( (vab.size()+1) - idx), hist.GetBinError( (vab.size() +1) - idx)};
 			}
 			if(ab.bintype == kPt){
-				point_x = {( ab.pl + ab.ph )/2, (ab.ph-ab.pl)/2 };
+				point_x = {((double)( ab.pl + ab.ph ))/2., ((double)(ab.ph-ab.pl))/2. };
 				point_y = {hist.GetBinContent( idx ), hist.GetBinError( idx )};
 			}
 			grap.AddPoint(point_x.first, point_y.first);
@@ -67,9 +68,12 @@ TGraphAsymmErrors analysis_plot(TFile* hf){
 	fillgraph(*hp2s, g_p2s, "2p");
 	fillgraph(*hp3s, g_p3s, "3p");
 
-	TCanvas* c1 = new TCanvas("c1","", 1800,900);
+	TCanvas* c1 = new TCanvas("c1","", 2400,900);
 	TPad* p1_L = new TPad("p1L", "", 0.00, 0., 0.83,1.);
 	TPad* p1_R = new TPad("p1R", "", 0.83, 0., 1., 1.);
+
+	double p2scale = (0.83/ (1. - 0.83) ) ;
+
 	p1_L->SetRightMargin(0);
 	p1_R->SetLeftMargin(0);
 
@@ -78,34 +82,81 @@ TGraphAsymmErrors analysis_plot(TFile* hf){
 	p1_L->Draw();
 	p1_R->Draw();
 
+/////////////////////////////////GRAPH ATTR///////////////////////////////////
 	g_c2s.SetLineColor(kBlue);
 	g_p2s.SetLineColor(kBlue);
 	g_i2s.SetLineColor(kBlue);
-	g_c3s.SetLineColor(kGreen+3);
-	g_p3s.SetLineColor(kGreen+3);
-	g_i3s.SetLineColor(kGreen+3);
-//	g_c2s.SetMarkerSize( gc2s.Ge
+	g_c2s.SetMarkerColor(kBlue);
+	g_p2s.SetMarkerColor(kBlue);
+	g_i2s.SetMarkerColor(kBlue);
+	g_c3s.SetLineColor(kGreen+2);
+	g_p3s.SetLineColor(kGreen+2);
+	g_i3s.SetLineColor(kGreen+2);
+	g_c3s.SetMarkerColor(kGreen+2);
+	g_p3s.SetMarkerColor(kGreen+2);
+	g_i3s.SetMarkerColor(kGreen+2);
+
+	g_c2s.SetMarkerStyle(kFullSquare);
+	g_p2s.SetMarkerStyle(kFullSquare);
+	g_i2s.SetMarkerStyle(kFullSquare);
+	g_c2s.SetMarkerSize(1.6);
+	g_p2s.SetMarkerSize(1.6);
+	g_i2s.SetMarkerSize(1.6);
+
+	g_c3s.SetMarkerStyle(kFullCircle);
+	g_p3s.SetMarkerStyle(kFullCircle);
+	g_i3s.SetMarkerStyle(kFullCircle);
+	g_c3s.SetMarkerSize(1.6);
+	g_p3s.SetMarkerSize(1.6);
+	g_i3s.SetMarkerSize(1.6);
+///////////////////////////////////////////////////////////////////////////////
+	gStyle->SetEndErrorSize(0);
+
+	double yup = 1.3;
+	double ydown = 0.0;
+
+	TLine* lineone = new TLine();
+	lineone->SetLineStyle(kDashed);
+	lineone->SetLineWidth(1);
 
 	p1_L->cd();
-	g_c2s.GetYaxis()->SetRangeUser(0,1);
+	g_c2s.GetYaxis()->SetRangeUser(ydown, yup);
+	g_c2s.GetXaxis()->SetTitle("#LT N_{part} #GT");
+	g_c2s.GetXaxis()->SetTitleOffset(1.1);
+	g_c2s.GetXaxis()->CenterTitle();
+	g_c2s.GetYaxis()->SetTitle("R_{AA}");
+	g_c2s.GetYaxis()->CenterTitle();
 	g_c2s.Draw("APE");
 	g_c3s.Draw("PE ");
+	lineone->DrawLine(0, 1, 420, 1);
 	p1_L->Update();
 	p1_L->Draw();
 
 	p1_R->cd();
-	g_i2s.GetYaxis()->SetRangeUser(0,1);
-	g_i2s.GetXaxis()->SetRangeUser(0,4);
+	g_i2s.GetYaxis()->SetRangeUser(ydown, yup);
+	g_i2s.GetYaxis()->SetTickLength( g_i2s.GetYaxis()->GetTickLength() * p2scale );
+	g_i2s.GetXaxis()->SetRangeUser(1,4);
+	g_i2s.GetXaxis()->SetLimits(1,4);
+	g_i2s.GetXaxis()->SetTickSize(0);
+	g_i2s.GetXaxis()->SetLabelSize(0);
 	g_i2s.Draw("APE");
 	g_i3s.Draw("PE");
+	lineone->DrawLine(1,1,4,1);
 	p1_R->Update();
 	p1_R->Draw();
 
 
 	c1->cd(2);
-	g_p2s.GetYaxis()->SetRangeUser(0,1);
+	g_p2s.GetYaxis()->SetRangeUser(ydown, yup);
+	g_p2s.GetXaxis()->SetRangeUser(0, 30);
+	g_p2s.GetXaxis()->SetTitle("p_{T} (GeV/c)");
+	g_p2s.GetXaxis()->SetTitleOffset(1.1);
+	g_p2s.GetXaxis()->CenterTitle();
+	g_p2s.GetYaxis()->SetTitle("R_{AA}");
+	g_p2s.GetYaxis()->CenterTitle();
 	g_p2s.Draw("APE");
 	g_p3s.Draw("PE");
+	lineone->DrawLine(0, 1, 30, 1);
 	
 	c1->Modified();
 	c1->Update();

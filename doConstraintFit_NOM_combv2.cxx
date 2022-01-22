@@ -349,22 +349,22 @@ state =3;
 	    if(ptpair.first.first == 0 && ptpair.first.second == 30){ INTBIN_BDTLOW = res.first; }
 	    std::cout << "cutBDTlow, sb_ratio: " << cutBDTlow << ", "<< sb_ratio.getVal() << std::endl;
 	    type 			= "CB3:CC1:GC"	;
-	    METHOD_MCGCDATA(2);
-	    type 			= "CB3:CC2:GC"	;
-	    METHOD_MCGCDATA(2);
-	    type 			= "CB3:CC3:GC"	;
-	    METHOD_MCGCDATA(2);
-	    type 			= "CB3:CC4:GC"	;
-	    METHOD_MCGCDATA(2);
-	    type 			= "CB3:CC5:GC"	;
-	    METHOD_MCGCDATA(2);
-	    type 			= "CB3:CC6:GC"	;
-	    METHOD_MCGCDATA(2);
+//	    METHOD_MCGCDATA(2);
+//	    type 			= "CB3:CC2:GC"	;
+//	    METHOD_MCGCDATA(2);
+//	    type 			= "CB3:CC3:GC"	;
+//	    METHOD_MCGCDATA(2);
+//	    type 			= "CB3:CC4:GC"	;
+//	    METHOD_MCGCDATA(2);
+//	    type 			= "CB3:CC5:GC"	;
+//	    METHOD_MCGCDATA(2);
+//	    type 			= "CB3:CC6:GC"	;
+//	    METHOD_MCGCDATA(2);
 	    type 			= "CB3:EE:GC"	;
 	    bkg_val  = {7.21, 5.201, 1.39,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 	    bkg_low  = {6.5, 2.1, 0.1,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
 	    bkg_high = {8.5, 8.0, 5.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
-	    METHOD_MCGCDATA(2);
+	    METHOD_MCGCDATA(0);
 		if(ptpair.first.first>= 9){
 		    bkg_val  = {-0.1, 4.0, 1.5,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 		    bkg_low  = {-2.0, 2.0, 0.2,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
@@ -452,8 +452,9 @@ cBinHigh = 181;
 
   for( auto ptpair : (std::vector<std::pair<std::pair<double, double>, std::pair<double, double> > >) { 
   {{0,30},{0,30}},
- // {{0,3},{0,3}}, 
- // {{3,6},{3,6}},
+//  {{0,3},{0,3}}, 
+//  {{0,4},{0,4}}, 
+//  {{3,6},{3,6}},
  // {{6,9},{6,9}},
  // {{9,15},{9,15}},
  // {{15,30},{15,30}}
@@ -473,22 +474,22 @@ cBinHigh = 181;
 		Nworkers = GLOBAL_NWORKERS;
 	    std::cout << "cutBDTlow, sb_ratio: " << cutBDTlow << ", "<< sb_ratio.getVal() << std::endl;
 	    type 			= "CB3:CC1:GC"	;
-	    METHOD_MCGCDATA(2);
-	    type 			= "CB3:CC2:GC"	;
-	    METHOD_MCGCDATA(2);
-	    type 			= "CB3:CC3:GC"	;
-	    METHOD_MCGCDATA(2);
-	    type 			= "CB3:CC4:GC"	;
-	    METHOD_MCGCDATA(2);
-	    type 			= "CB3:CC5:GC"	;
-	    METHOD_MCGCDATA(2);
-	    type 			= "CB3:CC6:GC"	;
-	    METHOD_MCGCDATA(2);
+//	    METHOD_MCGCDATA(2);
+//	    type 			= "CB3:CC2:GC"	;
+//	    METHOD_MCGCDATA(2);
+//	    type 			= "CB3:CC3:GC"	;
+//	    METHOD_MCGCDATA(2);
+//	    type 			= "CB3:CC4:GC"	;
+//	    METHOD_MCGCDATA(2);
+//	    type 			= "CB3:CC5:GC"	;
+//	    METHOD_MCGCDATA(2);
+//	    type 			= "CB3:CC6:GC"	;
+//	    METHOD_MCGCDATA(2);
 	    type 			= "CB3:EE:GC"	;
 	    bkg_val  = {7.0, 5.5, 6.4,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-	    bkg_low  = {6.5, 2.1, 0.21,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
-	    bkg_high = {8.1, 11.0, 12.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
-	    METHOD_MCGCDATA(2);
+	    bkg_low  = {6.5, 1.1, 0.21,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
+	    bkg_high = {9.1, 11.0, 12.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
+	    METHOD_MCGCDATA(0);
 		if(ptpair.first.first>= 3){
 		    bkg_val  = {-1.1, 4.0, 0.5,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 		    bkg_low  = {-10.0, 2.0, 0.002,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
@@ -514,7 +515,7 @@ for( auto cbinpair : (std::vector<std::pair<int, int> >) {
 //{40, 60},
 //{60, 80},
 //{80, 100},
-//{100, 120},
+{100, 120},
 //{120, 140},
 //{140, 181},
 /*{140, 160},
@@ -528,7 +529,7 @@ for( auto cbinpair : (std::vector<std::pair<int, int> >) {
     std::pair<double, RooRealVar> res = prep_bdtval(0.0,5);
     double CBINBDTLOW = res.first;
 	sb_ratio = res.second;
-	bool fitdata = 0;
+	bool fitdata = 1;
 	bool fit_aux = 0;
 	if(fitdata){
 		Nworkers = GLOBAL_NWORKERS;
@@ -545,9 +546,9 @@ for( auto cbinpair : (std::vector<std::pair<int, int> >) {
 //	    type2			= "CB3:CC6:FF"	;
 //		fixfit(CBINBDTLOW);
 	    type2			= "CB3:EE:FF"	;
-	    bkg_val  = {7.1, 8.01, 5.111,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-	    bkg_low  = {3.0, 1.1, 0.01,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
-	    bkg_high = {8.7, 20.1, 9.1, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
+	    bkg_val  = {7.5, 4.01, 5.111,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	    bkg_low  = {5.0, 1.1, 0.1,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
+	    bkg_high = {9.5, 10.1, 9.1, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
 		fixfit(CBINBDTLOW);
 		if(fit_aux){
 		    bkg_val  = {-1.1, 4.0, 1.5,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};

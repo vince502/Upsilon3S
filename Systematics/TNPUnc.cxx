@@ -1,16 +1,19 @@
 #include "../BDT/bininfo.h"
 
-std::pair< string, string > get_histnames(ana_bins x){
-	double bl = Get_BDT(9999999999, x.state, x.pl, x.ph, x.cl, x.ch);
+std::pair<string, string> get_histnames(ana_bins x){
+	long ts = _TS;
+	double bl = Get_BDT(ts, x);
 	double ml, mh;
 	if( x.state == 2){ml = 9.3; mh = 10.7;}
 	if( x.state == 3){ml = 9.6; mh = 11.0;}
-	std::string histNameNOM = Form("BDT_%dS_train%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID_fix", x.state, x.state, 9999999999, bl, 1., (double) x.pl, (double) x.ph, -2.4, 2.4, 3.5, ml, mh, x.cl, x.ch, 0., true, true);
-	std::string histNameSYS = Form("BDT_%dS_train%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID_SYSTNP", x.state, x.state, 9999999999, bl, 1., (double) x.pl, (double) x.ph, -2.4, 2.4, 3.5, ml, mh, x.cl, x.ch, 0., true, true);
-	return std::make_pair(histNameNOM, histNameSYS);
+//	std::string histNameNOM = Form("BDT_%dS_train%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID_fix", x.state, x.state, 9999999999, bl, 1., (double) x.pl, (double) x.ph, -2.4, 2.4, 3.5, ml, mh, x.cl, x.ch, 0., true, true);
+	std::string histNameNOM = GetEffDen(__FITRESLATEST, x.train_state, ml, mh);
+	std::string histNameSYS = Form("BDT_%dS_train%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID_SYSTNP", x.state, x.train_state, 10000000016, bl, 1., (double) x.pl, (double) x.ph, -2.4, 2.4, 3.5, ml, mh, x.cl, x.ch, 0., true, true);
+	return (std::pair<string, string>){histNameNOM, histNameSYS};
 };
 
 void TNPUnc(){
+	long ts = _TS;
 	 
 	TFile* output = new TFile("effTNP_unc.root","recreate");
 	TH1D *rc2s, *rc3s, *rp2s, *rp3s;
@@ -42,13 +45,14 @@ void TNPUnc(){
 		for( ana_bins ab : abv.second){
 			auto name_pair = get_histnames(ab);
 		  	TFile *f_hreco_ref, *f_hreco;
-			f_hreco_ref = TFile::Open(Form("%s/BDT/EffCalc/mc_eff_%s.root", workdir.Data(), name_pair.first.c_str() ) );
+			f_hreco_ref = TFile::Open(Form("%s", name_pair.first.c_str() ) );
 			f_hreco = TFile::Open(Form("%s/BDT/EffCalc/TNP/mc_eff_%s.root", workdir.Data(), name_pair.second.c_str() ) );
 
-			TH1D* hreco_ref;
+			TH3D* hreco_ref;
 			std::map<TString, TH1D*> map_hreco_tnp;
-			hreco_ref = (TH1D*) f_hreco_ref->Get("hreco");
-			double COUNT_REF = hreco_ref->GetBinContent(1);
+			hreco_ref = (TH3D*) f_hreco_ref->Get("hreco");
+			double bdtlow = Get_BDT(ts, ab);	
+			double COUNT_REF = hreco_ref->Integral( ((int)(bdtlow + 1.0000) * 10000), 20000, ab.pl, ab.ph, (ab.cl/5) +1 , (ab.ch/5) );
 			double ERR_CVAR[3] = {0,0,0};
 			for( int cv : {1,2,3}){
 			  	double COUNT_TAG, COUNT_STAT, COUNT_SYS;

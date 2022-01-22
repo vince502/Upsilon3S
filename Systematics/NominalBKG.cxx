@@ -44,6 +44,7 @@ void NominalBKG(){
 
     for( auto item : vp3){
 		auto res = AICGOF_test(item);
+		if(item.pl == 9 ) std::cout << "Problem bin : NOM BKG : " << res[0].second << std::endl;
 		rp3s->GetXaxis()->SetBinLabel(counter, res[0].second.c_str());
         rp3s->SetBinContent(counter, 0);
         counter++;

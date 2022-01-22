@@ -1,6 +1,7 @@
 #pragma once
 #include "yield_eff_signif.h"
 #include "Get_Optimal_BDT.cxx"
+#include "BDTtraindiff.cxx"
 #include "../script_tools.h"
 
 binplotter::binplotter(){};
@@ -211,7 +212,8 @@ std::pair<double, double> binplotter::get_eff_sysdpt(int state =3, std::string w
 };
 
 std::vector<double> binplotter::get_eff_NN(int state =3){
-  std::vector<double> bdteff = openEffhist_SYSDPT_NN((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, train_state, state, vcut, "",eff_old);  
+  std::vector<double> bdteff = openEffhist_SYS((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, bdtptMin, bdtptMax, train_state, state, vcut, eff_old, false);  
+//  std::vector<double> bdteff = openEffhist_SYSDPT_NN((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, train_state, state, vcut, "",eff_old);  
   return bdteff;
 };
 

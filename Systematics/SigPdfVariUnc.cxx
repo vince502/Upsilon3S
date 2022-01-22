@@ -1,13 +1,12 @@
-#include "../plots/drawRAAplot.cxx"
 #include "GOF_test.cxx"
 #include "sys_wr_helper.cxx"
-bool isDR = false;
+
 
 double getSigPdfVariUnc(ana_bins x){
+	bool isDR = ISDR;
 	int pl, ph, cl, ch, train_state, state, bpl, bph;
 	pl = x.pl; ph = x.ph; cl = x.cl; ch = x.ch; train_state = x.train_state; state = x.state; bpl = x.bpl; bph = x.bph;
-	long ts = 9999999999;
-	if( ts == 9999999999 ) train_state = state;
+	long ts = _TS;
 	string fittype = (strcmp(x.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 	auto AICres = AICGOF_test(x);
 	string bkgNom = AICres[0].second;

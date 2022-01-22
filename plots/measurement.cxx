@@ -33,6 +33,7 @@ RooRealVar getRAAValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC
 	yAA = RooRealVar(Form("corrY%dyield",state), Form("corrected %dS yield",state), _y.getVal()/(_yacc.getVal()*_yeff));
 	std::cout <<"##Yield "<<state<<"S Corrected y/acc eff: "<< yAA.getVal() << ", Efficiency: " << _yeff << ", Acceptance: " << _yacc.getVal() << std::endl;
 	yAA.setError(_y.getError()/(_yacc.getVal()*_yeff ));
+	std::cout << "\n\n\n YAA ERROR : " << yAA.getError() << "\n\n" << std::endl;
 	if(getPre==1) return yAA;
 	TFile* file_pp =TFile::Open(Form("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/results_%dS.root",state));
 	
@@ -69,11 +70,12 @@ RooRealVar getRAAValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC
 	Double_t step_two_err = step_one_err * (90./(ab.centh - ab.centl));
 	Double_t val_RAA = 4.*step_two*yAA.getVal();
 	Double_t val_RAA_err;
-	std::cout << "step 2 err and yAA err : " << 4* step_two_err*yAA.getVal() << ", " << step_two * yAA.getError() << std::endl;
-	if(inc_pp_stat) val_RAA_err = TMath::Sqrt(TMath::Power(4*step_two_err* yAA.getVal(),2) + TMath::Power(step_two * yAA.getError(),2)); 
+	std::cout << "step 2 err and yAA err : " << 4* step_two_err*yAA.getVal() << ", " << 4*step_two * yAA.getError()/val_RAA << std::endl;
+	if(inc_pp_stat) val_RAA_err = TMath::Sqrt(TMath::Power(4*step_two_err* yAA.getVal(),2) + TMath::Power(2*step_two * yAA.getError(),2)); 
 	if(!inc_pp_stat) val_RAA_err = step_two * yAA.getError(); 
 	std::cout << std::endl << std::endl << Form(" taa_Nmb: %.3f, cs_pp : %.9f,  step_one: %.16f, step_two %.16f ", taa_Nmb, cs_pp,  (double) step_one, (double) step_two) << std::endl << std::endl;
 	std::cout << std::endl << std::endl << "Projected RAA : " << val_RAA << std::endl << std::endl;
+	std::cout << "\n\n\n step 2 err and yAA err : " << 4* step_two_err*yAA.getVal() << ", " << step_two * yAA.getError() << "\n\n" << std::endl;
 	
 	RooRealVar val_return = RooRealVar("raa","", val_RAA);
 	val_return.setError(val_RAA_err);
@@ -134,8 +136,8 @@ RooRealVar getDRValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC2
 
 	// Calc - 2. Numerator : err = Y2S/Y3S * SQRT( (E2S/Y2S) ^2  + (E3S/Y3S) ^2 - 2* (COV23S/Y2S*Y3S) )
 	double AA_err = AA_val * TMath::Sqrt(
-		TMath::Power( (yAA2S.getError()/ yAA2S.getVal() ) ,2) 
-		+TMath::Power( (yAA3S.getError() / yAA3S.getVal() ) ,2) 
+		TMath::Power( (yAA2S.getError()*0.5/ yAA2S.getVal() ) ,2) 
+		+TMath::Power( (yAA3S.getError()*0.5 / yAA3S.getVal() ) ,2) 
 		- 2 * ( cov_23s / ( yAA2S.getVal() * yAA3S.getVal()) ) 
 	);
 	// Calc - 2-1. Update err for Blind projection
