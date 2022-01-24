@@ -7,7 +7,8 @@ std::pair<string, string> get_histnames(ana_bins x){
 	if( x.state == 2){ml = 9.3; mh = 10.7;}
 	if( x.state == 3){ml = 9.6; mh = 11.0;}
 //	std::string histNameNOM = Form("BDT_%dS_train%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID_fix", x.state, x.state, 9999999999, bl, 1., (double) x.pl, (double) x.ph, -2.4, 2.4, 3.5, ml, mh, x.cl, x.ch, 0., true, true);
-	std::string histNameNOM = GetEffDen(__FITRESLATEST, x.train_state, ml, mh);
+//	std::string histNameNOM = GetEffDen(__FITRESLATEST, x.state, ml, mh);
+	std::string histNameNOM = GetEffNum(__FITRESLATEST, ts, x.train_state, x.state, x.bpl, x.bph, -2.4, 2.4, 3.5, ml, mh, x.cl, x.ch, 0.00, true, true);
 	std::string histNameSYS = Form("BDT_%dS_train%dS_%ld_bdt_%.4f-%.4f_pt%.1f_%.1f_y%.1f_%.1f_SiMuPt%.1f_mass%.1f_%.1f_cent%d_%d_vp_%.4f_isTnP%d_isPtWeight%d_ID_SYSTNP", x.state, x.train_state, 10000000016, bl, 1., (double) x.pl, (double) x.ph, -2.4, 2.4, 3.5, ml, mh, x.cl, x.ch, 0., true, true);
 	return (std::pair<string, string>){histNameNOM, histNameSYS};
 };
@@ -15,7 +16,7 @@ std::pair<string, string> get_histnames(ana_bins x){
 void TNPUnc(){
 	long ts = _TS;
 	 
-	TFile* output = new TFile("effTNP_unc.root","recreate");
+	TFile* output = new TFile("./data/effTNP_unc.root","recreate");
 	TH1D *rc2s, *rc3s, *rp2s, *rp3s;
 	rc2s = new TH1D("rc2S","",10,0,9); //include int. bin
 	rc3s = new TH1D("rc3S","",4,0,3);  //include int. bin
@@ -46,13 +47,17 @@ void TNPUnc(){
 			auto name_pair = get_histnames(ab);
 		  	TFile *f_hreco_ref, *f_hreco;
 			f_hreco_ref = TFile::Open(Form("%s", name_pair.first.c_str() ) );
+			std::cout << name_pair.first.c_str() << std::endl;
+			std::cout << name_pair.second.c_str() << std::endl;
+
 			f_hreco = TFile::Open(Form("%s/BDT/EffCalc/TNP/mc_eff_%s.root", workdir.Data(), name_pair.second.c_str() ) );
 
 			TH3D* hreco_ref;
 			std::map<TString, TH1D*> map_hreco_tnp;
 			hreco_ref = (TH3D*) f_hreco_ref->Get("hreco");
 			double bdtlow = Get_BDT(ts, ab);	
-			double COUNT_REF = hreco_ref->Integral( ((int)(bdtlow + 1.0000) * 10000), 20000, ab.pl, ab.ph, (ab.cl/5) +1 , (ab.ch/5) );
+			std::cout << Form("Bin : %d - %d, %d - %d, %d - %d",(int) ( (bdtlow + 1.0000) * 10000), 20000, ab.pl, ab.ph, (ab.cl/5) +1, (ab.ch/5) ) << std::endl;
+			double COUNT_REF = hreco_ref->Integral((int) ((bdtlow + 1.0000) * 10000), 20000, ab.pl + 1 , ab.ph, (ab.cl/5) +1 , (ab.ch/5) );
 			double ERR_CVAR[3] = {0,0,0};
 			for( int cv : {1,2,3}){
 			  	double COUNT_TAG, COUNT_STAT, COUNT_SYS;
@@ -63,7 +68,7 @@ void TNPUnc(){
 
 					map_hreco_tnp[the_string] = clone_hreco;
 
-					if(md == 1) COUNT_TAG = map_hreco_tnp[the_string]->GetBinContent(1);
+					if(md == 1) COUNT_TAG = map_hreco_tnp[the_string]->GetSum();
 				}
 				std::vector<std::pair<int,int> > udp = {{2,3}, {4,5}};
 				for( auto mdp : udp){
@@ -71,17 +76,21 @@ void TNPUnc(){
 					TString cfg_up, cfg_down;
 					cfg_up = get_input_config(cv, mdp.first);
 					cfg_down = get_input_config(cv, mdp.second);
-					COUNT_UP = map_hreco_tnp[cfg_up]->GetBinContent(1);
-					COUNT_DOWN = map_hreco_tnp[cfg_down]->GetBinContent(1);
+					COUNT_UP = map_hreco_tnp[cfg_up]->GetSum();
+					COUNT_DOWN = map_hreco_tnp[cfg_down]->GetSum();
 					double _this = ( (fabs(COUNT_UP - COUNT_REF) - fabs(COUNT_DOWN - COUNT_REF)) >0) ? COUNT_UP : COUNT_DOWN;
 					if( mdp.first == 2) COUNT_STAT = _this;
 					if( mdp.first == 4) COUNT_SYS = _this;
 				}
+				std::cout <<"COUNT_REF " << COUNT_REF <<  ", COUNT_TAG " << COUNT_TAG - COUNT_REF << ", COUNT_STAT " << COUNT_STAT - COUNT_REF << ", COUNT_SYS " << COUNT_SYS - COUNT_REF << std::endl;
 				ERR_CVAR[cv-1] = TMath::Sqrt( TMath::Power(COUNT_TAG -COUNT_REF, 2) + TMath::Power(COUNT_STAT- COUNT_REF, 2) + TMath::Power(COUNT_SYS - COUNT_REF, 2) );
+				std::cout << "ER_CVAR[cv-1] " << ERR_CVAR[cv-1] << std::endl;
 			}
 			f_hreco->Close();
 			f_hreco_ref->Close();
 			double COUNT_TNP = TMath::Sqrt( TMath::Power(ERR_CVAR[0], 2) + TMath::Power(ERR_CVAR[1], 2) + TMath::Power(ERR_CVAR[2], 2) ); 
+			
+//			std::cout << Form("Efficiency for ref, TNP : %.5f, %.5f", COUNT_REF, COUNT_TNP ) << std::endl;
 			
 			double tnpUnc = (COUNT_TNP )/ COUNT_REF;
 			abv.first->SetBinContent(counter, tnpUnc);

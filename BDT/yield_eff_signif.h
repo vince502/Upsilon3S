@@ -34,6 +34,7 @@ class binplotter
 	std::pair<double, double> get_eff_sysdpt(int state =3, std::string what = "", bool getNum = false);
 	RooRealVar yield_eff();
 	RooRealVar get_frac(int state);
+	RooRealVar return_23s_frac(bool withEff = false);
 	RooRealVar getsignificance();
 	RooRealVar* NS;
 	RooRealVar* NB;

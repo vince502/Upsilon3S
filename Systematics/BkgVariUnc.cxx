@@ -7,7 +7,6 @@
 #endif
 
 pp getBkgVariUnc_2item(ana_bins x){
-	bool isDR = ISDR;
 	int pl, ph, cl, ch, state, bpl, bph;
 	pl = x.pl; ph = x.ph; cl = x.cl; ch = x.ch; state = x.state; bpl = x.bpl; bph = x.bph;
 	int train_state = x.train_state;
@@ -43,9 +42,9 @@ pp getBkgVariUnc_2item(ana_bins x){
 	raa_sys2.setVal(raa_sys2.getVal()/eff_sys2);
 	}
 	if( isDR ){
-	raa_nom  = bp_nom->get_frac(state);
-	raa_sys1 = bp_sys1->get_frac(state);
-	raa_sys2 = bp_sys2->get_frac(state);
+	raa_nom  = bp_nom->return_23s_frac();
+	raa_sys1 = bp_sys1->return_23s_frac();
+	raa_sys2 = bp_sys2->return_23s_frac();
 	}
 
 	double unc_sys1 =  (raa_sys1.getVal() - raa_nom.getVal())/(raa_nom.getVal());
@@ -58,7 +57,7 @@ double getBkgVariUnc(ana_bins x){
 };
 
 void BkgVariUnc(){
-	sys_wr_helper_2item(Form("bkgPDF_unc_2item_%ld.root", (long) _TS), getBkgVariUnc_2item);
-	sys_wr_helper(Form("bkgPDF_unc_%ld.root", (long) _TS), getBkgVariUnc);
+	sys_wr_helper_2item(Form("bkgPDF_unc%s_2item.root", labDR.c_str()), getBkgVariUnc_2item);
+	sys_wr_helper(Form("bkgPDF_unc%s.root", labDR.c_str()), getBkgVariUnc);
 }
 

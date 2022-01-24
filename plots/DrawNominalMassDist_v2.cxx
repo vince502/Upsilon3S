@@ -65,6 +65,8 @@ void DrawNominalMassDist_(ana_bins ab, long ts = 9999999999){
 /////////////////////////////////////////////////////////////////////////////
 
 
+	gStyle->SetEndErrorSize(0);
+
 //  setTDRStyle();
   TCanvas* c1 = new TCanvas("c1", "", 1200, 1000);
 

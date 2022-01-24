@@ -7,7 +7,6 @@
 #endif 
 
 pp getBDTDiffVariUnc_2item(ana_bins x){
-	bool isDR = ISDR;
 	int pl, ph, cl, ch, state, bpl, bph;
 	pl = x.pl; ph = x.ph; cl = x.cl; ch = x.ch; state = x.state; bpl = x.bpl; bph = x.bph;
 	string fittype = (strcmp(x.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
@@ -59,9 +58,12 @@ pp getBDTDiffVariUnc_2item(ana_bins x){
 	raa_sys2.setVal(raa_sys2.getVal()/eff_sys2);
 	}
 	if( isDR ){
-	raa_nom  = bp_nom->get_frac(state);
-	raa_sys1 = bp_sys1->get_frac(state);
-	raa_sys2 = bp_sys2->get_frac(state);
+		if( x.state == 2 ) return pp { { 0, "Up" }, { 0, "Down" } };
+		else{
+			raa_nom  = bp_nom->return_23s_frac(true);
+			raa_sys1 = bp_sys1->return_23s_frac(true);
+			raa_sys2 = bp_sys2->return_23s_frac(true);
+		}
 	}
 
 	double unc_sys1 =  (raa_sys1.getVal() - raa_nom.getVal())/(raa_nom.getVal());
@@ -77,7 +79,7 @@ double getBDTDiffVariUnc(ana_bins x){
 
 
 void BDTDiffVariUnc(){
-	sys_wr_helper("BDT_Diff_unc.root", getBDTDiffVariUnc);
-	sys_wr_helper_2item("BDT_Diff_unc_2item.root", getBDTDiffVariUnc_2item);
+	sys_wr_helper(Form("BDT_Diff_unc%s.root",labDR.c_str()), getBDTDiffVariUnc);
+	sys_wr_helper_2item(Form("BDT_Diff_unc%s_2item.root",labDR.c_str()), getBDTDiffVariUnc_2item);
 }
 

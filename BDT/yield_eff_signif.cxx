@@ -120,6 +120,24 @@ void binplotter::dump(){
 };
 
 
+RooRealVar binplotter::return_23s_frac( bool withEff =false){
+
+  RooRealVar Yield2S, Yield3S;
+  const RooArgList& paramList = res->floatParsFinal();
+  Yield2S = *(RooRealVar*) worksp->var("nSig2S");
+  Yield3S = *(RooRealVar*) worksp->var("nSig3S");
+
+  if ( withEff ){
+  	  auto eff2s = this->get_eff(2);
+  	  auto eff3s = this->get_eff(3);
+	  return RooRealVar("23frac_eff", "", (Yield3S.getVal()* eff2s.first) /( eff3s.first * Yield2S.getVal()));
+  }
+  else{ 
+	  return RooRealVar("23frac", "", (Yield3S.getVal()) /(Yield2S.getVal()));
+  }
+
+};
+
 RooRealVar binplotter::get_frac(int state){
 
   RooRealVar Yield1S, Frac2S, Frac3S;

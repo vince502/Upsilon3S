@@ -33,10 +33,10 @@ float relExtraDY = 1.2;
 // ratio of "CMS" and extra text size
 float extraOverCmsTextSize  = 0.76;
 
-TString lumi_pp502TeV  = "28.0 pb^{-1}";
+TString lumi_pp502TeV  = "302 pb^{-1}";
 TString lumi_pPb502TeV  = "34.6 nb^{-1}";
 TString lumi_PbPb502TeV  = "1.6 nb^{-1}";
-TString lumi_PbPb502TeV_blind  = "(1/4) of 1.6 nb^{-1}";
+TString lumi_PbPb502TeV_blind  = "1.6 nb^{-1} projection";
 TString lumi_PbPb502TeV_projected  = "10 nb^{-1} projection";
 TString lumi_sqrtS = "";
 

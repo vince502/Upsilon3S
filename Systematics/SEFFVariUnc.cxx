@@ -8,7 +8,6 @@
 #endif 
 
 pp getSEFFVariUnc_2item(ana_bins x){
-	bool isDR = ISDR;
 	int pl, ph, cl, ch, state, bpl, bph;
 	pl = x.pl; ph = x.ph; cl = x.cl; ch = x.ch; state = x.state; bpl = x.bpl; bph = x.bph;
 	string fittype = (strcmp(x.bin_attr.c_str(),"c")==0) ? "FF" : "GC";

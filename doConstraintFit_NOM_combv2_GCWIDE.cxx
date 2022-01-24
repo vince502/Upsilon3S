@@ -7,8 +7,8 @@
 #include "./BDT/yield_eff_signif.cxx"
 #include "script_tools.h"
 
-void doConstraintFit_NOM_combv2(int step = 0){
-  std::string type 			= "CB3:CC3:GC"	;
+void doConstraintFit_NOM_combv2_GCWIDE(int step = 0){
+  std::string type 			= "CB3:CC3:GCWIDE3"	;
   std::string type2 			= "CB3:CC4:DR2FF"	;
   std::string type_r 			= "CB3:CC4:DRGC"	;
   std::string typenobdt 		= "CB3:CC4:FF"	;
@@ -205,9 +205,9 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0, bool redo_nobdt =f
       for (auto keys : list_var_toConst){
       std::cout << keys << std::endl;
         RooRealVar* _var = (RooRealVar*) list_fit_final.find(keys.c_str());
-        map_keyval[keys.c_str()] = {_var->getVal(), _var->getError()};
-        opt_params_gc+=Form(":%s;%.6f",keys.c_str(), _var->getError());
-      std::cout << keys <<": "<< _var->getVal() << ", "<< _var->getError() << std::endl;
+        map_keyval[keys.c_str()] = {_var->getVal(), _var->getError()*3};
+        opt_params_gc+=Form(":%s;%.6f",keys.c_str(), _var->getError()*3);
+      std::cout << keys <<": "<< _var->getVal() << ", "<< _var->getError()*3 << std::endl;
       }
       opt_params_gc+=":GCPEND";
       type = type+opt_params_gc; 
@@ -275,7 +275,7 @@ auto fixfit = [&](double cBinBDTcut) mutable {
 	SetStyle();
        //////////////////////////////////////////////////////////////////
 //       std::string name_file_data = Form("%s/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_bdtpt_%d_%d_vp%.4f.root" ,workdir.Data(), train_state, ts, fitdir.c_str(), name_fitmodel.c_str(), (int) ptMin, (int) ptMax,  ylim10, ylim10, cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), (int) swflag, (int) isBDT, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP );
-	  std::string name_file_data = GetFit(__FITRESLATEST, false, "CB3:EE:GC",ts, train_state, (int) state, 0, 30, 0, 181, cutBDTlow, cutBDThigh, 0, 30, cutQVP, "");
+	  std::string name_file_data = GetFit(__FITRESLATEST, false, "CB3:EE:GCWIDE3",ts, train_state, (int) state, 0, 30, 0, 181, cutBDTlow, cutBDThigh, 0, 30, cutQVP, "");
 	std::cout << name_file_data << std::endl;
 	TFile* file_DATAres_input = new TFile(name_file_data.c_str(), "OPEN");
 	 //////////////////////////////////////////////////////////////////
@@ -311,7 +311,7 @@ auto fixfit = [&](double cBinBDTcut) mutable {
 };
   //##########################################EXECUTION CODE#########################################//
   int GLOBAL_NWORKERS= 40 ;
-  plot_dir_opt = "Nom_changed_signif_v8";
+  plot_dir_opt = "Nom_CHECK_GCWIDE_v8";
 
 //Step1, First reference integrated bin fit.
 double INTBIN_BDTLOW = 0.1825;// =0.16;
@@ -348,28 +348,28 @@ state =3;
 		Nworkers = GLOBAL_NWORKERS;
 	    if(ptpair.first.first == 0 && ptpair.first.second == 30){ INTBIN_BDTLOW = res.first; }
 	    std::cout << "cutBDTlow, sb_ratio: " << cutBDTlow << ", "<< sb_ratio.getVal() << std::endl;
-	    type 			= "CB3:CC1:GC"	;
+	    type 			= "CB3:CC1:GCWIDE3"	;
 //	    METHOD_MCGCDATA(2);
-//	    type 			= "CB3:CC2:GC"	;
+//	    type 			= "CB3:CC2:GCWIDE3"	;
 //	    METHOD_MCGCDATA(2);
-//	    type 			= "CB3:CC3:GC"	;
+//	    type 			= "CB3:CC3:GCWIDE3"	;
 //	    METHOD_MCGCDATA(2);
-//	    type 			= "CB3:CC4:GC"	;
+//	    type 			= "CB3:CC4:GCWIDE3"	;
 //	    METHOD_MCGCDATA(2);
-//	    type 			= "CB3:CC5:GC"	;
+//	    type 			= "CB3:CC5:GCWIDE3"	;
 //	    METHOD_MCGCDATA(2);
-//	    type 			= "CB3:CC6:GC"	;
+//	    type 			= "CB3:CC6:GCWIDE3"	;
 //	    METHOD_MCGCDATA(2);
-	    type 			= "CB3:EE:GC"	;
+	    type 			= "CB3:EE:GCWIDE3"	;
 	    bkg_val  = {7.21, 5.201, 1.39,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 	    bkg_low  = {6.5, 2.1, 0.1,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
 	    bkg_high = {8.5, 8.0, 5.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
-	    METHOD_MCGCDATA(0);
+	    METHOD_MCGCDATA(2);
 		if(ptpair.first.first>= 9){
 		    bkg_val  = {-0.1, 4.0, 1.5,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 		    bkg_low  = {-2.0, 2.0, 0.2,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
 		    bkg_high = {0.0 , 20.0, 3.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
-		    type 			= "CB3:EX:GC"	;
+		    type 			= "CB3:EX:GCWIDE3"	;
 		    METHOD_MCGCDATA(2);
 		}
 	}
@@ -451,10 +451,10 @@ cBinHigh = 181;
 //    bkg_high = {8.5, 9.0, 3.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
 
   for( auto ptpair : (std::vector<std::pair<std::pair<double, double>, std::pair<double, double> > >) { 
-//  {{0,30},{0,30}},
+  {{0,30},{0,30}},
 //  {{0,3},{0,3}}, 
 //  {{0,4},{0,4}}, 
-  {{3,6},{3,6}},
+//  {{3,6},{3,6}},
  // {{6,9},{6,9}},
  // {{9,15},{9,15}},
  // {{15,30},{15,30}}
@@ -473,19 +473,19 @@ cBinHigh = 181;
 	if(fitdata){
 		Nworkers = GLOBAL_NWORKERS;
 	    std::cout << "cutBDTlow, sb_ratio: " << cutBDTlow << ", "<< sb_ratio.getVal() << std::endl;
-	    type 			= "CB3:CC1:GC"	;
-	    METHOD_MCGCDATA(2);
-	    type 			= "CB3:CC2:GC"	;
-	    METHOD_MCGCDATA(2);
-	    type 			= "CB3:CC3:GC"	;
-	    METHOD_MCGCDATA(2);
-	    type 			= "CB3:CC4:GC"	;
-	    METHOD_MCGCDATA(2);
-	    type 			= "CB3:CC5:GC"	;
-	    METHOD_MCGCDATA(2);
-	    type 			= "CB3:CC6:GC"	;
-	    METHOD_MCGCDATA(2);
-	    type 			= "CB3:EE:GC"	;
+	    type 			= "CB3:CC1:GCWIDE3"	;
+//	    METHOD_MCGCDATA(2);
+//	    type 			= "CB3:CC2:GCWIDE3"	;
+//	    METHOD_MCGCDATA(2);
+//	    type 			= "CB3:CC3:GCWIDE3"	;
+//	    METHOD_MCGCDATA(2);
+//	    type 			= "CB3:CC4:GCWIDE3"	;
+//	    METHOD_MCGCDATA(2);
+//	    type 			= "CB3:CC5:GCWIDE3"	;
+//	    METHOD_MCGCDATA(2);
+//	    type 			= "CB3:CC6:GCWIDE3"	;
+//	    METHOD_MCGCDATA(2);
+	    type 			= "CB3:EE:GCWIDE3"	;
 	    bkg_val  = {7.0, 5.5, 6.4,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 	    bkg_low  = {6.5, 1.1, 0.21,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
 	    bkg_high = {9.1, 11.0, 12.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
@@ -494,8 +494,8 @@ cBinHigh = 181;
 		    bkg_val  = {-1.1, 4.0, 0.5,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 		    bkg_low  = {-10.0, 2.0, 0.002,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
 		    bkg_high = {0.1 , 20.0, 3.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
-		    type 			= "CB3:EX:GC"	;
-		    METHOD_MCGCDATA(2);
+		    type 			= "CB3:EX:GCWIDE3"	;
+//		    METHOD_MCGCDATA(2);
 		}
 	}
   	}
@@ -577,15 +577,15 @@ for( auto cbinpair : (std::vector<std::pair<int, int> >) {
 //    fname1S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC_1S.root", ts, Trig.c_str());
 //    ptMin = ptpair.first;
 //    ptMax = ptpair.second;
-//    type 			= "CB3:CC3:GC"	;
+//    type 			= "CB3:CC3:GCWIDE3"	;
 ////    std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);
 ////	for(double xj : {0.9, 0.8, 0.6, 0.1,-0.2}/*}*/){
 ////	for(double xj : {0.0, 0.1, 0.2,0.25,0.3,0.35,0.4,0.6, 0.8}/*}*/){
 //	for(double xj : VALI_V3_BDTTESTCUT/*}*/){
 ////	for(double xj : {0.1, -0.1 } ){
 //    	cutBDTlow = xj;
-//    	type 			= "CB3:CC5:GC"	;
-////		if(xj < -0.2) type = "CB3:CC4:GC";
+//    	type 			= "CB3:CC5:GCWIDE3"	;
+////		if(xj < -0.2) type = "CB3:CC4:GCWIDE3";
 //
 //    	METHOD_MCGCDATA(1);
 ////    	METHOD_FREEFIT("CB3:EE:FF");
@@ -607,13 +607,13 @@ for( auto cbinpair : (std::vector<std::pair<int, int> >) {
 //    fname1S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC_1S.root", ts, Trig.c_str());
 //    ptMin = ptpair.first;
 //    ptMax = ptpair.second;
-//    type 			= "CB3:CC3:GC"	;
+//    type 			= "CB3:CC3:GCWIDE3"	;
 ////    std::pair<double, RooRealVar> res = prep_bdtval(-0.0, -1);
 ////	for(double xj : VALI_V3_BDTTESTCUT3/*}*/){
 //	for(double xj : {0.8 } ){
 //    	cutBDTlow = xj;
 //    	type 			= "CB3:CC5:FF"	;
-////		if(xj < -0.2) type = "CB3:CC4:GC";
+////		if(xj < -0.2) type = "CB3:CC4:GCWIDE3";
 //
 //    	METHOD_MCGCDATA(2);
 ////    	METHOD_FREEFIT("CB3:EE:FF");

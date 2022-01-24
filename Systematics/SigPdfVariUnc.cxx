@@ -3,7 +3,6 @@
 
 
 double getSigPdfVariUnc(ana_bins x){
-	bool isDR = ISDR;
 	int pl, ph, cl, ch, train_state, state, bpl, bph;
 	pl = x.pl; ph = x.ph; cl = x.cl; ch = x.ch; train_state = x.train_state; state = x.state; bpl = x.bpl; bph = x.bph;
 	long ts = _TS;
@@ -23,8 +22,8 @@ double getSigPdfVariUnc(ana_bins x){
 	raa_sys1 = bp_sys1->get_yield(state);
 	}
 	if( isDR ){
-	raa_nom  = bp_nom->get_frac(state);
-	raa_sys1 = bp_sys1->get_frac(state);
+	raa_nom  = bp_nom->return_23s_frac();
+	raa_sys1 = bp_sys1->return_23s_frac();
 	}
 
 	double unc_sys1 =  (raa_sys1.getVal() - raa_nom.getVal())/(raa_nom.getVal());
@@ -33,6 +32,6 @@ double getSigPdfVariUnc(ana_bins x){
 };
 
 void SigPdfVariUnc(){
-	sys_wr_helper("sigPDF_unc.root", getSigPdfVariUnc);
+	sys_wr_helper(Form("sigPDF_unc%s.root",labDR.c_str()) , getSigPdfVariUnc);
 }
 

@@ -49,7 +49,7 @@
 //>
 //>};
 
-void systematic_ups()
+void systematic_ups_v2()
 {
 	std::map<TString, TFile*> m_sys = {
 	  					{"signal parameter", new TFile("./data/sigPAR_unc.root", "open")},
@@ -64,14 +64,15 @@ void systematic_ups()
 	for(auto x : m_sys) { std::cout << x.first.Data() << ", File: " << x.second->GetName()<< std::endl;} //Check File Open
 	gStyle->SetHistLineColor(kGray+1);
 	gStyle->SetOptStat(0);
-	TH1D* h_rc2s = new TH1D("hsys_tot_c2S", "",10, 0, 9);
-	TH1D* h_rc3s = new TH1D("hsys_tot_c3S", "", 4, 0, 3);
-	TH1D* h_rp2s = new TH1D("hsys_tot_p2S", "", 3, 1, 3);
-	TH1D* h_rp3s = new TH1D("hsys_tot_p3S", "", 2, 1, 2);
+	TH1D* h_rc2s = new TH1D("hsys_tot_c2S", "",ana_bm["2c"].size(), 0, ana_bm["2c"].size()-1);
+	TH1D* h_rc3s = new TH1D("hsys_tot_c3S", "",ana_bm["3c"].size(), 0, ana_bm["3c"].size()-1);
+	TH1D* h_rp2s = new TH1D("hsys_tot_p2S", "",ana_bm["2p"].size(), 1, ana_bm["2p"].size());
+	TH1D* h_rp3s = new TH1D("hsys_tot_p3S", "",ana_bm["3p"].size(), 1, ana_bm["3p"].size());
 	std::map<std::pair<TString, TString> , TH1D*> m_hists;
 	TFile* output = new TFile("./data/total_systematics_RAA.root", "recreate");
 	output->cd();
-	TString names[8];
+	const int num_sys = m_sys.size();
+	TString names[num_sys];
 	int xc_n= 0;
 	for(auto obj : m_sys){
 		names[xc_n] =  obj.first;
@@ -97,15 +98,15 @@ void systematic_ups()
 	
 
 
-	TH1D* h_rc2s_b[8];
-	TH1D* h_rc3s_b[8];
-	TH1D* h_rp2s_b[8];
-	TH1D* h_rp3s_b[8];
-	for(int i =0; i< 8; i++){
-		h_rc2s_b[i] = new TH1D(Form("h_rc2s_b%d",i),"",80, 0, 9);
-		h_rc3s_b[i] = new TH1D(Form("h_rc3s_b%d",i),"",32, 0, 3);
-                h_rp2s_b[i] = new TH1D(Form("h_rp2s_b%d",i),"",24, 1, 3);
-                h_rp3s_b[i] = new TH1D(Form("h_rp3s_b%d",i),"",16, 1, 2);
+	TH1D* h_rc2s_b[num_sys];
+	TH1D* h_rc3s_b[num_sys];
+	TH1D* h_rp2s_b[num_sys];
+	TH1D* h_rp3s_b[num_sys];
+	for(int i =0; i< num_sys; i++){
+		h_rc2s_b[i] = new TH1D(Form("h_rc2s_b%d",i),"",ana_bm["2c"].size()*num_sys, 0, ana_bm["2c"].size()-1);
+		h_rc3s_b[i] = new TH1D(Form("h_rc3s_b%d",i),"",ana_bm["3c"].size()*num_sys, 0, ana_bm["3c"].size()-1);
+        h_rp2s_b[i] = new TH1D(Form("h_rp2s_b%d",i),"",ana_bm["2p"].size()*num_sys, 1, ana_bm["2p"].size());
+        h_rp3s_b[i] = new TH1D(Form("h_rp3s_b%d",i),"",ana_bm["3p"].size()*num_sys, 1, ana_bm["3p"].size());
 	}
 						
 	std::vector<ana_bins> vc2, vc3, vp2, vp3;
@@ -122,7 +123,7 @@ void systematic_ups()
 			std::cout << Form("[INFO] Object \"%s\" on bin \'%s\', pt [%d, %d] cbin [%d, %d]'", obj.first.Data(), "rc2S", item.pl, item.ph, item.cl, item.ch)<< std::endl;
 			double unc = m_hists[{obj.first, "rc2S"}]->GetBinContent(counter);
 			std::cout << unc << std::endl;
-			h_rc2s_b[smallcounter-1]->SetBinContent(8*(counter-1)+smallcounter, fabs(unc));
+			h_rc2s_b[smallcounter-1]->SetBinContent(num_sys*(counter-1)+smallcounter, fabs(unc));
 			if(strcmp(h_rc2s_b[smallcounter-1]->GetTitle(),"")==0) h_rc2s_b[smallcounter-1]->SetTitle(Form("%s", obj.first.Data() ));;
 			total_unc = TMath::Sqrt( TMath::Power(total_unc, 2) + unc * unc);
 			smallcounter ++;	
@@ -140,7 +141,7 @@ void systematic_ups()
 			std::cout << Form("[INFO] Object \"%s\" on bin \'%s\', pt [%d, %d] cbin [%d, %d]'", obj.first.Data(), "rc3S", item.pl, item.ph, item.cl, item.ch)<< std::endl;
 			double unc = m_hists[{obj.first, "rc3S"}]->GetBinContent(counter);
 			std::cout << unc << std::endl;
-			h_rc3s_b[smallcounter-1]->SetBinContent(8*(counter-1)+smallcounter, fabs(unc));
+			h_rc3s_b[smallcounter-1]->SetBinContent(num_sys*(counter-1)+smallcounter, fabs(unc));
 			if(strcmp(h_rc3s_b[smallcounter-1]->GetTitle(),"")==0) h_rc3s_b[smallcounter-1]->SetTitle(Form("%s", obj.first.Data() ));;
 			total_unc = TMath::Sqrt( TMath::Power(total_unc, 2) + unc * unc);
 			smallcounter ++;	
@@ -159,7 +160,7 @@ void systematic_ups()
 			std::cout << m_hists[{obj.first, "rp2S"}]->GetName() << std::endl;
 			double unc = m_hists[{obj.first, "rp2S"}]->GetBinContent(counter);
 			std::cout << unc << std::endl;
-			h_rp2s_b[smallcounter-1]->SetBinContent(8*(counter-1)+smallcounter, fabs(unc));
+			h_rp2s_b[smallcounter-1]->SetBinContent(num_sys*(counter-1)+smallcounter, fabs(unc));
 			if(strcmp(h_rp2s_b[smallcounter-1]->GetTitle(),"") ==0) h_rp2s_b[smallcounter-1]->SetTitle(Form("%s", obj.first.Data() ));;
 			total_unc = TMath::Sqrt( TMath::Power(total_unc, 2) + unc * unc);
 			smallcounter ++;	
@@ -177,7 +178,7 @@ void systematic_ups()
 			std::cout << Form("[INFO] Object \"%s\" on bin \'%s\', pt [%d, %d] cbin [%d, %d]'", obj.first.Data(), "rp3S", item.pl, item.ph, item.cl, item.ch)<< std::endl;
 			double unc = m_hists[{obj.first, "rp3S"}]->GetBinContent(counter);
 			std::cout << unc << std::endl;
-			h_rp3s_b[smallcounter-1]->SetBinContent(8*(counter-1)+smallcounter, fabs(unc));
+			h_rp3s_b[smallcounter-1]->SetBinContent(num_sys*(counter-1)+smallcounter, fabs(unc));
 			if(strcmp(h_rp3s_b[smallcounter-1]->GetTitle(),"") ==0) h_rp3s_b[smallcounter-1]->SetTitle(Form("%s", obj.first.Data() ));;
 			total_unc = TMath::Sqrt( TMath::Power(total_unc, 2) + unc * unc);
 			smallcounter ++;	
@@ -197,7 +198,7 @@ void systematic_ups()
 
 	int colors[8] = {kRed, kOrange+8, kYellow-7, kGreen+1, kCyan-4, kAzure-3, kViolet-6, kMagenta-4};
 	int up = 1;
-	double down = 1e-3;
+	double down = 1e-5;
 
 	c1->cd();
 	TLine *l_bin = new TLine();
@@ -211,16 +212,17 @@ void systematic_ups()
 	h_rc2s->SetFillColor(kGray);
 	h_rc2s->SetLineColor(kBlack);
 //	h_rc2s->GetXaxis()->SetLabelSize(0);
-	h_rc2s->GetXaxis()->SetBinLabel(1 , "0-5 %");
-	h_rc2s->GetXaxis()->SetBinLabel(2 , "5-10 %");
-	h_rc2s->GetXaxis()->SetBinLabel(3 , "10-20 %");
-	h_rc2s->GetXaxis()->SetBinLabel(4 , "20-30 %");
-	h_rc2s->GetXaxis()->SetBinLabel(5 , "30-40 %");
-	h_rc2s->GetXaxis()->SetBinLabel(6 , "40-50 %");
-	h_rc2s->GetXaxis()->SetBinLabel(7 , "50-60 %");
-	h_rc2s->GetXaxis()->SetBinLabel(8 , "60-70 %");
-	h_rc2s->GetXaxis()->SetBinLabel(9 , "70-90 %");
-	h_rc2s->GetXaxis()->SetBinLabel(10, "int.");
+	h_rc2s->GetXaxis()->SetBinLabel(1, "int.");
+	h_rc2s->GetXaxis()->SetBinLabel(2 , "0-5 %");
+	h_rc2s->GetXaxis()->SetBinLabel(3 , "5-10 %");
+	h_rc2s->GetXaxis()->SetBinLabel(4 , "10-20 %");
+	h_rc2s->GetXaxis()->SetBinLabel(5 , "20-30 %");
+	h_rc2s->GetXaxis()->SetBinLabel(6 , "30-40 %");
+	h_rc2s->GetXaxis()->SetBinLabel(7 , "40-50 %");
+	h_rc2s->GetXaxis()->SetBinLabel(8 , "50-60 %");
+	h_rc2s->GetXaxis()->SetBinLabel(9 , "60-70 %");
+	h_rc2s->GetXaxis()->SetBinLabel(10 , "70-90 %");
+
 	h_rc2s->GetXaxis()->SetTickSize(0);
 	h_rc2s->SetLineWidth(2);
 	h_rc2s->Draw();
@@ -236,7 +238,7 @@ void systematic_ups()
 		l_bin->DrawLine(l_x,0, l_x, h_rc2s->GetBinContent(9)) ;
 
 	TLegend* leg = new TLegend(0.7, 0.7,0.89, 0.89);
-	for(int i =0; i< 8; i++){
+	for(int i =0; i< num_sys; i++){
 		leg->AddEntry(h_rc2s_b[i]->GetName(),names[i], "f");
 	}
 	leg->SetBorderSize(0);
@@ -248,13 +250,14 @@ void systematic_ups()
 	h_rc3s->SetFillColor(kGray);
 	h_rc3s->SetLineColor(kBlack);
 	h_rc3s->SetLineWidth(2);
-	h_rc3s->GetXaxis()->SetBinLabel(1 , "0-20 %");
-	h_rc3s->GetXaxis()->SetBinLabel(2 , "20-50 %");
-	h_rc3s->GetXaxis()->SetBinLabel(3 , "50-90 %");
-	h_rc3s->GetXaxis()->SetBinLabel(4 , "int.");
+	h_rc3s->GetXaxis()->SetBinLabel(1 , "int.");
+	h_rc3s->GetXaxis()->SetBinLabel(2 , "0-30 %");
+	h_rc3s->GetXaxis()->SetBinLabel(3 , "30-50 %");
+	h_rc3s->GetXaxis()->SetBinLabel(4 , "50-70 %");
+	h_rc3s->GetXaxis()->SetBinLabel(5 , "70-90 %");
 //	h_rc3s->GetXaxis()->SetLabelSize(0);
 	h_rc3s->Draw();
-	for(int i=0; i<4; i++){
+	for(int i=0; i<8; i++){
 		h_rc3s_b[i]->SetFillColor(colors[i]);
 		h_rc3s_b[i]->GetXaxis()->SetLabelSize(0);
 		h_rc3s_b[i]->Draw("same");
@@ -270,9 +273,11 @@ void systematic_ups()
 	h_rp2s->SetLineColor(kGray+2);
 	h_rp2s->SetLineColor(kBlack);
 	h_rp2s->SetLineWidth(2);
-	h_rp2s->GetXaxis()->SetBinLabel(1 , "0-4 GeV/c");
-	h_rp2s->GetXaxis()->SetBinLabel(2 , "4-9 GeV/c");
-	h_rp2s->GetXaxis()->SetBinLabel(3 , "9-30 GeV/c");
+	h_rp2s->GetXaxis()->SetBinLabel(1 , "0-3 GeV/c");
+	h_rp2s->GetXaxis()->SetBinLabel(2 , "3-6 GeV/c");
+	h_rp2s->GetXaxis()->SetBinLabel(3 , "6-9 GeV/c");
+	h_rp2s->GetXaxis()->SetBinLabel(4 , "9-15 GeV/c");
+	h_rp2s->GetXaxis()->SetBinLabel(5 , "15-30 GeV/c");
 //	h_rp2s->GetXaxis()->SetLabelSize(0);
 	h_rp2s->Draw();
 	for(int i=0; i<8; i++){
@@ -291,8 +296,10 @@ void systematic_ups()
 	h_rp3s->SetLineColor(kBlack);
 	h_rp3s->SetLineWidth(2);
 //	h_rp3s->GetXaxis()->SetLabelSize(0);
-	h_rp3s->GetXaxis()->SetBinLabel(1 , "0-6 GeV/c");
-	h_rp3s->GetXaxis()->SetBinLabel(2 , "6-30 GeV/c");
+	h_rp3s->GetXaxis()->SetBinLabel(1 , "0-4 GeV/c");
+	h_rp3s->GetXaxis()->SetBinLabel(2 , "4-9 GeV/c");
+	h_rp3s->GetXaxis()->SetBinLabel(3 , "9-15 GeV/c");
+	h_rp3s->GetXaxis()->SetBinLabel(4 , "15-30 GeV/c");
 	h_rp3s->Draw();
 	for(int i=0; i<8; i++){
 		h_rp3s_b[i]->SetFillColor(colors[i]);

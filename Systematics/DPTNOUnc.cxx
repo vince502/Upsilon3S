@@ -1,7 +1,6 @@
 #include "../plots/drawRAAplot.cxx"
 #include "GOF_test.cxx"
 #include "sys_wr_helper.cxx"
-bool isDR = false;
 
 double getDPTVariUnc(aba_bins x){
 	int pl, ph, cl, ch, tran_state, state, bpl, bph;

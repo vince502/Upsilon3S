@@ -191,8 +191,8 @@ state =3;
   for( auto ap : ana_bm){
 	  for( auto ab : ap.second){
 //		if( !((ab.bin_attr.find("i")!=std::string::npos && ab.state ==3))) continue;
-		if( !(ab.cl==100&&ab.ch==140&&(ab.bin_attr.find("c")!=std::string::npos && ab.state ==3))) continue;
-//		if( !(ab.pl==3&&ab.ph==6&&(ab.bin_attr.find("p")!=std::string::npos && ab.state ==2))) continue;
+//		if( !(ab.cl==100&&ab.ch==140&&(ab.bin_attr.find("c")!=std::string::npos && ab.state ==3))) continue;
+		if( !(ab.pl==3&&ab.ph==6&&(ab.bin_attr.find("p")!=std::string::npos && ab.state ==2))) continue;
 		string fittype = (strcmp(ab.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 	  	ptMin = ab.pl;
 		ptMax = ab.ph;

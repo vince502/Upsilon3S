@@ -137,7 +137,7 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
     alpha->setVal(1.766);
     n->setVal(1.675);
     sigmaNS_1->setVal(0.217);
-    frac->setVal(0.061);
+    frac->setVal(0.161);
     frac2->setVal(0.455);
     xNS->setVal(0.301);
     xNS_2->setVal(0.541);

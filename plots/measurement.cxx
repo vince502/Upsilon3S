@@ -91,6 +91,10 @@ RooRealVar getRAAValue(ana_bins ab, long ts){
 	return getRAAValue(true, ab, type, -2, 1, 0, ts, false, false);
 };
 
+
+
+
+
 RooRealVar getDRValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC2:GC", double custom_bl  = -2, double custom_bh = 1, int getPre = 0,long ts =9999999999, bool stdvcut = false, bool eff_old = false){
 	if( ab.state == 2) return RooRealVar("notuse","" , 0) ;
 	int cl, ch, pl, ph, state, train_state, bpl, bph;

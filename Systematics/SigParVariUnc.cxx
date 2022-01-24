@@ -1,9 +1,7 @@
 #include "GOF_test.cxx"
 #include "sys_wr_helper.cxx"
 
-
 double getSigParVariUnc(ana_bins x){
-	bool isDR = ISDR;
 	int pl, ph, cl, ch, state, bpl, bph;
 	pl = x.pl; ph = x.ph; cl = x.cl; ch = x.ch; state = x.state; bpl = x.bpl; bph = x.bph;
 	int train_state = x.train_state;
@@ -23,8 +21,8 @@ double getSigParVariUnc(ana_bins x){
 	raa_sys1 = bp_sys1->get_yield(state);
 	}
 	if( isDR ){
-	raa_nom  = bp_nom->get_frac(state);
-	raa_sys1 = bp_sys1->get_frac(state);
+	raa_nom  = bp_nom->return_23s_frac();
+	raa_sys1 = bp_sys1->return_23s_frac();
 	}
 
 	double unc_sys1 =  (raa_sys1.getVal() - raa_nom.getVal())/(raa_nom.getVal());
@@ -32,6 +30,6 @@ double getSigParVariUnc(ana_bins x){
 };
 
 void SigParVariUnc(){
-	sys_wr_helper("sigPAR_unc.root", getSigParVariUnc);
+	sys_wr_helper(Form("sigPAR_unc%s.root", labDR.c_str() ), getSigParVariUnc);
 }
 

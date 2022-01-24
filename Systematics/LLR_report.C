@@ -26,7 +26,7 @@ void LLR_report()
 	texout.open(Form("LLR_result_%ld.tex",ts));
 	texout << "\\subsection{Likelihood-ratio test}\n";
 
-	int pl, ph, cl, ch;
+	int pl, ph, cl, ch, centl, centh;
 	ana_bins ab;
 	double pvalue;
 	double pvalue_t[7][7] = {{0}};
@@ -35,7 +35,9 @@ void LLR_report()
 		ph = ab.ph;
 		cl = ab.cl;
 		ch = ab.ch;
-		texout << "\\begin{table}[htb]\n	\\begin{center}\n	\\caption{"<<Form("Result %dS, Centrality [%d, %d], $p_{T}$ [%d, %d]\n", state, cl, ch, pl, ph, state)<<"}\n{\\footnotesize\\renewcommand{\\arraystretch}{1.4}\n		\\begin{tabular}{cc||cccc}\n			N & NLL & p(H0: N = 1) & p(H0: N = 2) & p(H0: N = 3) & p(H0: N = 4)\\\\ \n		\\hline\n";
+		centl = ab.centl;
+		centh = ab.centh;
+		texout << "\\begin{table}[htb]\n	\\begin{center}\n	\\caption{"<<Form("Result %dS, Centrality [%d, %d] \\%%, $p_{T}$ [%d, %d] \\GeV\n", state, centl, centh, pl, ph, state)<<"}\n{\\footnotesize\\renewcommand{\\arraystretch}{1.4}\n		\\begin{tabular}{cc||cccc}\n			N & NLL & p(H0: N = 1) & p(H0: N = 2) & p(H0: N = 3) & p(H0: N = 4)\\\\ \n		\\hline\n";
 	  	pvalue = 1;
 		vector<int> N1over= {};
 		vector<int> N2over= {};
