@@ -36,6 +36,7 @@ void doConstraintFit_SYSSIGPDF_v2(int step = 0){
   bool isBDT 					= true		;
   double cutBDTlow				= 0.0859	;
   double cutBDThigh				= 1.0		;
+  double drawonly				= 0;
   RooRealVar sb_ratio					;
   string plot_dir_opt			= "";
    std::string fname3S		= Form("OniaRooDataset_BDT%ld_OniaSkim_Trig%s_BDT_MC.root", ts, Trig.c_str());
@@ -103,6 +104,7 @@ void doConstraintFit_SYSSIGPDF_v2(int step = 0){
       {"mag", { 1, 0, 0 }},
       {"sb_ratio", { sb_ratio.getVal(), 0, 0}},
       {"tmp", {0,0,0} },
+	  {"DrawOnly", {drawonly, 0, 0}},
       }, Nworkers, plot_dir_opt);
     }
 
@@ -132,6 +134,7 @@ void doConstraintFit_SYSSIGPDF_v2(int step = 0){
       {"sb_ratio", { -1, 0, 0}},
       {"tmp", {0,0,0} },
 	  {"signal_separate", {0,0,0}},
+	  {"DrawOnly", {drawonly, 0, 0}},
       }, Nworkers, plot_dir_opt);
 };
 
@@ -176,6 +179,7 @@ auto fixfit = [&](double cBinBDTcut) mutable {
 	{"sigmaNS_1", { map_keyval_2["sigma1S_1"].first,0,-1}},
 	{"mag", { 0, 0, 0 }},
 	{"sb_ratio", { sb_ratio.getVal(), 0, 0}},
+	{"DrawOnly", {drawonly, 0, 0}},
 	}, Nworkers, plot_dir_opt);
 };
   //##########################################EXECUTION CODE#########################################//
@@ -192,7 +196,7 @@ state =3;
 	  for( auto ab : ap.second){
 //		if( !((ab.bin_attr.find("i")!=std::string::npos && ab.state ==3))) continue;
 //		if( !(ab.cl==100&&ab.ch==140&&(ab.bin_attr.find("c")!=std::string::npos && ab.state ==3))) continue;
-		if( !(ab.pl==3&&ab.ph==6&&(ab.bin_attr.find("p")!=std::string::npos && ab.state ==2))) continue;
+	//	if( !(ab.pl==3&&ab.ph==6&&(ab.bin_attr.find("p")!=std::string::npos && ab.state ==2))) continue;
 		string fittype = (strcmp(ab.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 	  	ptMin = ab.pl;
 		ptMax = ab.ph;
@@ -208,6 +212,7 @@ dbg();
 		dbg();
 	    sb_ratio = RooRealVar("sb_ratio", "",-1);
 		bool fitdata = true;
+		drawonly = 1;
 		if(fitdata){
 			auto CTEST = AICGOF_test(ab);
 			string bkgNom = CTEST[0].second;

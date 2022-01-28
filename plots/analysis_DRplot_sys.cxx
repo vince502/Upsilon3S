@@ -22,7 +22,7 @@
 #include "../BDT/BDTtraindiff.cxx"
 #include "../glauberparams_PbPb5TeV.h"
 
-TGraphAsymmErrors analysis_DRplot_sys(TFile* hf, TFile* hsys){
+TGraphAsymmErrors analysis_DRplot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	TH1D* hp3s = (TH1D*) hf->Get("rp3S");
 //	TH1D* hp2s = (TH1D*) hf->Get("rp2S");
 	TH1D* hc3s = (TH1D*) hf->Get("rc3S");
@@ -32,6 +32,16 @@ TGraphAsymmErrors analysis_DRplot_sys(TFile* hf, TFile* hsys){
 //	TH1D* hp2s_sys = (TH1D*) hsys->Get("syst_comp/hsys_tot_p2S");
 	TH1D* hc3s_sys = (TH1D*) hsys->Get("syst_comp/hsys_tot_c3S");
 //	TH1D* hc2s_sys = (TH1D*) hsys->Get("syst_comp/hsys_tot_c2S");
+
+	TH1D* hpp_p3s_sys = (TH1D*) ppsys->Get("hptPP_3Sover2S_ratio");
+//	TH1D* hpp_p2s_sys = (TH1D*) ppsys->Get("hptPP_2S_yield");
+	TH1D* hpp_i3s_sys = (TH1D*) ppsys->Get("hIntPP_3Sover2S_ratio");
+//	TH1D* hpp_i2s_sys = (TH1D*) ppsys->Get("hIntPP_2S_yield");
+
+	TH1D* hpp_p3s_unc = (TH1D*) ppsys->Get("hptPP_3S_yield_total");
+//	TH1D* hpp_p2s_unc = (TH1D*) ppsys->Get("hptPP_2S_yield_total");
+	TH1D* hpp_i3s_unc = (TH1D*) ppsys->Get("hIntPP_3S_yield_total");
+//	TH1D* hpp_i2s_unc = (TH1D*) ppsys->Get("hIntPP_2S_yield_total");
 
 	TGraphAsymmErrors g_p3s, g_p3s_sys;
 //	TGraphAsymmErrors g_p2s, g_p2s_sys;
@@ -103,6 +113,7 @@ TGraphAsymmErrors analysis_DRplot_sys(TFile* hf, TFile* hsys){
 			}
 			if(ab.bintype == kPt){
 				point_x = {((double)( ab.pl + ab.ph ))/2., ((double)(ab.ph-ab.pl))/2. };
+				double pp_sys = hpp_p3s_sys->GetBinContent( idx );  
 				ref_raa = raahist.GetBinContent( idx );
 				nom_sys = hist.GetBinContent( idx );
 				point_y = { ref_raa , ref_raa * quadsum(nom_sys,0/* taa_err*/) };
@@ -119,10 +130,11 @@ TGraphAsymmErrors analysis_DRplot_sys(TFile* hf, TFile* hsys){
 	g_i3s.SetPointError(0, 0,0, hc3s->GetBinError(1), hc3s->GetBinError(1) ) ;
 
 	double int_sys_width = 0.45;
+	double int_pp_sys = hpp_i3s_sys->GetBinContent(1);
 //	g_i2s_sys.AddPoint(2, hc2s->GetBinContent(1)) ;
 //	g_i2s_sys.SetPointError(0, int_sys_width, int_sys_width, hc2s_sys->GetBinContent(1) *hc2s->GetBinContent(1), hc2s_sys->GetBinContent(1) *hc2s->GetBinContent(1) ) ;
 	g_i3s_sys.AddPoint(2.5, hc3s->GetBinContent(1)) ;
-	g_i3s_sys.SetPointError(0, int_sys_width, int_sys_width, hc3s_sys->GetBinContent(1) *hc3s->GetBinContent(1), hc3s_sys->GetBinContent(1) *hc3s->GetBinContent(1) ) ;
+	g_i3s_sys.SetPointError(0, int_sys_width, int_sys_width, hc3s_sys->GetBinContent(1) * quadsum( int_pp_sys, hc3s->GetBinContent(1)), hc3s_sys->GetBinContent(1) * quadsum( int_pp_sys, hc3s->GetBinContent(1)) ) ;
 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -207,11 +219,11 @@ TGraphAsymmErrors analysis_DRplot_sys(TFile* hf, TFile* hsys){
 
 //////////////////////////////Global Uncertainties/////////////////////////////
 
-	TBox* b_err = new TBox();
-	TBox* b_2serr = new TBox();
+//	TBox* b_err = new TBox();
+//	TBox* b_2serr = new TBox();
 	TBox* b_3serr = new TBox();
-	double glb_2serr = 0;
-	double glb_3serr = 0;
+//	double glb_2serr = 0;
+	double glb_3serr = hpp_i3s_unc->GetBinContent(1);
 	double glb_errMB_PP = 0;
 	double pp_state2s;
 
@@ -269,6 +281,15 @@ TGraphAsymmErrors analysis_DRplot_sys(TFile* hf, TFile* hsys){
 	tl->DrawLatex( 40, label_pos_up +0.05,"p^{#mu#mu}_{T} < 30 GeV/c");
 	tl->DrawLatex( 40, label_pos_up -0.20, "|y| < 2.4");
 	leg_cent->Draw();
+
+	b_3serr->SetX1(390);
+    b_3serr->SetX2(420);
+    b_3serr->SetY1(2 - fabs(glb_3serr));
+    b_3serr->SetY2(2 + fabs(glb_3serr));
+    b_3serr->SetFillColorAlpha(kTeal+5, 0.8);
+    b_3serr->SetLineWidth(1);
+	b_3serr->Draw("L");
+
 	p1_L->Update();
 	p1_L->Draw();
 
@@ -347,5 +368,5 @@ TGraphAsymmErrors analysis_DRplot_sys(TFile* hf, TFile* hsys){
 
 
 TGraphAsymmErrors analysis_DRplot_sys(){
-	return analysis_DRplot_sys(TFile::Open("./result/DR_10000000016.root"), TFile::Open("../Systematics/data/total_systematics_DR.root"));
+	return analysis_DRplot_sys(TFile::Open("./result/DR_10000000016.root"), TFile::Open("../Systematics/data/total_systematics_DR.root"), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root") );
 };

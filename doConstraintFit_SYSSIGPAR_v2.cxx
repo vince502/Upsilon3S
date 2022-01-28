@@ -36,6 +36,7 @@ void doConstraintFit_SYSSIGPAR_v2(int step = 0){
   bool isBDT 					= true		;
   double cutBDTlow				= 0.0859	;
   double cutBDThigh				= 1.0		;
+  double drawonly				= 0.;
   RooRealVar sb_ratio					;
   string plot_dir_opt			= "";
   string sys_seg 			= "XMCNP";
@@ -110,6 +111,7 @@ void doConstraintFit_SYSSIGPAR_v2(int step = 0){
       {"mag", { 1, 0, 0 }},
       {"sb_ratio", { sb_ratio.getVal(), 0, 0}},
       {"tmp", {0,0,0} },
+	  {"DrawOnly", {drawonly, 0, 0}},
       }, Nworkers, plot_dir_opt);
     }
 
@@ -139,6 +141,7 @@ void doConstraintFit_SYSSIGPAR_v2(int step = 0){
       {"sb_ratio", { -1, 0, 0}},
       {"tmp", {0,0,0} },
 	  {"signal_separate", {0,0,0}},
+	  {"DrawOnly", {drawonly, 0, 0}},
       }, Nworkers, plot_dir_opt);
 };
 
@@ -183,6 +186,7 @@ auto fixfit = [&](double cBinBDTcut) mutable {
 	{"sigmaNS_1", { map_keyval_2["sigma1S_1"].first,0,-1}},
 	{"mag", { 0, 0, 0 }},
 	{"sb_ratio", { sb_ratio.getVal(), 0, 0}},
+	{"DrawOnly", {drawonly, 0, 0}},
 	}, Nworkers, plot_dir_opt);
 };
   //##########################################EXECUTION CODE#########################################//
@@ -197,11 +201,11 @@ state =3;
  if(step == 1 || step == 99 || step == 11 || step == 111){
   for( auto ap : ana_bm){
 	  for( auto ab : ap.second){
-		if( !((ab.bin_attr.find("p")!=std::string::npos && true))) continue;
+//		if( !((ab.bin_attr.find("p")!=std::string::npos && true))) continue;
 //		if( !((ab.bin_attr.find("i")!=std::string::npos &&true ))) continue;
 //		if( !(ab.cl==140&&ab.ch==181&&(ab.bin_attr.find("c")!=std::string::npos && ab.state ==2))) continue;
 //		if( !(ab.cl==10&&ab.ch==20&&(ab.bin_attr.find("c")!=std::string::npos && true))) continue;
-		if( !(ab.pl==4&&ab.ph==9&&(ab.bin_attr.find("p")!=std::string::npos && ab.state ==3))) continue;
+//		if( !(ab.pl==4&&ab.ph==9&&(ab.bin_attr.find("p")!=std::string::npos && ab.state ==3))) continue;
 		string fittype = (strcmp(ab.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 	  	ptMin = ab.pl;
 		ptMax = ab.ph;
@@ -215,6 +219,7 @@ state =3;
 	  	cutBDTlow = Get_BDT(ts, ab);
 	    sb_ratio = RooRealVar("sb_ratio", "",-1);
 		bool fitdata = true;
+		drawonly = 1;
 		if(fitdata){
 			auto CTEST = AICGOF_test(ab);
 			string bkgNom = CTEST[0].second;

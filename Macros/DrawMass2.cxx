@@ -51,9 +51,12 @@ void DrawMass2(long ts, int state)
 	int nhists = hists.size();
 	TCanvas* c1 =new TCanvas("c1", "", 1200, 900);
 	Color_t colrs[12] = {kBlack , kBlue , kMagenta , kTeal , kOrange , kRed, kBlue -6, kMagenta +3, kTeal +3, kOrange -3, kRed -7, kCyan +2, };
+
+	gStyle->SetEndErrorSize(0);
+
 	for (int idx =0; idx < nhists; idx++)
 	{
-
+			hists[idx]->SetStats(0);
 			hists[idx]->SetMarkerColor(colrs[idx]);
 			hists[idx]->SetLineColor(colrs[idx]);
 			if( idx == 0 )
@@ -63,6 +66,18 @@ void DrawMass2(long ts, int state)
 			}
 			hists[idx]->Draw("same pe");
 	}
+	TLegend* leg = new TLegend(0.60,0.58,0.88, 0.73);
+	for(auto idx : ROOT::TSeqI(nhists)){
+		leg->AddEntry(hists[idx], Form("BDT > %.2f",VALI_V3_BDTTESTCUT[idx]), "ple"); 
+	}
+	leg->Draw();
+	c1->Draw();
+	c1->Modified();
+	c1->Update();
+	CMS_lumi_square(c1, 10001, 33);
 	c1->SaveAs(Form("./FullMassBDT/FullMassBDTCompare_fullmass_m614_%ld_%d.C", ts, state));
+}
+void DrawMass2(){
+	DrawMass2(10000000016, 3);
 }
 

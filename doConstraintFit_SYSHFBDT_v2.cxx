@@ -36,6 +36,7 @@ void doConstraintFit_SYSHFBDT_v2(int sys_step, int step = 111){
   bool isBDT 					= true		;
   double cutBDTlow				= 0.0859	;
   double cutBDThigh				= 1.0		;
+  double drawonly 				= 0.;
   RooRealVar sb_ratio					;
   string plot_dir_opt			= "";
    std::pair<double, double> fitrange = {8, 14};
@@ -94,6 +95,7 @@ void doConstraintFit_SYSHFBDT_v2(int sys_step, int step = 111){
       {"mag", { 1, 0, 0 }},
       {"sb_ratio", { sb_ratio.getVal(), 0, 0}},
       {"tmp", {0,0,0} },
+	  {"DrawOnly", {drawonly, 0, 0}},
       }, Nworkers, plot_dir_opt);
     }
 
@@ -123,6 +125,7 @@ void doConstraintFit_SYSHFBDT_v2(int sys_step, int step = 111){
       {"sb_ratio", { -1, 0, 0}},
       {"tmp", {0,0,0} },
 	  {"signal_separate", {0,0,0}},
+	  {"DrawOnly", {drawonly, 0, 0}},
       }, Nworkers, plot_dir_opt);
 };
 
@@ -167,6 +170,7 @@ auto fixfit = [&](double cBinBDTcut) mutable {
 	{"sigmaNS_1", { map_keyval_2["sigma1S_1"].first,0,-1}},
 	{"mag", { 0, 0, 0 }},
 	{"sb_ratio", { sb_ratio.getVal(), 0, 0}},
+	 {"DrawOnly", {drawonly, 0, 0}},
 	}, Nworkers, plot_dir_opt);
 };
   //##########################################EXECUTION CODE#########################################//
@@ -185,7 +189,7 @@ state =3;
 //		if( !((ab.bin_attr.find("c")!=std::string::npos && ab.state ==2))) continue;
 //		if( !(((ab.bin_attr.find("p")!=std::string::npos|| ab.bin_attr.find("i")!=std::string::npos) && true))) continue;
 //		if( !(ab.cl==120&&ab.ch==140&&(ab.bin_attr.find("c")!=std::string::npos && ab.state ==2))) continue;
-		if( !(ab.pl==3&&ab.ph==6&&(ab.bin_attr.find("p")!=std::string::npos && ab.state ==2))) continue;
+//		if( !(ab.pl==3&&ab.ph==6&&(ab.bin_attr.find("p")!=std::string::npos && ab.state ==2))) continue;
 		string fittype = (strcmp(ab.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 	  	ptMin = ab.pl;
 		ptMax = ab.ph;
@@ -199,6 +203,7 @@ state =3;
 	  	cutBDTlow = Get_BDT(_TS, ab);
 	    sb_ratio = RooRealVar("sb_ratio", "",-1);
 		bool fitdata = true;
+		drawonly = 1;
 		if(fitdata){
 			auto CTEST = AICGOF_test(ab);
 			string bkgNom = CTEST[0].second;
@@ -236,19 +241,19 @@ state =3;
 	    			bkg_val  = {-0.4, -0.07, 0.03,  -0.001, -0.03, 0.0, 0.0, 0.0, 0.0};
 	    			bkg_low  = {-0.8, -0.6, -0.6,  -0.6, -0.5, -0.5, -0.5, -0.5, -0.5};
 	    			bkg_high = {0.6, 0.6, 0.6, 0.6, 0.6, 0.5, 0.5, 0.5, 0.5};
-		    		METHOD_MCGCDATA(1);
+		    		METHOD_MCGCDATA(2);
 					}
 				if(bkgNom.find("EE")!=std::string::npos){
 		    		bkg_val  = {9.185, 3.88, 2.45,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 		    		bkg_low  = {7.0, 1.0, 1.11,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
 		    		bkg_high = {9.7, 7.0, 7.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
-		    		METHOD_MCGCDATA(1);
+		    		METHOD_MCGCDATA(2);
 					}
 				if(bkgNom.find("EX")!=std::string::npos){
 			    	bkg_val  = {-1.1, 4.0, 1.5,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 			    	bkg_low  = {-10.0, 2.0, 0.2,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
 			    	bkg_high = {0.1 , 20.0, 3.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
-		    		METHOD_MCGCDATA(1);
+		    		METHOD_MCGCDATA(2);
 					}
 			}
 		}

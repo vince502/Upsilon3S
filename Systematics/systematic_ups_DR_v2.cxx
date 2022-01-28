@@ -5,7 +5,7 @@ void systematic_ups_DR_v2()
 	std::map<TString, TFile*> m_sys = {
 	  					{"signal parameter", new TFile("./data/sigPAR_unc_DR.root", "open")},
 	  					{"signal pdf", new TFile("./data/sigPDF_unc_DR.root", "open")},
-	  					{"bkground pdf", new TFile("./data/bkgPDF_unc_DR.root", "open")},
+	  					{"background pdf", new TFile("./data/bkgPDF_unc_DR.root", "open")},
 //	  					{"acceptance dpt", new TFile("./data/ACCQuad_unc.root", "open")},
 //	  					{"efficiency dpt", new TFile("./data/effDPTQuad_unc.root", "open")},
 //	  					{"efficiency tnp", new TFile("./data/effTNP_unc.root", "open")},

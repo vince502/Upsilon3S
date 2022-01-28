@@ -122,6 +122,9 @@ std::vector<std::pair<double, string> > AICGOF_function(ana_bins ab, string test
 			stat3 = {test3, {999,999}};
 			if(test3.find("CC") != std::string::npos ) stat4 = {test4, {999,999}};
 		}
+		if(opt.find("notuse4")!=std::string::npos){
+			stat4 = {test4, {999,999}};
+		}
 	}
 	if(opt.find("force")!=std::string::npos){
 		if(opt.find("force1")!=std::string::npos){
@@ -187,12 +190,20 @@ std::vector<std::pair<double, string> > AICGOF_function(ana_bins ab, string test
 	statw stat_step4NOT = statw{stat4, AIC_res_step4[0]};
 	// if nominal is Chebyshev, use first alternative as +1 order, this will be checked in sorting stage
 	if( stat_step2.first.first.find("CC") != std::string::npos ) stat_step4NOT = {stat4 , 1.};
-	
+
+//	std::vector<std::pair< double, string > > gof_alt_vec = {
+//		{stat_step2NOT.second, stat_step2NOT.first.first},
+//		{stat_step3NOT.second, stat_step3NOT.first.first},
+//		{stat_step4NOT.second, stat_step4NOT.first.first},
+//	};
+	std::vector<std::pair<double, int> > s_coll = { stat_step2NOT.first.second, stat_step3NOT.first.second, stat_step4NOT.first.second };
+	dat AIC_alt = AIC_statistic(s_coll);
 	std::vector<std::pair< double, string > > gof_alt_vec = {
-		{stat_step2NOT.second, stat_step2NOT.first.first},
-		{stat_step3NOT.second, stat_step3NOT.first.first},
-		{stat_step4NOT.second, stat_step4NOT.first.first},
+		{AIC_alt[0], stat_step2NOT.first.first},
+		{AIC_alt[1], stat_step3NOT.first.first},
+		{AIC_alt[2], stat_step4NOT.first.first},
 	};
+
 	// sort alternatives by p-value
 	std::sort(gof_alt_vec.begin(), gof_alt_vec.end(), cmp_rev );
 

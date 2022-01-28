@@ -3,7 +3,7 @@
 
 const string plt_save_dir = Form("%s/plots/result/", workdir.Data() );
 
-void plot_wr_helper(string fout, RooRealVar (*x)(ana_bins, long), long ts){
+void plot_wr_helper(string fout, RooRealVar (*x)(ana_bins, long, bool), long ts){
 	
 	TFile* output = new TFile( (plt_save_dir + fout).c_str(), "recreate");
 	std::vector<ana_bins> vc2, vc3, vp2, vp3;
@@ -18,32 +18,41 @@ void plot_wr_helper(string fout, RooRealVar (*x)(ana_bins, long), long ts){
     rp2s = new TH1D("rp2S","",vp2.size(),1,vp2.size());
     rp3s = new TH1D("rp3S","",vp3.size(),1,vp3.size());
 
-
+	bool incl_ppstat_forthisbin;
 
     int counter =1;
     for( auto item : vc2){
-        rc2s->SetBinContent(counter, (*x)(item, ts).getVal());
-        rc2s->SetBinError(counter, (*x)(item, ts).getError());
+		incl_ppstat_forthisbin = ( item.bintype != kCent) ? true : false;
+		auto res = (*x)(item, ts, incl_ppstat_forthisbin);
+		
+        rc2s->SetBinContent(counter	,res.getVal());
+        rc2s->SetBinError(counter	,res.getError());
         counter++;
     }
     counter =1;
     for( auto item : vc3){
-        rc3s->SetBinContent(counter, (*x)(item, ts).getVal());
-        rc3s->SetBinError(counter, (*x)(item, ts).getError());
+		incl_ppstat_forthisbin = ( item.bintype != kCent) ? true : false;
+		auto res = (*x)(item, ts, incl_ppstat_forthisbin);
+        rc3s->SetBinContent(counter	,res.getVal());
+        rc3s->SetBinError(counter	,res.getError());
         counter++;
     }
     counter =1;
 
     for( auto item : vp2){
-        rp2s->SetBinContent(counter, (*x)(item, ts).getVal());
-        rp2s->SetBinError(counter, (*x)(item, ts).getError());
+		incl_ppstat_forthisbin = ( item.bintype != kCent) ? true : false;
+		auto res = (*x)(item, ts, incl_ppstat_forthisbin);
+        rp2s->SetBinContent(counter	,res.getVal());
+        rp2s->SetBinError(counter	,res.getError());
         counter++;
     }
     counter =1;
 
     for( auto item : vp3){
-        rp3s->SetBinContent(counter, (*x)(item, ts).getVal());
-        rp3s->SetBinError(counter, (*x)(item, ts).getError());
+		incl_ppstat_forthisbin = ( item.bintype != kCent) ? true : false;
+		auto res = (*x)(item, ts, incl_ppstat_forthisbin);
+        rp3s->SetBinContent(counter	,res.getVal());
+        rp3s->SetBinError(counter	,res.getError());
         counter++;
     }
     output->cd();

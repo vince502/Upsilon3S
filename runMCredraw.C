@@ -1,0 +1,6 @@
+#include "DrawHistMC.cxx"
+
+void runMCredraw(){
+	DrawHistMC({"CB3","CC4","FF"}, 0, 30, -2.4, 2.4, "3p5", "S13", false, 0 ,181, 0.00, true, 10000000016, 0.2290, 1, 0, 30, 0, 3, 2, false, 8, 14);
+};
+

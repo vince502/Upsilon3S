@@ -6,7 +6,7 @@
 #define pp std::pair<std::pair<double, string>, std:;pair<double, string> >
 #endif
 
-pp getBkgVariUnc_2item(ana_bins x){
+pp getBkgVariUnc1S_2item(ana_bins x){
 	int pl, ph, cl, ch, state, bpl, bph;
 	pl = x.pl; ph = x.ph; cl = x.cl; ch = x.ch; state = x.state; bpl = x.bpl; bph = x.bph;
 	int train_state = x.train_state;
@@ -31,9 +31,9 @@ pp getBkgVariUnc_2item(ana_bins x){
 	bp_sys2 = new binplotter(type_sys2, ts,  2.4, pl, ph, cl, ch, 0, bl_nom, 1, bpl, bph, train_state, state, false, false);
 	RooRealVar raa_nom, raa_sys1, raa_sys2;
 	if( !isDR ){
-	raa_nom = bp_nom->get_yield(state);
-	raa_sys1 = bp_sys1->get_yield(state);
-	raa_sys2 = bp_sys2->get_yield(state);
+	raa_nom = bp_nom->get_yield(1);
+	raa_sys1 = bp_sys1->get_yield(1);
+	raa_sys2 = bp_sys2->get_yield(1);
 //	double eff_nom = bp_nom->get_eff(state).first;
 //	double eff_sys1 = bp_sys1->get_eff(state).first;
 //	double eff_sys2 = bp_sys2->get_eff(state).first;
@@ -42,43 +42,23 @@ pp getBkgVariUnc_2item(ana_bins x){
 //	raa_sys2.setVal(raa_sys2.getVal()/eff_sys2);
 	}
 	if( isDR ){
-	raa_nom  = bp_nom->return_23s_frac();
-	raa_sys1 = bp_sys1->return_23s_frac();
-	raa_sys2 = bp_sys2->return_23s_frac();
+//	raa_nom  = bp_nom->return_23s_frac();
+//	raa_sys1 = bp_sys1->return_23s_frac();
+//	raa_sys2 = bp_sys2->return_23s_frac();
 	}
 
 	double unc_sys1 =  (raa_sys1.getVal() - raa_nom.getVal())/(raa_nom.getVal());
 	double unc_sys2 =  (raa_sys2.getVal() - raa_nom.getVal())/(raa_nom.getVal());
-	if( bkgtype_sys2.find("CC") != std::string::npos ) unc_sys2  =  0 ;
-	if( x.bkgopt.find("notuse1") !=std::string::npos ){
-		if( bkgtype_sys2.find("EE") !=std::string::npos ){
-			unc_sys2 = 0;
-		}
-	}
-	if( x.bkgopt.find("notuse2") !=std::string::npos ){
-		if( bkgtype_sys2.find("EX") !=std::string::npos ){
-			unc_sys2 = 0;
-		}
-	}
-	if( x.bkgopt.find("notuse3") !=std::string::npos ){
-		if( bkgtype_sys2.find("CC") !=std::string::npos ){
-			unc_sys2 = 0;
-		}
-	}
-	if( x.bkgopt.find("notuse4") !=std::string::npos ){
-		if( bkgtype_sys2.find("CC") !=std::string::npos ){
-			unc_sys2 = 0;
-		}
-	}
+	if( bkgtype_sys2.find("CC") != std::string::npos ) unc_sys2 = 0 ;
 	return (pp) { {unc_sys1, bkgtype_sys1}, {unc_sys2, bkgtype_sys2} };
 };
-double getBkgVariUnc(ana_bins x){
-	pp res = getBkgVariUnc_2item(x);
+double getBkgVariUnc1S(ana_bins x){
+	pp res = getBkgVariUnc1S_2item(x);
 	return max(fabs(res.first.first), fabs(res.second.first));
 };
 
-void BkgVariUnc(){
-	sys_wr_helper_2item(Form("bkgPDF_unc%s_2item.root", labDR.c_str()), getBkgVariUnc_2item);
-	sys_wr_helper(Form("bkgPDF_unc%s.root", labDR.c_str()), getBkgVariUnc);
+void BkgVariUnc1S(){
+	sys_wr_helper_2item(Form("bkgPDF_unc%s1S_2item.root", labDR.c_str()), getBkgVariUnc1S_2item);
+	sys_wr_helper(Form("bkgPDF_unc%s1S.root", labDR.c_str()), getBkgVariUnc1S);
 }
 

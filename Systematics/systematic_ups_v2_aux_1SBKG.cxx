@@ -49,17 +49,10 @@
 //>
 //>};
 
-void systematic_ups_v2()
+void systematic_ups_v2_aux_1SBKG()
 {
 	std::map<TString, TFile*> m_sys = {
-	  					{"signal parameter", new TFile("./data/sigPAR_unc.root", "open")},
-	  					{"signal pdf", new TFile("./data/sigPDF_unc.root", "open")},
-	  					{"background pdf", new TFile("./data/bkgPDF_unc.root", "open")},
-	  					{"acceptance dpt", new TFile("./data/ACCQuad_unc.root", "open")},
-	  					{"efficiency dpt", new TFile("./data/effDPTQuad_unc.root", "open")},
-	  					{"efficiency tnp", new TFile("./data/effTNP_unc.root", "open")},
-	  					{"centrality calibration", new TFile("./data/CENT_unc.root", "open")},
-	  					{"BDT variation", new TFile("./data/BDT_Diff_unc.root", "open")},
+	  					{"background pdf", new TFile("./data/bkgPDF_unc1S.root", "open")},
 	};
 	for(auto x : m_sys) { std::cout << x.first.Data() << ", File: " << x.second->GetName()<< std::endl;} //Check File Open
 	gStyle->SetHistLineColor(kGray+1);
@@ -69,7 +62,7 @@ void systematic_ups_v2()
 	TH1D* h_rp2s = new TH1D("hsys_tot_p2S", "",ana_bm["2p"].size(), 1, ana_bm["2p"].size());
 	TH1D* h_rp3s = new TH1D("hsys_tot_p3S", "",ana_bm["3p"].size(), 1, ana_bm["3p"].size());
 	std::map<std::pair<TString, TString> , TH1D*> m_hists;
-	TFile* output = new TFile("./data/total_systematics_RAA.root", "recreate");
+	TFile* output = new TFile("./data/total_systematics_RAA_AUX1SBKG.root", "recreate");
 	output->cd();
 	const int num_sys = m_sys.size();
 	TString names[num_sys];
@@ -227,7 +220,7 @@ void systematic_ups_v2()
 	h_rc2s->SetLineWidth(2);
 	h_rc2s->Draw();
 
-	for(int i=0; i<8; i++){
+	for(int i=0; i<num_sys; i++){
 		h_rc2s_b[i]->SetFillColor(colors[i]);
 		h_rc2s_b[i]->GetXaxis()->SetLabelSize(0);
 		h_rc2s_b[i]->Draw("same");
@@ -257,7 +250,7 @@ void systematic_ups_v2()
 	h_rc3s->GetXaxis()->SetBinLabel(5 , "70-90 %");
 //	h_rc3s->GetXaxis()->SetLabelSize(0);
 	h_rc3s->Draw();
-	for(int i=0; i<8; i++){
+	for(int i=0; i<num_sys; i++){
 		h_rc3s_b[i]->SetFillColor(colors[i]);
 		h_rc3s_b[i]->GetXaxis()->SetLabelSize(0);
 		h_rc3s_b[i]->Draw("same");
@@ -280,7 +273,7 @@ void systematic_ups_v2()
 	h_rp2s->GetXaxis()->SetBinLabel(5 , "15-30 GeV/c");
 //	h_rp2s->GetXaxis()->SetLabelSize(0);
 	h_rp2s->Draw();
-	for(int i=0; i<8; i++){
+	for(int i=0; i<num_sys; i++){
 		h_rp2s_b[i]->SetFillColor(colors[i]);
 		h_rp2s_b[i]->GetXaxis()->SetLabelSize(0);
 		h_rp2s_b[i]->Draw("same");
@@ -301,7 +294,7 @@ void systematic_ups_v2()
 	h_rp3s->GetXaxis()->SetBinLabel(3 , "9-15 GeV/c");
 	h_rp3s->GetXaxis()->SetBinLabel(4 , "15-30 GeV/c");
 	h_rp3s->Draw();
-	for(int i=0; i<8; i++){
+	for(int i=0; i<num_sys; i++){
 		h_rp3s_b[i]->SetFillColor(colors[i]);
 		h_rp3s_b[i]->GetXaxis()->SetLabelSize(0);
 		h_rp3s_b[i]->Draw("same");
@@ -311,10 +304,10 @@ void systematic_ups_v2()
 	leg->Draw("same");
 	
 	output->cd();
-	c1->SaveAs("../checkout/total_unc2Scent_v2.pdf");
-	c2->SaveAs("../checkout/total_unc3Scent_v2.pdf");
-	c3->SaveAs("../checkout/total_unc2Spt_v2.pdf");
-	c4->SaveAs("../checkout/total_unc3Spt_v2.pdf");
+	c1->SaveAs("../checkout/total_AUX1SBKGCHECK_unc2Scent_v2.pdf");
+	c2->SaveAs("../checkout/total_AUX1SBKGCHECK_unc3Scent_v2.pdf");
+	c3->SaveAs("../checkout/total_AUX1SBKGCHECK_unc2Spt_v2.pdf");
+	c4->SaveAs("../checkout/total_AUX1SBKGCHECK_unc3Spt_v2.pdf");
 	c1->Write();
 	c2->Write();
 	c3->Write();

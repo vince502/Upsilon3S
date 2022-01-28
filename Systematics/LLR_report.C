@@ -37,7 +37,8 @@ void LLR_report()
 		ch = ab.ch;
 		centl = ab.centl;
 		centh = ab.centh;
-		texout << "\\begin{table}[htb]\n	\\begin{center}\n	\\caption{"<<Form("Result %dS, Centrality [%d, %d] \\%%, $p_{T}$ [%d, %d] \\GeV\n", state, centl, centh, pl, ph, state)<<"}\n{\\footnotesize\\renewcommand{\\arraystretch}{1.4}\n		\\begin{tabular}{cc||cccc}\n			N & NLL & p(H0: N = 1) & p(H0: N = 2) & p(H0: N = 3) & p(H0: N = 4)\\\\ \n		\\hline\n";
+		string stringdump_head, stringdump_body;
+
 	  	pvalue = 1;
 		vector<int> N1over= {};
 		vector<int> N2over= {};
@@ -163,7 +164,14 @@ void LLR_report()
 	report << Form(" X X X X X X \n");
 	report << "Selected N = " << selected_deg << "\n\n";
 	value_header << Form("	if( (state == %d && pl == %d && ph == %d && cl == %d && ch == %d) ) return %d;\n", state, pl,ph,cl,ch, selected_deg) ;
-
+		string hl_O1, hl_O2, hl_O3, hl_O4;	
+		hl_O1 = ""; hl_O2 = ""; hl_O3 = ""; hl_O4 = "";
+		if( selected_deg == 1 ) hl_O1 = ">{\\columncolor[gray]{0.8}}";
+		if( selected_deg == 2 ) hl_O2 = ">{\\columncolor[gray]{0.8}}";
+		if( selected_deg == 3 ) hl_O3 = ">{\\columncolor[gray]{0.8}}";
+		if( selected_deg == 4 ) hl_O4 = ">{\\columncolor[gray]{0.8}}";
+		stringdump_head = "\\begin{table}[htb]\n	\\begin{center}\n	\\caption{" + string(Form("Result %dS, Centrality [%d, %d] \\%%, $p_{T}$ [%d, %d] \\GeV\n", state, centl, centh, pl, ph)) + string(Form("}\n{\\footnotesize\\renewcommand{\\arraystretch}{1.4}\n		\\begin{tabular}{cc||%sc%sc%sc%sc}\n			N & NLL & p(H0: N = 1) & p(H0: N = 2) & p(H0: N = 3) & p(H0: N = 4)\\\\ \n		\\hline\n",hl_O1.c_str(), hl_O2.c_str(), hl_O3.c_str(), hl_O4.c_str() ));
+	texout << stringdump_head;
 	texout << Form(		"1 & %.2f & & & & \\\\\n", NLLs[0]);
 	texout << Form(		"2 & %.2f & %.1f\\% & & & \\\\\n", NLLs[1], pvalue_t[1][2]*100);
 	texout << Form(		"3 & %.2f & %.1f\\% & %.1f\\% & & \\\\\n", NLLs[2], pvalue_t[1][3]*100, pvalue_t[2][3]*100);

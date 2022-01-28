@@ -200,7 +200,7 @@ double INTBIN_BDTLOW = 0.1825;// =0.16;
  if(step == 1 || step == 99 || step == 11 || step == 111){
   for( auto ap : ana_bm){
 	  for( auto ab : ap.second){
-		if( !((ab.bin_attr.find("i")!=std::string::npos && true))) continue;
+		if( ((ab.bin_attr.find("i")!=std::string::npos && true))) continue;
 //		if( !((ab.bin_attr.find("c")!=std::string::npos && ab.state ==3))) continue;
 //		if( !(ab.cl==140&&ab.ch==181&&(ab.bin_attr.find("c")!=std::string::npos && true))) continue;
 //		if( !(ab.pl==15&&ab.ph==30&&(ab.bin_attr.find("p")!=std::string::npos && true))) continue;
@@ -255,9 +255,9 @@ double INTBIN_BDTLOW = 0.1825;// =0.16;
 				}
 				else{
 					if(bkgNom.find("CC")!=std::string::npos){
-		    			bkg_val  = {-0.4, -0.07, 0.03,  -0.001, -0.03, 0.0, 0.0, 0.0, 0.0};
-		    			bkg_low  = {-0.8, -0.6, -0.6,  -0.6, -0.5, -0.5, -0.5, -0.5, -0.5};
-		    			bkg_high = {0.6, 0.6, 0.6, 0.6, 0.6, 0.5, 0.5, 0.5, 0.5};
+		    			bkg_val  = {-0.3, -0.07, 0.03,  -0.001, -0.03, 0.0, 0.0, 0.0, 0.0};
+		    			bkg_low  = {-0.8, -0.3, -0.2,  -0.1, -0.5, -0.5, -0.5, -0.5, -0.5};
+		    			bkg_high = {0.0, 0.1, 0.3, 0.1, 0.6, 0.5, 0.5, 0.5, 0.5};
 			    		METHOD_MCGCDATA(1);
 						}
 					if(bkgNom.find("EE")!=std::string::npos){

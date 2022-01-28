@@ -22,7 +22,7 @@
 #include "../BDT/BDTtraindiff.cxx"
 #include "../glauberparams_PbPb5TeV.h"
 
-TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys){
+TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	TH1D* hp3s = (TH1D*) hf->Get("rp3S");
 	TH1D* hp2s = (TH1D*) hf->Get("rp2S");
 	TH1D* hc3s = (TH1D*) hf->Get("rc3S");
@@ -32,6 +32,16 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys){
 	TH1D* hp2s_sys = (TH1D*) hsys->Get("syst_comp/hsys_tot_p2S");
 	TH1D* hc3s_sys = (TH1D*) hsys->Get("syst_comp/hsys_tot_c3S");
 	TH1D* hc2s_sys = (TH1D*) hsys->Get("syst_comp/hsys_tot_c2S");
+
+	TH1D* hpp_p3s_sys = (TH1D*) ppsys->Get("hptPP_3S_yield");
+	TH1D* hpp_p2s_sys = (TH1D*) ppsys->Get("hptPP_2S_yield");
+	TH1D* hpp_i3s_sys = (TH1D*) ppsys->Get("hIntPP_3S_yield");
+	TH1D* hpp_i2s_sys = (TH1D*) ppsys->Get("hIntPP_2S_yield");
+
+	TH1D* hpp_p3s_unc = (TH1D*) ppsys->Get("hptPP_3S_yield_total");
+	TH1D* hpp_p2s_unc = (TH1D*) ppsys->Get("hptPP_2S_yield_total");
+	TH1D* hpp_i3s_unc = (TH1D*) ppsys->Get("hIntPP_3S_yield_total");
+	TH1D* hpp_i2s_unc = (TH1D*) ppsys->Get("hIntPP_2S_yield_total");
 
 	TGraphAsymmErrors g_p3s, g_p3s_sys;
 	TGraphAsymmErrors g_p2s, g_p2s_sys;
@@ -59,6 +69,7 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys){
 				point_y = {hist.GetBinContent( (vab.size()+1) - idx), hist.GetBinError( (vab.size() +1) - idx)};
 			}
 			if(ab.bintype == kPt){
+
 				point_x = {((double)( ab.pl + ab.ph ))/2., 0.};//((double)(ab.ph-ab.pl))/2. };
 				point_y = {hist.GetBinContent( idx ), hist.GetBinError( idx )};
 			}
@@ -107,10 +118,11 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys){
 				point_y = { ref_raa, ref_raa * tot_sys };
 			}
 			if(ab.bintype == kPt){
+				auto hpt_err = (ab.state == 3) ? hpp_p3s_sys : hpp_p2s_sys;
 				point_x = {((double)( ab.pl + ab.ph ))/2., ((double)(ab.ph-ab.pl))/2. };
 				ref_raa = raahist.GetBinContent( idx );
 				nom_sys = hist.GetBinContent( idx );
-				double pp_err =0;
+				double pp_err = hpt_err->GetBinContent( idx );
 				double tot_sys = quadsum(nom_sys, pp_err);
 			
 				point_y = { ref_raa , ref_raa * tot_sys };
@@ -132,8 +144,10 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys){
 	double val_3s = hc3s->GetBinContent(1);
 	double int_sys_2s = (hc2s_sys->GetBinContent(1));
 	double int_sys_3s = (hc3s_sys->GetBinContent(1));
-	int_sys_2s =  quadsum( mb_unc, quadsum( pp_sys, quadsum(pp_lum, int_sys_2s) ) );
-	int_sys_3s =  quadsum( mb_unc, quadsum( pp_sys, quadsum(pp_lum, int_sys_3s) ) );
+	double int_pp_sys_2s = (hpp_i2s_sys->GetBinContent(1));
+	double int_pp_sys_3s = (hpp_i3s_sys->GetBinContent(1));
+	int_sys_2s =  quadsum( mb_unc, quadsum( pp_sys, quadsum(pp_lum, quadsum(int_pp_sys_2s, int_sys_2s) ) ) );
+	int_sys_3s =  quadsum( mb_unc, quadsum( pp_sys, quadsum(pp_lum, quadsum(int_pp_sys_3s, int_sys_3s) ) ) );
 	g_i2s_sys.AddPoint(2, val_2s) ;
 	g_i2s_sys.SetPointError(0, int_sys_width, int_sys_width, val_2s *int_sys_2s, val_2s * int_sys_2s ) ;
 	g_i3s_sys.AddPoint(3, val_3s) ;
@@ -224,17 +238,15 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys){
 	TBox* b_2serr = new TBox();
 	TBox* b_3serr = new TBox();
 	TBox* b_pterr = new TBox();
-	double glb_2serr = 0.001;
-	double glb_3serr = 0.001;
+	double glb_2serr = hpp_i2s_unc->GetBinContent(1);
+	double glb_3serr = hpp_i3s_unc->GetBinContent(1);
 	double glb_errMB_PP = 0;
-	double pp_stat2s_int =0;
-	double pp_stat3s_int =0;
-	glb_errMB_PP =quadsum(0.02, 0.01261);
+	glb_errMB_PP =quadsum(0.019, 0.01261);
 //	glb_errMB_PP =quadsum(pp_lum, mb_unc);
 
 	double glb_errpt = 0;
 	double taaint_err = glp::Taa[{0, 90}].second/ glp::Taa[{0, 90}].first;
-	glb_errpt = quadsum( 0.01261, quadsum(taaint_err, 0.02));
+	glb_errpt = quadsum( 0.01261, quadsum(taaint_err, 0.019));
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -395,5 +407,5 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys){
 
 
 TGraphAsymmErrors analysis_plot_sys(){
-	return analysis_plot_sys(TFile::Open("./result/RAA_10000000016.root"), TFile::Open("../Systematics/data/total_systematics_RAA.root"));
+	return analysis_plot_sys(TFile::Open("./result/RAA_10000000016.root"), TFile::Open("../Systematics/data/total_systematics_RAA.root"), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
 };

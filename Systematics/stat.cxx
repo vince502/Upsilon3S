@@ -33,3 +33,26 @@ dat AIC_statistic(double Nll1, int dof1, double Nll2, int dof2, double Nll3, int
 	p[2] = B[2]/sumB;
 	return dat{{0,p[0]}, {1,p[1]}, {2,p[2]}};
 };
+
+dat AIC_statistic( std::vector<std::pair<double, int> > statp ){
+	size_t vsize = statp.size();
+	double AIC[vsize];
+	double B[vsize];
+	double p[vsize];
+	double minAIC = TMath::Infinity();  
+	for( auto idx : ROOT::TSeqI(vsize)){
+		AIC[idx] = 2*statp[idx].first + 2*statp[idx].second;
+		minAIC = min(minAIC, AIC[idx]);
+	}
+	double sumB= 0;
+	for( auto idx : ROOT::TSeqI(vsize)){
+		B[idx] = TMath::Exp( ( minAIC - AIC[idx] ) / 2);
+		sumB += B[idx];
+	}
+	dat p_coll;
+	for( auto idx : ROOT::TSeqI(vsize)){
+		p[idx] = B[idx]/sumB;
+		p_coll[idx] = p[idx];
+	}
+	return p_coll;
+}

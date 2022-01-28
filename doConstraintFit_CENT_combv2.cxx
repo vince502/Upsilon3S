@@ -116,6 +116,7 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0, bool redo_nobdt =f
       {"mag", { 0, 0, 0 }},
       {"sb_ratio", { -1, 0, 0}},
 	  {"CentTrain",{ 1, bdtcBinLow, bdtcBinHigh} },
+	  {"DrawOnly", {drawonly, 0, 0}},
       }, Nworkers, plot_dir_opt);
       }
       if(parsed[2].find("FF") !=std::string::npos){
@@ -137,6 +138,7 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0, bool redo_nobdt =f
       {"mag", { 0, 0, 0 }},
       {"sb_ratio", { -1, 0, 0}},
 	  {"CentTrain",{ 1, bdtcBinLow, bdtcBinHigh} },
+	  {"DrawOnly", {drawonly, 0, 0}},
       }, Nworkers, plot_dir_opt);
       }
     };
@@ -388,8 +390,8 @@ state =3;
 //    bkg_high = {8.5, 9.0, 3.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
   for( auto cbinpair : (std::vector<std::pair<std::pair<double, double>, std::pair<double, double> > >) {
 //  {{0, 60 },{0 , 40 }},
-///  {{0, 60 },{0 , 60 }},
-  {{40, 60 },{0 , 60 }},
+  {{0, 60 },{0 , 60 }},
+//  {{40, 60 },{0 , 60 }},
 //  {{0, 40 },{0 , 40 }},
 //  {{60, 120 },{60 , 120 }},
 //  {{120, 181 },{120 , 181 }},
@@ -412,10 +414,10 @@ state =3;
 	bdtptMin = ptpair.second.first;
 	bdtptMax = ptpair.second.second;
 //    std::pair<double, RooRealVar> res = prep_bdtval(0.2,5);
-    cutBDTlow = 0.28;// res.first;
-    sb_ratio =RooRealVar("sb_ratio","",-1);// res.second;
+    cutBDTlow =  0.03266;// res.first;
+    sb_ratio = RooRealVar("sb_ratio","",-1);//res.second;
 	bool fitdata = true;
-	drawonly = 0;
+	drawonly = 1;
 	if(fitdata){
 		Nworkers = GLOBAL_NWORKERS;
 //	    std::cout << "cutBDTlow, sb_ratio: " << cutBDTlow << ", "<< sb_ratio.getVal() << std::endl;
@@ -435,7 +437,7 @@ state =3;
 	    bkg_val  = {6.5, 7.0, 2.5,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 	    bkg_low  = {2.0, 2.0, 0.11,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
 	    bkg_high = {8.5, 15.0, 9.2, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
-	    METHOD_MCGCDATA(1);
+	    METHOD_MCGCDATA(2);
 		if(ptpair.first.first>= 9){
 		    bkg_val  = {-0.1, 4.0, 1.5,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 		    bkg_low  = {-2.0, 2.0, 0.2,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
