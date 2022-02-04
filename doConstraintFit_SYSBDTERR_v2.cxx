@@ -226,7 +226,7 @@ double INTBIN_BDTLOW = 0.1825;// =0.16;
  if(step == 1 || step == 99 || step == 11 || step == 111){
   for( auto ap : ana_bm){
 	  for( auto ab : ap.second){
-//		if( !((ab.bin_attr.find("i")!=std::string::npos && ab.state ==2))) continue;
+		if( !((ab.bin_attr.find("i")!=std::string::npos && ab.state ==3))) continue;
 //		if( !((ab.bin_attr.find("c")!=std::string::npos && ab.state ==3))) continue;
 //		if( !(ab.cl==0&&ab.ch==20&&(ab.bin_attr.find("c")!=std::string::npos && ab.state ==3))) continue;
 //		if( !(ab.pl==15&&ab.ph==30&&(ab.bin_attr.find("p")!=std::string::npos && ab.state ==3))) continue;
@@ -243,7 +243,7 @@ double INTBIN_BDTLOW = 0.1825;// =0.16;
     	std::pair<double, double> res = prep_bdtval(0.0, global_step);
 	  	cutBDTlow = res.first;
 	    sb_ratio = RooRealVar("sb_ratio", "",res.second);
-		bool fitdata = true;
+		bool fitdata = false;
 		if(fitdata){
 			auto CTEST = AICGOF_test(ab);
 			string bkgNom = CTEST[0].second;

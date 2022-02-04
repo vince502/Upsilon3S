@@ -50,6 +50,12 @@ void CMS_lumi_square( TPad* pad, int iPeriod=101, int iPosX=10 )
     lumiText += lumi_PbPb502TeV_blind;
     lumiText += " (5.02 TeV)";
   }
+  else if( iPeriod==31 )
+  {
+    lumiText += "PbPb ";
+    lumiText += lumi_PbPb502TeV_quarter;
+    lumiText += " (5.02 TeV)";
+  }
   else if( iPeriod==4 )
   {
     lumiText += "pPb ";

@@ -200,8 +200,8 @@ double INTBIN_BDTLOW = 0.1825;// =0.16;
  if(step == 1 || step == 99 || step == 11 || step == 111){
   for( auto ap : ana_bm){
 	  for( auto ab : ap.second){
-		if( ((ab.bin_attr.find("i")!=std::string::npos && true))) continue;
-//		if( !((ab.bin_attr.find("c")!=std::string::npos && ab.state ==3))) continue;
+//		if( ((ab.bin_attr.find("i")!=std::string::npos && true))) continue;
+		if( !((ab.bin_attr.find("c")!=std::string::npos && true))) continue;
 //		if( !(ab.cl==140&&ab.ch==181&&(ab.bin_attr.find("c")!=std::string::npos && true))) continue;
 //		if( !(ab.pl==15&&ab.ph==30&&(ab.bin_attr.find("p")!=std::string::npos && true))) continue;
 		for( auto test : (std::vector<double>){-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8}){
@@ -229,9 +229,9 @@ double INTBIN_BDTLOW = 0.1825;// =0.16;
 				type			= "CB3:"+ bkgNom  + ":" + fittype.c_str()+bdt_seg;
 				type2			= "CB3:"+ bkgNom  + ":" + fittype.c_str()+bdt_seg;
 				if(strcmp(ab.bin_attr.c_str(),"c")==0){
-					double cbl = cutBDTlow;
-					cutBDTlow = Get_BDT(ts, ab.train_state, ab.state, 0, 30, 0, 30, 0, 181, 0.00, 2.4, 2, systype); 
-					string bkgNomREF = AICGOF_test(ana_bm[Form("%dc",ab.state)][0])[0].second;
+					double cbl =test;// cutBDTlow;
+					cutBDTlow = test;// Get_BDT(ts, ab.train_state, ab.state, 0, 30, 0, 30, 0, 181, 0.00, 2.4, 2, systype); 
+					string bkgNomREF = "CC4";// AICGOF_test(ana_bm[Form("%dc",ab.state)][0])[0].second;
 					type			= "CB3:"+ bkgNomREF  + ":" + "GC"+bdt_seg;
 					if(bkgNom.find("CC")!=std::string::npos){
 		    			bkg_val  = {-0.4, -0.07, 0.03,  -0.001, -0.03, 0.0, 0.0, 0.0, 0.0};

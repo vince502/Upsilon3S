@@ -148,8 +148,8 @@ TGraphAsymmErrors analysis_DRplot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 //	fillsysgraph(*hp2s_sys, *hp2s, g_p2s_sys, "2p");
 	fillsysgraph(*hp3s_sys, *hp3s, g_p3s_sys, "3p");
 
-	TCanvas* c1 = new TCanvas("c1","", 1000,700);
-	TCanvas* c2 = new TCanvas("c2","", 1000,700);
+	TCanvas* c1 = new TCanvas("c1","", 1000,900);
+	TCanvas* c2 = new TCanvas("c2","", 1000,900);
 	TPad* p1_L = new TPad("p1L", "", 0.00, 0., 0.83,1.);
 	TPad* p1_R = new TPad("p1R", "", 0.83, 0., 1., 1.);
 	TPad* p2 = new TPad("p2", "", 0., 0., 1., 1.);
@@ -286,7 +286,7 @@ TGraphAsymmErrors analysis_DRplot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
     b_3serr->SetX2(420);
     b_3serr->SetY1(2 - fabs(glb_3serr));
     b_3serr->SetY2(2 + fabs(glb_3serr));
-    b_3serr->SetFillColorAlpha(kTeal+5, 0.8);
+    b_3serr->SetFillColorAlpha(12, 0.8);
     b_3serr->SetLineWidth(1);
 	b_3serr->Draw("L");
 
@@ -338,7 +338,7 @@ TGraphAsymmErrors analysis_DRplot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	tl->SetTextSize(0.037);
 	tl->SetTextAlign(11);
 	tl->DrawLatex( 2.5, label_pos_up + 0.05,"p^{#mu#mu}_{T} < 30 GeV/c");
-	tl->DrawLatex( 10, label_pos_up + 0.05 , "|y| < 2.4");
+	tl->DrawLatex( 11, label_pos_up + 0.05 , "|y| < 2.4");
 	tl->DrawLatex( 2.5,label_pos_up - 0.20 , "Cent. 0-90 %");
 	leg_pt->Draw();
 	p2->Draw();

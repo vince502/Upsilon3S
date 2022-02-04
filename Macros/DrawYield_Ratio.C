@@ -24,7 +24,7 @@
 
 
 //For BDT Validation
-void DrawYield_Ratio(ana_bins ab = ana_bm_comb["3c"][0], long ts = _TS){
+void DrawYield_Ratio(ana_bins ab , long ts = _TS){
 	gStyle->SetEndErrorSize(0);
 	std::vector<double> use_bins = {-0.8,-0.6, -0.4,-0.2,0.0, 0.2, 0.4, 0.6, 0.8};
 	int NBDTbins = use_bins.size() +2;
@@ -40,10 +40,12 @@ void DrawYield_Ratio(ana_bins ab = ana_bm_comb["3c"][0], long ts = _TS){
 	string typestr;
 	
 	double bl = Get_BDT(ts, ab);
-	auto nom = getRAAValue(false, ab, "CB3:EE:GC", bl, 1., 0, ts, false, false); 
+	std::cout <<"bl : " <<  bl << std::endl;
+	string fittype  = (ab.bintype == kCent) ? "FF" : "GC" ;
+	auto nom = getRAAValue(false, ab, Form("CB3:EE:%s", fittype.c_str()) , bl, 1., 0, ts, false, false); 
 
-//	auto ref = getRAAValue(false, ab, "CB3:CC4:FF", -1, 1., 0, ts, true, false);
-	auto ref2 = getRAAValue(false, ab, "CB3:CC4:GC", -1, 1., 0, ts, false, false);
+	auto ref2 = getRAAValue(false, ab, "CB3:CC4:FF", -1, 1., 0, ts, true, false);
+//	auto ref2 = getRAAValue(false, ab, Form("CB3:CC4:%s", fittype.c_str()) , -1, 1., 0, ts, false, false);
 
 	hist->SetBinContent(1,nom.getVal());
 	hist->SetBinError(1,2*nom.getError());
@@ -70,7 +72,8 @@ void DrawYield_Ratio(ana_bins ab = ana_bm_comb["3c"][0], long ts = _TS){
 		std::cout << "BDTV VALUE: " << bdtv << std::endl;
 		hist->GetXaxis()->SetBinLabel(counter1,Form("%.2f",bdtv));
 		hist_norm->GetXaxis()->SetBinLabel(counter1,Form("%.2f",bdtv));
-		typestr="CB3:CC4:GCbdtup";
+		string fittype = (ab.bintype == kCent) ? "FF" : "GC"; 
+		typestr=Form("CB3:CC4:%sbdtup",fittype.c_str() );
 		RooRealVar cval;
 		try{	cval = getRAAValue(false, ab, typestr, bdtv, 1., 0, ts, false, false);
 		double theval = cval.getVal();
@@ -119,11 +122,21 @@ void DrawYield_Ratio(ana_bins ab = ana_bm_comb["3c"][0], long ts = _TS){
 	CMS_lumi_square((TPad*) c1->GetPad(2), 102, 33) ;
 
 		
-	c1->SaveAs(Form("./CorrYields/BDTCorYieldplot_train%d_%dS_%ld_2.C",ab.train_state,ab.state,ts) );
+	c1->SaveAs(Form("./CorrYields/BDTCorYieldplot_train%d_%dS_pt%d_%d_cent%d_%d_%ld_2.C",ab.train_state,ab.state, ab.pl, ab.ph, ab.centl, ab.centh,ts) );
+	c1->SaveAs(Form("./CorrYieldsPlot/BDTCorYieldplot_train%d_%dS_pt%d_%d_cent%d_%d.pdf",ab.train_state,ab.state, ab.pl, ab.ph, ab.centl, ab.centh) );
 	
 	TFile* f_out= new TFile(Form("./CorrYields/BDTCorYield_plots_%ld.root",ts), "update");
 	f_out->cd();
 	hist->Write();
 	f_out->Close();
 
-}
+};
+
+void DrawYield_Ratio(){
+	for( auto abv : ana_bm_comb){
+		for( auto ab : abv.second){
+
+			if(ab.bintype == kCent) DrawYield_Ratio(ab, _TS);
+		}
+	}
+};

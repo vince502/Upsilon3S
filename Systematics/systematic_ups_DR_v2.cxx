@@ -205,6 +205,8 @@ void systematic_ups_DR_v2()
 	c2->cd();
 //	c2->SetLogy();
 	h_rc3s->GetYaxis()->SetRangeUser(down, up);
+	h_rc3s->GetYaxis()->CenterTitle();
+	h_rc3s->GetYaxis()->SetTitle("Relative uncertainty");
 	h_rc3s->SetFillColor(kGray);
 	h_rc3s->SetLineColor(kBlack);
 	h_rc3s->SetLineWidth(2);
@@ -257,6 +259,8 @@ void systematic_ups_DR_v2()
 	c4->cd();
 //	c4->SetLogy();
 	h_rp3s->GetYaxis()->SetRangeUser(down, up);
+	h_rp3s->GetYaxis()->CenterTitle();
+	h_rp3s->GetYaxis()->SetTitle("Relative uncertainty");
 	h_rp3s->SetFillColor(kGray);
 	h_rp3s->SetLineColor(kBlack);
 	h_rp3s->SetLineWidth(2);
@@ -274,6 +278,9 @@ void systematic_ups_DR_v2()
 		l_bin->DrawLine(l_x,0, l_x, h_rp3s->GetBinContent(i+1)) ;
 	}
 	leg->Draw("same");
+
+	CMS_lumi_square(c2, 31, 11);
+	CMS_lumi_square(c4, 31, 11);
 	
 	output->cd();
 //	c1->SaveAs("../checkout/total_uncDR_2Scent_v2.pdf");

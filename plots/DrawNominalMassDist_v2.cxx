@@ -45,15 +45,24 @@ void DrawNominalMassDist_(ana_bins ab, long ts = 9999999999){
   gStyle->SetOptTitle(0);
   
   RooPlot* plot1 = vmass->frame(Nmassbins);
+  plot1->GetYaxis()->CenterTitle();
+  plot1->GetXaxis()->SetTitle("m_{#mu^{+}#mu^{-}} (GeV/c^{2})");
+  plot1->GetXaxis()->CenterTitle();
+  plot1->GetYaxis()->SetTitleSize(0.055);
+  plot1->GetXaxis()->SetTitleSize(0.055);
+
+  plot1->GetYaxis()->SetLabelSize(0.050);
+  plot1->GetXaxis()->SetLabelSize(0.050);
+
   RooPlot* plot2 = vmass->frame();
   plot2->SetAxisRange(10,10.6);
-  works->data("reducedDS")->plotOn(plot1, Name("massPlot"), MarkerSize(0.5), LineWidth(1));
-  works->pdf(name_model.c_str())->plotOn(plot1, Range("analysis"), RooFit::NormRange("analysis"), Name("modelPlot"), LineWidth(2));
+  works->data("reducedDS")->plotOn(plot1, Name("massPlot"), MarkerStyle(kFullCircle), MarkerSize(1.4), LineWidth(1));
+  works->pdf(name_model.c_str())->plotOn(plot1, Range("analysis"), RooFit::NormRange("analysis"), Name("modelPlot"), LineWidth(3));
 
-  works->pdf(name_model.c_str())->plotOn(plot1, Range("analysis"), RooFit::NormRange("analysis"), Name("CB3_1S"),Components(RooArgSet(*works->pdf(Form("%s1S",name_sig_pdf.c_str()))) ), LineWidth(3),LineStyle(4), LineColor(kRed) , MoveToBack());
-  works->pdf(name_model.c_str())->plotOn(plot1, Range("analysis"), RooFit::NormRange("analysis"), Name("CB3_2S"),Components(RooArgSet(*works->pdf(Form("%s2S",name_sig_pdf.c_str()))) ), LineWidth(3),LineStyle(4), LineColor(kRed) , MoveToBack());
-  works->pdf(name_model.c_str())->plotOn(plot1, Range("analysis"), RooFit::NormRange("analysis"), Name("CB3_3S"),Components(RooArgSet(*works->pdf(Form("%s3S",name_sig_pdf.c_str()))) ), LineWidth(3),LineStyle(4), LineColor(kRed) , MoveToBack());
-  works->pdf(name_model.c_str())->plotOn(plot1, Range("analysis"), RooFit::NormRange("analysis"), Name("modelBkg"), Components(RooArgSet(*works->pdf(name_pdf_bkg.c_str())) ), LineWidth(3), LineStyle(2), LineColor(kGreen), MoveToBack() );
+  works->pdf(name_model.c_str())->plotOn(plot1, Range("analysis"), RooFit::NormRange("analysis"), Name("CB3_1S"),Components(RooArgSet(*works->pdf(Form("%s1S",name_sig_pdf.c_str()))) ), LineWidth(2),LineStyle(2), LineColor(kOrange+7) , MoveToBack());
+  works->pdf(name_model.c_str())->plotOn(plot1, Range("analysis"), RooFit::NormRange("analysis"), Name("CB3_2S"),Components(RooArgSet(*works->pdf(Form("%s2S",name_sig_pdf.c_str()))) ), LineWidth(2),LineStyle(2), LineColor(kOrange+7) , MoveToBack());
+  works->pdf(name_model.c_str())->plotOn(plot1, Range("analysis"), RooFit::NormRange("analysis"), Name("CB3_3S"),Components(RooArgSet(*works->pdf(Form("%s3S",name_sig_pdf.c_str()))) ), LineWidth(2),LineStyle(2), LineColor(kOrange+7) , MoveToBack());
+  works->pdf(name_model.c_str())->plotOn(plot1, Range("analysis"), RooFit::NormRange("analysis"), Name("modelBkg"), Components(RooArgSet(*works->pdf(name_pdf_bkg.c_str())) ), LineWidth(2), LineStyle(3), LineColor(kBlue), MoveToBack() );
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -68,16 +77,19 @@ void DrawNominalMassDist_(ana_bins ab, long ts = 9999999999){
 	gStyle->SetEndErrorSize(0);
 
 //  setTDRStyle();
-  TCanvas* c1 = new TCanvas("c1", "", 1200, 1000);
+  TCanvas* c1 = new TCanvas("c1", "", 800, 800);
 
-  TPad* pad_mass = new TPad("pad_mass", "pad_mass", 0.05, 0.05, 1., 1.);
+  TPad* pad_mass = new TPad("pad_mass", "pad_mass", 0.00, 0.00, 1., 1.);
 //  TPad* pad_mass_3S = new TPad("pad_mass_3S", "pad_mass_3S", 0.60, 0.43, 0.90, 0.86);
 //  TPad* pad_pull = new TPad("pad_pull", "pad_pull", 0, 0.0, 0.7, 0.25);
 //  TPad* pad_leg = new TPad("pad_leg", "pad_leg", 0.7, 0.25, 1.0, 1.0);
 //  TPad* pad_mag = new TPad("pad_mag", "pad_mag", 0.7, 0.0, 1.0, 0.25);
   c1->cd();
   pad_mass->SetTopMargin(0.07);
-  pad_mass->SetLeftMargin(0.13);
+  pad_mass->SetLeftMargin(0.23);
+  pad_mass->SetRightMargin(0.03);
+  pad_mass->SetBottomMargin(0.13);
+  pad_mass->SetTicks();
   pad_mass->Draw();
 
 //  pad_pull->Draw();
@@ -89,12 +101,14 @@ void DrawNominalMassDist_(ana_bins ab, long ts = 9999999999){
 //  plot1->GetXaxis()->SetTitleSize(0);
   TLatex* lt0 = new TLatex();
   FormLatex(lt0, 12, 0.032);
-  lt0->DrawLatex(0.6,0.85, Form("%d < p_{T}^{#mu#mu} < %d GeV/c", ab.pl, ab.ph));
-  lt0->DrawLatex(0.6,0.80, Form("|y^{#mu#mu}| < 2.4"));
-  lt0->DrawLatex(0.6,0.75, Form("p_{T}^{#mu} > %s GeV/c", "3.5"));
-  lt0->DrawLatex(0.6,0.70, Form("|#eta^{#mu}| < 2.4"));
-  TLegend* leg = new TLegend(0.6, 0.4, 0.8,0.6 );
-  leg->AddEntry("modelPlot" ,"Total", "l");
+  lt0->DrawLatex(0.5,0.80, Form("p_{T}^{#mu#mu} < %d GeV/c", ab.ph));
+  lt0->DrawLatex(0.5,0.74, Form("|y^{#mu#mu}| < 2.4"));
+  lt0->DrawLatex(0.5,0.68, Form("p_{T}^{#mu} > %s GeV/c", "3.5"));
+  lt0->DrawLatex(0.5,0.62, Form("|#eta^{#mu}| < 2.4"));
+  TLegend* leg = new TLegend(0.71, 0.42, 0.95,0.7 );
+  leg->SetTextSize(0.030);
+  leg->AddEntry("massPlot" ,"Data", "ep");
+  leg->AddEntry("modelPlot" ,"Total fit", "l");
   leg->AddEntry("CB3_1S" ,"Signal", "l");
   leg->AddEntry("modelBkg" ,"Background", "l");
 
@@ -102,7 +116,7 @@ void DrawNominalMassDist_(ana_bins ab, long ts = 9999999999){
   leg->Draw();
 //  lt0->DrawLatex(0.20,0.65, Form("Centrality %d-%d %%",ab.centl, ab.centh));
   
-  CMS_lumi_square( pad_mass, 3, 11);
+  CMS_lumi_square( pad_mass, 31, 33);
 
  // if (draw_mag && train_state ==3){
  //   pad_mass_3S->SetMargin(0.25, 0.01, 0.14, 0.01);

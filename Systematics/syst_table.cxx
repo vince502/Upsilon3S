@@ -1,7 +1,7 @@
 #include "../BDT/bininfo.h"
 
 void syst_table(){
-	TFile* f_syst =  TFile::Open("total_systematic.root");
+	TFile* f_syst =  TFile::Open("./data/total_systematics_RAA.root");
 	TDirectoryFile* f_hist = (TDirectoryFile*) f_syst->Get("syst_comp");
 	
 	
@@ -10,7 +10,7 @@ void syst_table(){
 		std::vector<double> syst_val;
 		for( int i =0 ; i<8; i++){
 			syst_val.push_back(100.*((TH1D*) f_hist->Get(Form("h_r%ss_b%d",crit.c_str(),i )))->GetBinContent((idx-1)*8 +i+1));
-			std::cout << syst_val[i] << std::endl;
+			std::cout <<  ((TH1D*) f_hist->Get(Form("h_r%ss_b%d",crit.c_str(),i )))->GetTitle() << ": "<<syst_val[i] << std::endl;
 		}
 		syst_val.push_back( 100.* ((TH1D*) f_hist->Get(Form("hsys_tot_%sS", crit.c_str() )))->GetBinContent(idx));
 		return  syst_val;
@@ -29,7 +29,8 @@ void syst_table(){
 	  if(ab.state == 2) s_state = "b";
 	  if(ab.state == 3) s_state = "c";
 	  string line = Form("			\\PgU%s, \\pt %d--%d \\GeVc, %d--%d \\%% &" ,s_state.c_str(), ab.pl, ab.ph, ab.centl, ab.centh);
-	  auto nums = getSyst(Form("%s%d", ab.bin_attr.Data(),ab.state) ,ab.plot_idx);
+	  if( strcmp(ab.bin_attr.c_str(), "i") == 0 ) ab.bin_attr = "c";
+	  auto nums = getSyst(Form("%s%d", ab.bin_attr.c_str(),ab.state) ,ab.plot_idx);
 	  if(ab.state ==2){
 	 	 for(int j= 0 ; j<9; j++){
 	 	 	minsb[j] = std::min(minsb[j], nums[j]);
@@ -45,7 +46,7 @@ void syst_table(){
 	  line = line + Form("%.4f & %.4f & %.4f & %.4f & %.4f & %.4f & %.4f & %.4f & %.4f\\\\\n", nums[0], nums[1], nums[2], nums[3], nums[4], nums[5], nums[6], nums[7], nums[8]  ) ;
 	  return line;
 	};
-	for( auto x : ana_bm ){
+	for( auto x : ana_bm_comb ){
 		for( auto abx : x.second ){
 			texout << getRow(abx);	
 		}
@@ -58,5 +59,4 @@ void syst_table(){
 	std::cout << Form("------------------------------------------------------------")<< std::endl;
 	std::cout << Form(" %.4f, %.4f, %.4f, %.4f, %.4f, %.4f, %.4f, %.4f, %.4f", minsc[0], minsc[1], minsc[2], minsc[3], minsc[4], minsc[5], minsc[6], minsc[7], minsc[8]) << std::endl;
 	  std::cout << Form(" %.4f, %.4f, %.4f, %.4f, %.4f, %.4f, %.4f, %.4f, %.4f", maxsc[0], maxsc[1], maxsc[2], maxsc[3], maxsc[4], maxsc[5], maxsc[6], maxsc[7], maxsc[8]) << std::endl;
-	
 }

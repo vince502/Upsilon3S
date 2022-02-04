@@ -209,6 +209,8 @@ void systematic_ups_v2()
 
 //	c1->SetLogy();
 	h_rc2s->GetYaxis()->SetRangeUser(down,up);
+	h_rc2s->GetYaxis()->CenterTitle();
+	h_rc2s->GetYaxis()->SetTitle("Relative uncertainty");
 	h_rc2s->SetFillColor(kGray);
 	h_rc2s->SetLineColor(kBlack);
 //	h_rc2s->GetXaxis()->SetLabelSize(0);
@@ -247,6 +249,8 @@ void systematic_ups_v2()
 	c2->cd();
 //	c2->SetLogy();
 	h_rc3s->GetYaxis()->SetRangeUser(down, up);
+	h_rc3s->GetYaxis()->CenterTitle();
+	h_rc3s->GetYaxis()->SetTitle("Relative uncertainty");
 	h_rc3s->SetFillColor(kGray);
 	h_rc3s->SetLineColor(kBlack);
 	h_rc3s->SetLineWidth(2);
@@ -269,6 +273,8 @@ void systematic_ups_v2()
 	c3->cd();
 //	c3->SetLogy();
 	h_rp2s->GetYaxis()->SetRangeUser(down, up);
+	h_rp2s->GetYaxis()->CenterTitle();
+	h_rp2s->GetYaxis()->SetTitle("Relative uncertainty");
 	h_rp2s->SetFillColor(kGray);
 	h_rp2s->SetLineColor(kGray+2);
 	h_rp2s->SetLineColor(kBlack);
@@ -292,6 +298,8 @@ void systematic_ups_v2()
 	c4->cd();
 //	c4->SetLogy();
 	h_rp3s->GetYaxis()->SetRangeUser(down, up);
+	h_rp3s->GetYaxis()->CenterTitle();
+	h_rp3s->GetYaxis()->SetTitle("Relative uncertainty");
 	h_rp3s->SetFillColor(kGray);
 	h_rp3s->SetLineColor(kBlack);
 	h_rp3s->SetLineWidth(2);
@@ -309,6 +317,11 @@ void systematic_ups_v2()
 		l_bin->DrawLine(l_x,0, l_x, h_rp3s->GetBinContent(i+1)) ;
 	}
 	leg->Draw("same");
+	
+	CMS_lumi_square(c1, 31, 11);
+	CMS_lumi_square(c2, 31, 11);
+	CMS_lumi_square(c3, 31, 11);
+	CMS_lumi_square(c4, 31, 11);
 	
 	output->cd();
 	c1->SaveAs("../checkout/total_unc2Scent_v2.pdf");

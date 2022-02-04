@@ -511,20 +511,21 @@ bdtptMin = 0;
 bdtptMax = 30;
 cutBDTlow = Get_BDT(ts, train_state, state, bdtptMin, bdtptMax, (int) ptMin, (int) ptMax, 0, 181); 
 for( auto cbinpair : (std::vector<std::pair<int, int> >) {
-{0, 10}, 
-{10, 20}, 
+//{0, 10}, 
+//{10, 20}, 
 //{0, 20}, 
-{20, 40},
+//{20, 40},
 {40, 60},
-{60, 80},
-{80, 100},
-{100, 120},
-{120, 140},
-{140, 181},
+//{60, 80},
+//{80, 100},
+//{100, 120},
+//{120, 140},
+//{140, 181},
 /*{140, 160},
 {160, 181} -> too small stats*/
 }){
-    bkg_val  = {-0.4, -0.07, 0.03,  -0.001, -0.03, 0.0, 0.0, 0.0, 0.0};
+//    bkg_val  = {-0.4, -0.07, 0.03,  -0.001, -0.03, 0.0, 0.0, 0.0, 0.0};
+    bkg_val  = {0.000, 0.000, 0.000,  0.000, 0.000, 0.0, 0.0, 0.0, 0.0};
     bkg_low  = {-0.8, -0.6, -0.6,  -0.6, -0.5, -0.5, -0.5, -0.5, -0.5};
     bkg_high = {0.6, 0.6, 0.6, 0.6, 0.6, 0.5, 0.5, 0.5, 0.5};
 	cBinLow  = cbinpair.first;
@@ -533,7 +534,7 @@ for( auto cbinpair : (std::vector<std::pair<int, int> >) {
     double CBINBDTLOW = res.first;
 	sb_ratio = res.second;
 	bool fitdata = 1;
-	drawonly = 1;
+	drawonly = 0;
 	bool fit_aux = 0;
 	if(fitdata){
 		Nworkers = GLOBAL_NWORKERS;
@@ -553,13 +554,13 @@ for( auto cbinpair : (std::vector<std::pair<int, int> >) {
 	    bkg_val  = {7.5, 4.01, 5.111,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 	    bkg_low  = {5.0, 1.1, 0.1,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
 	    bkg_high = {9.5, 10.1, 9.1, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
-		fixfit(CBINBDTLOW);
+//		fixfit(CBINBDTLOW);
 		if(fit_aux){
 		    bkg_val  = {-1.1, 4.0, 1.5,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 		    bkg_low  = {-10.0, 2.0, 0.2,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
 		    bkg_high = {0.1 , 20.0, 3.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
 		    type2			= "CB3:EX:FF"	;
-			fixfit(CBINBDTLOW);
+//			fixfit(CBINBDTLOW);
 		}
 	}
   	}

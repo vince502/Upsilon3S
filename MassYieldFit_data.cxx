@@ -450,9 +450,9 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, int sig
 	  RooFitResult* Result;
 	  if(fitdir.find("GC")!=std::string::npos){
 	    std::cout << "Fitting with Gaussian Constraint" << std::endl;
-	    Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), Constrain(list_var_for_gc), PrefitDataFraction(0.1), Minimizer("Minuit","minimize"), NumCPU(workers), Range(mf.Range_fit_low, mf.Range_fit_high), SumW2Error(kTRUE), Extended(kTRUE));
+	    Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), Constrain(list_var_for_gc), PrefitDataFraction(0.1),  Minimizer("Minuit","minimize"), NumCPU(workers), Range(mf.Range_fit_low, mf.Range_fit_high), SumW2Error(kTRUE), Extended(kTRUE));
 	  }
-	  else  {Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), PrefitDataFraction(0.1),  Minimizer("Minuit","minimize"), NumCPU(workers), Range(mf.Range_fit_low, mf.Range_fit_high), SumW2Error(kTRUE), Extended(kTRUE));}
+	  else  {Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), /*PrefitDataFraction(0.1),*/  Minimizer("Minuit","minimize"), NumCPU(workers), Range(mf.Range_fit_low, mf.Range_fit_high), SumW2Error(kTRUE), Extended(kTRUE));}
 	dbg();
 	  mf.works->pdf(use_model.c_str())->plotOn(massPlot, Name("modelPlot"));
 	  mf.works->pdf(use_model.c_str())->plotOn(massPlot, Components(RooArgSet(*Signal1S)), LineColor(kRed), LineStyle(kDashed), MoveToBack());

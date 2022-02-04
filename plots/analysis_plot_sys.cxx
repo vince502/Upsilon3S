@@ -165,8 +165,8 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	fillsysgraph(*hp2s_sys, *hp2s, g_p2s_sys, "2p");
 	fillsysgraph(*hp3s_sys, *hp3s, g_p3s_sys, "3p");
 
-	TCanvas* c1 = new TCanvas("c1","", 1000,700);
-	TCanvas* c2 = new TCanvas("c2","", 1000,700);
+	TCanvas* c1 = new TCanvas("c1","", 1000,900);
+	TCanvas* c2 = new TCanvas("c2","", 1000,900);
 	TPad* p1_L = new TPad("p1L", "", 0.00, 0., 0.83,1.);
 	TPad* p1_R = new TPad("p1R", "", 0.83, 0., 1., 1.);
 	TPad* p2 = new TPad("p2", "", 0., 0., 1., 1.);
@@ -187,6 +187,30 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	p1_R->Draw();
 	c2->cd();
 	p2->Draw();
+
+///////////////////////////////Clone : For combining HIN-16-023///////////////////
+	TCanvas* c1a = new TCanvas("c1a","", 1000,900);
+	TCanvas* c2a = new TCanvas("c2a","", 1000,900);
+	TPad* p1_La = new TPad("p1La", "", 0.00, 0., 0.83,1.);
+	TPad* p1_Ra = new TPad("p1Ra", "", 0.83, 0., 1., 1.);
+	TPad* p2a = new TPad("p2a", "", 0., 0., 1., 1.);
+	p1_La->SetBottomMargin(0.12);
+	p1_Ra->SetBottomMargin(0.12);
+	p2a->SetBottomMargin(0.12);
+	p1_La->SetTicks();
+	p1_Ra->SetTicks();
+	p2a->SetTicks();
+
+	double p2ascale = ( (0.83 -0.12)/ (1. - 0.83) ) ;
+
+	p1_La->SetRightMargin(0);
+	p1_Ra->SetLeftMargin(0);
+
+	c1a->cd();
+	p1_La->Draw();
+	p1_Ra->Draw();
+	c2a->cd();
+	p2a->Draw();
 
 /////////////////////////////////GRAPH ATTR///////////////////////////////////
 	g_c2s.SetLineColor(kBlue);
@@ -368,7 +392,7 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	tl->SetTextSize(0.037);
 	tl->SetTextAlign(11);
 	tl->DrawLatex( 2.5, 1.15,"p^{#mu#mu}_{T} < 30 GeV/c");
-	tl->DrawLatex( 10, 1.15, "|y| < 2.4");
+	tl->DrawLatex( 11, 1.15, "|y| < 2.4");
 	tl->DrawLatex( 2.5,1.06, "Cent. 0-90 %");
 	leg_pt->Draw();
 	b_pterr->SetX1(0);
@@ -399,7 +423,337 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	c1->Write();
 	c2->Write();
 	output->Close();
+
+	/////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////
+	TGraphAsymmErrors pg_c1s, pg_p1s, pg_c2s, pg_p2s, pg_c3s, pg_p3s;
+	TGraphAsymmErrors pg_i1s, pg_i2s, pg_i3s;
+
+	pg_c1s.SetLineColor(kBlue);
+	pg_p1s.SetLineColor(kBlue);
+	pg_i1s.SetLineColor(kBlue);
+	pg_c1s.SetMarkerColor(kBlue+2);
+	pg_p1s.SetMarkerColor(kBlue+2);
+	pg_i1s.SetMarkerColor(kBlue+2);
+
+	pg_c2s.SetLineColor(kPink-3);
+	pg_p2s.SetLineColor(kPink-3);
+	pg_i2s.SetLineColor(kPink-3);
+	pg_c2s.SetMarkerColor(kPink-2);
+	pg_p2s.SetMarkerColor(kPink-2);
+	pg_i2s.SetMarkerColor(kPink-2);
+
+	pg_c3s.SetLineColor(kGreen+4);
+	pg_p3s.SetLineColor(kGreen+4);
+	pg_i3s.SetLineColor(kGreen+4);
+	pg_c3s.SetMarkerColor(kGreen+4);
+	pg_p3s.SetMarkerColor(kGreen+4);
+	pg_i3s.SetMarkerColor(kGreen+4);
+
+	pg_c1s.SetMarkerStyle(kFullCircle);
+	pg_p1s.SetMarkerStyle(kFullCircle);
+	pg_i1s.SetMarkerStyle(kFullCircle);
+	pg_c1s.SetMarkerSize(1.4);
+	pg_p1s.SetMarkerSize(1.4);
+	pg_i1s.SetMarkerSize(1.4);
+
+	pg_c2s.SetMarkerStyle(kFullCircle);
+	pg_p2s.SetMarkerStyle(kFullCircle);
+	pg_i2s.SetMarkerStyle(kFullCircle);
+	pg_c2s.SetMarkerSize(1.4);
+	pg_p2s.SetMarkerSize(1.4);
+	pg_i2s.SetMarkerSize(1.4);
+
+	pg_c3s.SetMarkerStyle(kFullCircle);
+	pg_p3s.SetMarkerStyle(kFullCircle);
+	pg_i3s.SetMarkerStyle(kFullCircle);
+	pg_c3s.SetMarkerSize(1.4);
+	pg_p3s.SetMarkerSize(1.4);
+	pg_i3s.SetMarkerSize(1.4);
+
+	/////////////////////////////////////////////////////////////////
+	pg_c1s.SetPoint(0,8.3000002, 0.79200000);
+	pg_c1s.SetPoint(1,30.600000, 0.92199999);
+	pg_c1s.SetPoint(2, 53.900002, 0.60900003);
+	pg_c1s.SetPoint(3, 87.000000, 0.52399999);
+	pg_c1s.SetPoint(4, 131.39999, 0.48500001);
+	pg_c1s.SetPoint(5, 189.20000, 0.40200001);
+	pg_c1s.SetPoint(6, 264.20001, 0.32400000);
+	pg_c1s.SetPoint(7, 333.29999, 0.32100001);
+	pg_c1s.SetPoint(8, 384.29999, 0.31900001);
+	pg_c1s.SetPointError(0, 0, 0, 0.13100000, 0.13100000);
+	pg_c1s.SetPointError(1, 0, 0, 0.088000000, 0.088000000);
+	pg_c1s.SetPointError(2, 0, 0, 0.052999999, 0.052999999);
+	pg_c1s.SetPointError(3, 0, 0, 0.035999998, 0.035999998);
+	pg_c1s.SetPointError(4, 0, 0, 0.027000001, 0.027000001);
+	pg_c1s.SetPointError(5, 0, 0, 0.039000001, 0.039000001);
+	pg_c1s.SetPointError(6, 0, 0, 0.017000001, 0.017000001);
+	pg_c1s.SetPointError(7, 0, 0, 0.021000000, 0.021000000);
+	pg_c1s.SetPointError(8, 0, 0, 0.018999999, 0.018999999);
+
+	pg_i1s.SetPoint(0, 1, 0.376 );
+	pg_i1s.SetPointError(0 ,0, 0,  TMath::Sqrt(0.013*0.013 + 0.035*0.035) );
+
+	pg_p1s.SetPoint(0, 1,	 0.301);
+	pg_p1s.SetPoint(1, 3,	 0.362);
+	pg_p1s.SetPoint(2, 5,	 0.388);
+	pg_p1s.SetPoint(3, 7.5, 0.402);
+	pg_p1s.SetPoint(4, 10.5,0.422);
+	pg_p1s.SetPoint(5, 21,	 0.425);
+
+	pg_p1s.SetPointError(0, 1.0, 1.0, quadsum(0.027, 0.123), quadsum(0.027, 0.123));
+	pg_p1s.SetPointError(1, 1.0, 1.0, quadsum(0.029, 0.035), quadsum(0.029, 0.035));
+	pg_p1s.SetPointError(2, 1.0, 1.0, quadsum(0.033, 0.035), quadsum(0.033, 0.035));
+	pg_p1s.SetPointError(3, 1.5, 1.5, quadsum(0.028, 0.032), quadsum(0.028, 0.032));
+	pg_p1s.SetPointError(4, 1.5, 1.5, quadsum(0.035, 0.045), quadsum(0.035, 0.045));
+	pg_p1s.SetPointError(5, 9.0, 9.0, quadsum(0.026, 0.036), quadsum(0.026, 0.036));
+
+
+	pg_c2s.SetPoint(0, 8.3,	 0.563);
+	pg_c2s.SetPoint(1, 30.6,	 0.530);
+	pg_c2s.SetPoint(2, 53.9,	 0.21);
+	pg_c2s.SetPoint(3, 87.0, 0.229);
+	pg_c2s.SetPoint(4, 131.4,0.194);
+	pg_c2s.SetPoint(5, 189.2,	 0.154);
+	pg_c2s.SetPoint(6, 264.2,	 0.101);
+	pg_c2s.SetPoint(7, 333.3,	 0.119);
+
+	pg_i2s.SetPoint(0, 1., 0.117 );
+	pg_i2s.SetPointError(0 ,0, 0,  quadsum(0.022, 0.019), quadsum(0.022, 0.019) );
+
+	pg_c2s.SetPointError(0, 0.0, 0.0, quadsum(0.319, 0.136), quadsum(0.319, 0.154));
+	pg_c2s.SetPointError(1, 0.0, 0.0, quadsum(0.170, 0.128), quadsum(0.170, 0.131));
+	pg_c2s.SetPointError(2, 0.0, 0.0, quadsum(0.106, 0.037), quadsum(0.106, 0.038));
+	pg_c2s.SetPointError(3, 0.0, 0.0, quadsum(0.077, 0.023), quadsum(0.077, 0.023));
+	pg_c2s.SetPointError(4, 0.0, 0.0, quadsum(0.060, 0.019), quadsum(0.060, 0.019));
+	pg_c2s.SetPointError(5, 0.0, 0.0, quadsum(0.092, 0.032), quadsum(0.092, 0.032));
+	pg_c2s.SetPointError(6, 0.0, 0.0, quadsum(0.042, 0.031), quadsum(0.042, 0.031));
+	pg_c2s.SetPointError(7, 0.0, 0.0, quadsum(0.051, 0.009), quadsum(0.051, 0.009));
+
+	pg_p2s.SetPoint(0, 2,	 0.085);
+	pg_p2s.SetPoint(1, 6.5,	 0.129);
+	pg_p2s.SetPoint(2, 19.5, 0.126);
+
+	pg_p2s.SetPointError(0, 2.0, 2.0, quadsum(0.039, 0.095), quadsum(0.039, 0.095));
+	pg_p2s.SetPointError(1, 2.5, 2.5, quadsum(0.038, 0.031), quadsum(0.038, 0.031));
+	pg_p2s.SetPointError(2, 10.5, 10.5, quadsum(0.032, 0.016), quadsum(0.032, 0.016));
+
+	////////////// CL 68 % ////////////
+	TBox* box_c3s_0 = new TBox(46.8-5, 0, 46.8+5, 0.188);
+	TBox* box_c3s_1 = new TBox(270.7-5, 0, 270.5+5, 0.040);
+	pg_c3s.SetPoint(0, 46.8,	 0.188);
+	pg_c3s.SetPoint(1, 270.7,	 0.040);
+
+	TBox* box_i3s_0 = new TBox(2.5-0.25, 0, 2.5+0.25, 0.059);
+	pg_i3s.SetPoint(0, 1., 0.059 );
+
+	TBox* box_p3s_0 = new TBox(3-0.75, 0, 3+0.75, 0.092);
+	TBox* box_p3s_1 = new TBox(18-0.75, 0, 18+0.75, 0.052);
+	pg_p3s.SetPoint(0, 3,	 0.092);
+	pg_p3s.SetPoint(1, 18,	 0.052);
+
+	pg_p3s.SetPointError(0, 1.50, 1.50, 0,0);
+	pg_p3s.SetPointError(1, 9.00, 9.00, 0,0);
+	box_c3s_0->SetFillColorAlpha(kOrange+6, 0.8);
+	box_c3s_1->SetFillColorAlpha(kOrange+6, 0.8);
+	box_i3s_0->SetFillColorAlpha(kOrange+6, 0.8);
+	box_p3s_0->SetFillColorAlpha(kOrange+6, 0.8);
+	box_p3s_0->SetFillColorAlpha(kOrange+6, 0.8);
+	box_c3s_0->SetLineWidth(1);
+	box_c3s_1->SetLineWidth(1);
+	box_i3s_0->SetLineWidth(1);
+	box_p3s_0->SetLineWidth(1);
+	box_p3s_0->SetLineWidth(1);
+
+	////////////// CL 95 % ////////////
+	TArrow* arr_c3s_0 = new TArrow(46.8,0.258,46.8, 0, 0.05, ">");
+	TArrow* arr_c3s_1 = new TArrow(270.7 ,0.077,270.7, 0, 0.05, ">");
+	pg_c3s.SetPoint(2, 46.8,	 0.258);
+	pg_c3s.SetPoint(3, 270.7,	 0.077);
+
+	TArrow* arr_i3s_0 = new TArrow(2.5,0.096,2.5, 0, 0.05, ">");
+	pg_i3s.SetPoint(2, 1., 0.096 );
+
+	TArrow* arr_p3s_0 = new TArrow(3,0.155,3, 0, 0.05, ">");
+	TArrow* arr_p3s_1 = new TArrow(18,0.095,18, 0, 0.05, ">");
+	pg_p3s.SetPoint(2, 3,	 0.155);
+	pg_p3s.SetPoint(3, 18,	 0.095);
+
+	pg_p3s.SetPointError(2, 1.50, 1.50, 0,0);
+	pg_p3s.SetPointError(3, 9.00, 9.00, 0,0);
+
+	arr_c3s_0->SetLineWidth(1);
+	arr_c3s_1->SetLineWidth(1);
+	arr_i3s_0->SetLineWidth(1);
+	arr_p3s_0->SetLineWidth(1);
+	arr_p3s_0->SetLineWidth(1);
+	arr_c3s_0->SetLineColor(kOrange+10);
+	arr_c3s_1->SetLineColor(kOrange+10);
+	arr_i3s_0->SetLineColor(kOrange+10);
+	arr_p3s_0->SetLineColor(kOrange+10);
+	arr_p3s_1->SetLineColor(kOrange+10);
+	/////////////////////////////////////////////////////////////////
+	TLegend* leg_cent2 = new TLegend(0.55, 0.45, 0.85, 0.7);
+//	leg_cent2->AddEntry(&pg_c1s, "#Upsilon(1S) PLB 790 (2019) 270", "pl");
+	leg_cent2->AddEntry(&pg_c2s, "#Upsilon(2S) PLB 790 (2019) 270", "pl");
+	leg_cent2->AddEntry(&g_c2s, "#Upsilon(2S)", "pl");
+	leg_cent2->AddEntry(&g_c3s, "#Upsilon(3S)", "pl");
+	leg_cent2->SetBorderSize(0);
+	leg_cent2->SetTextFont(42);
+	leg_cent2->SetTextSize(0.033);
+
+	TLegend* leg_pt2 = new TLegend(0.53, 0.45, 0.8, 0.7);
+//	leg_pt2->AddEntry(&pg_p1s, "#Upsilon(1S) PLB 790 (2019) 270", "pl");
+	leg_pt2->AddEntry(&pg_p2s, "#Upsilon(2S) PLB 790 (2019) 270", "pl");
+	leg_pt2->AddEntry(&g_p2s, "#Upsilon(2S)", "pl");
+	leg_pt2->AddEntry(&g_p3s, "#Upsilon(3S)", "pl");
+	leg_pt2->SetBorderSize(0);
+	leg_pt2->SetTextFont(42);
+	leg_pt2->SetTextSize(0.033);
+	/////////////////////////////////////////////////////////////////
+
+	p1_La->cd();
+	g_c2s.GetYaxis()->SetRangeUser(ydown, yup);
+	g_c2s.GetXaxis()->SetTitle("#LT N_{part} #GT");
+	g_c2s.GetXaxis()->SetTitleOffset(0.9);
+	g_c2s.GetXaxis()->SetTitleSize(0.05);
+	g_c2s.GetXaxis()->CenterTitle();
+	g_c2s.GetYaxis()->SetTitle("R_{AA}");
+	g_c2s.GetYaxis()->SetTitleOffset(0.9);
+	g_c2s.GetYaxis()->SetTitleSize(0.05);
+	g_c2s.GetYaxis()->CenterTitle();
+	g_c2s.Draw("APE");
+	g_c3s.Draw("PE ");
+//	pg_c1s.Draw("PE ");
+	pg_c2s.Draw("PE ");
+	g_c2s_sys.Draw("5");
+	g_c3s_sys.Draw("5");
+	box_c3s_0->Draw("L");
+	box_c3s_1->Draw("L");
+	arr_c3s_0->Draw("L");
+	arr_c3s_1->Draw("L");
+
+	lineone->DrawLine(0, 1, 420, 1);
+	tl->DrawLatex( 40, 1.15,"p^{#mu#mu}_{T} < 30 GeV/c");
+	tl->DrawLatex( 40, 1.06, "|y| < 2.4");
+	leg_cent2->Draw();
+
+    b_err->SetX1(360);
+    b_err->SetX2(380);
+    b_err->SetY1(1 - fabs(glb_errMB_PP));
+    b_err->SetY2(1 + fabs(glb_errMB_PP));
+    b_err->SetFillColorAlpha(12, 0.8);
+    b_err->SetLineWidth(1);
+    b_2serr->SetX1(380);
+    b_2serr->SetX2(400);
+    b_2serr->SetY1(1 - fabs(glb_2serr));
+    b_2serr->SetY2(1 + fabs(glb_2serr));
+//    std::cout <<"Global Error 2S " << b_y2err->GetY1() << std::endl;
+    b_2serr->SetFillColorAlpha(kAzure-3, 0.8);
+    b_2serr->SetLineWidth(1);
+    b_3serr->SetX1(400);
+    b_3serr->SetX2(420);
+    b_3serr->SetY1(1 - glb_3serr);
+    b_3serr->SetY2(1 + glb_3serr);
+    b_3serr->SetFillColorAlpha(kTeal+5, 0.8);
+    b_3serr->SetLineWidth(1);
+//  b_3serr->SetLineColor();
+	b_err->Draw("L");
+	b_3serr->Draw("L");
+    b_2serr->Draw("L");
+
+	p1_La->Update();
+	p1_La->Draw();
+
+	p1_Ra->cd();
+	g_i2s.GetYaxis()->SetRangeUser(ydown, yup);
+//	g_i2s.GetYaxis()->SetTickLength( g_i2s.GetYaxis()->GetTickLength() * p2scale );
+	g_i2s.GetXaxis()->SetRangeUser(0,4);
+	g_i2s.GetXaxis()->SetLimits(0,4);
+	g_i2s.GetXaxis()->SetTickSize(0);
+	g_i2s.GetXaxis()->SetLabelSize(0);
+	g_i2s.Draw("APE");
+	g_i3s.Draw("PE");
+//	pg_i1s.Draw("PE");
+	pg_i2s.Draw("PE");
+//	pg_i3s.Draw("PE");
+	g_i2s_sys.Draw("5");
+	g_i3s_sys.Draw("5");
+	box_i3s_0->Draw("L");
+	arr_i3s_0->Draw("L");
+
+	lineone->DrawLine(0,1,4,1);
+	tl->SetTextSize(0.037* p2scale);
+	tl->SetTextAlign(21);
+	tl->DrawLatex( 2., 1.02, "Cent.");
+	tl->DrawLatex( 2., 0.94, "0-90 %");
+	p1_Ra->Update();
+	p1_Ra->Draw();
+
+//	c1->Modified();
+//	c1->Update();
+
+	c2a->cd();
+	p2a->cd();
+	g_p2s.GetYaxis()->SetRangeUser(ydown, yup);
+	g_p2s.GetXaxis()->SetRangeUser(0, 30);
+	g_p2s.GetXaxis()->SetTitle("p_{T} (GeV/c)");
+	g_p2s.GetXaxis()->SetTitleOffset(0.9);
+	g_p2s.GetXaxis()->SetTitleSize(0.05);
+	g_p2s.GetXaxis()->CenterTitle();
+	g_p2s.GetYaxis()->SetTitle("R_{AA}");
+	g_p2s.GetYaxis()->SetTitleOffset(0.9);
+	g_p2s.GetYaxis()->SetTitleSize(0.05);
+	g_p2s.GetYaxis()->CenterTitle();
+	g_p2s.Draw("APE");
+	g_p3s.Draw("PE");
+//	pg_p1s.Draw("PE");
+	pg_p2s.Draw("PE");
+//	pg_p3s.Draw("PE");
+	g_p2s_sys.Draw("5");
+	g_p3s_sys.Draw("5");
+	box_p3s_0->Draw("L");
+	box_p3s_1->Draw("L");
+	arr_p3s_0->Draw("L");
+	arr_p3s_1->Draw("L");
+
+	lineone->DrawLine(0, 1, 30, 1);
+	tl->SetTextSize(0.037);
+	tl->SetTextAlign(11);
+	tl->DrawLatex( 2.5, 1.15,"p^{#mu#mu}_{T} < 30 GeV/c");
+	tl->DrawLatex( 11, 1.15, "|y| < 2.4");
+	tl->DrawLatex( 2.5,1.06, "Cent. 0-90 %");
+	leg_pt2->Draw();
+	b_pterr->SetX1(0);
+	b_pterr->SetX2(2);
+	b_pterr->SetY1(1 - glb_errpt);
+	b_pterr->SetY2(1 + glb_errpt);
+	b_pterr->SetFillColorAlpha(12, 0.8);
+	b_pterr->SetLineWidth(1);
+	b_pterr->SetLineColor(kBlack);
+	b_pterr->Draw("L");
+
+	p2a->Draw();
 	
+	c2a->Modified();
+	c2a->Update();
+
+	c1a->cd();
+	p1_La->cd();
+	CMS_lumi_square(p1_La,101, 33);
+	c2a->cd();
+	p2a->cd();
+	CMS_lumi_square( p2a, 101, 33);
+	
+	TFile* output2 = new TFile("resultRAA_nS_centrality_withSystematics_v2_HIN16023.root", "recreate");
+	output2->cd();
+	c1a->SaveAs("../checkout/RAA_centrality_int_v2_HIN16023.pdf");
+	c2a->SaveAs("../checkout/RAA_pt_v2_HIN16023.pdf");
+	c1a->Write();
+	c2a->Write();
+	output2->Close();
 //	c1->SaveAs("RAA_SYST_CENT_PT.pdf");
 	return g_p2s;
 
