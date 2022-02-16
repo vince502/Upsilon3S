@@ -200,8 +200,8 @@ double INTBIN_BDTLOW = 0.1825;// =0.16;
  if(step == 1 || step == 99 || step == 11 || step == 111){
   for( auto ap : ana_bm){
 	  for( auto ab : ap.second){
-//		if( ((ab.bin_attr.find("i")!=std::string::npos && true))) continue;
-		if( !((ab.bin_attr.find("c")!=std::string::npos && true))) continue;
+		if( ((ab.bin_attr.find("i")!=std::string::npos && ab.state == 3))) continue;
+//		if( !((ab.bin_attr.find("c")!=std::string::npos && true))) continue;
 //		if( !(ab.cl==140&&ab.ch==181&&(ab.bin_attr.find("c")!=std::string::npos && true))) continue;
 //		if( !(ab.pl==15&&ab.ph==30&&(ab.bin_attr.find("p")!=std::string::npos && true))) continue;
 		for( auto test : (std::vector<double>){-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8}){

@@ -28,7 +28,11 @@ std::pair<double, double> BDTtraindiff(
 		TGraph*   theHist2 = (TGraph*) HISTFILE->Get(Form("%s/TR2_HISTO", dirname.c_str()) );
 		TGraph* cloneHist1 = (TGraph*)  theHist1->Clone();
 		TGraph* cloneHist2 = (TGraph*)  theHist2->Clone();
-		auto findmax  = [](TGraph* g){
+		auto findmax  = [&ts](TGraph* g){
+			if(ts == 100019111111){
+				auto res = g->GetFunction("Msignif");
+				return std::make_pair(res->GetMaximumX(-0.1, 0.45), res->GetMaximum(-0.1,0.45));
+			}
 			Double_t x,y;
 			Double_t max_x, max_y;
 			max_y = -1;

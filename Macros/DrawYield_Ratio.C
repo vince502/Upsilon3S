@@ -27,7 +27,7 @@
 void DrawYield_Ratio(ana_bins ab , long ts = _TS){
 	gStyle->SetEndErrorSize(0);
 	std::vector<double> use_bins = {-0.8,-0.6, -0.4,-0.2,0.0, 0.2, 0.4, 0.6, 0.8};
-	int NBDTbins = use_bins.size() +2;
+	int NBDTbins = use_bins.size() +3;
 	TH1D* hist = new TH1D(Form("Y%dS_train%d",ab.state, ab.train_state) ,"" ,NBDTbins , use_bins.front() - ( (double)NBDTbins - (double) use_bins.size() )*(use_bins.back() - use_bins.front())/((double) use_bins.size()-1.), use_bins.back());
 	auto hist_norm = (TH1D*) hist->Clone("hist_norm");
 	hist->SetStats(0);
@@ -44,25 +44,32 @@ void DrawYield_Ratio(ana_bins ab , long ts = _TS){
 	string fittype  = (ab.bintype == kCent) ? "FF" : "GC" ;
 	auto nom = getRAAValue(false, ab, Form("CB3:EE:%s", fittype.c_str()) , bl, 1., 0, ts, false, false); 
 
-	auto ref2 = getRAAValue(false, ab, "CB3:CC4:FF", -1, 1., 0, ts, true, false);
+	auto ref2 = getRAAValue(false, ab, "CB3:CC4:GC", -1, 1., 0, ts, false, false);
+	auto ref3 = getRAAValue(false, ab, "CB3:EE:GC", -1, 1., 0, ts, false, false);
 //	auto ref2 = getRAAValue(false, ab, Form("CB3:CC4:%s", fittype.c_str()) , -1, 1., 0, ts, false, false);
 
 	hist->SetBinContent(1,nom.getVal());
 	hist->SetBinError(1,2*nom.getError());
 	hist->SetBinContent(2,ref2.getVal());
 	hist->SetBinError(2,2*ref2.getError());
+	hist->SetBinContent(3,ref3.getVal());
+	hist->SetBinError(3,2*ref3.getError());
 //	hist->SetBinContent(3,ref.getVal());
 //	hist->SetBinError(3,2*ref.getError());
 	hist_norm->SetBinContent(1,1);
 	hist_norm->SetBinError(1,2*nom.getError()/ nom.getVal());
 	hist_norm->SetBinContent(2,ref2.getVal() / nom.getVal());
 	hist_norm->SetBinError(2,(ref2.getVal()/nom.getVal())*TMath::Sqrt(TMath::Power(2*ref2.getError()/ref2.getVal(),2) + TMath::Power(2*nom.getError()/nom.getVal(),2)));//2*ref2.getError()/ ref2.getVal()
+	hist_norm->SetBinContent(3,ref3.getVal() / nom.getVal());
+	hist_norm->SetBinError(3,(ref3.getVal()/nom.getVal())*TMath::Sqrt(TMath::Power(2*ref3.getError()/ref3.getVal(),2) + TMath::Power(2*nom.getError()/nom.getVal(),2)));//2*ref3.getError()/ ref3.getVal()
 //	hist_norm->SetBinContent(3,ref.getVal() / nom.getVal());
 //	hist_norm->SetBinError(3,(ref.getVal()/nom.getVal())*TMath::Sqrt(TMath::Power(2*ref.getError()/ref.getVal(),2) + TMath::Power(2*nom.getError()/nom.getVal(),2)));//2*ref.getError()/ ref.getVal()
 	hist->GetXaxis()->SetBinLabel(1,"Nominal");
 	hist_norm->GetXaxis()->SetBinLabel(1,"Nominal");
 	hist->GetXaxis()->SetBinLabel(2,"-1.0");
 	hist_norm->GetXaxis()->SetBinLabel(2,"-1.0");
+	hist->GetXaxis()->SetBinLabel(3,"-1.0 Erf #times Exp");
+	hist_norm->GetXaxis()->SetBinLabel(3,"-1.0 Erf #times Exp");
 //	hist->GetXaxis()->SetBinLabel(3,"No BDT cut");
 //	hist_norm->GetXaxis()->SetBinLabel(3,"No BDT cut");
 
@@ -123,7 +130,12 @@ void DrawYield_Ratio(ana_bins ab , long ts = _TS){
 
 		
 	c1->SaveAs(Form("./CorrYields/BDTCorYieldplot_train%d_%dS_pt%d_%d_cent%d_%d_%ld_2.C",ab.train_state,ab.state, ab.pl, ab.ph, ab.centl, ab.centh,ts) );
-	c1->SaveAs(Form("./CorrYieldsPlot/BDTCorYieldplot_train%d_%dS_pt%d_%d_cent%d_%d.pdf",ab.train_state,ab.state, ab.pl, ab.ph, ab.centl, ab.centh) );
+	if( ts == _TS){
+		c1->SaveAs(Form("./CorrYieldsPlot/BDTCorYieldplot_train%d_%dS_pt%d_%d_cent%d_%d.pdf",ab.train_state,ab.state, ab.pl, ab.ph, ab.centl, ab.centh) );
+	}
+	else{
+		c1->SaveAs(Form("./CorrYieldsPlot/BDTCorYieldplot_train%d_%dS_pt%d_%d_cent%d_%d_ts%ld.pdf",ab.train_state,ab.state, ab.pl, ab.ph, ab.centl, ab.centh, ts) );
+	}
 	
 	TFile* f_out= new TFile(Form("./CorrYields/BDTCorYield_plots_%ld.root",ts), "update");
 	f_out->cd();

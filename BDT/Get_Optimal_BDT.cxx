@@ -101,7 +101,14 @@ std::pair<double,TGraph*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, d
 
 
 	//Find X value of maximum significance
-	auto findmax = [](TGraph* g){
+	auto findmax = [&ts](TGraph* g){
+		if(ts == 100019111111){
+			ROOT::Math::MinimizerOptions::SetDefaultMinimizer("Minuit2", "Simplex");
+			TF1* f1 = new TF1("Msignif", "pol7", -0.7, 0.65);
+			g->Fit("Msignif","MFR","");
+			auto res = g->GetFunction("Msignif");
+			return std::make_pair(res->GetMaximumX(-0.7, 0.65), res->GetMaximum(-0.7,0.65));
+		}
 		Double_t x, y;
 		Double_t max_x, max_y;
 		max_y = -1;

@@ -60,9 +60,9 @@ pp getBDTDiffVariUnc_2item(ana_bins x){
 	if( isDR ){
 		if( x.state == 2 ) return pp { { 0, "Up" }, { 0, "Down" } };
 		else{
-			raa_nom  = bp_nom->return_23s_frac(true);
-			raa_sys1 = bp_sys1->return_23s_frac(true);
-			raa_sys2 = bp_sys2->return_23s_frac(true);
+			raa_nom  = bp_nom->return_23s_frac(false);
+			raa_sys1 = bp_sys1->return_23s_frac(false);
+			raa_sys2 = bp_sys2->return_23s_frac(false);
 		}
 	}
 

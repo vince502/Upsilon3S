@@ -3,7 +3,7 @@
 std::vector<TH1D*> Get_hists(long ts, int state)
 {
 	auto cut = VALI_V3_BDTTESTCUT;
-	int nbins = cut.size()+1;
+	int nbins = cut.size();
 //	TFile* f_data = TFile::Open(Form("%s/BDT/roodatasets/%s", workdir.Data(), "OniaRooDataset_BDT1634633971_OniaSkim_TrigS13_BDT.root"));
 //	TFile* f_data = TFile::Open(Form("%s/BDT/Validation/roodatasets/%s", workdir.Data(), "OniaRooDataset_BDT1634805675_OniaSkim_TrigS13_BDT.root"));
 	TFile* f_data = TFile::Open(Form("%s/BDT/roodatasets/%s", workdir.Data(), Form("OniaRooDataset_BDT%ld_OniaSkim_TrigS13_BDT.root",ts)));
@@ -19,25 +19,22 @@ std::vector<TH1D*> Get_hists(long ts, int state)
 	TH1D* hist[nbins];
 	for(int idx = 0; idx<nbins; idx++)
 	{
-		hist[idx] = new TH1D(Form("h_%d",idx), "", 140,6, 14);
+		hist[idx] = new TH1D(Form("h_%d",idx), "", 120,8, 14);
 	}
 	int nE = t_data->GetEntries();
 	for(int evt =0; evt < nE; evt++)
 	{
 		t_data->GetEntry(evt);
 //		double cut[6] = {-1, -0.3,  0.1, 0.4,  0.7, 0.9};
-		if( qvp >=0.01){
-			hist[0]->Fill(mass);
-		}
-		for(int idx = 1; idx<nbins; idx++)
+		for(int idx = 0; idx<nbins; idx++)
 		{
 			
 			if( bdt > cut[idx]) hist[idx]->Fill(mass);
 		}
 	}
 	std::vector<TH1D*> hist_stack;
-	hist_stack.push_back(hist[0]);
-	for(int idx = 1; idx<nbins; idx++)
+//	hist_stack.push_back(hist[0]);
+	for(int idx = 0; idx<nbins; idx++)
 	{
 		hist_stack.push_back(hist[idx]);
 	}
@@ -47,6 +44,7 @@ std::vector<TH1D*> Get_hists(long ts, int state)
 
 void DrawMass2(long ts, int state)
 {
+	gStyle->SetEndErrorSize(0);
 	auto hists = Get_hists(ts, state);
 	int nhists = hists.size();
 	TCanvas* c1 =new TCanvas("c1", "", 1200, 900);
@@ -58,10 +56,12 @@ void DrawMass2(long ts, int state)
 	{
 			hists[idx]->SetStats(0);
 			hists[idx]->SetMarkerColor(colrs[idx]);
+			hists[idx]->SetMarkerSize(1.1);
+			hists[idx]->SetMarkerStyle(kFullCircle);
 			hists[idx]->SetLineColor(colrs[idx]);
 			if( idx == 0 )
 			{
-				hists[idx]->GetYaxis()->SetRangeUser(1,4000);
+				hists[idx]->GetYaxis()->SetRangeUser(-100,4500);
 				hists[idx]->Draw("pe");
 			}
 			hists[idx]->Draw("same pe");
@@ -74,8 +74,8 @@ void DrawMass2(long ts, int state)
 	c1->Draw();
 	c1->Modified();
 	c1->Update();
-	CMS_lumi_square(c1, 10001, 33);
-	c1->SaveAs(Form("./FullMassBDT/FullMassBDTCompare_fullmass_m614_%ld_%d.C", ts, state));
+	CMS_lumi_square(c1, 31, 33);
+	c1->SaveAs(Form("./FullMassBDT/FullMassBDTCompare_fullmass_m814_%ld_%d.C", ts, state));
 }
 void DrawMass2(){
 	DrawMass2(10000000016, 3);

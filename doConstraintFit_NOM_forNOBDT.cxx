@@ -11,7 +11,7 @@ void doConstraintFit_NOM_forNOBDT(int step = 0){
   std::string type 			= "CB3:CC3:GC"	;
   std::string type2 			= "CB3:CC4:DR2FF"	;
   std::string type_r 			= "CB3:CC4:DRGC"	;
-  std::string typenobdt 		= "CB3:CC4:GC"	;
+  std::string typenobdt 		= "CB3:EE:GC"	;
   std::string constraints		="alpha:n:frac:frac2:xNS:xNS_2:sigmaNS_1"	;
   std::string fixvars			="alpha:n:frac:frac2:x1S:x1S_2:sigma1S_1"	;
 //  long ts						= 10000000002	; 
@@ -99,9 +99,12 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0, bool redo_nobdt =f
       auto parsed = parser_symbol(type_,":");
       if(parsed[2].find("FF") ==std::string::npos){
       MassYieldFit_data(type_, train_state, state, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, app_cutQVP, isBDT, ts, bl, cutBDThigh, bdtptMin, bdtptMax, 
-	  (std::vector<Double_t>) { -0.02,0.0,0.1,0.1, -0.1},
-	  (std::vector<Double_t>) {-0.5, -0.5, -0.5,-0.5, -0.5}, 
-	  (std::vector<Double_t>) {0.5, 0.5, 0.5,0.5, 0.5}, 
+//	  (std::vector<Double_t>) { -0.02,0.0,0.1,0.1, -0.1},
+//	  (std::vector<Double_t>) {-0.5, -0.5, -0.5,-0.5, -0.5}, 
+//	  (std::vector<Double_t>) {0.5, 0.5, 0.5,0.5, 0.5}, 
+	  (std::vector<Double_t>) { 7.0, 7.0, 3.2,0.1, -0.1},
+	  (std::vector<Double_t>) {5, 3, 0.3,-0.5, -0.5}, 
+	  (std::vector<Double_t>) {8.7, 12, 8,0.5, 0.5}, 
       (std::map<string, params_vhl>) {
       {"massCut", { 0,8,14 }}, 
       {"mass_range", { 0,8,14 }}, 
@@ -138,9 +141,9 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0, bool redo_nobdt =f
       }, Nworkers, plot_dir_opt);
       }
     };
-  if(_step >=1|| _step == -101 || _step == -1011 || _step == -51){
+  if(_step >=1|| _step == -101 || _step == -1011 || _step == -1012 || _step == -51){
 	string query_file2 = GetFit(__FITRESLATEST, false, "CB3:CC4:FF", ts, train_state, state, (int) ptMin, (int) ptMax, cBinLow, cBinHigh, -1, 1, bdtptMin, bdtptMax, cutQVP_noBDT,"" ); 
-	if( _step == -1011 || !checkFile(query_file2)){
+	if( _step == -1011 || _step == -1012 || !checkFile(query_file2)){
 		fit_mc_dat(typenobdt, -1);
 	}
   }
@@ -324,11 +327,11 @@ state =3;
 //    bkg_high = {8.5, 9.0, 3.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
 
   for( auto ptpair : (std::vector<std::pair<std::pair<double, double>, std::pair<double, double> > >) {
-//  {{0,30},{0,30}},
-  {{0,4}, {0,4}},
-  {{4,9},{4,9}},
-  {{9,15 },{9,15}} ,
-  {{15,30},{15,30}}
+  {{0,30},{0,30}},
+//  {{0,4}, {0,4}},
+//  {{4,9},{4,9}},
+//  {{9,15 },{9,15}} ,
+//  {{15,30},{15,30}}
   }){ 
 
     bkg_val  = {-0.4, -0.07, 0.03,  -0.001, -0.03, 0.0, 0.0, 0.0, 0.0};
@@ -338,7 +341,7 @@ state =3;
     ptMax = ptpair.first.second;
 	bdtptMin = ptpair.second.first;
 	bdtptMax = ptpair.second.second;
-    std::pair<double, RooRealVar> res = prep_bdtval(0.2,-1011, true);
+    std::pair<double, RooRealVar> res = prep_bdtval(0.2,-1012, true);
     cutBDTlow = res.first;
     sb_ratio = res.second;
 	bool fitdata = false;
@@ -400,7 +403,7 @@ for( auto cbinpair : (std::vector<std::pair<int, int> >) {
 	cBinLow  = cbinpair.first;
 	cBinHigh = cbinpair.second;
 //	if(!(cBinLow == 140 && cBinHigh == 181 ) ) continue;
-    std::pair<double, RooRealVar> res = prep_bdtval(0.0,-1011, true);
+    std::pair<double, RooRealVar> res = prep_bdtval(0.0,-1012, true);
     double CBINBDTLOW = res.first;
 	sb_ratio = res.second;
 
@@ -461,7 +464,7 @@ cBinHigh = 181;
     ptMax = ptpair.first.second;
 	bdtptMin = ptpair.second.first;
 	bdtptMax = ptpair.second.second;
-    std::pair<double, RooRealVar> res = prep_bdtval(0.2,-1011, false);
+    std::pair<double, RooRealVar> res = prep_bdtval(0.2,-1012, false);
     cutBDTlow = res.first;
     sb_ratio = res.second;
 	bool fitdata = false;

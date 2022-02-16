@@ -7,7 +7,7 @@ using namespace std;
 using namespace RooFit;
 
 
-void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string fname = "", const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "4", const string Trig = "",int cBinLow=0, int cBinHigh = 181, int train_state =3, int state = 1, bool fixvar = false, bool swflag = false, double cutQVP= 0.01, double bdtlow = -1., double bdthigh =1., int bdtptMin = 0, int bdtptMax = 30, string dir_opt = "" ){
+void MassYieldSingleStateMCFitCB2( struct Y1Sfitvar *Y1S ,long ts, const string fname = "", const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "4", const string Trig = "",int cBinLow=0, int cBinHigh = 181, int train_state =3, int state = 1, bool fixvar = false, bool swflag = false, double cutQVP= 0.01, double bdtlow = -1., double bdthigh =1., int bdtptMin = 0, int bdtptMax = 30, string dir_opt = "" ){
   Double_t etaMax= 2.4;
   Double_t etaMin = -2.4;
 
@@ -15,7 +15,7 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   
   string alt =  "";
   if( strcmp(dir_opt.c_str(), "") !=0) alt = "/"+dir_opt; 
-  TString mainDIR_base = Form("%s/MassDist/%s/%ld%s/Cent%d-%d_Pt%d-%d_y%.1f/%d/MC_BW" , workdir.Data(), "BDT", ts, alt.c_str(), cBinLow, cBinHigh,(int) ptMin, (int) ptMax, rapMax, state  );
+  TString mainDIR_base = Form("%s/MassDist/%s/%ld%s/Cent%d-%d_Pt%d-%d_y%.1f/%d/MC_CB2" , workdir.Data(), "BDT", ts, alt.c_str(), cBinLow, cBinHigh,(int) ptMin, (int) ptMax, rapMax, state  );
   TString massDIR = mainDIR_base;
   TString massDIRp = mainDIR_base + "/png";
   TString massDIRcont = mainDIR_base + "/contour";
@@ -107,7 +107,7 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   }
 
   RooRealVar* sigmaNS_1;
-  sigmaNS_1  = new RooRealVar("sigmaNS_1", "sigma of NS", 0.18, 0.12, 0.33);
+  sigmaNS_1  = new RooRealVar("sigmaNS_1", "sigma of NS", 0.12, 0.02, 0.33);
 
   RooRealVar* xNS;
 
@@ -120,8 +120,8 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   sigmaNS_3 = new RooFormulaVar("sigmaNS_3", "@0*@1", RooArgList(*sigmaNS_1, *xNS_2));
 
   RooRealVar *alpha, *n, *frac, *frac2;
-  alpha = new RooRealVar("alpha", "alpha of Crystal bal1", 1.96, 1.10, 2.60 );
-  n = new RooRealVar("n", "n of Crystal ball", 1.27, 0.950, 2.700);
+  alpha = new RooRealVar("alpha", "alpha of Crystal bal1", 1.96, 0.80, 5.50 );
+  n = new RooRealVar("n", "n of Crystal ball", 1.27, 0.300, 4.700);
   frac = new RooRealVar("frac", "CB fraction", 0.58,	 0.0001, 1.00);
   frac2 = new RooRealVar("frac2", "CB fraction 2", 0.05, 0.0001, 1.00);
 //  if(bdtlow == -1.){
@@ -146,10 +146,10 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   RooCBShape *CBNS_1, *CBNS_2, *CBNS_3;
   CBNS_1 = new RooCBShape("CBNS_1", "NS Crystal ball function1", *(works1->var("mass")), meanNS, *sigmaNS_1, *alpha, *n);
   CBNS_2 = new RooCBShape("CBNS_2", "NS Crystal ball function2", *(works1->var("mass")), meanNS, *sigmaNS_2, *alpha, *n);
-  CBNS_3 = new RooCBShape("CBNS_3", "NS Crystal ball function3", *(works1->var("mass")), meanNS, *sigmaNS_3, *alpha, *n);
+//  CBNS_3 = new RooCBShape("CBNS_3", "NS Crystal ball function3", *(works1->var("mass")), meanNS, *sigmaNS_3, *alpha, *n);
 
-  RooAddPdf* threeCBNS = new RooAddPdf("threeCBNS", "Sum of NS Crystal ball", RooArgList(*CBNS_1, *CBNS_2, *CBNS_3), RooArgList(*frac, *frac2));
-  threeCBNS->fixAddCoefNormalization(RooArgList(*frac, *frac2), kTRUE);
+  RooAddPdf* threeCBNS = new RooAddPdf("threeCBNS", "Sum of NS Crystal ball", RooArgList(*CBNS_1, *CBNS_2), RooArgList(*frac));
+  threeCBNS->fixAddCoefNormalization(RooArgList(*frac), kTRUE);
 
   RooGenericPdf* SignalNS;
 
@@ -176,7 +176,7 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
 
   Result->SetName("fitresult_model_reducedDS");
   works1->pdf("model")->plotOn(massPlot, Name("modelPlot"));
- {works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*SignalNS)), LineColor(kRed), LineStyle(kDashed), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CBNS_1)), LineColor(kGreen), LineStyle(kSolid), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CBNS_2)), LineColor(kRed), LineStyle(kSolid), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CBNS_3)), LineColor(kMagenta), LineStyle(kDashDotted), MoveToBack());}
+ {works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*SignalNS)), LineColor(kRed), LineStyle(kDashed), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CBNS_1)), LineColor(kGreen), LineStyle(kSolid), MoveToBack()); works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CBNS_2)), LineColor(kRed), LineStyle(kSolid), MoveToBack());}// works1->pdf("model")->plotOn(massPlot, Components(RooArgSet(*CBNS_3)), LineColor(kMagenta), LineStyle(kDashDotted), MoveToBack());}
   massPlot->SetTitle("");
   TLatex* tl = new TLatex();
   FormLatex(tl, 42, 0.15);
@@ -243,19 +243,19 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   hYield->SetBinContent(1, YieldNS);
   hYield->SetBinError(1, YieldNSErr);
 
-  Double_t meanout, sigma1out, sigma2out;
-  meanout = works1->var("meanNS")->getVal();
-  sigma1out = works1->var("sigmaNS_1")->getVal();
-  sigma2out = (works1->var("xNS")->getVal())*sigma1out;
-  Double_t fracout = works1->var("frac")->getVal();
-  Double_t sigmaout = TMath::Sqrt(fracout*sigma1out*sigma1out+(1-fracout)*sigma2out*sigma2out);
-
-  TF1* SgnfcNS;
-
-  SgnfcNS = works1->pdf("threeCBNS")->asTF(*(works1->var("mass")));
-
-  Double_t TIntgrNS = SgnfcNS->Integral(RangeLow, RangeHigh);
-  Double_t IntgrSig = SgnfcNS->Integral(meanout-2*sigmaout, meanout+2*sigmaout);
+//  Double_t meanout, sigma1out, sigma2out;
+//  meanout = works1->var("meanNS")->getVal();
+//  sigma1out = works1->var("sigmaNS_1")->getVal();
+//  sigma2out = (works1->var("xNS")->getVal())*sigma1out;
+//  Double_t fracout = works1->var("frac")->getVal();
+//  Double_t sigmaout = TMath::Sqrt(fracout*sigma1out*sigma1out+(1-fracout)*sigma2out*sigma2out);
+//
+//  TF1* SgnfcNS;
+//
+//  SgnfcNS = works1->pdf("threeCBNS")->asTF(*(works1->var("mass")));
+//
+//  Double_t TIntgrNS = SgnfcNS->Integral(RangeLow, RangeHigh);
+//  Double_t IntgrSig = SgnfcNS->Integral(meanout-2*sigmaout, meanout+2*sigmaout);
 
 //  TH1D* hfrac = new TH1D("hfrac", "", 6, 0, 6);
 //    hfrac->SetBinContent(1, SgnfcNS->Eval(UNS_mass));
@@ -273,7 +273,7 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   
   //fout = new TFile(Form("Yield/Yield_%dS_pt_%d-%d_rap_%d-%d_noWeight_MupT%s_%s_BDT_%d-%d_vp_%d_MC_%d.root",(int) state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), MupT.Data(), Trig.c_str(), bdtlow, bdthigh, cutQVP,(int) fixvar), "RECREATE");
 
-  c1->SaveAs(Form("%s/CB3_MassDistribution_%dS_pt_%d-%d_rap_%d-%d_%dbin_noWeight_MupT%s_%s_BDT_%.4f-%.4f_bdtpt_%d_%d_vp_%.4f_MC_fix%d.pdf",massDIR.Data(), state,(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, MupT.Data(), Trig.c_str(), bdtlow, bdthigh, bdtptMin, bdtptMax, cutQVP,(int) fixvar));
+  c1->SaveAs(Form("%s/CB2_MassDistribution_%dS_pt_%d-%d_rap_%d-%d_%dbin_noWeight_MupT%s_%s_BDT_%.4f-%.4f_bdtpt_%d_%d_vp_%.4f_MC_fix%d.pdf",massDIR.Data(), state,(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, MupT.Data(), Trig.c_str(), bdtlow, bdthigh, bdtptMin, bdtptMax, cutQVP,(int) fixvar));
   c1->SaveAs(Form("%s/png/MassDistribution_%dS_pt_%d-%d_rap_%d-%d_%dbin_noWeight_MupT%s_%s_BDT_%.4f-%.4f_bdtpt_%d_%d_vp_%.4f_MC_fix%d.png",massDIR.Data(), state,(int)(ptMin*10), (int)(ptMax*10), (int)(rapMin*10), (int)(rapMax*10), Nmassbins, MupT.Data(), Trig.c_str(), bdtlow, bdthigh, bdtptMin, bdtptMax, cutQVP, (int) fixvar));
   TH1D* hmass = new TH1D("hmass", ";M (GeV/c^2);Counts", Nmassbins, RangeLow, RangeHigh);
 
@@ -298,7 +298,7 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
 
   TFile* fout;
   long outputts = ( bdtlow == -1) ? 9999999999 : ts;
-  std::string name_output = GetFit(__FITRESLATEST, true, "CB3", outputts, train_state, state,  (int) ptMin, (int) ptMax, cBinLow, cBinHigh, bdtlow, bdthigh, bdtptMin, bdtptMax, cutQVP, "");  
+  std::string name_output = GetFit(__FITRESLATEST, true, "CB2", outputts, train_state, state,  (int) ptMin, (int) ptMax, cBinLow, cBinHigh, bdtlow, bdthigh, bdtptMin, bdtptMax, cutQVP, "");  
 //  std::string name_output = Form("Yield/Yield_%ld_CB3_%dS_pt_%d-%d_rap_%d-%d_cBin_%d-%d_MupT%s_%s_BDT_%.4f-%.4f_bdtpt_%d_%d_vp_%.4f_MC_%d.root", outputts, (int) state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), bdtlow, bdthigh, bdtptMin, bdtptMax, cutQVP,(int) fixvar);
 //  if(ts >= 1634636609) name_output = Form("Yield/Yield_%ld_CB3_%dS_train%dS_pt_%d-%d_rap_%d-%d_cBin_%d-%d_MupT%s_%s_BDT_%.4f-%.4f_bdtpt_%d_%d_vp_%.4f_MC_%d.root", outputts, (int) state, train_state ,(int)ptMin, (int)ptMax, (int)(rapMin*10), (int)(rapMax*10), cBinLow, cBinHigh, MupT.Data(), Trig.c_str(), bdtlow, bdthigh, bdtptMin, bdtptMax, cutQVP,(int) fixvar);
   fout = new TFile(name_output.c_str(), "RECREATE");
@@ -317,7 +317,7 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   fout->Close(); 
 };
 
-void MassYieldFit_BDT_MC_CB3(long _ts, const string _fname1s = "", const string _fname3s = "", const Double_t _ptMin = 0, const Double_t _ptMax = 30, const Double_t _rapMin = -2.4, const Double_t _rapMax = 2.4, const TString _MupT = "4", const string _Trig = "", int _cBinLow = 0, int _cBinHigh = 180, int _train_state =3, int _state = 1, bool _fixvar =false, bool _swflag = false, double _cutQVP = 0.01, double _bdtlow =-1., double _bdthigh = 1., int _bdtptMin =0, int _bdtptMax = 30, string dir_opt = ""){
+void MassYieldFit_BDT_MC_CB2(long _ts, const string _fname1s = "", const string _fname3s = "", const Double_t _ptMin = 0, const Double_t _ptMax = 30, const Double_t _rapMin = -2.4, const Double_t _rapMax = 2.4, const TString _MupT = "4", const string _Trig = "", int _cBinLow = 0, int _cBinHigh = 180, int _train_state =3, int _state = 1, bool _fixvar =false, bool _swflag = false, double _cutQVP = 0.01, double _bdtlow =-1., double _bdthigh = 1., int _bdtptMin =0, int _bdtptMax = 30, string dir_opt = ""){
   struct Y1Sfitvar Y1Svar;
 //  if( _fixvar == true){
 //    MassYieldSingleStateMCFit( &Y1Svar, _fname1s, _ptMin, _ptMax, _rapMin, _rapMax, _MupT , _Trig, _cBinHigh, 1, _fixvar);
@@ -325,7 +325,7 @@ void MassYieldFit_BDT_MC_CB3(long _ts, const string _fname1s = "", const string 
 //    MassYieldSingleStateMCFit( &Y1Svar, _fname3s, _ptMin, _ptMax, _rapMin, _rapMax, _MupT , _Trig, _cBinHigh, 3, _fixvar);
 //  }
 //  else if( _fixvar ==false){
-    {MassYieldSingleStateMCFitCB3( &Y1Svar,_ts, _fname3s, _ptMin, _ptMax, _rapMin, _rapMax, _MupT , _Trig, _cBinLow, _cBinHigh, _train_state, _state, _fixvar, _swflag, _cutQVP, _bdtlow, _bdthigh, _bdtptMin, _bdtptMax, dir_opt);}
+    {MassYieldSingleStateMCFitCB2( &Y1Svar,_ts, _fname3s, _ptMin, _ptMax, _rapMin, _rapMax, _MupT , _Trig, _cBinLow, _cBinHigh, _train_state, _state, _fixvar, _swflag, _cutQVP, _bdtlow, _bdthigh, _bdtptMin, _bdtptMax, dir_opt);}
 //  }
 }
 

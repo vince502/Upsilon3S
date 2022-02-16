@@ -549,8 +549,8 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	TBox* box_i3s_0 = new TBox(2.5-0.25, 0, 2.5+0.25, 0.059);
 	pg_i3s.SetPoint(0, 1., 0.059 );
 
-	TBox* box_p3s_0 = new TBox(3-0.75, 0, 3+0.75, 0.092);
-	TBox* box_p3s_1 = new TBox(18-0.75, 0, 18+0.75, 0.052);
+	TBox* box_p3s_0 = new TBox(3-0.5, 0, 3+0.5, 0.092);
+	TBox* box_p3s_1 = new TBox(18-0.5, 0, 18+0.5, 0.052);
 	pg_p3s.SetPoint(0, 3,	 0.092);
 	pg_p3s.SetPoint(1, 18,	 0.052);
 
@@ -560,58 +560,73 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	box_c3s_1->SetFillColorAlpha(kOrange+6, 0.8);
 	box_i3s_0->SetFillColorAlpha(kOrange+6, 0.8);
 	box_p3s_0->SetFillColorAlpha(kOrange+6, 0.8);
-	box_p3s_0->SetFillColorAlpha(kOrange+6, 0.8);
+	box_p3s_1->SetFillColorAlpha(kOrange+6, 0.8);
 	box_c3s_0->SetLineWidth(1);
 	box_c3s_1->SetLineWidth(1);
 	box_i3s_0->SetLineWidth(1);
 	box_p3s_0->SetLineWidth(1);
-	box_p3s_0->SetLineWidth(1);
+	box_p3s_1->SetLineWidth(1);
 
 	////////////// CL 95 % ////////////
-	TArrow* arr_c3s_0 = new TArrow(46.8,0.258,46.8, 0, 0.05, ">");
-	TArrow* arr_c3s_1 = new TArrow(270.7 ,0.077,270.7, 0, 0.05, ">");
+	TArrow* arr_c3s_0 = new TArrow(46.8,0.258,46.8, 0, 0.015, "|->");
+	TArrow* arr_c3s_1 = new TArrow(270.7 ,0.077,270.7, 0, 0.015, "|->");
+	TLine* line_c3s_0 = new TLine(46.8-3,0.258, 46.8+3, 0.258);
+	TLine* line_c3s_1 = new TLine(270.7-3,0.077, 270.7+3, 0.077);
 	pg_c3s.SetPoint(2, 46.8,	 0.258);
 	pg_c3s.SetPoint(3, 270.7,	 0.077);
 
-	TArrow* arr_i3s_0 = new TArrow(2.5,0.096,2.5, 0, 0.05, ">");
+	TArrow* arr_i3s_0 = new TArrow(2.5,0.096,2.5, 0, 0.015, "|->");
+	TLine* line_i3s_0 = new TLine(2.5-0.2,0.096, 2.5+0.2, 0.096);
 	pg_i3s.SetPoint(2, 1., 0.096 );
 
-	TArrow* arr_p3s_0 = new TArrow(3,0.155,3, 0, 0.05, ">");
-	TArrow* arr_p3s_1 = new TArrow(18,0.095,18, 0, 0.05, ">");
+	TArrow* arr_p3s_0 = new TArrow(3,0.155,3, 0.0, 0.015, "|->");
+	TArrow* arr_p3s_1 = new TArrow(18,0.095,18, 0, 0.015, "|->");
+	TLine* line_p3s_0 = new TLine(3-0.33,0.155, 3+0.33, 0.155);
+	TLine* line_p3s_1 = new TLine(18-0.33,0.095, 18+0.33, 0.095);
 	pg_p3s.SetPoint(2, 3,	 0.155);
 	pg_p3s.SetPoint(3, 18,	 0.095);
 
 	pg_p3s.SetPointError(2, 1.50, 1.50, 0,0);
 	pg_p3s.SetPointError(3, 9.00, 9.00, 0,0);
 
-	arr_c3s_0->SetLineWidth(1);
-	arr_c3s_1->SetLineWidth(1);
-	arr_i3s_0->SetLineWidth(1);
-	arr_p3s_0->SetLineWidth(1);
-	arr_p3s_0->SetLineWidth(1);
-	arr_c3s_0->SetLineColor(kOrange+10);
-	arr_c3s_1->SetLineColor(kOrange+10);
-	arr_i3s_0->SetLineColor(kOrange+10);
-	arr_p3s_0->SetLineColor(kOrange+10);
-	arr_p3s_1->SetLineColor(kOrange+10);
+//	arr_c3s_0->SetLineWidth(1);
+//	arr_c3s_1->SetLineWidth(1);
+//	arr_i3s_0->SetLineWidth(1);
+//	arr_p3s_0->SetLineWidth(1);
+//	arr_p3s_0->SetLineWidth(1);
+	arr_c3s_0->SetLineColor(kOrange+4);
+	arr_c3s_1->SetLineColor(kOrange+4);
+	arr_i3s_0->SetLineColor(kOrange+4);
+	arr_p3s_0->SetLineColor(kOrange+4);
+	arr_p3s_1->SetLineColor(kOrange+4);
+	line_c3s_0->SetLineColor(kOrange+4);
+	line_c3s_1->SetLineColor(kOrange+4);
+	line_i3s_0->SetLineColor(kOrange+4);
+	line_p3s_0->SetLineColor(kOrange+4);
+	line_p3s_1->SetLineColor(kOrange+4);
 	/////////////////////////////////////////////////////////////////
-	TLegend* leg_cent2 = new TLegend(0.55, 0.45, 0.85, 0.7);
+	TLegend* leg_cent2 = new TLegend(0.55, 0.35, 0.83, 0.7);
 //	leg_cent2->AddEntry(&pg_c1s, "#Upsilon(1S) PLB 790 (2019) 270", "pl");
 	leg_cent2->AddEntry(&pg_c2s, "#Upsilon(2S) PLB 790 (2019) 270", "pl");
+	leg_cent2->AddEntry(box_c3s_0, "#splitline{#Upsilon(3S) PLB 790 (2019) 270,}{ 68 % C.L.}", "f");
+	leg_cent2->AddEntry(arr_p3s_0, "#splitline{#Upsilon(3S) PLB 790 (2019) 270,}{ 95 % C.L.}", "" );
+
 	leg_cent2->AddEntry(&g_c2s, "#Upsilon(2S)", "pl");
 	leg_cent2->AddEntry(&g_c3s, "#Upsilon(3S)", "pl");
 	leg_cent2->SetBorderSize(0);
 	leg_cent2->SetTextFont(42);
-	leg_cent2->SetTextSize(0.033);
+	leg_cent2->SetTextSize(0.028);
 
-	TLegend* leg_pt2 = new TLegend(0.53, 0.45, 0.8, 0.7);
+	TLegend* leg_pt2 = new TLegend(0.53, 0.30, 0.8, 0.7);
 //	leg_pt2->AddEntry(&pg_p1s, "#Upsilon(1S) PLB 790 (2019) 270", "pl");
 	leg_pt2->AddEntry(&pg_p2s, "#Upsilon(2S) PLB 790 (2019) 270", "pl");
+	leg_pt2->AddEntry(box_p3s_0, "#splitline{#Upsilon(3S) PLB 790 (2019) 270,}{ 68 % C.L.}", "f");
+	leg_pt2->AddEntry(arr_p3s_0, "#splitline{#Upsilon(3S) PLB 790 (2019) 270,}{ 95 % C.L.}", "" );
 	leg_pt2->AddEntry(&g_p2s, "#Upsilon(2S)", "pl");
 	leg_pt2->AddEntry(&g_p3s, "#Upsilon(3S)", "pl");
 	leg_pt2->SetBorderSize(0);
 	leg_pt2->SetTextFont(42);
-	leg_pt2->SetTextSize(0.033);
+	leg_pt2->SetTextSize(0.028);
 	/////////////////////////////////////////////////////////////////
 
 	p1_La->cd();
@@ -632,13 +647,17 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	g_c3s_sys.Draw("5");
 	box_c3s_0->Draw("L");
 	box_c3s_1->Draw("L");
-	arr_c3s_0->Draw("L");
-	arr_c3s_1->Draw("L");
+	arr_c3s_0->Draw();
+	arr_c3s_1->Draw();
+//	line_c3s_0->Draw();
+//	line_c3s_1->Draw();
 
 	lineone->DrawLine(0, 1, 420, 1);
 	tl->DrawLatex( 40, 1.15,"p^{#mu#mu}_{T} < 30 GeV/c");
 	tl->DrawLatex( 40, 1.06, "|y| < 2.4");
 	leg_cent2->Draw();
+	
+	arr_c3s_0->DrawArrow(228,0.7,228, 0.65, 0.015,"|->");
 
     b_err->SetX1(360);
     b_err->SetX2(380);
@@ -682,7 +701,8 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	g_i2s_sys.Draw("5");
 	g_i3s_sys.Draw("5");
 	box_i3s_0->Draw("L");
-	arr_i3s_0->Draw("L");
+	arr_i3s_0->Draw();
+//	line_i3s_0->Draw();
 
 	lineone->DrawLine(0,1,4,1);
 	tl->SetTextSize(0.037* p2scale);
@@ -716,8 +736,10 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	g_p3s_sys.Draw("5");
 	box_p3s_0->Draw("L");
 	box_p3s_1->Draw("L");
-	arr_p3s_0->Draw("L");
-	arr_p3s_1->Draw("L");
+	arr_p3s_0->Draw();
+	arr_p3s_1->Draw();
+//	line_p3s_0->Draw();
+//	line_p3s_1->Draw();
 
 	lineone->DrawLine(0, 1, 30, 1);
 	tl->SetTextSize(0.037);
@@ -726,6 +748,8 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	tl->DrawLatex( 11, 1.15, "|y| < 2.4");
 	tl->DrawLatex( 2.5,1.06, "Cent. 0-90 %");
 	leg_pt2->Draw();
+	arr_c3s_0->DrawArrow(17.45,0.66,17.45, 0.61, 0.015,"|->");
+
 	b_pterr->SetX1(0);
 	b_pterr->SetX2(2);
 	b_pterr->SetY1(1 - glb_errpt);

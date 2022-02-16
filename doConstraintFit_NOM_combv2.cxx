@@ -231,7 +231,7 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0, bool redo_nobdt =f
       {"sigmaNS_1", { mean_sigma1S1,0,1}},
       {"mag", { 0, 0, 0 }},
       {"sb_ratio", { sb_ratio.getVal(), 0, 0}},
-      {"tmp", {0,0,0}},
+      {"tmp", {1,0,0}},
 	  {"DrawOnly", {drawonly, 0, 0}},
       }, Nworkers, plot_dir_opt);
     }
@@ -326,10 +326,10 @@ state =3;
 
   for( auto ptpair : (std::vector<std::pair<std::pair<double, double>, std::pair<double, double> > >) {
   {{0,30},{0,30}},
-  {{0,4}, {0,4}},
-  {{4,9},{4,9}},
-  {{9,15 },{9,15}} ,
-  {{15,30},{15,30}}
+//  {{0,4}, {0,4}},
+//  {{4,9},{4,9}},
+//  {{9,15 },{9,15}} ,
+//  {{15,30},{15,30}}
   }){ 
 
     bkg_val  = {-0.4, 0.000, 0.002,  -0.001, -0.03, 0.0, 0.0, 0.0, 0.0};
@@ -344,12 +344,12 @@ state =3;
     sb_ratio = res.second;
 	std::cout << Form("[doFit] sb_ratio : %.5f +/- %.5f", sb_ratio.getVal(), sb_ratio.getError()) << std::endl;
 	bool fitdata = true;
-	drawonly = 1;
+	drawonly = 0;
 	if(fitdata){
 		Nworkers = GLOBAL_NWORKERS;
 	    if(ptpair.first.first == 0 && ptpair.first.second == 30){ INTBIN_BDTLOW = res.first; }
 	    std::cout << "cutBDTlow, sb_ratio: " << cutBDTlow << ", "<< sb_ratio.getVal() << std::endl;
-	    type 			= "CB3:CC1:GC"	;
+//	    type 			= "CB3:CC1:GC"	;
 //	    METHOD_MCGCDATA(2);
 //	    type 			= "CB3:CC2:GC"	;
 //	    METHOD_MCGCDATA(2);
@@ -371,7 +371,7 @@ state =3;
 		    bkg_low  = {-2.0, 2.0, 0.2,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
 		    bkg_high = {0.0 , 20.0, 3.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
 		    type 			= "CB3:EX:GC"	;
-		    METHOD_MCGCDATA(2);
+//		    METHOD_MCGCDATA(2);
 		}
 	}
   	}

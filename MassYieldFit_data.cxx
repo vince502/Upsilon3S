@@ -55,7 +55,12 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, int sig
       mf.Range_fit_high = map_params["massCut"].high;
   }
   string aux = "";
-  if(map_params.find("tmp") != map_params.end() &&map_params["tmp"].val == 1) aux = "_tmp";
+  if(map_params.find("tmp") != map_params.end() &&map_params["tmp"].val == 1) {
+	  aux = "_tmp";
+	  if(map_params["tmp"].high !=0 ){
+		  aux += Form("%1f",map_params["tmp"].high);
+	  }
+  }
   if(!(map_params.find("DrawOnly")!=map_params.end() && map_params["DrawOnly"].val ==1)){
 ///////////////////////////////////////////////////////////////////////
 //Need
@@ -426,6 +431,7 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, int sig
 	      list_var_for_gc.add(*map_rrv[key_val[0].c_str()]);
 	      count_var++;
 	    }
+
 	    model_gc = new RooProdPdf("model_gc","model with gauss constraint", RooArgSet(*model,list_var_gc));
 	  }
 	
@@ -448,9 +454,33 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, int sig
 	  std::cout << mf.works->pdf(use_model.c_str())->GetName() << std::endl;
 	
 	  RooFitResult* Result;
+//	  ROOT::Math::MinimizerOptions::SetDefaultMinimizer("Minuit2", "Simplex");
 	  if(fitdir.find("GC")!=std::string::npos){
 	    std::cout << "Fitting with Gaussian Constraint" << std::endl;
-	    Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), Constrain(list_var_for_gc), PrefitDataFraction(0.1),  Minimizer("Minuit","minimize"), NumCPU(workers), Range(mf.Range_fit_low, mf.Range_fit_high), SumW2Error(kTRUE), Extended(kTRUE));
+		RooLinkedList* fitcmd = new RooLinkedList();
+		RooCmdArg opt1 = RooFit::Save();
+		fitcmd->Add(&opt1);
+		RooCmdArg opt2 = RooFit::Constrain(list_var_for_gc);
+		fitcmd->Add(&opt2);
+		RooCmdArg opt3 = RooFit::PrefitDataFraction(0.1);
+		fitcmd->Add(&opt3);
+		RooCmdArg opt4 = RooFit::Minimizer("Minuit","minimize");//"migradimproved");//);
+		fitcmd->Add(&opt4);
+		RooCmdArg opt5 = RooFit::NumCPU(workers);
+		fitcmd->Add(&opt5);
+		RooCmdArg opt6 = RooFit::Range(mf.Range_fit_low, mf.Range_fit_high);
+		fitcmd->Add(&opt6);
+		RooCmdArg opt7 = RooFit::SumW2Error(kTRUE);
+		fitcmd->Add(&opt7);
+		RooCmdArg opt8 = RooFit::Extended(kTRUE);
+		fitcmd->Add(&opt8);
+		RooCmdArg opt9 = RooFit::Minos(kFALSE);
+		fitcmd->Add(&opt9);
+		RooCmdArg opt10= RooCmdArg::none();
+		RooCmdArg opt11= RooCmdArg::none();
+		Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, *fitcmd);
+//	    Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), Constrain(list_var_for_gc), PrefitDataFraction(0.1),  Minimizer("Minuit","minimize"), NumCPU(workers), Range(mf.Range_fit_low, mf.Range_fit_high), SumW2Error(kTRUE), Extended(kTRUE));
+
 	  }
 	  else  {Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), /*PrefitDataFraction(0.1),*/  Minimizer("Minuit","minimize"), NumCPU(workers), Range(mf.Range_fit_low, mf.Range_fit_high), SumW2Error(kTRUE), Extended(kTRUE));}
 	dbg();

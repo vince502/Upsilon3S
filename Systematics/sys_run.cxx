@@ -17,7 +17,7 @@
 #endif
 
 
-bool isDR = false;
+bool isDR = true;
 const string labDR = (isDR) ? "_DR" : "" ;
 
 int cross_state(int state){
@@ -50,6 +50,8 @@ int cross_state(int state){
 
 
 void sys_run(){
-	NominalBKG();
-	BkgVariUnc();
+//	NominalBKG();
+//	BkgVariUnc();
+	auto ab = ana_bm["3c"][0];
+	auto res = AICGOF_test(ab);
 }
