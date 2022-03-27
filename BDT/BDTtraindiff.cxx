@@ -11,7 +11,7 @@ std::pair<double, double> BDTtraindiff(
 	//Header
 	std::string st_opt;
 	if(strcmp(name_input_opt.c_str(),"")!=0) st_opt = "_"+name_input_opt;
-	std::string output_fname = Form("%s/BDT/Significance_hist/HIST_train%dS_for%dS_bdtpt_%d_%d_%ld_pt_%d-%d_rap_%d-%d_cbin_%d-%d_vp_%.4f_%s%s", workdir.Data(), train_state, sig_state, bdtptMin, bdtptMax, ts, (int) ptMin, (int) ptMax, (int) (rapMin*10), (int) (rapMax*10), cBinLow, cBinHigh, cutQVP, formula_significance.c_str(), st_opt.c_str() );
+	std::string output_fname = Form("%s/BDT/Significance_hist/HIST_train%dS_for%dS_bdtpt_%d_%d_%ld_pt_%d-%d_rap_%d-%d_cbin_%d-%d_vp_%.4f_%s%s", workdir.Data(), train_state, sig_state, bdtptMin, bdtptMax, ts_alias(ts), (int) ptMin, (int) ptMax, (int) (rapMin*10), (int) (rapMax*10), cBinLow, cBinHigh, cutQVP, formula_significance.c_str(), st_opt.c_str() );
 	TFile* HISTFILE = nullptr;
 	HISTFILE = new TFile(Form("%s.root",output_fname.c_str()), "update" );
 	std::cout << static_cast<void*>(HISTFILE) << std::endl;
@@ -29,7 +29,7 @@ std::pair<double, double> BDTtraindiff(
 		TGraph* cloneHist1 = (TGraph*)  theHist1->Clone();
 		TGraph* cloneHist2 = (TGraph*)  theHist2->Clone();
 		auto findmax  = [&ts](TGraph* g){
-			if(ts == 100019111111){
+			if(ts_alias(ts) == 100019111111){
 				auto res = g->GetFunction("Msignif");
 				return std::make_pair(res->GetMaximumX(-0.1, 0.45), res->GetMaximum(-0.1,0.45));
 			}

@@ -51,16 +51,31 @@
 
 void systematic_ups_v2()
 {
-	std::map<TString, TFile*> m_sys = {
-	  					{"signal parameter", new TFile("./data/sigPAR_unc.root", "open")},
-	  					{"signal pdf", new TFile("./data/sigPDF_unc.root", "open")},
-	  					{"background pdf", new TFile("./data/bkgPDF_unc.root", "open")},
-	  					{"acceptance dpt", new TFile("./data/ACCQuad_unc.root", "open")},
-	  					{"efficiency dpt", new TFile("./data/effDPTQuad_unc.root", "open")},
-	  					{"efficiency tnp", new TFile("./data/effTNP_unc.root", "open")},
-	  					{"centrality calibration", new TFile("./data/CENT_unc.root", "open")},
-	  					{"BDT variation", new TFile("./data/BDT_Diff_unc.root", "open")},
-	};
+	std::map<TString, TFile*> m_sys;
+	if( (long) _TS == 10000000016 ){
+		m_sys= {
+		  					{"signal parameter", new TFile("./data/sigPAR_unc.root", "open")},
+		  					{"signal pdf", new TFile("./data/sigPDF_unc.root", "open")},
+		  					{"background pdf", new TFile("./data/bkgPDF_unc.root", "open")},
+		  					{"acceptance dpt", new TFile("./data/ACCQuad_unc.root", "open")},
+		  					{"efficiency dpt", new TFile("./data/effDPTQuad_unc.root", "open")},
+		  					{"efficiency tnp", new TFile("./data/effTNP_unc.root", "open")},
+		  					{"centrality calibration", new TFile("./data/CENT_unc.root", "open")},
+		  					{"BDT variation", new TFile("./data/BDT_Diff_unc.root", "open")},
+		};
+	}
+	else{
+		m_sys= {
+		  					{"signal parameter", new TFile(Form("./data/sigPAR_unc_%ld.root", _TS), "open")},
+		  					{"signal pdf", new TFile(Form("./data/sigPDF_unc_%ld.root", _TS), "open")},
+		  					{"background pdf", new TFile(Form("./data/bkgPDF_unc_%ld.root", _TS), "open")},
+		  					{"acceptance dpt", new TFile("./data/ACCQuad_unc.root", "open")},
+		  					{"efficiency dpt", new TFile(Form("./data/effDPTQuad_unc_%ld.root", ts_alias(_TS)), "open")},
+		  					{"efficiency tnp", new TFile("./data/effTNP_unc.root", "open")},
+		  					{"centrality calibration", new TFile(Form("./data/CENT_unc_%ld.root", _TS), "open")},
+		  					{"BDT variation", new TFile(Form("./data/BDT_Diff_unc_%ld.root", _TS), "open")},
+		};
+	}
 	for(auto x : m_sys) { std::cout << x.first.Data() << ", File: " << x.second->GetName()<< std::endl;} //Check File Open
 	gStyle->SetHistLineColor(kGray+1);
 	gStyle->SetOptStat(0);
@@ -69,7 +84,7 @@ void systematic_ups_v2()
 	TH1D* h_rp2s = new TH1D("hsys_tot_p2S", "",ana_bm["2p"].size(), 1, ana_bm["2p"].size());
 	TH1D* h_rp3s = new TH1D("hsys_tot_p3S", "",ana_bm["3p"].size(), 1, ana_bm["3p"].size());
 	std::map<std::pair<TString, TString> , TH1D*> m_hists;
-	TFile* output = new TFile("./data/total_systematics_RAA.root", "recreate");
+	TFile* output = new TFile(Form("./data/total_systematics_RAA_%ld.root", _TS), "recreate");
 	output->cd();
 	const int num_sys = m_sys.size();
 	TString names[num_sys];
@@ -77,22 +92,24 @@ void systematic_ups_v2()
 	for(auto obj : m_sys){
 		names[xc_n] =  obj.first;
 		xc_n ++;
-		m_hists[{obj.first, "rc2S"}] = (TH1D*) ( (TH1D*) (obj.second->Get("rc2S")))->Clone();
-		m_hists[{obj.first, "rc3S"}] = (TH1D*) ( (TH1D*) (obj.second->Get("rc3S")))->Clone();
-		m_hists[{obj.first, "rp2S"}] = (TH1D*) ( (TH1D*) (obj.second->Get("rp2S")))->Clone();
-		m_hists[{obj.first, "rp3S"}] = (TH1D*) ( (TH1D*) (obj.second->Get("rp3S")))->Clone();
-		
-		m_hists[{obj.first, "rc2S"}]->SetDirectory(0);
-		m_hists[{obj.first, "rc3S"}]->SetDirectory(0);
-		m_hists[{obj.first, "rp2S"}]->SetDirectory(0);
-		m_hists[{obj.first, "rp3S"}]->SetDirectory(0);
+		if(obj.second->IsOpen()){
+			m_hists[{obj.first, "rc2S"}] = (TH1D*) ( (TH1D*) (obj.second->Get("rc2S")))->Clone();
+			m_hists[{obj.first, "rc3S"}] = (TH1D*) ( (TH1D*) (obj.second->Get("rc3S")))->Clone();
+			m_hists[{obj.first, "rp2S"}] = (TH1D*) ( (TH1D*) (obj.second->Get("rp2S")))->Clone();
+			m_hists[{obj.first, "rp3S"}] = (TH1D*) ( (TH1D*) (obj.second->Get("rp3S")))->Clone();
+			
+			m_hists[{obj.first, "rc2S"}]->SetDirectory(0);
+			m_hists[{obj.first, "rc3S"}]->SetDirectory(0);
+			m_hists[{obj.first, "rp2S"}]->SetDirectory(0);
+			m_hists[{obj.first, "rp3S"}]->SetDirectory(0);
 
-		std::cout <<
-		m_hists[{obj.first, "rc2S"}]->GetNbinsX() <<
-		m_hists[{obj.first, "rc3S"}]->GetNbinsX() <<
-		m_hists[{obj.first, "rp2S"}]->GetNbinsX() <<
-		m_hists[{obj.first, "rp3S"}]->GetNbinsX() <<
-		std::endl;
+			std::cout <<
+			m_hists[{obj.first, "rc2S"}]->GetNbinsX() <<
+			m_hists[{obj.first, "rc3S"}]->GetNbinsX() <<
+			m_hists[{obj.first, "rp2S"}]->GetNbinsX() <<
+			m_hists[{obj.first, "rp3S"}]->GetNbinsX() <<
+			std::endl;
+		}
 
 	}
 	
@@ -121,7 +138,8 @@ void systematic_ups_v2()
 		double total_unc = 0 ;
 		for( auto obj : m_sys){
 			std::cout << Form("[INFO] Object \"%s\" on bin \'%s\', pt [%d, %d] cbin [%d, %d]'", obj.first.Data(), "rc2S", item.pl, item.ph, item.cl, item.ch)<< std::endl;
-			double unc = m_hists[{obj.first, "rc2S"}]->GetBinContent(counter);
+			double unc = 0;
+			if(m_hists[{obj.first, "rc2S"}]) unc = m_hists[{obj.first, "rc2S"}]->GetBinContent(counter);
 			std::cout << unc << std::endl;
 			h_rc2s_b[smallcounter-1]->SetBinContent(num_sys*(counter-1)+smallcounter, fabs(unc));
 			if(strcmp(h_rc2s_b[smallcounter-1]->GetTitle(),"")==0) h_rc2s_b[smallcounter-1]->SetTitle(Form("%s", obj.first.Data() ));;
@@ -139,7 +157,9 @@ void systematic_ups_v2()
 		double total_unc = 0 ;
 		for( auto obj : m_sys){
 			std::cout << Form("[INFO] Object \"%s\" on bin \'%s\', pt [%d, %d] cbin [%d, %d]'", obj.first.Data(), "rc3S", item.pl, item.ph, item.cl, item.ch)<< std::endl;
-			double unc = m_hists[{obj.first, "rc3S"}]->GetBinContent(counter);
+			double unc = 0;
+			if(m_hists[{obj.first, "rc3S"}]) unc = m_hists[{obj.first, "rc3S"}]->GetBinContent(counter);
+//			double unc = m_hists[{obj.first, "rc3S"}]->GetBinContent(counter);
 			std::cout << unc << std::endl;
 			h_rc3s_b[smallcounter-1]->SetBinContent(num_sys*(counter-1)+smallcounter, fabs(unc));
 			if(strcmp(h_rc3s_b[smallcounter-1]->GetTitle(),"")==0) h_rc3s_b[smallcounter-1]->SetTitle(Form("%s", obj.first.Data() ));;
@@ -157,8 +177,10 @@ void systematic_ups_v2()
 		double total_unc = 0 ;
 		for( auto obj : m_sys){
 			std::cout << Form("[INFO] Object \"%s\" on bin \'%s\', pt [%d, %d] cbin [%d, %d]'", obj.first.Data(), "rp2S", item.pl, item.ph, item.cl, item.ch)<< std::endl;
-			std::cout << m_hists[{obj.first, "rp2S"}]->GetName() << std::endl;
-			double unc = m_hists[{obj.first, "rp2S"}]->GetBinContent(counter);
+//			std::cout << m_hists[{obj.first, "rp2S"}]->GetName() << std::endl;
+			double unc = 0;
+			if(m_hists[{obj.first, "rp2S"}]) unc = m_hists[{obj.first, "rp2S"}]->GetBinContent(counter);
+//			double unc = m_hists[{obj.first, "rp2S"}]->GetBinContent(counter);
 			std::cout << unc << std::endl;
 			h_rp2s_b[smallcounter-1]->SetBinContent(num_sys*(counter-1)+smallcounter, fabs(unc));
 			if(strcmp(h_rp2s_b[smallcounter-1]->GetTitle(),"") ==0) h_rp2s_b[smallcounter-1]->SetTitle(Form("%s", obj.first.Data() ));;
@@ -176,7 +198,9 @@ void systematic_ups_v2()
 		double total_unc = 0 ;
 		for( auto obj : m_sys){
 			std::cout << Form("[INFO] Object \"%s\" on bin \'%s\', pt [%d, %d] cbin [%d, %d]'", obj.first.Data(), "rp3S", item.pl, item.ph, item.cl, item.ch)<< std::endl;
-			double unc = m_hists[{obj.first, "rp3S"}]->GetBinContent(counter);
+			double unc = 0;
+			if(m_hists[{obj.first, "rp3S"}]) unc = m_hists[{obj.first, "rp3S"}]->GetBinContent(counter);
+//			double unc = m_hists[{obj.first, "rp3S"}]->GetBinContent(counter);
 			std::cout << unc << std::endl;
 			h_rp3s_b[smallcounter-1]->SetBinContent(num_sys*(counter-1)+smallcounter, fabs(unc));
 			if(strcmp(h_rp3s_b[smallcounter-1]->GetTitle(),"") ==0) h_rp3s_b[smallcounter-1]->SetTitle(Form("%s", obj.first.Data() ));;
@@ -318,16 +342,16 @@ void systematic_ups_v2()
 	}
 	leg->Draw("same");
 	
-	CMS_lumi_square(c1, 31, 11);
-	CMS_lumi_square(c2, 31, 11);
-	CMS_lumi_square(c3, 31, 11);
-	CMS_lumi_square(c4, 31, 11);
+	CMS_lumi_square(c1, 2, 11);
+	CMS_lumi_square(c2, 2, 11);
+	CMS_lumi_square(c3, 2, 11);
+	CMS_lumi_square(c4, 2, 11);
 	
 	output->cd();
-	c1->SaveAs("../checkout/total_unc2Scent_v2.pdf");
-	c2->SaveAs("../checkout/total_unc3Scent_v2.pdf");
-	c3->SaveAs("../checkout/total_unc2Spt_v2.pdf");
-	c4->SaveAs("../checkout/total_unc3Spt_v2.pdf");
+	c1->SaveAs(Form("../checkout/tscol/total_unc2Scent_%ld_v2.pdf", _TS));
+	c2->SaveAs(Form("../checkout/tscol/total_unc3Scent_%ld_v2.pdf", _TS));
+	c3->SaveAs(Form("../checkout/tscol/total_unc2Spt_%ld_v2.pdf", _TS));
+	c4->SaveAs(Form("../checkout/tscol/total_unc3Spt_%ld_v2.pdf", _TS));
 	c1->Write();
 	c2->Write();
 	c3->Write();

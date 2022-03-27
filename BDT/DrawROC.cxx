@@ -5,9 +5,15 @@
 void DrawROC()
 {
   std::map<long, std::string> ts_map = {
-  	{10000000016, "Nominal"}, 
-  	{100000000162, "No 2D variables"}, 
-//  	{100000000163, "No 3D variables"}, 
+//  	{10000000016, "Nominal"}, 
+  	{100019111111, "Nominal"}, 
+//  	{100019101111, "No QQdca"}, 
+  	{100019111010, "No 3D Variables"}, 
+  	{100019110101, "No 2D Variables"}, 
+//  	{100119111111, "500 Trees"}, 
+//  	{100219111111, "700 Trees"}, 
+//  	{100319111111, "2100 Trees"}, 
+//  	{100000000162, "No 2D variables"}, 
 //  	{100009110111, "No ctau(2D)"}, 
 //  	{100009111101, "No cosine alpha(2D)"}, 
 //  	{8000000007, ""},
@@ -32,9 +38,9 @@ void DrawROC()
   std::vector<Color_t> c_map = {  kOrange +8,  kBlack, kGreen, kMagenta, kBlue,kRed, kCyan, kPink, kAzure, kViolet};
  
   setTDRStyle();
-  TCanvas *c1 = new TCanvas("c1","",1000,800);
+  TCanvas *c1 = new TCanvas("c1","",1400, 1200);
   c1->cd();
-  c1->SetTopMargin(0.15);
+  c1->SetTopMargin(0.10);
 
   TLegend* l1 = new TLegend(0.2,0.2,0.6,0.55);
   l1->SetBorderSize(0);
@@ -63,6 +69,6 @@ void DrawROC()
 
   c1->Update();
   c1->SaveAs("../Macros/ROC_plot.pdf");
-  c1->SaveAs("../checkout/ROC_plot.png");
+  c1->SaveAs("../checkout/tmp/ROC_plot.png");
 
 }

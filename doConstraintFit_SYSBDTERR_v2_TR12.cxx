@@ -1,11 +1,5 @@
 #pragma once
-#include "MassYieldFit_BDT_MC_CB3.C"
-//#include "MassYieldFit_BDT_MC.C"
-#include "MassYieldFit_data.cxx"
-#include "./BDT/yield_eff_signif.cxx"
-//#include "./BDT/BDTVari_Seff.cxx"
-#include "script_tools.h"
-#include "Systematics/GOF_test.cxx"
+
 
 #if defined _TS
 void doConstraintFit_SYSBDTERR_v2_TR12(int global_step = 1, int step = 111){
@@ -74,7 +68,7 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0, bool redo_nobdt =f
 }
 
       auto fit_mc_dat = [&] (string type_, double bl){
-	  long kts = ts;
+	  long kts = ts_alias(ts);
 	  double app_cutQVP = cutQVP;
 	  if(bl == -1.0000){ kts = 9999999999; app_cutQVP = cutQVP_noBDT; }
 	  std::string mcres_input = GetFit(__FITRESLATEST, true, "CB3",kts, train_state, state, (int)ptMin, (int)ptMax, cBinLow, cBinHigh, bl, cutBDThigh, bdtptMin, bdtptMax, app_cutQVP, "");
@@ -161,9 +155,9 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0, bool redo_nobdt =f
   dbg(100);
     if( _step > -10 ){
   dbg(100);
-    sb_ratio = get_eff_acc_v2(type_r, ts, rapMax, ptMin, ptMax, cBinLow, cBinHigh, blow_ref, 1.0, bdtptMin, bdtptMax, train_state, 1, state, false);
+    sb_ratio = get_eff_acc_v2(type_r, ts_alias(ts), rapMax, ptMin, ptMax, cBinLow, cBinHigh, blow_ref, 1.0, bdtptMin, bdtptMax, train_state, 1, state, false);
 	std::cout << "sb_ratio: " << sb_ratio.getVal() << std::endl;
-   res_GOB = Get_Optimal_BDT(ts,ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP , sb_ratio.getVal(), train_state, state, bdtptMin, bdtptMax, "", "S2");
+   res_GOB = Get_Optimal_BDT(ts_alias(ts) ,ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP , sb_ratio.getVal(), train_state, state, bdtptMin, bdtptMax, "", "S2");
   dbg();
     res_blow= res_GOB.first;
     }
@@ -194,15 +188,15 @@ auto prep_bdtval = [&] (double blow_ref = -0.3, int _step =0, bool redo_nobdt =f
     if(state ==2) fname = fname2S;
     if(state ==3) fname = fname3S;
 	std::cout << Form("%ld,%.4f, %.4f, %d, %d, %d, %d, %.4f, %.4f, %d, %d", ts, ptMin, ptMax, cBinLow, cBinHigh, train_state, state, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax) << std::endl;
-	  std::string mcres_input_pre = GetFit(__FITRESLATEST, true, "CB3",ts, train_state, (int) state, (int)ptMin, (int)ptMax, cBinLow, cBinHigh, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP, "");
+	  std::string mcres_input_pre = GetFit(__FITRESLATEST, true, "CB3",ts_alias(ts), train_state, (int) state, (int)ptMin, (int)ptMax, cBinLow, cBinHigh, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP, "");
     if(mode ==1 || mode ==0){
 	   if(!checkFile(mcres_input_pre) || justfit ){
-       		MassYieldFit_BDT_MC_CB3(ts, "", fname, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, train_state, state, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, plot_dir_opt);
+       		MassYieldFit_BDT_MC_CB3(ts_alias(ts), "", fname, ptMin, ptMax, rapMin, rapMax, MupT, Trig, cBinLow, cBinHigh, train_state, state, fixvar, swflag, cutQVP, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, plot_dir_opt);
 	   }
     }
 
     if(mode ==1 || mode ==2){
-	  std::string mcres_input = GetFit(__FITRESLATEST, true, "CB3",ts, train_state, (int) state, (int)ptMin, (int)ptMax, cBinLow, cBinHigh, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP, "");
+	  std::string mcres_input = GetFit(__FITRESLATEST, true, "CB3",ts_alias(ts), train_state, (int) state, (int)ptMin, (int)ptMax, cBinLow, cBinHigh, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP, "");
 	  std::cout << mcres_input << std::endl;
 
 	  TFile* file_MCres_input = TFile::Open(mcres_input.c_str() );
@@ -333,12 +327,13 @@ double INTBIN_BDTLOW = 0.1825;// =0.16;
  if(step == 1 || step == 99 || step == 11 || step == 111){
   for( auto ap : ana_bm){
 	  for( auto ab : ap.second){
-//		if( ((ab.bin_attr.find("i")!=std::string::npos && true))) continue;
+//		if( ((ab.bin_attr.find("i")!=std::string::npos && ab.state == 3 ))) continue;
 //		if( ((ab.bin_attr.find("c")!=std::string::npos && true))) continue;
 //		if( !((ab.bin_attr.find("p")!=std::string::npos && ab.state ==2))) continue;
 //		if( !((ab.bin_attr.find("c")!=std::string::npos && ab.state ==3))) continue;
-//		if( !(ab.cl==0&&ab.ch==60&&(ab.bin_attr.find("c")!=std::string::npos && true))) continue;
-//		if( !(ab.pl==3&&ab.ph==6&&(ab.bin_attr.find("p")!=std::string::npos && ab.state == 2))) continue;
+//		if( !(ab.cl==80&&ab.ch==100&&(ab.bin_attr.find("c")!=std::string::npos && ab.state == 2))) continue;
+		if( !(ab.pl==0&&ab.ph==4&&(ab.bin_attr.find("p")!=std::string::npos && ab.state == 3))) continue;
+//		if( !(ab.bin_attr.find("p")!=std::string::npos && ab.ph > 29 && ab.state == 3)) continue;
 		string fittype = (strcmp(ab.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 		////////////////////////////////////////////////////////////////
 	  	ptMin = 0;
@@ -360,12 +355,12 @@ double INTBIN_BDTLOW = 0.1825;// =0.16;
 		train_state = ab.train_state;
 		state = ab.state;
 
-		drawonly = 1;
+		drawonly = 0;
 		auto res = prep_bdtval(-1, 5);
 		double ref_ratio = res.second.getVal();
 
 	    sb_ratio = RooRealVar("sb_ratio", "",-1);
-		auto bdt_diff_pair = Get_BDTTD(ts, ab, ref_ratio);
+		auto bdt_diff_pair = Get_BDTTD(ts_alias(ts), ab, ref_ratio);
 	  	if (global_step == -1 )cutBDTlow = bdt_diff_pair.first;
 	  	if (global_step ==  1 )cutBDTlow = bdt_diff_pair.second;
 		bool fitdata = true;
@@ -382,7 +377,7 @@ double INTBIN_BDTLOW = 0.1825;// =0.16;
 			type2			= "CB3:"+ bkgNom  + ":" + fittype.c_str()+bdt_seg;
 			if(strcmp(ab.bin_attr.c_str(),"c")==0){
 				double cbl = cutBDTlow;
-				auto bdt_diff_pair_ref = Get_BDTTD(ts, 0, 30, 0, 181, ab.train_state, ab.state, 0, 30, sb_ratio_ref.second.getVal() ); 
+				auto bdt_diff_pair_ref = Get_BDTTD(ts_alias(ts), 0, 30, 0, 181, ab.train_state, ab.state, 0, 30, sb_ratio_ref.second.getVal() ); 
 	  			if (global_step == -1 )cutBDTlow = bdt_diff_pair_ref.first;
 	  			if (global_step ==  1 )cutBDTlow = bdt_diff_pair_ref.second;
 				string bkgNomREF = AICGOF_test(ana_bm[Form("%dc",ab.state)][0])[0].second;
@@ -395,9 +390,9 @@ double INTBIN_BDTLOW = 0.1825;// =0.16;
 
 					}
 				if(bkgNom.find("EE")!=std::string::npos){
-		    		bkg_val  = {7.0, 6.0, 4.3,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-		    		bkg_low  = {3.0, 0.1, 0.1,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
-		    		bkg_high = {18, 10.0, 9.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
+		    		bkg_val  = {6.0, 5.0, 1.3,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		    		bkg_low  = {3.0, 1.6, 0.4,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
+		    		bkg_high = {11, 9.0, 6.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
 					fixfit(cbl);
 					}
 				if(bkgNom.find("EX")!=std::string::npos){
@@ -415,9 +410,10 @@ double INTBIN_BDTLOW = 0.1825;// =0.16;
 		    		METHOD_MCGCDATA(2);
 					}
 				if(bkgNom.find("EE")!=std::string::npos){
-		    		bkg_val  = {8.0, 7.0, 1.1,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-		    		bkg_low  = {6.0, 1.0, 0.1,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
-		    		bkg_high = {9.2, 10.0, 5.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
+		    		bkg_val  = {8.1, 5.0, 2.1,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		    		bkg_low  = {0.0, 0.0, 0.3,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
+//		    		bkg_high = {11, 9.0, 6.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
+		    		bkg_high = {60, 10, 10, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
 		    		METHOD_MCGCDATA(2);
 					}
 				if(bkgNom.find("EX")!=std::string::npos){

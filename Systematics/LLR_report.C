@@ -1,9 +1,16 @@
 #include "../BDT/bininfo.h"
 
-#define _TS_LLRINTERNAL 10000000016
+#define UB true
+
+//#define _TS_LLRINTERNAL 100019111111
+#define _TS_LLRINTERNAL 200019111111
 //#define _TS_LLRINTERNAL 9999999999
-#if _TS_LLRINTERNAL != 9999999999
+#if _TS_LLRINTERNAL != 9999999999 && UB == false
 #	define ana_bm ana_bm_comb
+#endif
+
+#if _TS_LLRINTERNAL != 9999999999 && UB == true
+#	define ana_bm ana_bm_comb_ub
 #endif
 
 #include "LLR_bkgPDF.cxx"
@@ -164,21 +171,32 @@ void LLR_report()
 	report << Form(" X X X X X X \n");
 	report << "Selected N = " << selected_deg << "\n\n";
 	value_header << Form("	if( (state == %d && pl == %d && ph == %d && cl == %d && ch == %d) ) return %d;\n", state, pl,ph,cl,ch, selected_deg) ;
-		string hl_O1, hl_O2, hl_O3, hl_O4;	
-		hl_O1 = ""; hl_O2 = ""; hl_O3 = ""; hl_O4 = "";
+		string hl_O1, hl_O2, hl_O3, hl_O4, hl_O5;	
+		hl_O1 = ""; hl_O2 = ""; hl_O3 = ""; hl_O4 = ""; hl_O5 = "";
 		if( selected_deg == 1 ) hl_O1 = ">{\\columncolor[gray]{0.8}}";
 		if( selected_deg == 2 ) hl_O2 = ">{\\columncolor[gray]{0.8}}";
 		if( selected_deg == 3 ) hl_O3 = ">{\\columncolor[gray]{0.8}}";
 		if( selected_deg == 4 ) hl_O4 = ">{\\columncolor[gray]{0.8}}";
+		if( selected_deg == 5 ) hl_O5 = ">{\\columncolor[gray]{0.8}}";
 		stringdump_head = "\\begin{table}[htb]\n	\\begin{center}\n	\\caption{" + string(Form("Result %dS, Centrality [%d, %d] \\%%, $p_{T}$ [%d, %d] \\GeV\n", state, centl, centh, pl, ph)) + string(Form("}\n{\\footnotesize\\renewcommand{\\arraystretch}{1.4}\n		\\begin{tabular}{cc||%sc%sc%sc%sc}\n			N & NLL & p(H0: N = 1) & p(H0: N = 2) & p(H0: N = 3) & p(H0: N = 4)\\\\ \n		\\hline\n",hl_O1.c_str(), hl_O2.c_str(), hl_O3.c_str(), hl_O4.c_str() ));
 	texout << stringdump_head;
-	texout << Form(		"1 & %.2f & & & & \\\\\n", NLLs[0]);
-	texout << Form(		"2 & %.2f & %.1f\\% & & & \\\\\n", NLLs[1], pvalue_t[1][2]*100);
-	texout << Form(		"3 & %.2f & %.1f\\% & %.1f\\% & & \\\\\n", NLLs[2], pvalue_t[1][3]*100, pvalue_t[2][3]*100);
-	texout << Form(		"4 & %.2f & %.1f\\% & %.1f\\% & %.1f\\% & \\\\\n", NLLs[3], pvalue_t[1][4]*100, pvalue_t[2][4]*100, pvalue_t[3][4]*100);
-	texout << Form(		"5 & %.2f & %.1f\\% & %.1f\\% & %.1f\\% & %.1f\\% \\\\\n", NLLs[4], pvalue_t[1][5]*100, pvalue_t[2][5]*100, pvalue_t[3][5]*100, pvalue_t[4][5]*100);
+	texout << Form(		"1 & %.2f & & & &\\\\\n", NLLs[0]);
+	texout << Form(		"2 & %.2f & %.1f\\% & & &\\\\\n", NLLs[1], pvalue_t[1][2]*100);
+	texout << Form(		"3 & %.2f & %.1f\\% & %.1f\\% & &\\\\\n", NLLs[2], pvalue_t[1][3]*100, pvalue_t[2][3]*100);
+	texout << Form(		"4 & %.2f & %.1f\\% & %.1f\\% & %.1f\\% &\\\\\n", NLLs[3], pvalue_t[1][4]*100, pvalue_t[2][4]*100, pvalue_t[3][4]*100);
+	texout << Form(		"5 & %.2f & %.1f\\% & %.1f\\% & %.1f\\% & %.1f\\%\\\\\n", NLLs[4], pvalue_t[1][5]*100, pvalue_t[2][5]*100, pvalue_t[3][5]*100, pvalue_t[4][5]*100);
 	texout << Form(		"6 & %.2f & %.1f\\% & %.1f\\% & %.1f\\% & %.1f\\% \\\\\n", NLLs[5], pvalue_t[1][6]*100, pvalue_t[2][6]*100, pvalue_t[3][6]*100, pvalue_t[4][6]*100);
 	texout << "	\\end{tabular}\n		\\label{tab:lab}\n	}\n	\\end{center}\\end{table}\n\n";
+
+//		stringdump_head = "\\begin{table}[htb]\n	\\begin{center}\n	\\caption{" + string(Form("Result %dS, Centrality [%d, %d] \\%%, $p_{T}$ [%d, %d] \\GeV\n", state, centl, centh, pl, ph)) + string(Form("}\n{\\footnotesize\\renewcommand{\\arraystretch}{1.4}\n		\\begin{tabular}{cc||%sc%sc%sc%sc%sc}\n			N & NLL & p(H0: N = 1) & p(H0: N = 2) & p(H0: N = 3) & p(H0: N = 4) & p(H0: N = 5)\\\\ \n		\\hline\n",hl_O1.c_str(), hl_O2.c_str(), hl_O3.c_str(), hl_O4.c_str(), hl_O5.c_str() ));
+//	texout << stringdump_head;
+//	texout << Form(		"1 & %.2f & & & & &\\\\\n", NLLs[0]);
+//	texout << Form(		"2 & %.2f & %.1f\\% & & & &\\\\\n", NLLs[1], pvalue_t[1][2]*100);
+//	texout << Form(		"3 & %.2f & %.1f\\% & %.1f\\% & & &\\\\\n", NLLs[2], pvalue_t[1][3]*100, pvalue_t[2][3]*100);
+//	texout << Form(		"4 & %.2f & %.1f\\% & %.1f\\% & %.1f\\% & &\\\\\n", NLLs[3], pvalue_t[1][4]*100, pvalue_t[2][4]*100, pvalue_t[3][4]*100);
+//	texout << Form(		"5 & %.2f & %.1f\\% & %.1f\\% & %.1f\\% & %.1f\\% &\\\\\n", NLLs[4], pvalue_t[1][5]*100, pvalue_t[2][5]*100, pvalue_t[3][5]*100, pvalue_t[4][5]*100);
+//	texout << Form(		"6 & %.2f & %.1f\\% & %.1f\\% & %.1f\\% & %.1f\\% & %.1f\\% \\\\\n", NLLs[5], pvalue_t[1][6]*100, pvalue_t[2][6]*100, pvalue_t[3][6]*100, pvalue_t[4][6]*100, pvalue_t[5][6]*100);
+//	texout << "	\\end{tabular}\n		\\label{tab:lab}\n	}\n	\\end{center}\\end{table}\n\n";
 
 
 

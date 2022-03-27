@@ -13,7 +13,7 @@ using namespace RooFit;
 
 void DrawHist_(long ts,double ylim, float blow, float bhigh, float vcut, TString MupT = "3p5", string Trig = "S13", TString fittype = "freefit", string opt = "") {};
 void DrawHist__();
-void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 180, double cutQVP = 0.01, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1., int bdtptMin =0, int bdtptMax = 30, double signif_ratio = 0.02,  int train_state =3, int sig_state= 3, bool draw_mag = false, double massMin= 8, double massMax = 14, string aux = "", string opt = ""){
+void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const Double_t ptMax = 30, const Double_t rapMin = -2.4, const Double_t rapMax = 2.4, const TString MupT = "3p5", const string Trig = "", bool swflag= false, int cBinLow =0, int cBinHigh = 180, double cutQVP = 0.01, bool isBDT=true, long ts = 1, double cutBDTlow=-1, double cutBDThigh = 1., int bdtptMin =0, int bdtptMax = 30, double signif_ratio = 0.02,  int train_state =3, int sig_state= 3, bool draw_mag = false, double massMin= 8, double massMax = 14, string aux = "", string opt = "", long ubts = -1){
   setTDRStyle();
   int Nmassbins = 80;
 
@@ -59,7 +59,8 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
   std::pair<double, TGraph*> _hist_;
   TGraph* signif_hist;
   if( signif_ratio != -1){
-    _hist_ = Get_Optimal_BDT(ts, ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP, signif_ratio, train_state, sig_state, bdtptMin, bdtptMax, "", "S2", s_bdtupdown.c_str()); 
+	 if( ubts != -1) _hist_ = Get_Optimal_BDT(ubts, ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP, signif_ratio, train_state, sig_state, bdtptMin, bdtptMax, "", "S2", s_bdtupdown.c_str()); 
+	 if( ubts == -1) _hist_ = Get_Optimal_BDT(ts, ptMin, ptMax, rapMin, rapMax, cBinLow, cBinHigh, cutQVP, signif_ratio, train_state, sig_state, bdtptMin, bdtptMax, "", "S2", s_bdtupdown.c_str()); 
     signif_hist = _hist_.second;
     if (signif_hist ==nullptr) {
       std::cout << "[Error] Significance plot not loaded, returning with null histogram" << std::endl;
@@ -139,7 +140,7 @@ void DrawHist(std::vector<std::string>  parsed,const Double_t ptMin = 0, const D
   TPad* pad_leg = new TPad("pad_leg", "pad_leg", 0.7, 0.25, 1.0, 1.0);
   TPad* pad_mag = new TPad("pad_mag", "pad_mag", 0.7, 0.0, 1.0, 0.25);
   c1->cd();
-  pad_mass->SetBottomMargin(0.04);
+  pad_mass->SetBottomMargin(0.10);
   pad_mass->Draw();
 
   pad_pull->Draw();

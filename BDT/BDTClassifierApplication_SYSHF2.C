@@ -31,7 +31,7 @@ void BDTClassifierApplication_SYSHF2(long ts= 9999999999, int train_state =2, in
   TMVA::Reader *reader2 = new TMVA::Reader("V:!Silent");
   TXMLEngine xml;
   long nominal_ts = NOMINAL_TS;
-  XMLDocPointer_t xmldoc = xml.ParseFile(Form("./data/Y%dSpt%dto%d/dataset1/weights/TMVA_BDT_Classifier1_%ld_BDT.weights.xml", train_state, ptLow, ptHigh, nominal_ts));
+  XMLDocPointer_t xmldoc = xml.ParseFile(Form("./data/Y%dSpt%dto%d/dataset1/weights/TMVA_BDT_Classifier1_%ld_BDT.weights.xml", train_state, ptLow, ptHigh, ts_alias(nominal_ts)));
   XMLDocPointer_t mainnode = xml.DocGetRootElement(xmldoc);
 
   TString fname;
@@ -53,8 +53,10 @@ void BDTClassifierApplication_SYSHF2(long ts= 9999999999, int train_state =2, in
   else if(!isMC){
     if(whichtree !=0){
       fname =Form("%s/%s", store.Data(), ONIABDTDATAB_LATEST.c_str() );
-      if( ts == 9999999998) fname = Form("%s/%s", hfdir.Data(), SYS_HFUPDATA.c_str() );
-      if( ts == 9999999997) fname = Form("%s/%s", hfdir.Data(), SYS_HFDOWNDATA.c_str() );
+  //    if( ts == 9999999998) fname = Form("%s/%s", hfdir.Data(), SYS_HFUPDATA.c_str() );
+  //    if( ts == 9999999997) fname = Form("%s/%s", hfdir.Data(), SYS_HFDOWNDATA.c_str() );
+      if( ts == nominal_ts * 10000 + 2) fname = Form("%s/%s", hfdir.Data(), SYS_HFUPDATA_RAW_SPLIT.c_str() ); 
+      if( ts == nominal_ts * 10000 + 1) fname = Form("%s/%s", hfdir.Data(), SYS_HFDOWNDATA_RAW_SPLIT.c_str() );
     }
     if(whichtree ==0) fname =Form("%s/%s", store.Data(), ONIABDTDATA_LATEST.c_str() );
   }
@@ -133,8 +135,8 @@ void BDTClassifierApplication_SYSHF2(long ts= 9999999999, int train_state =2, in
   }
   
 
-  TString weightfile1 = Form("./data/Y%dSpt%dto%d/dataset1/weights/TMVA_BDT_Classifier1_%ld_BDT.weights.xml", train_state, ptLow, ptHigh, nominal_ts);
-  TString weightfile2 = Form("./data/Y%dSpt%dto%d/dataset2/weights/TMVA_BDT_Classifier2_%ld_BDT.weights.xml", train_state, ptLow, ptHigh, nominal_ts);
+  TString weightfile1 = Form("./data/Y%dSpt%dto%d/dataset1/weights/TMVA_BDT_Classifier1_%ld_BDT.weights.xml", train_state, ptLow, ptHigh, ts_alias(nominal_ts));
+  TString weightfile2 = Form("./data/Y%dSpt%dto%d/dataset2/weights/TMVA_BDT_Classifier2_%ld_BDT.weights.xml", train_state, ptLow, ptHigh, ts_alias(nominal_ts));
   TString methodName1 = (Form("BDT"));
   TString methodName2 = (Form("BDT"));
   reader1->BookMVA( methodName1, weightfile1);

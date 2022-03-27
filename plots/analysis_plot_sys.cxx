@@ -1,5 +1,7 @@
 //#define _TS 9999999999
-#define _TS 10000000016
+//#define _TS 10000000016
+//#define _TS 100019111111
+#define _TS 200019111111
 #if _TS == 9999999999 && __has_include("../LLR_CCorder_9999999999.h")
 #   include "../LLR_CCorder_9999999999.h"
 #   define getNomBkgO getNomBkgO_9999999999
@@ -10,19 +12,40 @@
 #   define getNomBkgO getNomBkgO_10000000016
 #endif
 
+#if _TS == 20000000016 && __has_include("../LLR_CCorder_20000000016.h")
+#   include "../LLR_CCorder_20000000016.h"
+#   define getNomBkgO getNomBkgO_20000000016
+#endif
+
+#if _TS == 100019111111 && __has_include("../LLR_CCorder_100019111111.h")
+#   include "../LLR_CCorder_100019111111.h"
+#   define getNomBkgO getNomBkgO_100019111111
+#	define ana_bm ana_bm_comb
+#endif
+
+#if _TS == 200019111111 && __has_include("../LLR_CCorder_200019111111.h")
+#   include "../LLR_CCorder_200019111111.h"
+#   define getNomBkgO getNomBkgO_200019111111
+#	define ana_bm ana_bm_comb_ub
+#endif
+
 #if _TS == 10000000003 && __has_include("../LLR_CCorder_10000000003.h")
 #   include "../LLR_CCorder_10000000003.h"
 #   define getNomBkgO getNomBkgO_10000000003
 #endif
 
-#if _TS != 9999999999
-#	define ana_bm ana_bm_comb
-#endif
+//#if _TS != 9999999999
+//#	define ana_bm ana_bm_comb
+//#endif
 #include "../BDT/bininfo.h"
 #include "../BDT/BDTtraindiff.cxx"
 #include "../glauberparams_PbPb5TeV.h"
+#include "theory/get_theory.cxx"
 
 TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
+	std::vector<TH1D*> vhist = {};
+	std::vector<TGraphAsymmErrors*> vgraph= {};
+
 	TH1D* hp3s = (TH1D*) hf->Get("rp3S");
 	TH1D* hp2s = (TH1D*) hf->Get("rp2S");
 	TH1D* hc3s = (TH1D*) hf->Get("rc3S");
@@ -42,6 +65,25 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	TH1D* hpp_p2s_unc = (TH1D*) ppsys->Get("hptPP_2S_yield_total");
 	TH1D* hpp_i3s_unc = (TH1D*) ppsys->Get("hIntPP_3S_yield_total");
 	TH1D* hpp_i2s_unc = (TH1D*) ppsys->Get("hIntPP_2S_yield_total");
+	vhist.push_back(hp3s);
+	vhist.push_back(hp2s);
+	vhist.push_back(hc3s);
+	vhist.push_back(hc2s);
+
+	vhist.push_back(hp3s_sys);
+	vhist.push_back(hp2s_sys);
+	vhist.push_back(hc3s_sys);
+	vhist.push_back(hc2s_sys);
+
+	vhist.push_back(hpp_p3s_sys);
+	vhist.push_back(hpp_p2s_sys);
+	vhist.push_back(hpp_i3s_sys);
+	vhist.push_back(hpp_i2s_sys);
+
+//	vhist.push_back(hpp_p3s_unc);
+//	vhist.push_back(hpp_p2s_unc);
+//	vhist.push_back(hpp_i3s_unc);
+//	vhist.push_back(hpp_i2s_unc);
 
 	TGraphAsymmErrors g_p3s, g_p3s_sys;
 	TGraphAsymmErrors g_p2s, g_p2s_sys;
@@ -49,6 +91,21 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	TGraphAsymmErrors g_c2s, g_c2s_sys;
 	TGraphAsymmErrors g_i3s, g_i3s_sys;
 	TGraphAsymmErrors g_i2s, g_i2s_sys;
+
+	vgraph.push_back(&g_p3s); vgraph.push_back(&g_p3s_sys);
+	vgraph.push_back(&g_p2s); vgraph.push_back(&g_p2s_sys);
+	vgraph.push_back(&g_c3s); vgraph.push_back(&g_c3s_sys);
+	vgraph.push_back(&g_c2s); vgraph.push_back(&g_c2s_sys);
+	vgraph.push_back(&g_i3s); vgraph.push_back(&g_i3s_sys);
+	vgraph.push_back(&g_i2s); vgraph.push_back(&g_i2s_sys);
+
+
+	g_p3s.SetName("g_p3s"); g_p3s_sys.SetName("g_p3s_sys");
+	g_p2s.SetName("g_p2s"); g_p2s_sys.SetName("g_c2s_sys");
+	g_c3s.SetName("g_c3s"); g_c3s_sys.SetName("g_p3s_sys");
+	g_c2s.SetName("g_c2s"); g_c2s_sys.SetName("g_c2s_sys");
+	g_i3s.SetName("g_i3s"); g_i3s_sys.SetName("g_i3s_sys");
+	g_i2s.SetName("g_i2s"); g_i2s_sys.SetName("g_i2s_sys");
 	
 //////////////////////////NOMINAL VALUE, STATISTICAL ERROR///////////////////////////
 
@@ -184,6 +241,7 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 
 	c1->cd();
 	p1_L->Draw();
+	std:: cout << "p1_L on Heap? : " << (int) p1_L->IsOnHeap() << std::endl;
 	p1_R->Draw();
 	c2->cd();
 	p2->Draw();
@@ -191,6 +249,8 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 ///////////////////////////////Clone : For combining HIN-16-023///////////////////
 	TCanvas* c1a = new TCanvas("c1a","", 1000,900);
 	TCanvas* c2a = new TCanvas("c2a","", 1000,900);
+	TCanvas* c1b = new TCanvas("c1b","", 1000,900);
+	TCanvas* c2b = new TCanvas("c2b","", 1000,900);
 	TPad* p1_La = new TPad("p1La", "", 0.00, 0., 0.83,1.);
 	TPad* p1_Ra = new TPad("p1Ra", "", 0.83, 0., 1., 1.);
 	TPad* p2a = new TPad("p2a", "", 0., 0., 1., 1.);
@@ -295,7 +355,7 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	leg_cent->SetTextFont(42);
 	leg_cent->SetTextSize(0.04);
 
-	TLegend* leg_pt = new TLegend(0.65, 0.4, 0.85, 0.7);
+	TLegend* leg_pt = new TLegend(0.65, 0.3, 0.85, 0.7);
 	leg_pt->AddEntry(&g_p2s, "#Upsilon(2S)", "pl");
 	leg_pt->AddEntry(&g_p3s, "#Upsilon(3S)", "pl");
 	leg_pt->SetBorderSize(0);
@@ -316,6 +376,7 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	g_c2s.GetYaxis()->CenterTitle();
 	g_c2s.Draw("APE");
 	g_c3s.Draw("PE ");
+
 	g_c2s_sys.Draw("5");
 	g_c3s_sys.Draw("5");
 	lineone->DrawLine(0, 1, 420, 1);
@@ -361,6 +422,7 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	g_i3s.Draw("PE");
 	g_i2s_sys.Draw("5");
 	g_i3s_sys.Draw("5");
+	std:: cout << "g_i3s on Heap? : " << (int) g_i3s.IsOnHeap() << std::endl;
 	lineone->DrawLine(1,1,4,1);
 	tl->SetTextSize(0.037* p2scale);
 	tl->SetTextAlign(21);
@@ -411,15 +473,28 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 
 	c1->cd();
 	p1_L->cd();
-	CMS_lumi_square(p1_L,101, 33);
+	CMS_lumi_square(p1_L,103, 33);
 	c2->cd();
 	p2->cd();
-	CMS_lumi_square( p2, 101, 33);
+	CMS_lumi_square( p2, 103, 33);
+	c1->Update();
+	c1->Modified();
+	c2->Update();
+	c2->Modified();
 
-	TFile* output = new TFile("resultRAA_nS_centrality_withSystematics_v2.root", "recreate");
+	TFile* output = new TFile(Form("resultRAA_nS_centrality_withSystematics_%ld_v2.root", _TS), "recreate");
 	output->cd();
-	c1->SaveAs("../checkout/RAA_centrality_int_v2.pdf");
-	c2->SaveAs("../checkout/RAA_pt_v2.pdf");
+	for(auto hist : vhist){
+		std::cout << hist->GetName() << std::endl;;
+		hist->Write();
+	}
+	dbg();
+	for(auto grap : vgraph){
+		std::cout << grap->GetName() << std::endl;;
+		grap->Write();
+	}
+	c1->SaveAs(Form("../checkout/tscol/RAA_centrality_int_%ld_v2.pdf", _TS) );
+	c2->SaveAs(Form("../checkout/tscol/RAA_pt_%ld_v2.pdf", _TS) );
 	c1->Write();
 	c2->Write();
 	output->Close();
@@ -431,12 +506,12 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	TGraphAsymmErrors pg_c1s, pg_p1s, pg_c2s, pg_p2s, pg_c3s, pg_p3s;
 	TGraphAsymmErrors pg_i1s, pg_i2s, pg_i3s;
 
-	pg_c1s.SetLineColor(kBlue);
-	pg_p1s.SetLineColor(kBlue);
-	pg_i1s.SetLineColor(kBlue);
-	pg_c1s.SetMarkerColor(kBlue+2);
-	pg_p1s.SetMarkerColor(kBlue+2);
-	pg_i1s.SetMarkerColor(kBlue+2);
+	pg_c1s.SetLineColor(kViolet-5);
+	pg_p1s.SetLineColor(kViolet-5);
+	pg_i1s.SetLineColor(kViolet-5);
+	pg_c1s.SetMarkerColor(kViolet+1);
+	pg_p1s.SetMarkerColor(kViolet+1);
+	pg_i1s.SetMarkerColor(kViolet+1);
 
 	pg_c2s.SetLineColor(kPink-3);
 	pg_p2s.SetLineColor(kPink-3);
@@ -606,10 +681,16 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	line_p3s_1->SetLineColor(kOrange+4);
 	/////////////////////////////////////////////////////////////////
 	TLegend* leg_cent2 = new TLegend(0.55, 0.35, 0.83, 0.7);
+	TLegend* leg_cent2_2 = new TLegend(0.55, 0.35, 0.83, 0.7);
 //	leg_cent2->AddEntry(&pg_c1s, "#Upsilon(1S) PLB 790 (2019) 270", "pl");
 	leg_cent2->AddEntry(&pg_c2s, "#Upsilon(2S) PLB 790 (2019) 270", "pl");
 	leg_cent2->AddEntry(box_c3s_0, "#splitline{#Upsilon(3S) PLB 790 (2019) 270,}{ 68 % C.L.}", "f");
 	leg_cent2->AddEntry(arr_p3s_0, "#splitline{#Upsilon(3S) PLB 790 (2019) 270,}{ 95 % C.L.}", "" );
+
+	leg_cent2_2->AddEntry(&pg_c1s, "#Upsilon(1S) PLB 790 (2019) 270", "pl");
+//	leg_cent2_2->AddEntry(&pg_c2s, "#Upsilon(2S) PLB 790 (2019) 270", "pl");
+//	leg_cent2_2->AddEntry(box_c3s_0, "#splitline{#Upsilon(3S) PLB 790 (2019) 270,}{ 68 % C.L.}", "f");
+//	leg_cent2_2->AddEntry(arr_p3s_0, "#splitline{#Upsilon(3S) PLB 790 (2019) 270,}{ 95 % C.L.}", "" );
 
 	leg_cent2->AddEntry(&g_c2s, "#Upsilon(2S)", "pl");
 	leg_cent2->AddEntry(&g_c3s, "#Upsilon(3S)", "pl");
@@ -617,7 +698,14 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	leg_cent2->SetTextFont(42);
 	leg_cent2->SetTextSize(0.028);
 
+	leg_cent2_2->AddEntry(&g_c2s, "#Upsilon(2S)", "pl");
+	leg_cent2_2->AddEntry(&g_c3s, "#Upsilon(3S)", "pl");
+	leg_cent2_2->SetBorderSize(0);
+	leg_cent2_2->SetTextFont(42);
+	leg_cent2_2->SetTextSize(0.027);
+
 	TLegend* leg_pt2 = new TLegend(0.53, 0.30, 0.8, 0.7);
+	TLegend* leg_pt2_2 = new TLegend(0.53, 0.4, 0.8, 0.71);
 //	leg_pt2->AddEntry(&pg_p1s, "#Upsilon(1S) PLB 790 (2019) 270", "pl");
 	leg_pt2->AddEntry(&pg_p2s, "#Upsilon(2S) PLB 790 (2019) 270", "pl");
 	leg_pt2->AddEntry(box_p3s_0, "#splitline{#Upsilon(3S) PLB 790 (2019) 270,}{ 68 % C.L.}", "f");
@@ -627,6 +715,16 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	leg_pt2->SetBorderSize(0);
 	leg_pt2->SetTextFont(42);
 	leg_pt2->SetTextSize(0.028);
+
+	leg_pt2_2->AddEntry(&pg_p1s, "#Upsilon(1S) PLB 790 (2019) 270", "pl");
+//	leg_pt2_2->AddEntry(&pg_p2s, "#Upsilon(2S) PLB 790 (2019) 270", "pl");
+//	leg_pt2_2->AddEntry(box_p3s_0, "#splitline{#Upsilon(3S) PLB 790 (2019) 270,}{ 68 % C.L.}", "f");
+//	leg_pt2_2->AddEntry(arr_p3s_0, "#splitline{#Upsilon(3S) PLB 790 (2019) 270,}{ 95 % C.L.}", "" );
+	leg_pt2_2->AddEntry(&g_p2s, "#Upsilon(2S)", "pl");
+	leg_pt2_2->AddEntry(&g_p3s, "#Upsilon(3S)", "pl");
+	leg_pt2_2->SetBorderSize(0);
+	leg_pt2_2->SetTextFont(42);
+	leg_pt2_2->SetTextSize(0.027);
 	/////////////////////////////////////////////////////////////////
 
 	p1_La->cd();
@@ -766,17 +864,134 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 
 	c1a->cd();
 	p1_La->cd();
-	CMS_lumi_square(p1_La,101, 33);
+	CMS_lumi_square(p1_La,103, 33);
 	c2a->cd();
 	p2a->cd();
-	CMS_lumi_square( p2a, 101, 33);
+	CMS_lumi_square( p2a, 103, 33);
 	
-	TFile* output2 = new TFile("resultRAA_nS_centrality_withSystematics_v2_HIN16023.root", "recreate");
+	TFile* output2 = new TFile(Form("resultRAA_nS_centrality_withSystematics_v2_HIN16023_%ld.root", _TS), "recreate");
 	output2->cd();
-	c1a->SaveAs("../checkout/RAA_centrality_int_v2_HIN16023.pdf");
-	c2a->SaveAs("../checkout/RAA_pt_v2_HIN16023.pdf");
+	c1a->SaveAs(Form("../checkout/tscol/RAA_centrality_int_v2_HIN16023_%ld.pdf", _TS));
+	c2a->SaveAs(Form("../checkout/tscol/RAA_pt_v2_HIN16023_%ld.pdf", _TS));
 	c1a->Write();
 	c2a->Write();
+	leg_cent2->AddEntry(&pg_c1s, "#Upsilon(1S) PLB 790 (2019) 270", "pl");
+	leg_pt2->AddEntry(&pg_p1s, "#Upsilon(1S) PLB 790 (2019) 270", "pl");
+	arr_c3s_0->Clear();
+	arr_c3s_1->Clear();
+	pg_i2s.Clear();
+	pg_c2s.Clear();
+	pg_p2s.Clear();
+	c1a->cd();
+	p1_La->cd();
+	p1_La->Clear();
+	g_c2s.Draw("APE");
+	draw_theory_EPPS16(p1_La, leg_cent2_2, kTCent, 2);
+	draw_theory_EPPS16(p1_La, leg_cent2_2, kTCent, 3);
+	draw_theory_QTraj(p1_La,  leg_cent2_2, kTCent, 2);
+	draw_theory_QTraj(p1_La,  leg_cent2_2, kTCent, 3);
+	g_c2s.Draw("PE");
+	g_c3s.Draw("PE ");
+	pg_c1s.Draw("PE");
+	g_c2s_sys.Draw("5");
+	g_c3s_sys.Draw("5");
+
+	leg_cent2->Clear();
+	leg_cent2_2->Draw();
+//	arr_c3s_0->DrawArrow(228,0.65,228, 0.60, 0.015,"|->");
+
+
+	lineone->DrawLine(0, 1, 420, 1);
+	tl->DrawLatex( 40, 1.15,"p^{#mu#mu}_{T} < 30 GeV/c");
+	tl->DrawLatex( 40, 1.06, "|y| < 2.4");
+	
+    b_err->SetX1(360);
+    b_err->SetX2(380);
+    b_err->SetY1(1 - fabs(glb_errMB_PP));
+    b_err->SetY2(1 + fabs(glb_errMB_PP));
+    b_err->SetFillColorAlpha(12, 0.8);
+    b_err->SetLineWidth(1);
+    b_2serr->SetX1(380);
+    b_2serr->SetX2(400);
+    b_2serr->SetY1(1 - fabs(glb_2serr));
+    b_2serr->SetY2(1 + fabs(glb_2serr));
+//    std::cout <<"Global Error 2S " << b_y2err->GetY1() << std::endl;
+    b_2serr->SetFillColorAlpha(kAzure-3, 0.8);
+    b_2serr->SetLineWidth(1);
+    b_3serr->SetX1(400);
+    b_3serr->SetX2(420);
+    b_3serr->SetY1(1 - glb_3serr);
+    b_3serr->SetY2(1 + glb_3serr);
+    b_3serr->SetFillColorAlpha(kTeal+5, 0.8);
+    b_3serr->SetLineWidth(1);
+//  b_3serr->SetLineColor();
+	b_err->Draw("L");
+	b_3serr->Draw("L");
+    b_2serr->Draw("L");
+
+	p1_Ra->cd();
+	p1_Ra->Clear();
+	g_i2s.Draw("APE");
+	g_i3s.Draw("PE");
+	pg_i1s.Draw("PE");
+	g_i2s_sys.Draw("5");
+	g_i3s_sys.Draw("5");
+
+	lineone->DrawLine(0,1,4,1);
+	tl->SetTextSize(0.037* p2scale);
+	tl->SetTextAlign(21);
+	tl->DrawLatex( 2., 1.02, "Cent.");
+	tl->DrawLatex( 2., 0.94, "0-90 %");
+	p1_Ra->Update();
+	p1_Ra->Draw();
+
+
+	c2a->cd();
+	p2a->cd();
+	p2a->Clear();
+	g_p2s.Draw("APE");
+	draw_theory_EPPS16(p2a,leg_pt2_2,  kTPt, 2);
+	draw_theory_EPPS16(p2a,leg_pt2_2,  kTPt, 3);
+	draw_theory_QTraj(p2a, leg_pt2_2, kTPt, 2);
+	draw_theory_QTraj(p2a, leg_pt2_2, kTPt, 3);
+	g_p2s.Draw("PE");
+	g_p3s.Draw("PE");
+	pg_p1s.Draw("PE");
+	g_p2s_sys.Draw("5");
+	g_p3s_sys.Draw("5");
+//	leg_pt2->SetY1(leg_pt2->GetY1() +0.2);
+	leg_pt2->Clear();
+	leg_pt2_2->Draw();
+
+	lineone->DrawLine(0, 1, 30, 1);
+	tl->SetTextSize(0.037);
+	tl->SetTextAlign(11);
+	tl->DrawLatex( 2.5, 1.15,"p^{#mu#mu}_{T} < 30 GeV/c");
+	tl->DrawLatex( 11, 1.15, "|y| < 2.4");
+	tl->DrawLatex( 2.5,1.06, "Cent. 0-90 %");
+
+	b_pterr->SetX1(0);
+	b_pterr->SetX2(2);
+	b_pterr->SetY1(1 - glb_errpt);
+	b_pterr->SetY2(1 + glb_errpt);
+	b_pterr->SetFillColorAlpha(12, 0.8);
+	b_pterr->SetLineWidth(1);
+	b_pterr->SetLineColor(kBlack);
+	b_pterr->Draw("L");
+//	arr_c3s_0->DrawArrow(17.45,0.7,17.45, 0.65, 0.015,"|->");
+
+	c1a->cd();
+	p1_La->cd();
+	CMS_lumi_square(p1_La,103, 33);
+
+	c2a->cd();
+	p2a->cd();
+	CMS_lumi_square( p2a, 103, 33);
+
+	output2->cd();
+	c1a->SaveAs(Form("../checkout/tscol/RAA_centrality_int_v2_HIN16023_w1S_%ld.pdf", _TS));
+	c2a->SaveAs(Form("../checkout/tscol/RAA_pt_v2_HIN16023_w1S_%ld.pdf", _TS));
+
 	output2->Close();
 //	c1->SaveAs("RAA_SYST_CENT_PT.pdf");
 	return g_p2s;
@@ -784,6 +999,10 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 };
 
 
+//TGraphAsymmErrors analysis_plot_sys(){
+//	return analysis_plot_sys(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
+//};
+
 TGraphAsymmErrors analysis_plot_sys(){
-	return analysis_plot_sys(TFile::Open("./result/RAA_10000000016.root"), TFile::Open("../Systematics/data/total_systematics_RAA.root"), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
+	return analysis_plot_sys(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
 };

@@ -12,7 +12,7 @@ double getSigParVariUnc(ana_bins x){
 	std::string type_sys = Form("CB3:%s:%sXMCNP",	bkgNom.c_str(), fittype.c_str());
 
 	binplotter *bp_nom, *bp_sys1;
-	double bl_nom = Get_BDT(ts, x);
+	double bl_nom = Get_BDT(ts_alias(ts), x);
 	bp_nom  = new binplotter(type_nom, ts,  2.4, pl, ph, cl, ch, 0, bl_nom, 1, bpl, bph, train_state, state, false, false);
 	bp_sys1 = new binplotter(type_sys, ts,  2.4, pl, ph, cl, ch, 0, bl_nom, 1, bpl, bph, train_state, state, false, false);
 	RooRealVar raa_nom, raa_sys1;
@@ -30,6 +30,6 @@ double getSigParVariUnc(ana_bins x){
 };
 
 void SigParVariUnc(){
-	sys_wr_helper(Form("sigPAR_unc%s.root", labDR.c_str() ), getSigParVariUnc);
+	sys_wr_helper(Form("sigPAR_unc%s_%ld.root", labDR.c_str(), _TS ), getSigParVariUnc);
 }
 

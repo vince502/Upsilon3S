@@ -4,12 +4,14 @@
 #include "../.workdir.h"
 
 void BlindTree(){
-  TFile* fo = new TFile(Form("%s/%s", store.Data(), "OutputSkim_isMC0_HFNom_NewMass_211019.root"),"READ");
-  TFile* fn = new TFile(Form("%s/test211218.root", store.Data()) ,"recreate");
+  TFile* fo = new TFile(Form("%s/%s", store.Data(), ONIABDTDATA_LATEST.c_str()),"READ");
+  TFile* fn = new TFile(Form("%s/testBlind_Quat_v2_2.root", store.Data()) ,"recreate");
 //  TFile* fo = new TFile(Form("%s/%s", store.Data(), ONIABDTDATA_LATEST.c_str()),"READ");
 //  TFile* fn = new TFile(Form("%s/OutputSkim_isMC0_v211019_ForBLIND.root", store.Data()) ,"recreate");
 //  TFile* fo = new TFile(Form("%s/%s", hfdir.Data(), SYS_HFUPDATA_RAW.c_str()),"READ");
-//  TFile* fn = new TFile(Form("%s/%s", hfdir.Data(), SYS_HFUPDATA.c_str()) ,"recreate");
+//  TFile* fn = new TFile(Form("%s/%s", hfdir.Data(), string("OutputSkim_isMC0_HFUp_CutOnHFNom_Split.root").c_str()) ,"recreate");
+//  TFile* fo = new TFile(Form("%s/%s", hfdir.Data(), SYS_HFDOWNDATA_RAW.c_str()),"READ");
+//  TFile* fn = new TFile(Form("%s/%s", hfdir.Data(), string("OutputSkim_isMC0_HFDo_CutOnHFNom_Split.root").c_str()) ,"recreate");
   TTree* t0 = (TTree*) fo->Get("tree");
   TObjArray* l1 = t0->GetListOfBranches();
   int nl = l1->GetSize();
@@ -37,22 +39,49 @@ void BlindTree(){
 
   int nevt = t0->GetEntries();
 
+//  for(int i = 1; i <= nevt; i++){
+//    t0->GetEntry(i);
+//    if((i%1000)==0) std::cout << "Processing Event : " << i << std::endl;
+//    int tn = 0;
+//    if(i%4==1) t2->Fill();
+//    if(i%4==2){
+////      t1->Fill();
+//      if(((i-2)/4)%2==0) t2->Fill();
+//      if(((i-2)/4)%2==1) t3->Fill();
+//    }
+//    if(i%4==3){
+////      t1->Fill();
+//      if(((i-3)/4)%2==0) t2->Fill();
+//      if(((i-3)/4)%2==1) t3->Fill();
+//    }
+//    if(i%4==0) t3->Fill();
   for(int i = 1; i <= nevt; i++){
     t0->GetEntry(i);
     if((i%1000)==0) std::cout << "Processing Event : " << i << std::endl;
     int tn = 0;
-    if(i%4==1) t1->Fill();
+    if(i%4==1){
+//		t1->Fill();
+//		if(((i-1)/4)%2==0) t2->Fill();
+//		if(((i-1)/4)%2==1) t3->Fill();
+
+	}
     if(i%4==2){
-      t1->Fill();
-      if(((i-2)/4)%2==0) t2->Fill();
-      if(((i-2)/4)%2==1) t3->Fill();
+//      t1->Fill();
+		if(((i-2)/4)%2==0) t2->Fill();
+		if(((i-2)/4)%2==1) t3->Fill();
+
     }
     if(i%4==3){
-      t1->Fill();
-      if(((i-3)/4)%2==0) t4->Fill();
-      if(((i-3)/4)%2==1) t5->Fill();
+//      t1->Fill();
+
+//		if(((i-3)/4)%2==0) t2->Fill();
+//		if(((i-3)/4)%2==1) t3->Fill();
     }
-    if(i%4==0) t6->Fill();
+    if(i%4==0){
+//		t6->Fill();
+//		if(((i-0)/4)%2==0) t2->Fill();
+//		if(((i-0)/4)%2==1) t3->Fill();
+	}
 //    if(i%4==tn) {t5->Fill(); (tn==0) ? tn =1 : tn++;} 
   }
   fn->Write();
@@ -60,3 +89,18 @@ void BlindTree(){
   fo->Close();
   
 }
+
+//    if(i%4==1){
+
+//	}
+//    if(i%4==2){
+//
+//    }
+//    if(i%4==3){
+//      if(((i-3)/4)%2==0) t1->Fill();
+//      if(((i-3)/4)%2==1) t1->Fill();
+//
+//    }
+//    if(i%4==0){
+//	  }
+//	  }

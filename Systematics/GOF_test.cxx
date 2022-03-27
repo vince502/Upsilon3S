@@ -24,9 +24,9 @@ std::vector<std::pair<double, string> > Chi2GOF_function(ana_bins ab, string tes
 	string typeEE = Form("CB3:%s:%s", test2.c_str(), fittype.c_str());
 	string typeEX = Form("CB3:%s:%s", test3.c_str(), fittype.c_str());
 
-	string fitCC = GetFit(__FITRESLATEST, false, typeCC, ts, ab.train_state, ab.state, ab.pl, ab.ph, ab.cl, ab.ch, Get_BDT(ts, ab), 1, ab.bpl, ab.bph, 0, "");
-	string fitEE = GetFit(__FITRESLATEST, false, typeEE, ts, ab.train_state, ab.state, ab.pl, ab.ph, ab.cl, ab.ch, Get_BDT(ts, ab), 1, ab.bpl, ab.bph, 0, "");
-	string fitEX = GetFit(__FITRESLATEST, false, typeEX, ts, ab.train_state, ab.state, ab.pl, ab.ph, ab.cl, ab.ch, Get_BDT(ts, ab), 1, ab.bpl, ab.bph, 0, "");
+	string fitCC = GetFit(__FITRESLATEST, false, typeCC, ts, ab.train_state, ab.state, ab.pl, ab.ph, ab.cl, ab.ch, Get_BDT(ts_alias(ts), ab), 1, ab.bpl, ab.bph, 0, "");
+	string fitEE = GetFit(__FITRESLATEST, false, typeEE, ts, ab.train_state, ab.state, ab.pl, ab.ph, ab.cl, ab.ch, Get_BDT(ts_alias(ts), ab), 1, ab.bpl, ab.bph, 0, "");
+	string fitEX = GetFit(__FITRESLATEST, false, typeEX, ts, ab.train_state, ab.state, ab.pl, ab.ph, ab.cl, ab.ch, Get_BDT(ts_alias(ts), ab), 1, ab.bpl, ab.bph, 0, "");
 	
 	auto getChi2NDF = [&](string fileN){
 		std::cout << fileN.c_str() << std::endl;
@@ -87,10 +87,10 @@ std::vector<std::pair<double, string> > AICGOF_function(ana_bins ab, string test
 	string type3 = Form("CB3:%s:%s", test3.c_str(), fittype.c_str());
 	string type4 = Form("CB3:%s:%s", test4.c_str(), fittype.c_str());
 
-	string fit1 = GetFit(__FITRESLATEST, false, type1, ts, ab.train_state, ab.state, ab.pl, ab.ph, ab.cl, ab.ch, Get_BDT(ts, ab), 1, ab.bpl, ab.bph, 0, "");
-	string fit2 = GetFit(__FITRESLATEST, false, type2, ts, ab.train_state, ab.state, ab.pl, ab.ph, ab.cl, ab.ch, Get_BDT(ts, ab), 1, ab.bpl, ab.bph, 0, "");
-	string fit3 = GetFit(__FITRESLATEST, false, type3, ts, ab.train_state, ab.state, ab.pl, ab.ph, ab.cl, ab.ch, Get_BDT(ts, ab), 1, ab.bpl, ab.bph, 0, "");
-	string fit4 = GetFit(__FITRESLATEST, false, type4, ts, ab.train_state, ab.state, ab.pl, ab.ph, ab.cl, ab.ch, Get_BDT(ts, ab), 1, ab.bpl, ab.bph, 0, "");
+	string fit1 = GetFit(__FITRESLATEST, false, type1, ts, ab.train_state, ab.state, ab.pl, ab.ph, ab.cl, ab.ch, Get_BDT(ts_alias(ts), ab), 1, ab.bpl, ab.bph, 0, "");
+	string fit2 = GetFit(__FITRESLATEST, false, type2, ts, ab.train_state, ab.state, ab.pl, ab.ph, ab.cl, ab.ch, Get_BDT(ts_alias(ts), ab), 1, ab.bpl, ab.bph, 0, "");
+	string fit3 = GetFit(__FITRESLATEST, false, type3, ts, ab.train_state, ab.state, ab.pl, ab.ph, ab.cl, ab.ch, Get_BDT(ts_alias(ts), ab), 1, ab.bpl, ab.bph, 0, "");
+	string fit4 = GetFit(__FITRESLATEST, false, type4, ts, ab.train_state, ab.state, ab.pl, ab.ph, ab.cl, ab.ch, Get_BDT(ts_alias(ts), ab), 1, ab.bpl, ab.bph, 0, "");
 	
 	auto getAICcomp = [&](string fileN){
 		std::cout << fileN.c_str() << std::endl;
@@ -151,9 +151,9 @@ std::vector<std::pair<double, string> > AICGOF_function(ana_bins ab, string test
 	);
 	// step 1 results
 	////Winner
-	statw stat_step1 = (AIC_res_step1[1] > 0.68) ? statw{stat2, AIC_res_step1[1]} : statw{stat1, AIC_res_step1[0]};
+	statw stat_step1 = (AIC_res_step1[1] > 0.5) ? statw{stat2, AIC_res_step1[1]} : statw{stat1, AIC_res_step1[0]};
 	////Looser
-	statw stat_step1NOT = (AIC_res_step1[1] <= 0.68 ) ? statw{stat2, AIC_res_step1[1]} : statw{stat1, AIC_res_step1[0]};
+	statw stat_step1NOT = (AIC_res_step1[1] <= 0.5 ) ? statw{stat2, AIC_res_step1[1]} : statw{stat1, AIC_res_step1[0]};
 //	statw stat_step1 = (AIC_res_step1[0] > AIC_res_step1[1]) ? statw{stat1, AIC_res_step1[0]} : statw{stat2, AIC_res_step1[1]};
 //	////Looser
 //	statw stat_step1NOT = (AIC_res_step1[0] <= AIC_res_step1[1]) ? statw{stat1, AIC_res_step1[0]} : statw{stat2, AIC_res_step1[1]};

@@ -24,7 +24,7 @@ void CMS_lumi_square( TPad* pad, int iPeriod=101, int iPosX=10 )
   float H = pad->GetWh();
   float W = pad->GetWw();
   float l = pad->GetLeftMargin();
-  float t = pad->GetTopMargin()*0.83;
+  float t = pad->GetTopMargin() * 0.93;
   float r = pad->GetRightMargin();
   float b = pad->GetBottomMargin();
   //  float e = 0.025;
@@ -78,10 +78,24 @@ void CMS_lumi_square( TPad* pad, int iPeriod=101, int iPosX=10 )
     lumiText += lumi_pp502TeV;
     lumiText += " (5.02 TeV)";
   }
+  else if ( iPeriod==103 )
+  {
+    lumiText += "PbPb ";
+    lumiText += lumi_PbPb502TeV;
+    lumiText += ", pp ";
+    lumiText += lumi_pp502TeV;
+    lumiText += " (5.02 TeV)";
+  }
   else if ( iPeriod==10001 )
   {
     lumiText += "PbPb ";
     lumiText += lumi_PbPb502TeV_blind;
+    lumiText += " (5.02 TeV)";
+  }
+  else if ( iPeriod==10001 )
+  {
+    lumiText += "PbPb ";
+    lumiText += lumi_PbPb502TeV;
     lumiText += " (5.02 TeV)";
   }
   else if ( iPeriod==0 )

@@ -22,7 +22,8 @@ string GetFit(int version, bool isMC, string type, int train_state, int target_s
 	if( version > 9 && bl == -1.0000){ 
 		if( ts != 9999999999) { 
 			std::cout << "[GetFit] Warning! Requested result timestamp does not match, maybe check psets?" << std::endl;
-			ts = 9999999999;
+//			ts = 9999999999;
+			if( aux.find("cts") == std::string::npos ) ts = 9999999999; 
 		}
 		bh = 1.0000; bpl = 0.0000; bph = 0.0000; train_state = 0; target_state = 0; 
 	}
@@ -57,7 +58,7 @@ string GetFit(int version, bool isMC, string type, int train_state, int target_s
 
 	//Version 11 : Post Pre-Approval jobs v2, signal shape MC state added
 	if( version == 11 ){
-		if( isMC ) wanted_string = Form("%s/Yield/Yield_%ld_%s_%dS_train%dS_pt_%d-%d_rap_-%d-%d_cBin_%d-%d_MupT%s_%s_BDT_%.4f-%.4f_bdtpt_%d_%d_vp_%.4f_MC_%d.root",workdir.Data(), ts, signal_model.c_str(), target_state, train_state ,pl, ph, (int)(rl*10), (int)(rh*10), cl, ch,  mupt.c_str(), trig.c_str(), bl, bh, bpl, bph, cutqvp,(int) fixvar);
+		if( isMC ) wanted_string = Form("%s/Yield/Yield_%ld_%s_%dS_train%dS_pt_%d-%d_rap_-%d-%d_cBin_%d-%d_MupT%s_%s_BDT_%.4f-%.4f_bdtpt_%d_%d_vp_%.4f_MC_%d%s.root",workdir.Data(), ts, signal_model.c_str(), target_state, train_state ,pl, ph, (int)(rl*10), (int)(rh*10), cl, ch,  mupt.c_str(), trig.c_str(), bl, bh, bpl, bph, cutqvp,(int) fixvar, aux.c_str());
 		if( !isMC ) wanted_string = Form("%s/Yield/Yield_%dS_Sig%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT%s_Trig_%s_SW%d_BDT%d_cut%.4f-%.4f_bdtpt_%d_%d_vp%.4f%s.root" ,workdir.Data(), train_state, target_state, ts, fitdir.c_str(), name_fitmodel.c_str(), pl, ph,  (int) (rl*10), (int) (rh*10), cl, ch, mupt.c_str(), trig.c_str(), (int) swflag, (int) isBDT, bl, bh, bpl, bph, cutqvp, aux.c_str() );
 	}
 	return wanted_string;

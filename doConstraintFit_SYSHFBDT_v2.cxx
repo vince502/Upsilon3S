@@ -1,12 +1,4 @@
-//#include "./BDT/bininfo.h"
-//#include "MassYieldFit_BDT_MC.C"
-//#include "MassYieldFit_BDT_MC_GE.C"
-#include "MassYieldFit_BDT_MC_CB3.C"
-//#include "MassYieldFit_BDT_MC.C"
-#include "MassYieldFit_data.cxx"
-#include "./BDT/yield_eff_signif.cxx"
-#include "script_tools.h"
-#include "Systematics/GOF_test.cxx"
+#pragma once
 
 #if defined _TS
 void doConstraintFit_SYSHFBDT_v2(int sys_step, int step = 111){
@@ -44,16 +36,21 @@ void doConstraintFit_SYSHFBDT_v2(int sys_step, int step = 111){
    std::vector<Double_t> bkg_val ;
    std::vector<Double_t> bkg_low ;
    std::vector<Double_t> bkg_high;
-
-   if(sys_step ==  1) ts = 9999999998;
-   if(sys_step == -1) ts = 9999999997;
+   if(ts == 10000000016){
+    	if(sys_step ==  1) ts = 9999999998;
+    	if(sys_step == -1) ts = 9999999997;
+   }
+   else{
+    	if(sys_step ==  1) ts = (ts * 10000) +2;
+    	if(sys_step == -1) ts = (ts * 10000) +1;
+   }
 
 
 //////////////////////////////////////////STEP : GAUS CONSTRAIN FITTING/////////////////////////////////////////
   auto METHOD_MCGCDATA = [&](int mode = 1) mutable {
   std::cout << "cutBDTlow, sb_ratio in functoin : " << cutBDTlow << ", " << sb_ratio.getVal() << std::endl;
     if(mode ==1 || mode ==2){
-	  std::string mcres_input = GetFit(__FITRESLATEST, true, "CB3",_TS, train_state, state, (int)ptMin, (int)ptMax, cBinLow, cBinHigh, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP, "");
+	  std::string mcres_input = GetFit(__FITRESLATEST, true, "CB3",ts_alias(_TS), train_state, state, (int)ptMin, (int)ptMax, cBinLow, cBinHigh, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, cutQVP, "");
 	  std::cout << mcres_input << std::endl;
 
 	  TFile* file_MCres_input = TFile::Open(mcres_input.c_str() );
@@ -188,8 +185,9 @@ state =3;
 //		if( !((ab.bin_attr.find("i")!=std::string::npos && ab.state ==3))) continue;
 //		if( !((ab.bin_attr.find("c")!=std::string::npos && ab.state ==2))) continue;
 //		if( !(((ab.bin_attr.find("p")!=std::string::npos|| ab.bin_attr.find("i")!=std::string::npos) && true))) continue;
-//		if( !(ab.cl==120&&ab.ch==140&&(ab.bin_attr.find("c")!=std::string::npos && ab.state ==2))) continue;
-//		if( !(ab.pl==3&&ab.ph==6&&(ab.bin_attr.find("p")!=std::string::npos && ab.state ==2))) continue;
+		if( !(ab.cl==120&&ab.ch==140&&(ab.bin_attr.find("c")!=std::string::npos && ab.state ==2))) continue;
+//		if( !(ab.pl==4&&ab.ph==9&&(ab.bin_attr.find("p")!=std::string::npos && ab.state ==3))) continue;
+//		if( !(ab.bin_attr.find("p")!=std::string::npos && ab.ph > 29)) continue;
 		string fittype = (strcmp(ab.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 	  	ptMin = ab.pl;
 		ptMax = ab.ph;
@@ -200,10 +198,10 @@ state =3;
 		train_state = ab.train_state;
 		state = ab.state;
 
-	  	cutBDTlow = Get_BDT(_TS, ab);
+	  	cutBDTlow = Get_BDT(ts_alias(_TS), ab);
 	    sb_ratio = RooRealVar("sb_ratio", "",-1);
 		bool fitdata = true;
-		drawonly = 1;
+		drawonly = 0;
 		if(fitdata){
 			auto CTEST = AICGOF_test(ab);
 			string bkgNom = CTEST[0].second;
@@ -213,7 +211,7 @@ state =3;
 			type2			= "CB3:"+ bkgNom  + ":" + fittype.c_str();
 			if(strcmp(ab.bin_attr.c_str(),"c")==0){
 				double cbl = cutBDTlow;
-				cutBDTlow = Get_BDT(_TS, ab.train_state, ab.state, 0, 30, 0, 30, 0, 181, 0.00, 2.4, 2); 
+				cutBDTlow = Get_BDT(ts_alias(_TS), ab.train_state, ab.state, 0, 30, 0, 30, 0, 181, 0.00, 2.4, 2); 
 				string bkgNomREF = AICGOF_test(ana_bm[Form("%dc",ab.state)][0])[0].second;
 				type			= "CB3:"+ bkgNomREF  + ":" + "GC";
 				if(bkgNom.find("CC")!=std::string::npos){
@@ -224,9 +222,9 @@ state =3;
 
 					}
 				if(bkgNom.find("EE")!=std::string::npos){
-		    		bkg_val  = {7.5, 6.0, 1.3,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-		    		bkg_low  = {2.0, 1.1, 0.1,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
-		    		bkg_high = {15.5, 11.0, 5.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
+		    		bkg_val  = {7.1, 5.0, 1.3,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		    		bkg_low  = {4.0, 1.1, 0.5,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
+		    		bkg_high = {8.7, 9.0, 5.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
 					fixfit(cbl);
 					}
 				if(bkgNom.find("EX")!=std::string::npos){
@@ -244,9 +242,10 @@ state =3;
 		    		METHOD_MCGCDATA(2);
 					}
 				if(bkgNom.find("EE")!=std::string::npos){
-		    		bkg_val  = {9.185, 3.88, 2.45,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-		    		bkg_low  = {7.0, 1.0, 1.11,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
-		    		bkg_high = {9.7, 7.0, 7.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
+		    		bkg_val  = {4.185, 3.88, 2.45,    0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		    		bkg_low  = {1.0, 1.0, 0.11,  -0.5, -0.5, -0.5, -0.5, -0.5, -0.5};
+		    		bkg_high = {8.7, 11.0, 5.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
+//		    		bkg_high = {100, 100, 100, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
 		    		METHOD_MCGCDATA(2);
 					}
 				if(bkgNom.find("EX")!=std::string::npos){

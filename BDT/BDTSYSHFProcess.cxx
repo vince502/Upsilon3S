@@ -1,4 +1,5 @@
 #define NOMINAL_TS 10000000016
+//#define NOMINAL_TS 200019111111
 #include "BDTClassifierApplication_SYSHF2.C"
 #include "makeRooDataset_fromBDT_NOM.C"
 
@@ -33,8 +34,11 @@ void BDTSYSHFProcess_function(long ts=1635139612, int mode =0, std::vector<std::
 
 void BDTSYSHFProcess(int sys_step ){
 	ROOT::EnableImplicitMT(4);
-	long ts_up = 9999999998;
-	long ts_do = 9999999997;
+//	long ts_up = 9999999998;
+//	long ts_do = 9999999997;
+
+	long ts_up = (NOMINAL_TS * 10000) + 2;
+	long ts_do = (NOMINAL_TS * 10000) + 1;
 
 	std::vector<std::pair<int,int>> ptp = {
 		{	0,30	},

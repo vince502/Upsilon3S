@@ -56,7 +56,7 @@ void binplotter::init(bool get_bdt= true){
   fitdir = info_fit[2].c_str();
   fittype =fitdir;
   
-  if(get_bdt){ blow = Get_BDT(ts, train_state, bdtptMin, bdtptMax, pl, ph, cl, ch, vcut, (double)ylim);}//Get_Optimal_BDT(ts, pl, ph,(double) -1*ylim, ylim, cl, ch, vcut, train_state).first; }
+  if(get_bdt){ blow = Get_BDT(ts_alias(ts), train_state, bdtptMin, bdtptMax, pl, ph, cl, ch, vcut, (double)ylim);}//Get_Optimal_BDT(ts, pl, ph,(double) -1*ylim, ylim, cl, ch, vcut, train_state).first; }
   filename = GetFit(__FITRESLATEST, false, type, ts, train_state, target_state, pl, ph, cl, ch, blow, bhigh, bdtptMin, bdtptMax, vcut,"");  
 //  filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%ld_%s%s_pt_%d-%d_rap_-%d-%d_%dbin_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_bdtpt_%d_%d_vp%.4f.root", ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10,nbin, cl, ch, blow, bhigh,  bdtptMin, bdtptMax, vcut);
 //  if(ts >= 1634636609) filename = Form("/home/vince402/Upsilon3S/Yield/Yield_%dS_%ld_%s%s_pt_%d-%d_rap_-%d-%d_cbin_%d-%d_MupT3p5_Trig_S13_SW0_BDT1_cut%.4f-%.4f_bdtpt_%d_%d_vp%.4f.root", train_state, ts, fitdir.c_str(),Form("_%s",fitfunc.c_str()) ,pl,ph, ylim10, ylim10, cl, ch, blow, bhigh, bdtptMin, bdtptMax, vcut);
@@ -218,20 +218,20 @@ RooRealVar binplotter::get_yield(int state =3 ){
 
 std::pair<double, double> binplotter::get_eff(int state =3, bool getNum = false){
 	std::cout << "[bp][get_eff] :" << train_state << ", " << state << std::endl;
-  std::pair<double, double> bdteff = openEffhist((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, bdtptMin, bdtptMax, train_state, state, vcut, eff_old, getNum);  
+  std::pair<double, double> bdteff = openEffhist((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts_alias(ts), blow, bhigh, bdtptMin, bdtptMax, train_state, state, vcut, eff_old, getNum);  
   return bdteff;
 };
 
 std::pair<double, double> binplotter::get_eff_sysdpt(int state =3, std::string what = "", bool getNum = false){
   std::pair<double, double> bdteff;
-  if(what == "NO") bdteff= openEffhist_SYSNODPT((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, train_state, state, vcut, what, getNum);  
-  else bdteff = openEffhist_SYSDPT((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, train_state, state, vcut, what, getNum);  
+  if(what == "NO") bdteff= openEffhist_SYSNODPT((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts_alias(ts), blow, bhigh, train_state, state, vcut, what, getNum);  
+  else bdteff = openEffhist_SYSDPT((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts_alias(ts), blow, bhigh, train_state, state, vcut, what, getNum);  
   return bdteff;
 };
 
 std::vector<double> binplotter::get_eff_NN(int state =3){
-  std::vector<double> bdteff = openEffhist_SYS((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, bdtptMin, bdtptMax, train_state, state, vcut, eff_old, false);  
-//  std::vector<double> bdteff = openEffhist_SYSDPT_NN((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts, blow, bhigh, train_state, state, vcut, "",eff_old);  
+  std::vector<double> bdteff = openEffhist_SYS((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts_alias(ts), blow, bhigh, bdtptMin, bdtptMax, train_state, state, vcut, eff_old, false);  
+//  std::vector<double> bdteff = openEffhist_SYSDPT_NN((float) pl, (float) ph, -1.*(ylim), ylim, cl, ch, true, true, false, kTrigUps, ts_alias(ts), blow, bhigh, train_state, state, vcut, "",eff_old);  
   return bdteff;
 };
 

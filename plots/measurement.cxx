@@ -6,13 +6,15 @@ RooRealVar getRAAValue(std::pair <int, int>);
 // Double Ratio Finding Function
 //////////////////////////////////////////////////////////////////////////////
 //RooRealVar getRAAValue(bool inc_pp_stat, std::pair <int, int> cbpair, std::pair<double, double> ptpair = {0,30},std::string type = "CB3:CC2:GC", double bdtlow_val = -2, int bdtptMin = 0 , int bdtptMax = 30, int train_state = 3, int state =3, int getPre = 0,long ts =9999999999, bool stdvcut = false, bool eff_old = false){
-RooRealVar getRAAValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC2:GC", double custom_bl  = -2, double custom_bh = 1, int getPre = 0,long ts =9999999999, bool stdvcut = false, bool eff_old = false){
+RooRealVar getRAAValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC2:GC", double custom_bl  = -2, double custom_bh = 1, int getPre = 0,long ts =9999999999, bool stdvcut = false, bool eff_old = false, int ofstate = -1){
+	if(ofstate == -1) ofstate = ab.state;
 	int cl, ch, pl, ph, state, train_state, bpl, bph;
 	cl = ab.cl; ch = ab.ch;
 	pl = ab.pl; ph = ab.ph;
 	bpl = ab.bpl; bph = ab.bph;
 	state = ab.state; train_state = ab.train_state;
-	double val_bdt_nom = Get_BDT(ts, ab);
+	double val_bdt_nom;
+	if(custom_bl < -1 )val_bdt_nom= Get_BDT(ts_alias(ts), ab);
 	double bdt_upper =custom_bh;
 	std::cout << "[getDRV] val_bdt_nom : " << val_bdt_nom << std::endl;
 	
@@ -24,18 +26,18 @@ RooRealVar getRAAValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC
 	double app_cutQVP = (stdvcut) ? 0.01 : 0.0000;
 	bp = new binplotter(type,ts, ylim, (double) pl, (double) ph, cl, ch, app_cutQVP, val_bdt_nom, bdt_upper, bpl, bph, train_state, state, false, eff_old);
 	
-	RooRealVar _y = bp->get_yield(state);
+	RooRealVar _y = bp->get_yield(ofstate);
 	if(getPre==2) return _y;
-	RooRealVar _yacc = upsi::getacceptance(pl,ph, (double) -1*ylim, ylim, 3.5, state);
-	auto _yeff_pair = bp->get_eff(state);
+	RooRealVar _yacc = upsi::getacceptance(pl,ph, (double) -1*ylim, ylim, 3.5, ofstate);
+	auto _yeff_pair = bp->get_eff(ofstate);
 	double _yeff = _yeff_pair.first;
 	RooRealVar yAA, yPP ;
-	yAA = RooRealVar(Form("corrY%dyield",state), Form("corrected %dS yield",state), _y.getVal()/(_yacc.getVal()*_yeff));
+	yAA = RooRealVar(Form("corrY%dyield",ofstate), Form("corrected %dS yield",ofstate), _y.getVal()/(_yacc.getVal()*_yeff));
 	std::cout <<"##Yield "<<state<<"S Corrected y/acc eff: "<< yAA.getVal() << ", Efficiency: " << _yeff << ", Acceptance: " << _yacc.getVal() << std::endl;
 	yAA.setError(_y.getError()/(_yacc.getVal()*_yeff ));
 	std::cout << "\n\n\n YAA ERROR : " << yAA.getError() << "\n\n" << std::endl;
 	if(getPre==1) return yAA;
-	TFile* file_pp =TFile::Open(Form("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/results_%dS.root",state));
+	TFile* file_pp =TFile::Open(Form("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/results_%dS.root",ofstate));
 	
 	TH1D *h_cs_pp = (!(pl == 0 && ph == 30)) ? (TH1D*) file_pp->Get("hptData") : (TH1D*) file_pp->Get("hintData");
 	
@@ -61,6 +63,15 @@ RooRealVar getRAAValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC
 	Double_t Nmb = 11968044281.;
 	auto taa =glp::Taa[{ab.centl,ab.centh}];
 	double lum_scale = 1 *TMath::Power(10,6);
+	double n_scale = 4;
+	if( ts == 20000000000 ) n_scale = 1;  
+	if( ts == 20000000001 ) n_scale = 1;  
+	if( ts == 20000000011 ) n_scale = 1;  
+	if( ts == 20000000003 ) n_scale = 1;  
+	if( ts == 20000000004 ) n_scale = 1;  
+	if( ts_alias(ts) != ts) n_scale = 1;
+
+	std::cout << "\n\n\n[n_scale] : " << n_scale  << "\n\n\n" << std::endl;
 	
 	Double_t trig_presc = 1.0684;
 	Double_t taa_Nmb = 4.8*(ph-pl)*taa.first*Nmb/(trig_presc);
@@ -68,14 +79,14 @@ RooRealVar getRAAValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC
 	Double_t step_one_err  = -(cs_err*lum_scale)/(taa_Nmb * cs_pp * cs_pp );
 	Double_t step_two = step_one * (90./(ab.centh - ab.centl) );
 	Double_t step_two_err = step_one_err * (90./(ab.centh - ab.centl));
-	Double_t val_RAA = 4.*step_two*yAA.getVal();
+	Double_t val_RAA = n_scale*step_two*yAA.getVal();
 	Double_t val_RAA_err;
-	std::cout << "step 2 err and yAA err : " << 4* step_two_err*yAA.getVal() << ", " << 4*step_two * yAA.getError()/val_RAA << std::endl;
-	if(inc_pp_stat) val_RAA_err = TMath::Sqrt(TMath::Power(4*step_two_err* yAA.getVal(),2) + TMath::Power(2*step_two * yAA.getError(),2)); 
+	std::cout << "step 2 err and yAA err : " << n_scale* step_two_err*yAA.getVal() << ", " << n_scale*step_two * yAA.getError()/val_RAA << std::endl;
+	if(inc_pp_stat) val_RAA_err = TMath::Sqrt(TMath::Power(n_scale*step_two_err* yAA.getVal(),2) + TMath::Power(TMath::Sqrt(n_scale)*step_two * yAA.getError(),2)); 
 	if(!inc_pp_stat) val_RAA_err = step_two * yAA.getError(); 
 	std::cout << std::endl << std::endl << Form(" taa_Nmb: %.3f, cs_pp : %.9f,  step_one: %.16f, step_two %.16f ", taa_Nmb, cs_pp,  (double) step_one, (double) step_two) << std::endl << std::endl;
 	std::cout << std::endl << std::endl << "Projected RAA : " << val_RAA << std::endl << std::endl;
-	std::cout << "\n\n\n step 2 err and yAA err : " << 4* step_two_err*yAA.getVal() << ", " << step_two * yAA.getError() << "\n\n" << std::endl;
+	std::cout << "\n\n\n step 2 err and yAA err : " <<  n_scale* step_two_err*yAA.getVal() << ", " << step_two * yAA.getError() << "\n\n" << std::endl;
 	
 	RooRealVar val_return = RooRealVar("raa","", val_RAA);
 	val_return.setError(val_RAA_err);
@@ -83,12 +94,12 @@ RooRealVar getRAAValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC
 	return val_return;
 };
 
-RooRealVar getRAAValue(ana_bins ab, long ts, bool ppstat){
+RooRealVar getRAAValue(ana_bins ab, long ts, bool ppstat, int ofstate = -1){
 	string fittype = (strcmp(ab.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 	string bkgtype = AICGOF_test(ab)[0].second;
 	string type = Form("CB3:%s:%s", bkgtype.c_str() ,fittype.c_str());
-	double bl = Get_BDT(ts, ab);
-	return getRAAValue(ppstat, ab, type, -2, 1, 0, ts, false, false);
+	double bl = Get_BDT(ts_alias(ts), ab);
+	return getRAAValue(ppstat, ab, type, -2, 1, 0, ts, false, false, ofstate);
 };
 
 
@@ -102,7 +113,7 @@ RooRealVar getDRValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC2
 	pl = ab.pl; ph = ab.ph;
 	bpl = ab.bpl; bph = ab.bph;
 	state = ab.state; train_state = ab.train_state;
-	double val_bdt_nom = Get_BDT(ts, ab);
+	double val_bdt_nom = Get_BDT(ts_alias(ts), ab);
 	double bdt_upper =custom_bh;
 	std::cout << "[getDRV] val_bdt_nom : " << val_bdt_nom << std::endl;
 	
@@ -133,20 +144,35 @@ RooRealVar getDRValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC2
 	double pp_val = ( isptbin ) ? pp_data->GetBinContent(ab.plot_idx) : pp_data->GetBinContent(1); 
 	double pp_err = ( isptbin ) ? pp_data->GetBinError(ab.plot_idx) : pp_data->GetBinError(1);
 
-	std::cout << Form("[AASR] pt(%d-%d) cent(%d-%d) val +/- err : ",ab.pl, ab.ph, ab.centl, ab.centh) << pp_val << " +/- " << pp_err << std::endl;
+	double n_scale = 4;
+	if( ts == 20000000000 ) n_scale = 1;  
+	if( ts == 20000000001 ) n_scale = 1;  
+	if( ts == 20000000011 ) n_scale = 1;  
+	if( ts == 20000000003 ) n_scale = 1;  
+	if( ts == 20000000004 ) n_scale = 1;  
+	if( ts_alias(ts) != ts) n_scale = 1;
+
+	std::cout << Form("[AASR] n_scale : %.1f pt(%d-%d) cent(%d-%d) val +/- err : ",n_scale, ab.pl, ab.ph, ab.centl, ab.centh) << pp_val << " +/- " << pp_err << std::endl;
 
 	// Calc - 1. Numerator : val = Y2S/Y3S
 	double AA_val = yAA3S.getVal() / yAA2S.getVal();
 
 	// Calc - 2. Numerator : err = Y2S/Y3S * SQRT( (E2S/Y2S) ^2  + (E3S/Y3S) ^2 - 2* (COV23S/Y2S*Y3S) )
 	double AA_err = AA_val * TMath::Sqrt(
-		TMath::Power( (yAA2S.getError()*0.5/ yAA2S.getVal() ) ,2) 
-		+TMath::Power( (yAA3S.getError()*0.5 / yAA3S.getVal() ) ,2) 
+		TMath::Power( (yAA2S.getError()/ yAA2S.getVal() ) ,2) 
+		+TMath::Power( (yAA3S.getError() / yAA3S.getVal() ) ,2) 
 		- 2 * ( cov_23s / ( yAA2S.getVal() * yAA3S.getVal()) ) 
 	);
 	// Calc - 2-1. Update err for Blind projection
-	AA_err = AA_err / 2;
+	AA_err = AA_err / TMath::Sqrt(n_scale);
 	
+	if(getPre==1){
+		std::cout << "Getting only the Single Ratio PbPb" << std::endl;
+		RooRealVar theDoubleRatio("SR", "", AA_val);
+		theDoubleRatio.setError(AA_err);
+	
+		return theDoubleRatio;
+	}
 	std::cout << Form("[AASR] pt(%d-%d) cent(%d-%d) val +/- err : ",ab.pl, ab.ph, ab.centl, ab.centh) << AA_val << " +/- " << AA_err << std::endl;
 	
 	// Calc - 3. DoubleRatio : val = AASR / ppSR
@@ -165,6 +191,6 @@ RooRealVar getDRValue(ana_bins ab, long ts, bool ppstat){
 	string fittype = (strcmp(ab.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 	string bkgtype = AICGOF_test(ab)[0].second;
 	string type = Form("CB3:%s:%s", bkgtype.c_str() ,fittype.c_str());
-	double bl = Get_BDT(ts, ab);
-	return getDRValue(ppstat, ab, type, -2, 1, 0, ts, false, false);
+	double bl = Get_BDT(ts_alias(ts), ab);
+	return getDRValue(ppstat, ab, type, -2, 1, 1, ts, false, false);
 };

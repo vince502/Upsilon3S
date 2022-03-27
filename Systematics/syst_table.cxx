@@ -1,7 +1,8 @@
 #include "../BDT/bininfo.h"
+#define _TS 200019111111
 
 void syst_table(){
-	TFile* f_syst =  TFile::Open("./data/total_systematics_RAA.root");
+	TFile* f_syst =  TFile::Open(Form("./data/total_systematics_RAA_%ld.root", _TS) );
 	TDirectoryFile* f_hist = (TDirectoryFile*) f_syst->Get("syst_comp");
 	
 	
@@ -17,7 +18,7 @@ void syst_table(){
 	};
 
 	ofstream texout;
-	texout.open("syst_table.tex");
+	texout.open(Form("syst_table_%ld.tex", _TS ));
 	texout << Form(" \\begin{table}[htb]\n	\\centering\n	\\begin{tabular}{c||cccccccc|c}\n		Bin	\\\\\\hline\n");
 	
 	double minsb[9] = {100,100,100,100,100,100,100,100,100};

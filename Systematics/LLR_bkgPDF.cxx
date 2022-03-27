@@ -45,7 +45,7 @@ std::pair<double, std::pair<double, double> > LLR_bkgPDF(std::string type1, std:
 };
 
 std::pair<double, std::pair<double, double> > LLR_bkgPDF(std::string type1, std::string type2, long ts, double pl, double ph, int cl, int ch, int train_state, int sig_state, int bpl, int bph, double ylim =2.4, double vcut = 0.00){
-	double blow = Get_BDT(ts, train_state, sig_state, bpl, bph, (int) pl, (int) ph, cl, ch, vcut,  ylim, signif_formula);
+	double blow = Get_BDT(ts_alias(ts), train_state, sig_state, bpl, bph, (int) pl, (int) ph, cl, ch, vcut,  ylim, signif_formula);
 	double bhigh = 1;
 	auto res =  LLR_bkgPDF(type1, type2, ts, pl ,ph ,cl, ch, blow, bhigh, train_state, sig_state, bpl, bph, ylim, vcut);
 	return res;
@@ -53,4 +53,8 @@ std::pair<double, std::pair<double, double> > LLR_bkgPDF(std::string type1, std:
 
 std::pair<double, std::pair<double, double> > LLR_bkgPDF(std::string type1, std::string type2, long ts, ana_bins x){
 	return LLR_bkgPDF(type1, type2, ts, x.pl, x.ph, x.cl, x.ch, x.train_state, x.state, x.bpl, x.bph, 2.4, 0.00);
+}
+
+std::pair<double, std::pair<double, double> > LLR_bkgPDF(std::string type1, std::string type2, long ts, ana_bins x, double bl){
+	return LLR_bkgPDF(type1, type2, ts, x.pl, x.ph, x.cl, x.ch, bl, 1., x.train_state, x.state, x.bpl, x.bph, 2.4, 0.00);
 }

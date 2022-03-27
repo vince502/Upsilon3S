@@ -11,7 +11,7 @@ double getDPTVariUnc(ana_bins x){
 	auto AICres = AICGOF_test(x);
 	string bkgtype_nom = AICres[0].second;
 	string type_nom = Form("CB3:%s:%s", bkgtype_nom.c_str(), fittype.c_str() );
-	double bl = Get_BDT(ts, x);
+	double bl = Get_BDT(ts_alias(ts), x);
 
 	binplotter* bp = new binplotter(type_nom, ts, 2.4, pl, ph, cl, ch, 0, bl, 1, bpl, bph, train_state, state, false, false);
 	auto v_eff = bp->get_eff_NN(state);
@@ -26,6 +26,6 @@ double getDPTVariUnc(ana_bins x){
 };
 
 void DPTUnc(){
-	sys_wr_helper("effDPTQuad_unc.root", getDPTVariUnc);
+	sys_wr_helper(Form("effDPTQuad_unc_%ld.root",_TS), getDPTVariUnc);
 }
 

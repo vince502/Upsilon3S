@@ -12,7 +12,7 @@
 #include "../.workdir.h"
 
 
-void BDTClassifierApplication_NOM(long ts= 9999999999, int train_state =2, int target_state = 2, bool isMC = 0, bool isbbb = true, int ptLow =0, int ptHigh = 30, int mcmode= 0){
+void BDTClassifierApplication_NOM(long train_ts = 9999999999, long ts= 9999999999, int train_state =2, int target_state = 2, bool isMC = 0, bool isbbb = true, int ptLow =0, int ptHigh = 30, string dataset = ONIABDTDATA_LATEST, int mcmode= 0){
   std::cout <<"[BDT_APP] Initializing" << std::endl;
 //  std::string info_blind;
 //  if( !isbbb) info_blind = info_BDT(ts)[2];
@@ -30,32 +30,32 @@ void BDTClassifierApplication_NOM(long ts= 9999999999, int train_state =2, int t
   TMVA::Reader *reader1 = new TMVA::Reader("V:!Silent");
   TMVA::Reader *reader2 = new TMVA::Reader("V:!Silent");
   TXMLEngine xml;
-  XMLDocPointer_t xmldoc = xml.ParseFile(Form("./data/Y%dSpt%dto%d/dataset1/weights/TMVA_BDT_Classifier1_%ld_BDT.weights.xml", train_state, ptLow, ptHigh, ts));
+  XMLDocPointer_t xmldoc = xml.ParseFile(Form("./data/Y%dSpt%dto%d/dataset1/weights/TMVA_BDT_Classifier1_%ld_BDT.weights.xml", train_state, ptLow, ptHigh, train_ts));
   XMLDocPointer_t mainnode = xml.DocGetRootElement(xmldoc);
 
   TString fname;
   if(isMC){
     if(target_state==1) {
 		if(mcmode==0) fname =Form("%s/%s", store.Data(), ONIABDTMC1S_LATEST.c_str());
-		if(mcmode==1) fname = Form("%s/BDT/BDTResults/BDTresultY3S_%ld_BLIND.root",workdir.Data(), ts);
+		if(mcmode==1) fname = Form("%s/BDT/BDTResults/BDTresultY3S_%ld_BLIND.root",workdir.Data(), train_ts);
 	}
     if(target_state==2) {
 		if(mcmode==0) fname =Form("%s/%s", store.Data(), ONIABDTMC2S_LATEST.c_str());
-		if(mcmode==1) fname = Form("%s/BDT/BDTResults/BDTresultY3S_%ld_BLIND.root",workdir.Data(), ts);
+		if(mcmode==1) fname = Form("%s/BDT/BDTResults/BDTresultY3S_%ld_BLIND.root",workdir.Data(), train_ts);
 	
 	}
     if(target_state==3) {
 		if(mcmode==0) fname =Form("%s/%s", store.Data(), ONIABDTMC_LATEST.c_str());
-		if(mcmode==1) fname = Form("%s/BDT/BDTResults/BDTresultY3S_%ld_BLIND.root",workdir.Data(), ts);
+		if(mcmode==1) fname = Form("%s/BDT/BDTResults/BDTresultY3S_%ld_BLIND.root",workdir.Data(), train_ts);
 	}
   }
   else if(!isMC){
     if(whichtree !=0){
-      fname =Form("%s/%s", store.Data(), ONIABDTDATAB_LATEST.c_str() );
+      fname =Form("%s/%s", store.Data(), dataset.c_str() );
       if( ts == 9999999996) fname = Form("%s/%s", hfdir.Data(), SYS_HFUPDATA.c_str() );
       if( ts == 9999999995) fname = Form("%s/%s", hfdir.Data(), SYS_HFDOWNDATA.c_str() );
     }
-    if(whichtree ==0) fname =Form("%s/%s", store.Data(), ONIABDTDATA_LATEST.c_str() );
+    if(whichtree ==0) fname =Form("%s/%s", store.Data(), dataset.c_str() );
   }
 
   TFile* input(0);
@@ -132,8 +132,8 @@ void BDTClassifierApplication_NOM(long ts= 9999999999, int train_state =2, int t
   }
   
 
-  TString weightfile1 = Form("./data/Y%dSpt%dto%d/dataset1/weights/TMVA_BDT_Classifier1_%ld_BDT.weights.xml", train_state, ptLow, ptHigh, ts);
-  TString weightfile2 = Form("./data/Y%dSpt%dto%d/dataset2/weights/TMVA_BDT_Classifier2_%ld_BDT.weights.xml", train_state, ptLow, ptHigh, ts);
+  TString weightfile1 = Form("./data/Y%dSpt%dto%d/dataset1/weights/TMVA_BDT_Classifier1_%ld_BDT.weights.xml", train_state, ptLow, ptHigh, train_ts);
+  TString weightfile2 = Form("./data/Y%dSpt%dto%d/dataset2/weights/TMVA_BDT_Classifier2_%ld_BDT.weights.xml", train_state, ptLow, ptHigh, train_ts);
   TString methodName1 = (Form("BDT"));
   TString methodName2 = (Form("BDT"));
   reader1->BookMVA( methodName1, weightfile1);

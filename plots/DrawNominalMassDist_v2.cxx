@@ -11,8 +11,10 @@
 using namespace RooFit;
 void DrawNominalMassDist_(ana_bins ab, long ts = 9999999999);
 void DrawNominalMassDist_v2(){
-  DrawNominalMassDist_(ana_bm_comb["3c"][0], 10000000016);
-  DrawNominalMassDist_(ana_bm_comb["2c"][0], 10000000016);
+  DrawNominalMassDist_(ana_bm_comb["3c"][0], 200019111111);
+  DrawNominalMassDist_(ana_bm_comb["2c"][0], 200019111111);
+//  DrawNominalMassDist_(ana_bm_comb["3c"][0], 10000000016);
+//  DrawNominalMassDist_(ana_bm_comb["2c"][0], 10000000016);
 };
 void DrawNominalMassDist_(ana_bins ab, long ts = 9999999999){
   int Nmassbins = 80;
@@ -21,7 +23,7 @@ void DrawNominalMassDist_(ana_bins ab, long ts = 9999999999){
   string name_sig_pdf = "threeCB";
   string name_pdf_bkg = "bkgErf";
 
-  double bl = Get_BDT(ts, ab);
+  double bl = Get_BDT(ts_alias(ts), ab);
   string name_file_output = GetFit(__FITRESLATEST, false, "CB3:EE:GC", ts, ab.train_state, ab.state, ab.pl, ab.ph, ab.cl, ab.ch, bl, 1, ab.bpl, ab.bph, 0, "");
   std::cout << name_file_output << std::endl;
   TFile* file1 = new TFile(name_file_output.c_str(),"read");
@@ -77,7 +79,7 @@ void DrawNominalMassDist_(ana_bins ab, long ts = 9999999999){
 	gStyle->SetEndErrorSize(0);
 
 //  setTDRStyle();
-  TCanvas* c1 = new TCanvas("c1", "", 800, 800);
+  TCanvas* c1 = new TCanvas("c1", "", 800, 810);
 
   TPad* pad_mass = new TPad("pad_mass", "pad_mass", 0.00, 0.00, 1., 1.);
 //  TPad* pad_mass_3S = new TPad("pad_mass_3S", "pad_mass_3S", 0.60, 0.43, 0.90, 0.86);
@@ -85,7 +87,7 @@ void DrawNominalMassDist_(ana_bins ab, long ts = 9999999999){
 //  TPad* pad_leg = new TPad("pad_leg", "pad_leg", 0.7, 0.25, 1.0, 1.0);
 //  TPad* pad_mag = new TPad("pad_mag", "pad_mag", 0.7, 0.0, 1.0, 0.25);
   c1->cd();
-  pad_mass->SetTopMargin(0.07);
+  pad_mass->SetTopMargin(0.09);
   pad_mass->SetLeftMargin(0.23);
   pad_mass->SetRightMargin(0.03);
   pad_mass->SetBottomMargin(0.13);
@@ -100,8 +102,8 @@ void DrawNominalMassDist_(ana_bins ab, long ts = 9999999999){
 //  plot1->GetXaxis()->SetLabelSize(0);
 //  plot1->GetXaxis()->SetTitleSize(0);
   TLatex* lt0 = new TLatex();
-  FormLatex(lt0, 12, 0.032);
-  lt0->DrawLatex(0.5,0.80, Form("p_{T}^{#mu#mu} < %d GeV/c", ab.ph));
+  FormLatex(lt0, 12, 0.030);
+  lt0->DrawLatex(0.5,0.8, Form("p_{T}^{#mu#mu} < %d GeV/c", ab.ph));
   lt0->DrawLatex(0.5,0.74, Form("|y^{#mu#mu}| < 2.4"));
   lt0->DrawLatex(0.5,0.68, Form("p_{T}^{#mu} > %s GeV/c", "3.5"));
   lt0->DrawLatex(0.5,0.62, Form("|#eta^{#mu}| < 2.4"));
@@ -116,7 +118,7 @@ void DrawNominalMassDist_(ana_bins ab, long ts = 9999999999){
   leg->Draw();
 //  lt0->DrawLatex(0.20,0.65, Form("Centrality %d-%d %%",ab.centl, ab.centh));
   
-  CMS_lumi_square( pad_mass, 31, 33);
+  CMS_lumi_square( pad_mass, 2, 33);
 
  // if (draw_mag && train_state ==3){
  //   pad_mass_3S->SetMargin(0.25, 0.01, 0.14, 0.01);
@@ -187,8 +189,8 @@ void DrawNominalMassDist_(ana_bins ab, long ts = 9999999999){
 
   c1->Update();
 //  c1->Draw();
-  c1->SaveAs(Form("FitMass_NOM_v2_%dS_%d-%dGeV_%d-%dCent.pdf", ab.state, ab.pl, ab.ph, ab.centl, ab.centh));
-  c1->SaveAs(Form("../checkout/FitMass_NOM_v2_%dS_%d-%dGeV_%d-%dCent.pdf", ab.state, ab.pl, ab.ph, ab.centl, ab.centh));
+  c1->SaveAs(Form("FitMass_NOM_v2_%ld_%dS_%d-%dGeV_%d-%dCent.pdf", ts, ab.state, ab.pl, ab.ph, ab.centl, ab.centh));
+  c1->SaveAs(Form("../checkout/FitMass_NOM_v2_%ld_%dS_%d-%dGeV_%d-%dCent.pdf", ts, ab.state, ab.pl, ab.ph, ab.centl, ab.centh));
   c1->Close();
 
 }

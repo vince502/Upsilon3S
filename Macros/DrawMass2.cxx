@@ -78,6 +78,6 @@ void DrawMass2(long ts, int state)
 	c1->SaveAs(Form("./FullMassBDT/FullMassBDTCompare_fullmass_m814_%ld_%d.C", ts, state));
 }
 void DrawMass2(){
-	DrawMass2(10000000016, 3);
+	DrawMass2(20000000000, 3);
 }
 

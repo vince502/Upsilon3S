@@ -1,5 +1,7 @@
 //#define _TS 9999999999
-#define _TS 10000000016
+//#define _TS 10000000016
+//#define _TS 100019111111
+#define _TS 200019111111
 #if _TS == 9999999999 && __has_include("../LLR_CCorder_9999999999.h")
 #   include "../LLR_CCorder_9999999999.h"
 #   define getNomBkgO getNomBkgO_9999999999
@@ -10,17 +12,30 @@
 #   define getNomBkgO getNomBkgO_10000000016
 #endif
 
+#if _TS == 100019111111 && __has_include("../LLR_CCorder_100019111111.h")
+#   include "../LLR_CCorder_100019111111.h"
+#   define getNomBkgO getNomBkgO_100019111111
+#	define ana_bm ana_bm_comb
+#endif
+
+#if _TS == 200019111111 && __has_include("../LLR_CCorder_200019111111.h")
+#   include "../LLR_CCorder_200019111111.h"
+#   define getNomBkgO getNomBkgO_200019111111
+#	define ana_bm ana_bm_comb_ub
+#endif
+
 #if _TS == 10000000003 && __has_include("../LLR_CCorder_10000000003.h")
 #   include "../LLR_CCorder_10000000003.h"
 #   define getNomBkgO getNomBkgO_10000000003
 #endif
 
-#if _TS != 9999999999
-#	define ana_bm ana_bm_comb
-#endif
+//#if _TS != 9999999999
+//#	define ana_bm ana_bm_comb
+//#endif
 #include "../BDT/bininfo.h"
 #include "../BDT/BDTtraindiff.cxx"
 #include "../glauberparams_PbPb5TeV.h"
+#include "theory/get_theory.cxx"
 
 TGraphAsymmErrors analysis_DRplot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	TH1D* hp3s = (TH1D*) hf->Get("rp3S");
@@ -222,7 +237,7 @@ TGraphAsymmErrors analysis_DRplot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 //	TBox* b_err = new TBox();
 //	TBox* b_2serr = new TBox();
 	TBox* b_3serr = new TBox();
-//	double glb_2serr = 0;
+//	double glb_2serr = 0;label_pos_up
 	double glb_3serr = hpp_i3s_unc->GetBinContent(1);
 	double glb_errMB_PP = 0;
 	double pp_state2s;
@@ -232,9 +247,10 @@ TGraphAsymmErrors analysis_DRplot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 //////////////////////////////Auxiliary Drawings///////////////////////////////
 	gStyle->SetEndErrorSize(0);
 
-	double yup = 2.6;
-	double ydown = 0.2;
-	double label_pos_up = yup - 0.3 ;
+	double yup = 1.6;
+	double ydown = 0.0;
+	double label_pos_up = yup - 0.2 ;
+//	double label_pos_do = yup - 0.6 ;
 
 	TLine* lineone = new TLine();
 	lineone->SetLineStyle(kDashed);
@@ -244,19 +260,19 @@ TGraphAsymmErrors analysis_DRplot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	tl->SetTextSize(0.037);
 	tl->SetTextFont(42);
 
-	TLegend* leg_cent = new TLegend(0.80, 0.5, 0.85, 0.6);
+	TLegend* leg_cent = new TLegend(0.21,0.17, 0.66, 0.36);
 //	leg_cent->AddEntry(&g_c2s, "#Upsilon(2S)", "pl");
 	leg_cent->AddEntry(&g_c3s, "#Upsilon(3S)", "pl");
 	leg_cent->SetBorderSize(0);
 	leg_cent->SetTextFont(42);
-	leg_cent->SetTextSize(0.04);
+	leg_cent->SetTextSize(0.032);
 
-	TLegend* leg_pt = new TLegend(0.65, 0.5, 0.85, 0.6);
+	TLegend* leg_pt = new TLegend(0.47,0.17, 0.78, 0.32);
 //	leg_pt->AddEntry(&g_p2s, "#Upsilon(2S)", "pl");
 	leg_pt->AddEntry(&g_p3s, "#Upsilon(3S)", "pl");
 	leg_pt->SetBorderSize(0);
 	leg_pt->SetTextFont(42);
-	leg_pt->SetTextSize(0.04);
+	leg_pt->SetTextSize(0.032);
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -279,13 +295,13 @@ TGraphAsymmErrors analysis_DRplot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	lineone->DrawLine(0, 1, 420, 1);
 	lineone->DrawLine(0, 2, 420, 2);
 	tl->DrawLatex( 40, label_pos_up +0.05,"p^{#mu#mu}_{T} < 30 GeV/c");
-	tl->DrawLatex( 40, label_pos_up -0.20, "|y| < 2.4");
-	leg_cent->Draw();
+	tl->DrawLatex( 40, label_pos_up -0.15, "|y| < 2.4");
+//	leg_cent->Draw();
 
 	b_3serr->SetX1(390);
     b_3serr->SetX2(420);
-    b_3serr->SetY1(2 - fabs(glb_3serr));
-    b_3serr->SetY2(2 + fabs(glb_3serr));
+    b_3serr->SetY1(1 - fabs(glb_3serr));
+    b_3serr->SetY2(1 + fabs(glb_3serr));
     b_3serr->SetFillColorAlpha(12, 0.8);
     b_3serr->SetLineWidth(1);
 	b_3serr->Draw("L");
@@ -338,9 +354,9 @@ TGraphAsymmErrors analysis_DRplot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	tl->SetTextSize(0.037);
 	tl->SetTextAlign(11);
 	tl->DrawLatex( 2.5, label_pos_up + 0.05,"p^{#mu#mu}_{T} < 30 GeV/c");
-	tl->DrawLatex( 11, label_pos_up + 0.05 , "|y| < 2.4");
-	tl->DrawLatex( 2.5,label_pos_up - 0.20 , "Cent. 0-90 %");
-	leg_pt->Draw();
+	tl->DrawLatex( 12, label_pos_up + 0.05 , "|y| < 2.4");
+	tl->DrawLatex( 2.5,label_pos_up - 0.15 , "Cent. 0-90 %");
+//	leg_pt->Draw();
 	p2->Draw();
 	
 	c2->Modified();
@@ -348,17 +364,31 @@ TGraphAsymmErrors analysis_DRplot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 
 	c1->cd();
 	p1_L->cd();
-	CMS_lumi_square(p1_L,101, 33);
+	CMS_lumi_square(p1_L,103, 33);
 	c2->cd();
 	p2->cd();
-	CMS_lumi_square( p2, 101, 33);
+	CMS_lumi_square( p2, 103, 33);
 
-	TFile* output = new TFile("resultDR_nS_centrality_withSystematics_v2.root", "recreate");
+	TFile* output = new TFile(Form("resultDR_nS_centrality_withSystematics_%ld_v2.root", _TS), "recreate");
 	output->cd();
-	c1->SaveAs("../checkout/DR_centrality_int_v2.pdf");
-	c2->SaveAs("../checkout/DR_pt_v2.pdf");
+	c1->SaveAs(Form("../checkout/tscol/DR_centrality_int_%ld_v2.pdf", _TS));
+	c2->SaveAs(Form("../checkout/tscol/DR_pt_%ld_v2.pdf", _TS));
 	c1->Write();
 	c2->Write();
+
+	c1->cd();
+	p1_L->cd();
+	draw_theory_QTraj(p1_L, leg_cent, kTCent, 32);
+	draw_theory_EPPS16(p1_L, leg_cent,  kTCent, 4);
+	leg_cent->Draw();
+	c2->cd();
+	p2->cd();
+	draw_theory_QTraj(p2, leg_pt, kTPt, 32);
+	draw_theory_EPPS16(p2, leg_pt, kTPt, 4);
+	leg_pt->Draw();
+	c1->SaveAs(Form("../checkout/tscol/DR_wthry_centrality_int_%ld_v2.pdf", _TS));
+	c2->SaveAs(Form("../checkout/tscol/DR_wthry_pt_%ld_v2.pdf", _TS));
+
 	output->Close();
 	
 //	c1->SaveAs("RAA_SYST_CENT_PT.pdf");
@@ -367,6 +397,10 @@ TGraphAsymmErrors analysis_DRplot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 };
 
 
+//TGraphAsymmErrors analysis_DRplot_sys(){
+//	return analysis_DRplot_sys(TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root") );
+//};
+
 TGraphAsymmErrors analysis_DRplot_sys(){
-	return analysis_DRplot_sys(TFile::Open("./result/DR_10000000016.root"), TFile::Open("../Systematics/data/total_systematics_DR.root"), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root") );
+	return analysis_DRplot_sys(TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root") );
 };

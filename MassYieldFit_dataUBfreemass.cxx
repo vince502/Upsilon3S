@@ -58,9 +58,10 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, int sig
   if(map_params.find("tmp") != map_params.end() &&map_params["tmp"].val == 1) {
 	  aux = "_tmp";
 	  if(map_params["tmp"].high !=0 ){
-		  aux += Form("%1f",map_params["tmp"].high);
+		  aux += Form("%d",(int) map_params["tmp"].high);
 	  }
   }
+  aux =  aux + string("_FreeMass");
   if(!(map_params.find("DrawOnly")!=map_params.end() && map_params["DrawOnly"].val ==1)){
 ///////////////////////////////////////////////////////////////////////
 //Need
@@ -144,9 +145,12 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, int sig
 	
 	  RooRealVar *mratio2 = new RooRealVar("mratio2", "mratio2", U2S_mass/U1S_mass);
 	  RooRealVar *mratio3 = new RooRealVar("mratio3", "mratio3", U3S_mass/U1S_mass);
-	  RooFormulaVar *mean2S = new RooFormulaVar("mean2S", "mean1S*mratio2", RooArgSet(*mean1S, *mratio2));
-	  RooFormulaVar *mean3S = new RooFormulaVar("mean3S", "mean1S*mratio3", RooArgSet(*mean1S, *mratio3));
-	  //RooRealVar mean3S("mean3S", "mean of Upsilon 1S", U3S_mass, U3S_mass-0.010, U3S_mass+0.010);
+
+	  RooRealVar *mean2Sval = new RooRealVar("mean2S", "mean of Upsilon 2S", U2S_mass, U2S_mass-0.050, U2S_mass+0.050);
+	  RooRealVar *mean3Sval = new RooRealVar("mean3S", "mean of Upsilon 3S", U3S_mass, U3S_mass-0.050, U3S_mass+0.050);
+//	  RooConstVar theOne("One", "", 1);
+	  RooFormulaVar *mean2S = new RooFormulaVar("mean2Sval", "mean2S", RooArgSet(*mean2Sval));
+	  RooFormulaVar *mean3S = new RooFormulaVar("mean3Sval", "mean3S", RooArgSet(*mean3Sval));
 	
 	  RooRealVar *sigma1S_1 = new RooRealVar("sigma1S_1", "sigma1 of 1S", map_params["sigma1S1"].val, map_params["sigma1S1"].low,map_params["sigma1S1"].high);
 	
@@ -360,18 +364,15 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, int sig
 		  Background = (RooGenericPdf*) expo;
 	  }
 	
-	dbg(1000);
-	  RooRealVar* nSig1S = new RooRealVar("nSig1S", "# of 1S signal", 900, -1000, 30000);
+	  RooRealVar* nSig1S = new RooRealVar("nSig1S", "# of 1S signal", 900, -1000, 50000);
 	  RooRealVar* nSig2S;
 	  RooRealVar* nSig3S;
 	
-	dbg(1000);
 	  RooRealVar* frac2over1 = new RooRealVar("frac_2sOver1s","2S/1S",0.15,-0.,0.8);
 	  RooRealVar* frac3over1 = new RooRealVar("frac_3sOver1s","3S/1S",0.03,-0.02,0.20);
 	  RooRealVar* frac3over2 = new RooRealVar("frac_3sOver2s","3S/2S",0.3,-0.2,1);
 	  RooRealVar* nBkg = new RooRealVar("nBkg", "# of background signal", 300, -1000, 10000000);
 	
-	dbg(1000);
 	  RooAddPdf* model,* model_sig, *model_sig2;
 	  std::string use_model = "model";
 	  RooProdPdf* model_gc;
@@ -402,7 +403,33 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, int sig
 	    model = new RooAddPdf("model", "1S+2S+3S+Bkg", RooArgList(*Signal1S, *Signal2S, *Signal3S, *Background), RooArgList(*nSig1S, *nSig2S, *nSig3S, *nBkg));
 	
 	  }
-	  
+
+  if(map_params.find("tmp") != map_params.end() &&map_params["tmp"].val == 1) {
+	  if(map_params["tmp"].high ==1 ){
+		  nSig3S->setVal(0);
+		  nSig3S->setConstant();
+	  }
+	  if(map_params["tmp"].high ==2 ){
+		  nSig3S->setVal(8.4318e+02);
+		  nSig3S->setConstant();
+	  }
+	  if(map_params["tmp"].high ==3 ){
+		  alpha->setVal(1.7708e+00);
+		  alpha->setConstant();
+		  n->setVal(1.6131e+00);
+		  n->setConstant();
+		  frac->setVal(4.9807e-02);
+		  frac->setConstant();
+		  frac2->setVal(3.9459e-01);
+		  frac2->setConstant();
+		  sigma1S_1->setVal(2.1654e-01);
+		  sigma1S_1->setConstant();
+		  x1S->setVal(3.0453e-01);
+		  x1S->setConstant();
+		  x1S_2->setVal(5.5781e-01);
+		  x1S_2->setConstant();
+	  }
+  }
 	
 	
 	// std::map<std::string, RooGaussian* > map_var_gc;
@@ -445,11 +472,9 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, int sig
 	    use_model = "model_gc";
 	  }
 	  else if(fitdir.find("GC")==std::string::npos){
-	    dbg(1021);
 	    mf.works->import(*model);
 	    mf.works->Print();
 	  }
-	  dbg(1000);
 	
 	  std::cout << mf.works->pdf(use_model.c_str())->GetName() << std::endl;
 	
@@ -462,10 +487,47 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, int sig
 		fitcmd->Add(&opt1);
 		RooCmdArg opt2 = RooFit::Constrain(list_var_for_gc);
 		fitcmd->Add(&opt2);
-//		RooCmdArg opt3 = RooFit::PrefitDataFraction(0.025);
-		RooCmdArg opt3 = RooFit::PrefitDataFraction(0.1);
+		RooCmdArg opt3 = RooFit::PrefitDataFraction(0.25);
+//		RooCmdArg opt3 = RooFit::PrefitDataFraction(0.1);
 		fitcmd->Add(&opt3);
 		RooCmdArg opt4 = RooFit::Minimizer("Minuit","minimize");//"migradimproved");//);
+//		RooCmdArg opt4 = RooFit::Minimizer("GSLMultiMin","steepestdescent");//"migradimproved");//);
+		fitcmd->Add(&opt4);
+		RooCmdArg opt5 = RooFit::NumCPU(workers, 3);
+		fitcmd->Add(&opt5);
+		RooCmdArg opt6 = RooFit::Range(mf.Range_fit_low, mf.Range_fit_high);
+		fitcmd->Add(&opt6);
+//		RooCmdArg opt7 = RooFit::SumW2Error(kTRUE);
+//		fitcmd->Add(&opt7);
+		RooCmdArg opt8 = RooFit::Extended(kTRUE);
+		fitcmd->Add(&opt8);
+//		RooCmdArg opt9 = RooFit::Minos(kTRUE);
+//		fitcmd->Add(&opt9);
+		RooCmdArg opt10= RooFit::Hesse(kTRUE);//RooCmdArg::none();
+		fitcmd->Add(&opt10);
+		RooCmdArg opt11= RooFit::EvalErrorWall(kTRUE);//tRooCmdArg::none();
+		fitcmd->Add(&opt11);
+		RooCmdArg opt12= RooFit::Strategy(1);//tRooCmdArg::none();
+		fitcmd->Add(&opt12);
+		RooCmdArg opt13= RooFit::RecoverFromUndefinedRegions(5);//tRooCmdArg::none();
+		fitcmd->Add(&opt13);
+		RooCmdArg opt14= RooFit::BatchMode(kTRUE);//tRooCmdArg::none();
+		fitcmd->Add(&opt14);
+//		RooCmdArg opt15= RooFit::Offset(kTRUE);//tRooCmdArg::none();
+//		fitcmd->Add(&opt15);
+		Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, *fitcmd);
+//	    Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), Constrain(list_var_for_gc), PrefitDataFraction(0.1),  Minimizer("Minuit","minimize"), NumCPU(workers), Range(mf.Range_fit_low, mf.Range_fit_high), SumW2Error(kTRUE), Extended(kTRUE));
+
+	  }
+	  else  {
+		RooLinkedList* fitcmd = new RooLinkedList();
+		RooCmdArg opt1 = RooFit::Save();
+		fitcmd->Add(&opt1);
+		RooCmdArg opt3 = RooFit::PrefitDataFraction(0.15);
+//		RooCmdArg opt3 = RooFit::PrefitDataFraction(0.1);
+//		fitcmd->Add(&opt3);
+		RooCmdArg opt4 = RooFit::Minimizer("Minuit","minimize");//"migradimproved");//);
+//		RooCmdArg opt4 = RooFit::Minimizer("GSLMultiMin","steepestdescent");//"migradimproved");//);
 		fitcmd->Add(&opt4);
 		RooCmdArg opt5 = RooFit::NumCPU(workers, 0);
 		fitcmd->Add(&opt5);
@@ -475,23 +537,23 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, int sig
 //		fitcmd->Add(&opt7);
 		RooCmdArg opt8 = RooFit::Extended(kTRUE);
 		fitcmd->Add(&opt8);
-		RooCmdArg opt9 = RooFit::Minos(kFALSE);
-		fitcmd->Add(&opt9);
+//		RooCmdArg opt9 = RooFit::Minos(kTRUE);
+//		fitcmd->Add(&opt9);
 		RooCmdArg opt10= RooFit::Hesse(kTRUE);//RooCmdArg::none();
 		fitcmd->Add(&opt10);
 		RooCmdArg opt11= RooFit::EvalErrorWall(kTRUE);//tRooCmdArg::none();
 		fitcmd->Add(&opt11);
-		RooCmdArg opt12= RooFit::Strategy(2);//tRooCmdArg::none();
+		RooCmdArg opt12= RooFit::Strategy(1);//tRooCmdArg::none();
 		fitcmd->Add(&opt12);
 		RooCmdArg opt13= RooFit::RecoverFromUndefinedRegions(3);//tRooCmdArg::none();
 		fitcmd->Add(&opt13);
 		RooCmdArg opt14= RooFit::BatchMode(kTRUE);//tRooCmdArg::none();
 		fitcmd->Add(&opt14);
+//		RooCmdArg opt15= RooFit::InitialHesse(kTRUE);//tRooCmdArg::none();
+//		fitcmd->Add(&opt15);
 		Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, *fitcmd);
-//	    Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), Constrain(list_var_for_gc), PrefitDataFraction(0.1),  Minimizer("Minuit","minimize"), NumCPU(workers), Range(mf.Range_fit_low, mf.Range_fit_high), SumW2Error(kTRUE), Extended(kTRUE));
-
-	  }
-	  else  {Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), /*PrefitDataFraction(0.1),*/  Minimizer("Minuit","minimize"), NumCPU(workers), Range(mf.Range_fit_low, mf.Range_fit_high), SumW2Error(kTRUE), Extended(kTRUE));}
+//		  Result = mf.works->pdf(use_model.c_str())->fitTo(*mf.fDS, Save(), /*PrefitDataFraction(0.1),*/  Minimizer("Minuit","minimize"), NumCPU(workers), Range(mf.Range_fit_low, mf.Range_fit_high)/*, SumW2Error(kTRUE)*/, Extended(kTRUE));
+		  }
 	dbg();
 	  mf.works->pdf(use_model.c_str())->plotOn(massPlot, Name("modelPlot"));
 	  mf.works->pdf(use_model.c_str())->plotOn(massPlot, Components(RooArgSet(*Signal1S)), LineColor(kRed), LineStyle(kDashed), MoveToBack());
@@ -674,6 +736,6 @@ void MassYieldFit_data(std::string type="CB2:CC3:GC",int train_state =3, int sig
 	}
 	int drawmag = (int) map_params["mag"].val; 
 
-  DrawHist(parsed, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, map_params["sb_ratio"].val, train_state, sig_state, (bool) drawmag, massMin, massMax, aux, draw_dir, ubts );
+  DrawHist(parsed, ptMin, ptMax, rapMin, rapMax, MupT, Trig, swflag, cBinLow, cBinHigh, cutQVP, isBDT, ts, cutBDTlow, cutBDThigh, bdtptMin, bdtptMax, map_params["sb_ratio"].val, train_state, sig_state, (bool) drawmag, massMin, massMax, aux, draw_dir , ubts);
  
 }

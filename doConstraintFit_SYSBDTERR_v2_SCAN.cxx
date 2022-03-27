@@ -1,11 +1,4 @@
 #pragma once
-#include "MassYieldFit_BDT_MC_CB3.C"
-//#include "MassYieldFit_BDT_MC.C"
-#include "MassYieldFit_data.cxx"
-#include "./BDT/yield_eff_signif.cxx"
-#include "./BDT/BDTVari_Seff.cxx"
-#include "script_tools.h"
-#include "Systematics/GOF_test.cxx"
 
 #if defined _TS
 void doConstraintFit_SYSBDTERR_v2_SCAN(int global_step = 1, int step = 111){

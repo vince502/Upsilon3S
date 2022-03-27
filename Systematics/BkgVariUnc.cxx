@@ -25,7 +25,7 @@ pp getBkgVariUnc_2item(ana_bins x){
 	std::string type_sys2 = Form("CB3:%s:%s",	bkgtype_sys2.c_str(),  fittype.c_str());
 
 	binplotter *bp_nom, *bp_sys1, *bp_sys2;
-	double bl_nom = Get_BDT(ts, train_state, state, bpl, bph, pl, ph, cl, ch);
+	double bl_nom = Get_BDT(ts_alias(ts), train_state, state, bpl, bph, pl, ph, cl, ch);
 	bp_nom  = new binplotter(type_nom , ts,  2.4, pl, ph, cl, ch, 0, bl_nom, 1, bpl, bph, train_state, state, false, false);
 	bp_sys1 = new binplotter(type_sys1, ts,  2.4, pl, ph, cl, ch, 0, bl_nom, 1, bpl, bph, train_state, state, false, false);
 	bp_sys2 = new binplotter(type_sys2, ts,  2.4, pl, ph, cl, ch, 0, bl_nom, 1, bpl, bph, train_state, state, false, false);
@@ -78,7 +78,7 @@ double getBkgVariUnc(ana_bins x){
 };
 
 void BkgVariUnc(){
-	sys_wr_helper_2item(Form("bkgPDF_unc%s_2item.root", labDR.c_str()), getBkgVariUnc_2item);
-	sys_wr_helper(Form("bkgPDF_unc%s.root", labDR.c_str()), getBkgVariUnc);
+	sys_wr_helper_2item(Form("bkgPDF_unc%s_2item_%ld.root", labDR.c_str(), _TS), getBkgVariUnc_2item);
+	sys_wr_helper(Form("bkgPDF_unc%s_%ld.root", labDR.c_str(), _TS), getBkgVariUnc);
 }
 

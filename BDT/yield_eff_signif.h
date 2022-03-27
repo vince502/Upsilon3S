@@ -48,6 +48,7 @@ class binplotter
   	
   private:
   	long ts;
+	long tsMC;
 	int pl, ph,cl, ch, train_state, target_state, bdtptMin, bdtptMax;
 	bool eff_old;
 	double vcut =0.00;

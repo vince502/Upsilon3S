@@ -39,10 +39,11 @@ void DrawYield_Ratio(ana_bins ab , long ts = _TS){
 	int counter1 = NBDTbins +1 - use_bins.size();
 	string typestr;
 	
-	double bl = Get_BDT(ts, ab);
+	long kts = 100019111111;
+	double bl = Get_BDT(kts, ab);
 	std::cout <<"bl : " <<  bl << std::endl;
 	string fittype  = (ab.bintype == kCent) ? "FF" : "GC" ;
-	auto nom = getRAAValue(false, ab, Form("CB3:EE:%s", fittype.c_str()) , bl, 1., 0, ts, false, false); 
+	auto nom = getRAAValue(false, ab, Form("CB3:EE:%s", fittype.c_str()) , bl, 1., 0, kts, false, false); 
 
 	auto ref2 = getRAAValue(false, ab, "CB3:CC4:GC", -1, 1., 0, ts, false, false);
 	auto ref3 = getRAAValue(false, ab, "CB3:EE:GC", -1, 1., 0, ts, false, false);

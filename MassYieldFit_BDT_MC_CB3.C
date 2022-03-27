@@ -107,12 +107,12 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   }
 
   RooRealVar* sigmaNS_1;
-  sigmaNS_1  = new RooRealVar("sigmaNS_1", "sigma of NS", 0.18, 0.12, 0.33);
+  sigmaNS_1  = new RooRealVar("sigmaNS_1", "sigma of NS", 0.16, 0.09, 0.35);
 
   RooRealVar* xNS;
 
-  xNS = new RooRealVar("xNS", "sigma ratio", 0.56, 0.001, 0.999);
-  RooRealVar* xNS_2 = new RooRealVar("xNS_2", "sigma ratio", 0.318, 0.001, 0.999);
+  xNS = new RooRealVar("xNS", "sigma ratio", 0.56, 0.000, 1);
+  RooRealVar* xNS_2 = new RooRealVar("xNS_2", "sigma ratio", 0.318, 0.000, 1);
   works1->import(*xNS);
 
   RooFormulaVar* sigmaNS_2, *sigmaNS_3;
@@ -120,10 +120,10 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
   sigmaNS_3 = new RooFormulaVar("sigmaNS_3", "@0*@1", RooArgList(*sigmaNS_1, *xNS_2));
 
   RooRealVar *alpha, *n, *frac, *frac2;
-  alpha = new RooRealVar("alpha", "alpha of Crystal bal1", 1.96, 1.10, 2.60 );
-  n = new RooRealVar("n", "n of Crystal ball", 1.27, 0.950, 2.700);
-  frac = new RooRealVar("frac", "CB fraction", 0.58,	 0.0001, 1.00);
-  frac2 = new RooRealVar("frac2", "CB fraction 2", 0.05, 0.0001, 1.00);
+  alpha = new RooRealVar("alpha", "alpha of Crystal bal1", 1.96, 0.90, 2.70 );
+  n = new RooRealVar("n", "n of Crystal ball", 1.27, 0.900, 3.200);
+  frac = new RooRealVar("frac", "CB fraction", 0.58,	 0.0000, 1.00);
+  frac2 = new RooRealVar("frac2", "CB fraction 2", 0.05, 0.0000, 1.00);
 //  if(bdtlow == -1.){
 //  PARAMSET FOR 2,3S
 //    alpha->setVal(1.866);
@@ -134,13 +134,13 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
 //    xNS->setVal(0.54);
 //    xNS_2->setVal(0.30);
 //    PARAMSET FOR 1S
-    alpha->setVal(1.766);
-    n->setVal(1.675);
+    alpha->setVal(1.566);
+    n->setVal(1.875);
     sigmaNS_1->setVal(0.217);
-    frac->setVal(0.161);
+    frac->setVal(0.061);
     frac2->setVal(0.455);
     xNS->setVal(0.301);
-    xNS_2->setVal(0.541);
+    xNS_2->setVal(0.641);
 //  }
 
   RooCBShape *CBNS_1, *CBNS_2, *CBNS_3;
@@ -155,7 +155,7 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
 
   SignalNS = (RooGenericPdf*) threeCBNS;
 
-  RooRealVar* nSigNS = new RooRealVar("nSigNS", "# of NS signal", 30, 0, 1000000000);
+  RooRealVar* nSigNS = new RooRealVar("nSigNS", "# of NS signal", 30, 7e+07, 3e+08);
   if (Trig == "Ups"){
     if(state ==1) {nSigNS->setMax(20000000000); nSigNS->setVal(2100000000);}
     if(state ==2) {nSigNS->setMax(4000000000); nSigNS->setVal(100000000);}
@@ -171,8 +171,42 @@ void MassYieldSingleStateMCFitCB3( struct Y1Sfitvar *Y1S ,long ts, const string 
 //  RooFitResult* Result = m.fit("shr");
 //  Result->SetName("fitresult_model_reducedDS");
 //std::cout << "[Mass Fit MC] Is dataset Weighted? : " << reducedDS->isWeighted()<< std::endl;
+		RooLinkedList* fitcmd = new RooLinkedList();
+		RooCmdArg opt1 = RooFit::Save();
+		fitcmd->Add(&opt1);
+//		RooCmdArg opt2 = RooFit::Constrain(list_var_for_gc);
+//		fitcmd->Add(&opt2);
+		RooCmdArg opt3 = RooFit::PrefitDataFraction(0.05);
+//		RooCmdArg opt3 = RooFit::PrefitDataFraction(0.1);
+		fitcmd->Add(&opt3);
+		RooCmdArg opt4 = RooFit::Minimizer("Minuit","minimize");//"migradimproved");//);
+//		RooCmdArg opt4 = RooFit::Minimizer("GSLMultiMin","steepestdescent");//"migradimproved");//);
+		fitcmd->Add(&opt4);
+		RooCmdArg opt5 = RooFit::NumCPU(40, 0);
+		fitcmd->Add(&opt5);
+		RooCmdArg opt6 = RooFit::Range(RangeLow, RangeHigh);
+		fitcmd->Add(&opt6);
+//		RooCmdArg opt7 = RooFit::SumW2Error(kTRUE);
+//		fitcmd->Add(&opt7);
+		RooCmdArg opt8 = RooFit::Extended(kTRUE);
+		fitcmd->Add(&opt8);
+//		RooCmdArg opt9 = RooFit::Minos(kTRUE);
+//		fitcmd->Add(&opt9);
+		RooCmdArg opt10= RooFit::Hesse(kTRUE);//RooCmdArg::none();
+		fitcmd->Add(&opt10);
+		RooCmdArg opt11= RooFit::EvalErrorWall(kTRUE);//tRooCmdArg::none();
+		fitcmd->Add(&opt11);
+		RooCmdArg opt12= RooFit::Strategy(1);//tRooCmdArg::none();
+		fitcmd->Add(&opt12);
+		RooCmdArg opt13= RooFit::RecoverFromUndefinedRegions(3);//tRooCmdArg::none();
+		fitcmd->Add(&opt13);
+		RooCmdArg opt14= RooFit::BatchMode(kTRUE);//tRooCmdArg::none();
+		fitcmd->Add(&opt14);
+		RooCmdArg opt15= RooFit::SumW2Error(kTRUE);//RooFit::AsymptoticError(kTRUE);
+		fitcmd->Add(&opt15);
+		RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, *fitcmd);
 
-  RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), PrefitDataFraction(0.080), Minimizer("Minuit","minimize"), NumCPU(38), Range(RangeLow, RangeHigh), /*AsymptoticError(kTRUE)*/SumW2Error(kTRUE), Extended(kTRUE));
+//  RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), PrefitDataFraction(0.080), Minimizer("Minuit","minimize"), NumCPU(38,0), BatchMode(kTRUE), Range(RangeLow, RangeHigh), Strategy(0), AsymptoticError(kTRUE)/*SumW2Error(kTRUE)*/, Extended(kTRUE));
 
   Result->SetName("fitresult_model_reducedDS");
   works1->pdf("model")->plotOn(massPlot, Name("modelPlot"));

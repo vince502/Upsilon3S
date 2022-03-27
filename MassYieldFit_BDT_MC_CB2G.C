@@ -106,7 +106,7 @@ void MassYieldSingleStateMCFitCB2G( struct Y1Sfitvar *Y1S ,long ts, const string
   }
 
   RooRealVar* sigmaNS_1;
-  sigmaNS_1  = new RooRealVar("sigmaNS_1", "sigma of NS", 0.20, 0.15, 0.33);
+  sigmaNS_1  = new RooRealVar("sigmaNS_1", "sigma of NS", 0.20, 0.05, 0.38);
 
   RooRealVar* xNS;
 
@@ -120,14 +120,14 @@ void MassYieldSingleStateMCFitCB2G( struct Y1Sfitvar *Y1S ,long ts, const string
 
   RooRealVar *alpha, *n, *frac, *frac2;
   alpha = new RooRealVar("alpha", "alpha of Crystal bal1", 1.96, 0.6, 3.5 );
-  n = new RooRealVar("n", "n of Crystal ball", 1.27, 0.200, 3.100);
-  frac = new RooRealVar("frac", "CB fraction", 0.13, 0.0001, 0.999);
-  frac2 = new RooRealVar("frac2", "CB fraction 2", 0.25, 0.0001, 0.999);
+  n = new RooRealVar("n", "n of Crystal ball", 1.27, 0.200, 3.500);
+  frac = new RooRealVar("frac", "CB fraction", 0.13, 0.0000, 1.0);
+  frac2 = new RooRealVar("frac2", "CB fraction 2", 0.25, 0.0000, 1.0);
 //  if(bdtlow == -1.){
-    alpha->setVal(1.753);
-    n->setVal(1.675);
-    sigmaNS_1->setVal(0.247);
-    frac->setVal(0.12);
+    alpha->setVal(1.353);
+    n->setVal(2.175);
+    sigmaNS_1->setVal(0.217);
+    frac->setVal(0.22);
     frac2->setVal(0.52);
     xNS->setVal(0.54);
     xNS_2->setVal(0.30);
@@ -157,7 +157,42 @@ void MassYieldSingleStateMCFitCB2G( struct Y1Sfitvar *Y1S ,long ts, const string
 //  RooFitResult* Result = m.fit("shr");
 //  Result->SetName("fitresult_model_reducedDS");
 
-  RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), PrefitDataFraction(0.005), Minimizer("Minuit","minimize"), NumCPU(38), Range(RangeLow, RangeHigh), /*AsymptoticError(kTRUE)*/SumW2Error(kTRUE), Extended(kTRUE));
+//  RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, Save(), PrefitDataFraction(0.005), Minimizer("Minuit","minimize"), NumCPU(38), Range(RangeLow, RangeHigh), /*AsymptoticError(kTRUE)*/SumW2Error(kTRUE), Extended(kTRUE));
+
+		RooLinkedList* fitcmd = new RooLinkedList();
+		RooCmdArg opt1 = RooFit::Save();
+		fitcmd->Add(&opt1);
+//		RooCmdArg opt2 = RooFit::Constrain(list_var_for_gc);
+//		fitcmd->Add(&opt2);
+		RooCmdArg opt3 = RooFit::PrefitDataFraction(0.01);
+//		RooCmdArg opt3 = RooFit::PrefitDataFraction(0.1);
+		fitcmd->Add(&opt3);
+		RooCmdArg opt4 = RooFit::Minimizer("Minuit","minimize");//"migradimproved");//);
+//		RooCmdArg opt4 = RooFit::Minimizer("GSLMultiMin","steepestdescent");//"migradimproved");//);
+		fitcmd->Add(&opt4);
+		RooCmdArg opt5 = RooFit::NumCPU(40, 0);
+		fitcmd->Add(&opt5);
+		RooCmdArg opt6 = RooFit::Range(RangeLow, RangeHigh);
+		fitcmd->Add(&opt6);
+//		RooCmdArg opt7 = RooFit::SumW2Error(kTRUE);
+//		fitcmd->Add(&opt7);
+		RooCmdArg opt8 = RooFit::Extended(kTRUE);
+		fitcmd->Add(&opt8);
+//		RooCmdArg opt9 = RooFit::Minos(kTRUE);
+//		fitcmd->Add(&opt9);
+		RooCmdArg opt10= RooFit::Hesse(kTRUE);//RooCmdArg::none();
+		fitcmd->Add(&opt10);
+		RooCmdArg opt11= RooFit::EvalErrorWall(kTRUE);//tRooCmdArg::none();
+		fitcmd->Add(&opt11);
+		RooCmdArg opt12= RooFit::Strategy(2);//tRooCmdArg::none();
+		fitcmd->Add(&opt12);
+		RooCmdArg opt13= RooFit::RecoverFromUndefinedRegions(6);//tRooCmdArg::none();
+		fitcmd->Add(&opt13);
+		RooCmdArg opt14= RooFit::BatchMode(kTRUE);//tRooCmdArg::none();
+		fitcmd->Add(&opt14);
+		RooCmdArg opt15= RooFit::SumW2Error(kTRUE);//RooFit::AsymptoticError(kTRUE);
+		fitcmd->Add(&opt15);
+		RooFitResult* Result = works1->pdf("model")->fitTo(*reducedDS, *fitcmd);
 
   Result->SetName("fitresult_model_reducedDS");
   works1->pdf("model")->plotOn(massPlot, Name("modelPlot"));

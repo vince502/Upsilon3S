@@ -33,11 +33,11 @@ pp getBDTDiffVariUnc_2item(ana_bins x){
 	std::string type_sys1  =Form("CB3:%s:%sbdtup",		bkgtype.c_str(),  fittype.c_str());
 	std::string type_sys2 = Form("CB3:%s:%sbdtdown",	bkgtype.c_str(),  fittype.c_str());
 	binplotter *bp_nom, *bp_sys1, *bp_sys2;
-	double bl_nom = Get_BDT(ts, x);
+	double bl_nom = Get_BDT(ts_alias(ts), x);
 	//////////////////////////////////////////////////
 	auto getdiff = [=](){
-		auto sb_ratio = get_eff_acc_v2(type_nom, ts, 2.4, (double) pl, (double) ph, cl, ch, bl_nom, 1.0, bpl, bph, train_state, 1, state, false);
-		return Get_BDTTD(ts, x, sb_ratio.getVal());
+		auto sb_ratio = get_eff_acc_v2(type_nom, ts_alias(ts), 2.4, (double) pl, (double) ph, cl, ch, bl_nom, 1.0, bpl, bph, train_state, 1, state, false);
+		return Get_BDTTD(ts_alias(ts), x, sb_ratio.getVal());
 	};
 	auto res = getdiff(); 
 	//////////////////////////////////////////////////
@@ -79,7 +79,7 @@ double getBDTDiffVariUnc(ana_bins x){
 
 
 void BDTDiffVariUnc(){
-	sys_wr_helper(Form("BDT_Diff_unc%s.root",labDR.c_str()), getBDTDiffVariUnc);
-	sys_wr_helper_2item(Form("BDT_Diff_unc%s_2item.root",labDR.c_str()), getBDTDiffVariUnc_2item);
+	sys_wr_helper(Form("BDT_Diff_unc%s_%ld.root",labDR.c_str(), _TS), getBDTDiffVariUnc);
+	sys_wr_helper_2item(Form("BDT_Diff_unc%s_2item_%ld.root",labDR.c_str(), _TS), getBDTDiffVariUnc_2item);
 }
 

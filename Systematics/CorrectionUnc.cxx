@@ -15,7 +15,7 @@ double effratio(ana_bins ab){
 	string fittype = (strcmp(ab.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 	string bkgtype = AICGOF_test(ab)[0].second;
 	string type = Form("CB3:%s:%s", bkgtype.c_str(), fittype.c_str());
-	double bl = Get_BDT(ts, ab);
+	double bl = Get_BDT(ts_alias(ts), ab);
 //	std::cout << "[bl, type]: " <<bl << ", " << type.c_str()  << std::endl;
 	auto bp = new binplotter(type, ts, 2.4, ab.pl,  ab.ph, ab.cl, ab.ch, 0., bl, 1, ab.bpl, ab.bph, ab.train_state, ab.state, false, false);
 	RooRealVar _yacc_2s = upsi::getacceptance(ab.pl, ab.ph, -2.4,2.4, 3.5, 2);
@@ -33,5 +33,5 @@ double effratio(ana_bins ab){
 }
 
 void CorrectionUnc(){
-	sys_wr_helper("Correction_unc_DR.root", effratio);	
+	sys_wr_helper(Form("Correction_unc_DR_%ld.root", _TS), effratio);	
 }

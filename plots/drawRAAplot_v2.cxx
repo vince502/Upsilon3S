@@ -1,5 +1,7 @@
 //#define _TS 9999999999
-#define _TS 10000000016
+//#define _TS 10000000016
+#define _TS 200019111111
+//#define _TS 200019111111
 #if _TS == 9999999999 && __has_include("../LLR_CCorder_9999999999.h")
 #   include "../LLR_CCorder_9999999999.h"
 #   define getNomBkgO getNomBkgO_9999999999
@@ -10,14 +12,26 @@
 #   define getNomBkgO getNomBkgO_10000000016
 #endif
 
+#if _TS == 100019111111 && __has_include("../LLR_CCorder_100019111111.h")
+#   include "../LLR_CCorder_100019111111.h"
+#	define ana_bm ana_bm_comb
+#   define getNomBkgO getNomBkgO_100019111111
+#endif
+
+#if _TS == 200019111111 && __has_include("../LLR_CCorder_200019111111.h")
+#   include "../LLR_CCorder_200019111111.h"
+#	define ana_bm ana_bm_comb_ub
+#   define getNomBkgO getNomBkgO_200019111111
+#endif
+
 #if _TS == 10000000003 && __has_include("../LLR_CCorder_10000000003.h")
 #   include "../LLR_CCorder_10000000003.h"
 #   define getNomBkgO getNomBkgO_10000000003
 #endif
 
-#if _TS != 9999999999
-#	define ana_bm ana_bm_comb
-#endif
+//#if _TS != 9999999999
+//#	define ana_bm ana_bm_comb
+//#endif
 
 
 #include "plot_wr_helper.cxx"
@@ -28,7 +42,8 @@
 
 void drawRAAplot_v2(int state =3, double bdt_fix = -2, int shift =0){
 	long ts = _TS;
-	plot_wr_helper(Form("RAA_%ld.root",ts), getRAAValue, ts);
+//	plot_wr_helper(Form("RAA_%ld_NOSF.root",ts), getRAAValue, ts);
+	plot_wr_helper(Form("RAA_%ld_only2S.root",ts), getRAAValue, ts, 2);
 };
 //TH1D* getPbPbRAA(int state =3, double bdt_fix = -2, int shift =0){
 //  Double_t* cbinthree = new Double_t[4]{0,40,100,181};

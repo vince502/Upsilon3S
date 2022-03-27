@@ -12,8 +12,15 @@ void runEff_SYSTNP()
 	
 	for(auto ab : bx){
 	  for(auto bin : ab){
-	    double bl = Get_BDT(10000000016, bin);
-	    getEfficiencyBDT_SYSTNP((float) bin.pl,(float) bin.ph, -2.4, 2.4, bin.cl, bin.ch, true, true, 10000000016, bl, 1, bin.train_state, bin.state, 0);
+	    double bl = Get_BDT(100019111111, bin);
+	    getEfficiencyBDT_SYSTNP((float) bin.pl,(float) bin.ph, -2.4, 2.4, bin.cl, bin.ch, true, true, 100019111111, bl, 1, bin.train_state, bin.state, 0);
 	  }
 	}
+
+//	for(auto ab : bx){
+//	  for(auto bin : ab){
+//	    double bl = Get_BDT(10000000016, bin);
+//	    getEfficiencyBDT_SYSTNP((float) bin.pl,(float) bin.ph, -2.4, 2.4, bin.cl, bin.ch, true, true, 10000000016, bl, 1, bin.train_state, bin.state, 0);
+//	  }
+//	}
 }
