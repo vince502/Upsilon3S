@@ -94,13 +94,21 @@ RooRealVar getRAAValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC
 	return val_return;
 };
 
-RooRealVar getRAAValue(ana_bins ab, long ts, bool ppstat, int ofstate = -1){
+RooRealVar getRAAValue(ana_bins ab, long ts, bool ppstat, int ofstate = -1, int getPre=0){
 	string fittype = (strcmp(ab.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 	string bkgtype = AICGOF_test(ab)[0].second;
 	string type = Form("CB3:%s:%s", bkgtype.c_str() ,fittype.c_str());
 	double bl = Get_BDT(ts_alias(ts), ab);
-	return getRAAValue(ppstat, ab, type, -2, 1, 0, ts, false, false, ofstate);
+	return getRAAValue(ppstat, ab, type, -2, 1, getPre, ts, false, false, ofstate);
 };
+
+//RooRealVar getRAAValue(ana_bins ab,  double bl, long ts, bool ppstat = 0, int ofstate = -1, int getPre=0){
+//	string fittype = (strcmp(ab.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
+//	string bkgtype = AICGOF_test(ab)[0].second;
+//	string type = Form("CB3:%s:%s", bkgtype.c_str() ,fittype.c_str());
+//	double bl = Get_BDT(ts_alias(ts), ab);
+//	return getRAAValue(ppstat, ab, type, bl, 1, getPre, ts, false, false, ofstate);
+//};
 
 
 
@@ -187,10 +195,10 @@ RooRealVar getDRValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC2
 	return theDoubleRatio;
 };
 
-RooRealVar getDRValue(ana_bins ab, long ts, bool ppstat){
+RooRealVar getDRValue(ana_bins ab, long ts, bool ppstat, int getPre = 0){
 	string fittype = (strcmp(ab.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 	string bkgtype = AICGOF_test(ab)[0].second;
 	string type = Form("CB3:%s:%s", bkgtype.c_str() ,fittype.c_str());
 	double bl = Get_BDT(ts_alias(ts), ab);
-	return getDRValue(ppstat, ab, type, -2, 1, 1, ts, false, false);
+	return getDRValue(ppstat, ab, type, -2, 1, getPre, ts, false, false);
 };

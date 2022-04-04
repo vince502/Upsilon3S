@@ -147,13 +147,16 @@ void DrawHistMC(std::vector<std::string>  parsed,const Double_t ptMin = 0, const
   TPad* pad_mass = new TPad("pad_mass", "pad_mass", 0, 0.25, 0.7, 0.94);
   TPad* pad_mass_3S = new TPad("pad_mass_3S", "pad_mass_3S", 0.62, 0.43, 0.92, 0.86);
   TPad* pad_pull = new TPad("pad_pull", "pad_pull", 0, 0.0, 0.7, 0.25);
-  TPad* pad_leg = new TPad("pad_leg", "pad_leg", 0.7, 0.25, 1.0, 1.0);
+  TPad* pad_leg = new TPad("pad_leg", "pad_leg", 0.7, 0.25, 1.0, 0.94);
   TPad* pad_mag = new TPad("pad_mag", "pad_mag", 0.7, 0.0, 1.0, 0.25);
   c1->cd();
+  pad_mass->SetTopMargin(0.10);
+
   pad_mass->SetBottomMargin(0.04);
   pad_mass->Draw();
 
   pad_pull->Draw();
+  pad_leg->SetTopMargin(0.20);
   pad_leg->Draw();
   pad_mag->Draw();
   pad_mass->cd();
@@ -316,6 +319,7 @@ void DrawHistMC(TFile* file1 ){
   TPad* pad_leg = new TPad("pad_leg", "pad_leg", 0.7, 0.25, 1.0, 1.0);
   TPad* pad_mag = new TPad("pad_mag", "pad_mag", 0.7, 0.0, 1.0, 0.25);
   c1->cd();
+  pad_mass->SetTopMargin(0.1);
   pad_mass->SetBottomMargin(0.04);
   pad_mass->Draw();
 

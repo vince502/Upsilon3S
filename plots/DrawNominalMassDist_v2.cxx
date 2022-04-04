@@ -48,7 +48,7 @@ void DrawNominalMassDist_(ana_bins ab, long ts = 9999999999){
   
   RooPlot* plot1 = vmass->frame(Nmassbins);
   plot1->GetYaxis()->CenterTitle();
-  plot1->GetXaxis()->SetTitle("m_{#mu^{+}#mu^{-}} (GeV/c^{2})");
+  plot1->GetXaxis()->SetTitle("m_{#mu^{+}#mu^{#font[122]{\55}}} (GeV/c^{2})");
   plot1->GetXaxis()->CenterTitle();
   plot1->GetYaxis()->SetTitleSize(0.055);
   plot1->GetXaxis()->SetTitleSize(0.055);
@@ -103,10 +103,11 @@ void DrawNominalMassDist_(ana_bins ab, long ts = 9999999999){
 //  plot1->GetXaxis()->SetTitleSize(0);
   TLatex* lt0 = new TLatex();
   FormLatex(lt0, 12, 0.030);
-  lt0->DrawLatex(0.5,0.8, Form("p_{T}^{#mu#mu} < %d GeV/c", ab.ph));
-  lt0->DrawLatex(0.5,0.74, Form("|y^{#mu#mu}| < 2.4"));
+  lt0->DrawLatex(0.5,0.8, Form("p_{T}^{#mu^{+}#mu^{#font[122]{\55}}} < %d GeV/c", ab.ph));
+  lt0->DrawLatex(0.5,0.74, Form("|y^{#mu^{+}#mu^{#font[122]{\55}}}| < 2.4"));
   lt0->DrawLatex(0.5,0.68, Form("p_{T}^{#mu} > %s GeV/c", "3.5"));
   lt0->DrawLatex(0.5,0.62, Form("|#eta^{#mu}| < 2.4"));
+  lt0->DrawLatex(0.5,0.56, Form("Centrality 0-90%%"));
   TLegend* leg = new TLegend(0.71, 0.42, 0.95,0.7 );
   leg->SetTextSize(0.030);
   leg->AddEntry("massPlot" ,"Data", "ep");

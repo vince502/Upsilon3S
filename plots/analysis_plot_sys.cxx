@@ -40,7 +40,7 @@
 #include "../BDT/bininfo.h"
 #include "../BDT/BDTtraindiff.cxx"
 #include "../glauberparams_PbPb5TeV.h"
-#include "theory/get_theory.cxx"
+//#include "theory/get_theory.cxx"
 
 TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	std::vector<TH1D*> vhist = {};
@@ -380,7 +380,7 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	g_c2s_sys.Draw("5");
 	g_c3s_sys.Draw("5");
 	lineone->DrawLine(0, 1, 420, 1);
-	tl->DrawLatex( 40, 1.15,"p^{#mu#mu}_{T} < 30 GeV/c");
+	tl->DrawLatex( 40, 1.15,"p_{T} < 30 GeV/c");
 	tl->DrawLatex( 40, 1.06, "|y| < 2.4");
 	leg_cent->Draw();
 
@@ -453,8 +453,8 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	lineone->DrawLine(0, 1, 30, 1);
 	tl->SetTextSize(0.037);
 	tl->SetTextAlign(11);
-	tl->DrawLatex( 2.5, 1.15,"p^{#mu#mu}_{T} < 30 GeV/c");
-	tl->DrawLatex( 11, 1.15, "|y| < 2.4");
+//	tl->DrawLatex( 2.5, 1.15,"p_{T} < 30 GeV/c");
+	tl->DrawLatex( 2.5, 1.15, "|y| < 2.4");
 	tl->DrawLatex( 2.5,1.06, "Cent. 0-90 %");
 	leg_pt->Draw();
 	b_pterr->SetX1(0);
@@ -751,7 +751,7 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 //	line_c3s_1->Draw();
 
 	lineone->DrawLine(0, 1, 420, 1);
-	tl->DrawLatex( 40, 1.15,"p^{#mu#mu}_{T} < 30 GeV/c");
+	tl->DrawLatex( 40, 1.15,"p_{T} < 30 GeV/c");
 	tl->DrawLatex( 40, 1.06, "|y| < 2.4");
 	leg_cent2->Draw();
 	
@@ -761,8 +761,9 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
     b_err->SetX2(380);
     b_err->SetY1(1 - fabs(glb_errMB_PP));
     b_err->SetY2(1 + fabs(glb_errMB_PP));
-    b_err->SetFillColorAlpha(12, 0.8);
-    b_err->SetLineWidth(1);
+    b_err->SetFillColorAlpha(12, 0.0);
+    b_err->SetLineWidth(2);
+    b_err->SetLineColor(kGray+2);
     b_2serr->SetX1(380);
     b_2serr->SetX2(400);
     b_2serr->SetY1(1 - fabs(glb_2serr));
@@ -842,19 +843,19 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	lineone->DrawLine(0, 1, 30, 1);
 	tl->SetTextSize(0.037);
 	tl->SetTextAlign(11);
-	tl->DrawLatex( 2.5, 1.15,"p^{#mu#mu}_{T} < 30 GeV/c");
-	tl->DrawLatex( 11, 1.15, "|y| < 2.4");
+//	tl->DrawLatex( 2.5, 1.15,"p_{T} < 30 GeV/c");
+	tl->DrawLatex( 2.5, 1.15, "|y| < 2.4");
 	tl->DrawLatex( 2.5,1.06, "Cent. 0-90 %");
 	leg_pt2->Draw();
 	arr_c3s_0->DrawArrow(17.45,0.66,17.45, 0.61, 0.015,"|->");
 
-	b_pterr->SetX1(0);
-	b_pterr->SetX2(2);
+	b_pterr->SetX1(28);
+	b_pterr->SetX2(30);
 	b_pterr->SetY1(1 - glb_errpt);
 	b_pterr->SetY2(1 + glb_errpt);
 	b_pterr->SetFillColorAlpha(12, 0.8);
-	b_pterr->SetLineWidth(1);
-	b_pterr->SetLineColor(kBlack);
+	b_pterr->SetLineWidth(2);
+	b_pterr->SetLineColor(kGray+2);
 	b_pterr->Draw("L");
 
 	p2a->Draw();
@@ -875,123 +876,123 @@ TGraphAsymmErrors analysis_plot_sys(TFile* hf, TFile* hsys, TFile* ppsys){
 	c2a->SaveAs(Form("../checkout/tscol/RAA_pt_v2_HIN16023_%ld.pdf", _TS));
 	c1a->Write();
 	c2a->Write();
-	leg_cent2->AddEntry(&pg_c1s, "#Upsilon(1S) PLB 790 (2019) 270", "pl");
-	leg_pt2->AddEntry(&pg_p1s, "#Upsilon(1S) PLB 790 (2019) 270", "pl");
-	arr_c3s_0->Clear();
-	arr_c3s_1->Clear();
-	pg_i2s.Clear();
-	pg_c2s.Clear();
-	pg_p2s.Clear();
-	c1a->cd();
-	p1_La->cd();
-	p1_La->Clear();
-	g_c2s.Draw("APE");
-	draw_theory_EPPS16(p1_La, leg_cent2_2, kTCent, 2);
-	draw_theory_EPPS16(p1_La, leg_cent2_2, kTCent, 3);
-	draw_theory_QTraj(p1_La,  leg_cent2_2, kTCent, 2);
-	draw_theory_QTraj(p1_La,  leg_cent2_2, kTCent, 3);
-	g_c2s.Draw("PE");
-	g_c3s.Draw("PE ");
-	pg_c1s.Draw("PE");
-	g_c2s_sys.Draw("5");
-	g_c3s_sys.Draw("5");
-
-	leg_cent2->Clear();
-	leg_cent2_2->Draw();
-//	arr_c3s_0->DrawArrow(228,0.65,228, 0.60, 0.015,"|->");
-
-
-	lineone->DrawLine(0, 1, 420, 1);
-	tl->DrawLatex( 40, 1.15,"p^{#mu#mu}_{T} < 30 GeV/c");
-	tl->DrawLatex( 40, 1.06, "|y| < 2.4");
-	
-    b_err->SetX1(360);
-    b_err->SetX2(380);
-    b_err->SetY1(1 - fabs(glb_errMB_PP));
-    b_err->SetY2(1 + fabs(glb_errMB_PP));
-    b_err->SetFillColorAlpha(12, 0.8);
-    b_err->SetLineWidth(1);
-    b_2serr->SetX1(380);
-    b_2serr->SetX2(400);
-    b_2serr->SetY1(1 - fabs(glb_2serr));
-    b_2serr->SetY2(1 + fabs(glb_2serr));
-//    std::cout <<"Global Error 2S " << b_y2err->GetY1() << std::endl;
-    b_2serr->SetFillColorAlpha(kAzure-3, 0.8);
-    b_2serr->SetLineWidth(1);
-    b_3serr->SetX1(400);
-    b_3serr->SetX2(420);
-    b_3serr->SetY1(1 - glb_3serr);
-    b_3serr->SetY2(1 + glb_3serr);
-    b_3serr->SetFillColorAlpha(kTeal+5, 0.8);
-    b_3serr->SetLineWidth(1);
-//  b_3serr->SetLineColor();
-	b_err->Draw("L");
-	b_3serr->Draw("L");
-    b_2serr->Draw("L");
-
-	p1_Ra->cd();
-	p1_Ra->Clear();
-	g_i2s.Draw("APE");
-	g_i3s.Draw("PE");
-	pg_i1s.Draw("PE");
-	g_i2s_sys.Draw("5");
-	g_i3s_sys.Draw("5");
-
-	lineone->DrawLine(0,1,4,1);
-	tl->SetTextSize(0.037* p2scale);
-	tl->SetTextAlign(21);
-	tl->DrawLatex( 2., 1.02, "Cent.");
-	tl->DrawLatex( 2., 0.94, "0-90 %");
-	p1_Ra->Update();
-	p1_Ra->Draw();
-
-
-	c2a->cd();
-	p2a->cd();
-	p2a->Clear();
-	g_p2s.Draw("APE");
-	draw_theory_EPPS16(p2a,leg_pt2_2,  kTPt, 2);
-	draw_theory_EPPS16(p2a,leg_pt2_2,  kTPt, 3);
-	draw_theory_QTraj(p2a, leg_pt2_2, kTPt, 2);
-	draw_theory_QTraj(p2a, leg_pt2_2, kTPt, 3);
-	g_p2s.Draw("PE");
-	g_p3s.Draw("PE");
-	pg_p1s.Draw("PE");
-	g_p2s_sys.Draw("5");
-	g_p3s_sys.Draw("5");
-//	leg_pt2->SetY1(leg_pt2->GetY1() +0.2);
-	leg_pt2->Clear();
-	leg_pt2_2->Draw();
-
-	lineone->DrawLine(0, 1, 30, 1);
-	tl->SetTextSize(0.037);
-	tl->SetTextAlign(11);
-	tl->DrawLatex( 2.5, 1.15,"p^{#mu#mu}_{T} < 30 GeV/c");
-	tl->DrawLatex( 11, 1.15, "|y| < 2.4");
-	tl->DrawLatex( 2.5,1.06, "Cent. 0-90 %");
-
-	b_pterr->SetX1(0);
-	b_pterr->SetX2(2);
-	b_pterr->SetY1(1 - glb_errpt);
-	b_pterr->SetY2(1 + glb_errpt);
-	b_pterr->SetFillColorAlpha(12, 0.8);
-	b_pterr->SetLineWidth(1);
-	b_pterr->SetLineColor(kBlack);
-	b_pterr->Draw("L");
-//	arr_c3s_0->DrawArrow(17.45,0.7,17.45, 0.65, 0.015,"|->");
-
-	c1a->cd();
-	p1_La->cd();
-	CMS_lumi_square(p1_La,103, 33);
-
-	c2a->cd();
-	p2a->cd();
-	CMS_lumi_square( p2a, 103, 33);
-
-	output2->cd();
-	c1a->SaveAs(Form("../checkout/tscol/RAA_centrality_int_v2_HIN16023_w1S_%ld.pdf", _TS));
-	c2a->SaveAs(Form("../checkout/tscol/RAA_pt_v2_HIN16023_w1S_%ld.pdf", _TS));
-
+//	leg_cent2->AddEntry(&pg_c1s, "#Upsilon(1S) PLB 790 (2019) 270", "pl");
+//	leg_pt2->AddEntry(&pg_p1s, "#Upsilon(1S) PLB 790 (2019) 270", "pl");
+//	arr_c3s_0->Clear();
+//	arr_c3s_1->Clear();
+//	pg_i2s.Clear();
+//	pg_c2s.Clear();
+//	pg_p2s.Clear();
+//	c1a->cd();
+//	p1_La->cd();
+//	p1_La->Clear();
+//	g_c2s.Draw("APE");
+//	draw_theory_EPPS16(p1_La, leg_cent2_2, kTCent, 2);
+//	draw_theory_EPPS16(p1_La, leg_cent2_2, kTCent, 3);
+//	draw_theory_QTraj(p1_La,  leg_cent2_2, kTCent, 2);
+//	draw_theory_QTraj(p1_La,  leg_cent2_2, kTCent, 3);
+//	g_c2s.Draw("PE");
+//	g_c3s.Draw("PE ");
+//	pg_c1s.Draw("PE");
+//	g_c2s_sys.Draw("5");
+//	g_c3s_sys.Draw("5");
+//
+//	leg_cent2->Clear();
+//	leg_cent2_2->Draw();
+////	arr_c3s_0->DrawArrow(228,0.65,228, 0.60, 0.015,"|->");
+//
+//
+//	lineone->DrawLine(0, 1, 420, 1);
+//	tl->DrawLatex( 40, 1.15,"p_{T} < 30 GeV/c");
+//	tl->DrawLatex( 40, 1.06, "|y| < 2.4");
+//	
+//    b_err->SetX1(360);
+//    b_err->SetX2(380);
+//    b_err->SetY1(1 - fabs(glb_errMB_PP));
+//    b_err->SetY2(1 + fabs(glb_errMB_PP));
+//    b_err->SetFillColorAlpha(12, 0.8);
+//    b_err->SetLineWidth(1);
+//    b_2serr->SetX1(380);
+//    b_2serr->SetX2(400);
+//    b_2serr->SetY1(1 - fabs(glb_2serr));
+//    b_2serr->SetY2(1 + fabs(glb_2serr));
+////    std::cout <<"Global Error 2S " << b_y2err->GetY1() << std::endl;
+//    b_2serr->SetFillColorAlpha(kAzure-3, 0.8);
+//    b_2serr->SetLineWidth(1);
+//    b_3serr->SetX1(400);
+//    b_3serr->SetX2(420);
+//    b_3serr->SetY1(1 - glb_3serr);
+//    b_3serr->SetY2(1 + glb_3serr);
+//    b_3serr->SetFillColorAlpha(kTeal+5, 0.8);
+//    b_3serr->SetLineWidth(1);
+////  b_3serr->SetLineColor();
+//	b_err->Draw("L");
+//	b_3serr->Draw("L");
+//    b_2serr->Draw("L");
+//
+//	p1_Ra->cd();
+//	p1_Ra->Clear();
+//	g_i2s.Draw("APE");
+//	g_i3s.Draw("PE");
+//	pg_i1s.Draw("PE");
+//	g_i2s_sys.Draw("5");
+//	g_i3s_sys.Draw("5");
+//
+//	lineone->DrawLine(0,1,4,1);
+//	tl->SetTextSize(0.037* p2scale);
+//	tl->SetTextAlign(21);
+//	tl->DrawLatex( 2., 1.02, "Cent.");
+//	tl->DrawLatex( 2., 0.94, "0-90 %");
+//	p1_Ra->Update();
+//	p1_Ra->Draw();
+//
+//
+//	c2a->cd();
+//	p2a->cd();
+//	p2a->Clear();
+//	g_p2s.Draw("APE");
+//	draw_theory_EPPS16(p2a,leg_pt2_2,  kTPt, 2);
+//	draw_theory_EPPS16(p2a,leg_pt2_2,  kTPt, 3);
+//	draw_theory_QTraj(p2a, leg_pt2_2, kTPt, 2);
+//	draw_theory_QTraj(p2a, leg_pt2_2, kTPt, 3);
+//	g_p2s.Draw("PE");
+//	g_p3s.Draw("PE");
+//	pg_p1s.Draw("PE");
+//	g_p2s_sys.Draw("5");
+//	g_p3s_sys.Draw("5");
+////	leg_pt2->SetY1(leg_pt2->GetY1() +0.2);
+//	leg_pt2->Clear();
+//	leg_pt2_2->Draw();
+//
+//	lineone->DrawLine(0, 1, 30, 1);
+//	tl->SetTextSize(0.037);
+//	tl->SetTextAlign(11);
+//	tl->DrawLatex( 2.5, 1.15,"p_{T} < 30 GeV/c");
+//	tl->DrawLatex( 11, 1.15, "|y| < 2.4");
+//	tl->DrawLatex( 2.5,1.06, "Cent. 0-90 %");
+//
+//	b_pterr->SetX1(0);
+//	b_pterr->SetX2(2);
+//	b_pterr->SetY1(1 - glb_errpt);
+//	b_pterr->SetY2(1 + glb_errpt);
+//	b_pterr->SetFillColorAlpha(12, 0.8);
+//	b_pterr->SetLineWidth(1);
+//	b_pterr->SetLineColor(kBlack);
+//	b_pterr->Draw("L");
+////	arr_c3s_0->DrawArrow(17.45,0.7,17.45, 0.65, 0.015,"|->");
+//
+//	c1a->cd();
+//	p1_La->cd();
+//	CMS_lumi_square(p1_La,103, 33);
+//
+//	c2a->cd();
+//	p2a->cd();
+//	CMS_lumi_square( p2a, 103, 33);
+//
+//	output2->cd();
+//	c1a->SaveAs(Form("../checkout/tscol/RAA_centrality_int_v2_HIN16023_w1S_%ld.pdf", _TS));
+//	c2a->SaveAs(Form("../checkout/tscol/RAA_pt_v2_HIN16023_w1S_%ld.pdf", _TS));
+//
 	output2->Close();
 //	c1->SaveAs("RAA_SYST_CENT_PT.pdf");
 	return g_p2s;

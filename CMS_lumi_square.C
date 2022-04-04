@@ -115,14 +115,14 @@ void CMS_lumi_square( TPad* pad, int iPeriod=101, int iPosX=10 )
   latex.SetTextFont(42);
   latex.SetTextAlign(31); 
   latex.SetTextSize(lumiTextSize*t);    
-  latex.DrawLatex(1-r,1-t+lumiTextOffset*t-0.014,lumiText);
+  latex.DrawLatex(1-r,1-t+lumiTextOffset*t-0.008,lumiText);
 
   if( outOfFrame )
   {
     latex.SetTextFont(cmsTextFont);
     latex.SetTextAlign(11); 
     latex.SetTextSize(cmsTextSize*t);    
-    latex.DrawLatex(l,1-t+lumiTextOffset*t,cmsText);
+    latex.DrawLatex(l,1-t+lumiTextOffset*t +0.002,cmsText);
   }
 
   pad->cd();
