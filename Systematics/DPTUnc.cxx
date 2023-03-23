@@ -26,6 +26,6 @@ double getDPTVariUnc(ana_bins x){
 };
 
 void DPTUnc(){
-	sys_wr_helper(Form("effDPTQuad_unc_%ld.root",_TS), getDPTVariUnc);
+	sys_wr_helper(Form("effDPTQuad_unc_%ld.root",ts_alias(_TS)), getDPTVariUnc);
 }
 

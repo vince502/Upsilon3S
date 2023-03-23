@@ -13,6 +13,10 @@ binplotter::binplotter(ana_bins x, int _bdtptMin, int _bdtptMax ){
   init(false);
 };
 #endif
+binplotter::binplotter(long _ts, ana_bins _x, string _type, double _bcut){
+  type = _type; ts = _ts; ylim = 2.4, pl = (double) _x.pl; ph = (double) _x.ph; cl = _x.cl; ch = _x.ch; blow = _bcut; bhigh = 1; bdtptMin = _x.bpl; bdtptMax = _x.bph; target_state = _x.state; eff_old = false; train_state = _x.train_state;
+  init(false);
+};
 binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _vcut, double _blow, double _bhigh, int _bdtptMin, int _bdtptMax, int _train_state =3, int _target_state=3,  bool find_bdt = false, bool _eff_old = false){
   type = _type; ts = _ts; ylim = _ylim;  pl = _pl; ph = _ph; cl = _cl; ch = _ch; blow = _blow; bhigh = _bhigh; bdtptMin = _bdtptMin; bdtptMax = _bdtptMax;train_state = _train_state; target_state = _target_state; eff_old = _eff_old; vcut= _vcut;
 
@@ -27,6 +31,9 @@ binplotter::binplotter(std::string _type, long _ts, double _ylim, int _pl, int _
 
 binplotter::~binplotter(){ 
 	std::cout << "[bp][Deconstruct] call" << std::endl;
+	if(file1->IsOpen() ) file1->Close();
+//	if( NS ) delete NS;
+//	if( NB ) delete NB;
 };
 
 void binplotter::init(bool get_bdt= true){

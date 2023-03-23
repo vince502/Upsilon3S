@@ -397,31 +397,49 @@ void analysis_plots_combine_func_w1s_theory2(TFile* hf, TFile* hsys, TFile* ppsy
 	lineone->SetLineWidth(1);
 
 	TLatex* tl = new TLatex();
-	tl->SetTextSize(0.037);
+	tl->SetTextSize(0.042);
 	tl->SetTextFont(42);
 
-	TLegend* leg_cent = new TLegend(0.38, 0.48, 0.7, 0.70);
-	leg_cent->AddEntry(pg_c1s, "#Upsilon(1S) (2015 PbPb/pp)", "pl");
-	leg_cent->AddEntry(g_c2s, "#Upsilon(2S)", "pl");
-	leg_cent->AddEntry(g_c3s, "#Upsilon(3S)", "pl");
+	TLegend* leg_cent = new TLegend(0.37, 0.54, 0.61, 0.70);
+	leg_cent->AddEntry(pg_c1s, "#Upsilon(1S) (2015 PbPb/pp)", "pe");
+	leg_cent->AddEntry(g_c2s, "#Upsilon(2S)", "pe");
+	leg_cent->AddEntry(g_c3s, "#Upsilon(3S)", "pe");
 	leg_cent->SetBorderSize(0);
 	leg_cent->SetTextFont(42);
 	leg_cent->SetTextSize(0.030);
+	leg_cent->SetFillStyle(0);
+	TLegend* leg_cent_box = new TLegend(0.37, 0.54, 0.61, 0.70);
+	leg_cent_box->AddEntry(pg_c1s_sys, "#Upsilon(1S) (2015 PbPb/pp)", "f");
+	leg_cent_box->AddEntry(g_c2s_sys, "#Upsilon(2S)", "f");
+	leg_cent_box->AddEntry(g_c3s_sys, "#Upsilon(3S)", "f");
+	leg_cent_box->SetBorderSize(0);
+	leg_cent_box->SetTextFont(42);
+	leg_cent_box->SetTextSize(0.030);
+	leg_cent_box->SetFillStyle(0);
 
-	TLegend* leg_pt = new TLegend(0.18, 0.47, 0.52, 0.7);
-	leg_pt->AddEntry(pg_p1s, "#Upsilon(1S) (2015 PbPb/pp)", "pl");
-	leg_pt->AddEntry(g_p2s, "#Upsilon(2S)", "pl");
-	leg_pt->AddEntry(g_p3s, "#Upsilon(3S)", "pl");
+	TLegend* leg_pt = new TLegend(0.24, 0.47, 0.56, 0.65);
+	leg_pt->AddEntry(pg_p1s, "#Upsilon(1S) (2015 PbPb/pp)", "pe");
+	leg_pt->AddEntry(g_p2s, "#Upsilon(2S)", "pe");
+	leg_pt->AddEntry(g_p3s, "#Upsilon(3S)", "pe");
 	leg_pt->SetBorderSize(0);
 	leg_pt->SetTextFont(42);
 	leg_pt->SetTextSize(0.030);
+	leg_pt->SetFillStyle(0);
+	TLegend* leg_pt_box = new TLegend(0.24, 0.47, 0.56, 0.65);
+	leg_pt_box->AddEntry(pg_p1s_sys, "#Upsilon(1S) (2015 PbPb/pp)", "f");
+	leg_pt_box->AddEntry(g_p2s_sys, "#Upsilon(2S)", "f");
+	leg_pt_box->AddEntry(g_p3s_sys, "#Upsilon(3S)", "f");
+	leg_pt_box->SetBorderSize(0);
+	leg_pt_box->SetTextFont(42);
+	leg_pt_box->SetTextSize(0.030);
+	leg_pt_box->SetFillStyle(0);
 
 	TLegend* leg_cent_theory = new TLegend(0.67, 0.40, 0.85, 0.60);
 	leg_cent_theory->SetBorderSize(0);
 	leg_cent_theory->SetTextFont(42);
 	leg_cent_theory->SetTextSize(0.030);
 
-	TLegend* leg_pt_theory = new TLegend(0.54, 0.47, 0.85, 0.7);
+	TLegend* leg_pt_theory = new TLegend(0.58, 0.47, 0.89, 0.7);
 	leg_pt_theory->SetBorderSize(0);
 	leg_pt_theory->SetTextFont(42);
 	leg_pt_theory->SetTextSize(0.030);
@@ -441,6 +459,10 @@ void analysis_plots_combine_func_w1s_theory2(TFile* hf, TFile* hsys, TFile* ppsy
 	p2->SetTicks();
 	p1_L->SetRightMargin(0);
 	p1_R->SetLeftMargin(0);
+	p1_L->SetRightMargin(0);
+	p1_L->SetLeftMargin(0.13);
+	p1_R->SetLeftMargin(0);
+	p2->SetLeftMargin(0.12);
 	////////READY PADS/////////
 	c1->cd();
 	p1_L->Draw();
@@ -466,9 +488,10 @@ void analysis_plots_combine_func_w1s_theory2(TFile* hf, TFile* hsys, TFile* ppsy
     draw_theory_QTraj(p1_L,  leg_cent_theory, kTCent, 2);
     draw_theory_QTraj(p1_L,  leg_cent_theory, kTCent, 3);
 	TLine* p1_L_line1 = lineone->DrawLine(0, 1, 420, 1);
-	TLatex* p1_L_latex1 = tl->DrawLatex( 40, 1.15,"p_{T} < 30 GeV/c");
-	TLatex* p1_L_latex2 = tl->DrawLatex( 40, 1.06, "|y| < 2.4");
-	leg_cent->Draw();
+	TLatex* p1_L_latex1 = tl->DrawLatex( 40, 1.15,"#it{p}_{T} < 30 GeV/c");
+	TLatex* p1_L_latex2 = tl->DrawLatex( 40, 1.06, "|#it{y}| < 2.4");
+	leg_cent_box->Draw();
+	leg_cent->Draw("same");
 	leg_cent_theory->Draw();
 	b_err->  Draw("L");
 	b_2serr->Draw("L");
@@ -498,10 +521,10 @@ void analysis_plots_combine_func_w1s_theory2(TFile* hf, TFile* hsys, TFile* ppsy
 	g_i2s_sys->Draw("5");
 	g_i3s_sys->Draw("5");
 	TLine* p1_R_line1 = lineone->DrawLine(0,1,4,1);
-	tl->SetTextSize(0.037* p2scale);
+	tl->SetTextSize(0.042* p2scale);
 	tl->SetTextAlign(21);
 	TLatex* p1_R_latex1 = tl->DrawLatex( 2.0, 1.02, "Cent.");
-	TLatex* p1_R_latex2 = tl->DrawLatex( 2.0, 0.94, "0-90 %");
+	TLatex* p1_R_latex2 = tl->DrawLatex( 2.0, 0.94, "0-90%");
 	towrite["g_i2s_sys"] = g_i2s_sys;
 	towrite["g_i3s_sys"] = g_i3s_sys;
 	towrite["g_i3s"] = g_i3s;
@@ -530,11 +553,11 @@ void analysis_plots_combine_func_w1s_theory2(TFile* hf, TFile* hsys, TFile* ppsy
     draw_theory_QTraj(p2, leg_pt_theory, kTPt, 2);
     draw_theory_QTraj(p2, leg_pt_theory, kTPt, 3);
 	TLine* p2_line1 = lineone->DrawLine(0, 1, 30, 1);
-	tl->SetTextSize(0.037);
+	tl->SetTextSize(0.042);
 	tl->SetTextAlign(11);
 //	TLatex* p2_latex1 = tl->DrawLatex( 2.5, 1.15,"p_{T} < 30 GeV/c");
-	TLatex* p2_latex2 = tl->DrawLatex( 2.5, 1.15, "|y| < 2.4");
-	TLatex* p2_latex3 = tl->DrawLatex( 2.5,1.06, "Cent. 0-90 %");
+	TLatex* p2_latex2 = tl->DrawLatex( 2.5, 1.15, "|#it{y}| < 2.4");
+	TLatex* p2_latex3 = tl->DrawLatex( 2.5,1.06, "Cent. 0-90%");
 	towrite["g_p2s"] = g_p2s;
 	towrite["g_p3s"] = g_p3s;
 	towrite["g_p3s_sys"] = g_p3s_sys;
@@ -544,7 +567,8 @@ void analysis_plots_combine_func_w1s_theory2(TFile* hf, TFile* hsys, TFile* ppsy
 	towrite["p2_latex2"] = p2_latex2;
 	towrite["p2_latex3"] = p2_latex3;
 	towrite["leg_pt"] = leg_pt;
-	leg_pt->Draw();
+	leg_pt_box->Draw();
+	leg_pt->Draw("same");
 	leg_pt_theory->Draw();
 	b_pterr->Draw("L");
 	towrite["p2_box1"] = b_pterr;
@@ -554,10 +578,10 @@ void analysis_plots_combine_func_w1s_theory2(TFile* hf, TFile* hsys, TFile* ppsy
 	//LUMIFY PADS AND COMBINE PLOTS//
 	c1->cd();
 	p1_L->cd();
-	CMS_lumi_square(p1_L,103, 33);
+	CMS_lumi_square(p1_L,103, 33, 2);
 	c2->cd();
 	p2->cd();
-	CMS_lumi_square( p2, 103, 33);
+	CMS_lumi_square( p2, 103, 33, 2);
 	c1->Update();
 	c1->Modified();
 	c2->Update();
@@ -653,10 +677,10 @@ void analysis_plots_combine_func_w1s_theory2(TFile* hf, TFile* hsys, TFile* ppsy
 //	g_i23s->Draw("APE");
 //	g_i23s_sys->Draw("5");
 //	p1_R_line1 = lineone->DrawLine(1,1,4,1);
-//	tl->SetTextSize(0.037* p2scale);
+//	tl->SetTextSize(0.042* p2scale);
 //	tl->SetTextAlign(21);
 //	p1_R_latex1 = tl->DrawLatex( 2.5, 1.02, "Cent.");
-//	p1_R_latex2 = tl->DrawLatex( 2.5, 0.94, "0-90 %");
+//	p1_R_latex2 = tl->DrawLatex( 2.5, 0.94, "0-90%");
 //	p1_R->Update();
 //	p1_R->Draw();
 //	towrite["p1_R"] = p1_R;
@@ -667,11 +691,11 @@ void analysis_plots_combine_func_w1s_theory2(TFile* hf, TFile* hsys, TFile* ppsy
 //	g_p23s->Draw("APE");
 //	g_p23s_sys->Draw("5");
 //	p2_line1 = lineone->DrawLine(0, 1, 30, 1);
-//	tl->SetTextSize(0.037);
+//	tl->SetTextSize(0.042);
 //	tl->SetTextAlign(11);
 //	tl->DrawLatex( 2.5, label_pos_up + 0.05,"p_{T} < 30 GeV/c");
 //	tl->DrawLatex( 12, label_pos_up + 0.05 , "|y| < 2.4");
-//	tl->DrawLatex( 2.5,label_pos_up - 0.15 , "Cent. 0-90 %");
+//	tl->DrawLatex( 2.5,label_pos_up - 0.15 , "Cent. 0-90%");
 ////	leg_pt->Draw();
 //	b_pterr->Draw("L");
 //
@@ -705,155 +729,3 @@ void analysis_plots_combine_func_w1s_theory2(TFile* hf, TFile* hsys, TFile* ppsy
 //	}
 	output->cd();
 };
-
-
-//void invokePAgraph(
-//	TGraphAsymmErrors& pg_c1s,TGraphAsymmErrors& pg_c1s_sys,
-//	TGraphAsymmErrors& pg_c2s,TGraphAsymmErrors& pg_c2s_sys,
-//	TGraphAsymmErrors& pg_i1s,TGraphAsymmErrors& pg_i1s_sys,
-//	TGraphAsymmErrors& pg_i2s,TGraphAsymmErrors& pg_i2s_sys,
-//	TGraphAsymmErrors& pg_p1s,TGraphAsymmErrors& pg_p1s_sys,
-//	TGraphAsymmErrors& pg_p2s,TGraphAsymmErrors& pg_p2s_sys
-//){
-//
-/////1S/////////
-//	pg_c1s.SetPoint(0,8.3000002, 0.79200000);
-//	pg_c1s.SetPoint(1,30.600000, 0.92199999);
-//	pg_c1s.SetPoint(2, 53.900002, 0.60900003);
-//	pg_c1s.SetPoint(3, 87.000000, 0.52399999);
-//	pg_c1s.SetPoint(4, 131.39999, 0.48500001);
-//	pg_c1s.SetPoint(5, 189.20000, 0.40200001);
-//	pg_c1s.SetPoint(6, 264.20001, 0.32400000);
-//	pg_c1s.SetPoint(7, 333.29999, 0.32100001);
-//	pg_c1s.SetPoint(8, 384.29999, 0.31900001);
-//
-//	pg_i1s.SetPoint(0, 1, 0.376 );
-//
-//	pg_p1s.SetPoint(0, 1,	 0.301);
-//	pg_p1s.SetPoint(1, 3,	 0.362);
-//	pg_p1s.SetPoint(2, 5,	 0.388);
-//	pg_p1s.SetPoint(3, 7.5, 0.402);
-//	pg_p1s.SetPoint(4, 10.5,0.422);
-//	pg_p1s.SetPoint(5, 21,	 0.425);
-//
-//	pg_c1s_sys.SetPoint(0,8.3000002, 0.79200000);
-//	pg_c1s_sys.SetPoint(1,30.600000, 0.92199999);
-//	pg_c1s_sys.SetPoint(2, 53.900002, 0.60900003);
-//	pg_c1s_sys.SetPoint(3, 87.000000, 0.52399999);
-//	pg_c1s_sys.SetPoint(4, 131.39999, 0.48500001);
-//	pg_c1s_sys.SetPoint(5, 189.20000, 0.40200001);
-//	pg_c1s_sys.SetPoint(6, 264.20001, 0.32400000);
-//	pg_c1s_sys.SetPoint(7, 333.29999, 0.32100001);
-//	pg_c1s_sys.SetPoint(8, 384.29999, 0.31900001);
-//
-//	pg_i1s_sys.SetPoint(0, 1, 0.376 );
-//
-//	pg_p1s_sys.SetPoint(0, 1,	 0.301);
-//	pg_p1s_sys.SetPoint(1, 3,	 0.362);
-//	pg_p1s_sys.SetPoint(2, 5,	 0.388);
-//	pg_p1s_sys.SetPoint(3, 7.5, 0.402);
-//	pg_p1s_sys.SetPoint(4, 10.5,0.422);
-//	pg_p1s_sys.SetPoint(5, 21,	 0.425);
-//
-//	pg_c1s.SetPointError(0, 0, 0, 0.13100000, 0.13100000);
-//	pg_c1s.SetPointError(1, 0, 0, 0.088000000, 0.088000000);
-//	pg_c1s.SetPointError(2, 0, 0, 0.052999999, 0.052999999);
-//	pg_c1s.SetPointError(3, 0, 0, 0.035999998, 0.035999998);
-//	pg_c1s.SetPointError(4, 0, 0, 0.027000001, 0.027000001);
-//	pg_c1s.SetPointError(5, 0, 0, 0.039000001, 0.039000001);
-//	pg_c1s.SetPointError(6, 0, 0, 0.017000001, 0.017000001);
-//	pg_c1s.SetPointError(7, 0, 0, 0.021000000, 0.021000000);
-//	pg_c1s.SetPointError(8, 0, 0, 0.018999999, 0.018999999);
-//
-//	pg_i1s.SetPointError(0 ,0, 0,  quadsum(0.013, 0), quadsum(0.013,0) );
-//         
-//	pg_p1s.SetPointError(0, 1.0, 1.0, quadsum(0.027, 0.000), quadsum(0.027, 0.000));
-//	pg_p1s.SetPointError(1, 1.0, 1.0, quadsum(0.029, 0.000), quadsum(0.029, 0.000));
-//	pg_p1s.SetPointError(2, 1.0, 1.0, quadsum(0.033, 0.000), quadsum(0.033, 0.000));
-//	pg_p1s.SetPointError(3, 1.5, 1.5, quadsum(0.028, 0.000), quadsum(0.028, 0.000));
-//	pg_p1s.SetPointError(4, 1.5, 1.5, quadsum(0.035, 0.000), quadsum(0.035, 0.000));
-//	pg_p1s.SetPointError(5, 9.0, 9.0, quadsum(0.026, 0.000), quadsum(0.026, 0.000));
-//
-//
-//	pg_c1s_sys.SetPointError(0, 0, 0, 0.13100000, 0.13100000);
-//	pg_c1s_sys.SetPointError(1, 0, 0, 0.088000000, 0.088000000);
-//	pg_c1s_sys.SetPointError(2, 0, 0, 0.052999999, 0.052999999);
-//	pg_c1s_sys.SetPointError(3, 0, 0, 0.035999998, 0.035999998);
-//	pg_c1s_sys.SetPointError(4, 0, 0, 0.027000001, 0.027000001);
-//	pg_c1s_sys.SetPointError(5, 0, 0, 0.039000001, 0.039000001);
-//	pg_c1s_sys.SetPointError(6, 0, 0, 0.017000001, 0.017000001);
-//	pg_c1s_sys.SetPointError(7, 0, 0, 0.021000000, 0.021000000);
-//	pg_c1s_sys.SetPointError(8, 0, 0, 0.018999999, 0.018999999);
-//
-//	pg_i1s_sys.SetPointError(0 ,0, 0,  quadsum(0.000, 0.035), quadsum(0.000,0.035) );
-//
-//	pg_p1s_sys.SetPointError(0, 1.0, 1.0, quadsum(0.000, 0.123), quadsum(0.000, 0.123));
-//	pg_p1s_sys.SetPointError(1, 1.0, 1.0, quadsum(0.000, 0.035), quadsum(0.000, 0.035));
-//	pg_p1s_sys.SetPointError(2, 1.0, 1.0, quadsum(0.000, 0.035), quadsum(0.000, 0.035));
-//	pg_p1s_sys.SetPointError(3, 1.5, 1.5, quadsum(0.000, 0.032), quadsum(0.000, 0.032));
-//	pg_p1s_sys.SetPointError(4, 1.5, 1.5, quadsum(0.000, 0.045), quadsum(0.000, 0.045));
-//	pg_p1s_sys.SetPointError(5, 9.0, 9.0, quadsum(0.000, 0.036), quadsum(0.000, 0.036));
-//
-/////2S/////////
-//	pg_c2s.SetPoint(0, 8.3,	 0.563);
-//	pg_c2s.SetPoint(1, 30.6,	 0.530);
-//	pg_c2s.SetPoint(2, 53.9,	 0.21);
-//	pg_c2s.SetPoint(3, 87.0, 0.229);
-//	pg_c2s.SetPoint(4, 131.4,0.194);
-//	pg_c2s.SetPoint(5, 189.2,	 0.154);
-//	pg_c2s.SetPoint(6, 264.2,	 0.101);
-//	pg_c2s.SetPoint(7, 333.3,	 0.119);
-//
-//	pg_i2s.SetPoint(0, 1., 0.117 );
-//
-//	pg_c2s_sys.SetPoint(0, 8.3,	 0.563);
-//	pg_c2s_sys.SetPoint(1, 30.6,	 0.530);
-//	pg_c2s_sys.SetPoint(2, 53.9,	 0.21);
-//	pg_c2s_sys.SetPoint(3, 87.0, 0.229);
-//	pg_c2s_sys.SetPoint(4, 131.4,0.194);
-//	pg_c2s_sys.SetPoint(5, 189.2,	 0.154);
-//	pg_c2s_sys.SetPoint(6, 264.2,	 0.101);
-//	pg_c2s_sys.SetPoint(7, 333.3,	 0.119);
-//
-//	pg_i2s_sys.SetPoint(0, 1., 0.117 );
-//
-//	pg_c2s.SetPointError(0, 0.0, 0.0, quadsum(0.319, 0.000), quadsum(0.319, 0.000));
-//	pg_c2s.SetPointError(1, 0.0, 0.0, quadsum(0.170, 0.000), quadsum(0.170, 0.000));
-//	pg_c2s.SetPointError(2, 0.0, 0.0, quadsum(0.106, 0.000), quadsum(0.106, 0.000));
-//	pg_c2s.SetPointError(3, 0.0, 0.0, quadsum(0.077, 0.000), quadsum(0.077, 0.000));
-//	pg_c2s.SetPointError(4, 0.0, 0.0, quadsum(0.060, 0.000), quadsum(0.060, 0.000));
-//	pg_c2s.SetPointError(5, 0.0, 0.0, quadsum(0.092, 0.000), quadsum(0.092, 0.000));
-//	pg_c2s.SetPointError(6, 0.0, 0.0, quadsum(0.042, 0.000), quadsum(0.042, 0.000));
-//	pg_c2s.SetPointError(7, 0.0, 0.0, quadsum(0.051, 0.000), quadsum(0.051, 0.000));
-//
-//	pg_i2s.SetPointError(0 ,0, 0,  quadsum(0.022, 0.000), quadsum(0.022, 0.000) );
-//
-//	pg_p2s.SetPoint(0, 2,	 0.085);
-//	pg_p2s.SetPoint(1, 6.5,	 0.129);
-//	pg_p2s.SetPoint(2, 19.5, 0.126);
-//
-//	pg_p2s.SetPointError(0, 2.0, 2.0, quadsum(0.039, 0.000), quadsum(0.039, 0.000));
-//	pg_p2s.SetPointError(1, 2.5, 2.5, quadsum(0.038, 0.000), quadsum(0.038, 0.000));
-//	pg_p2s.SetPointError(2, 10.5, 10.5, quadsum(0.032, 0.000), quadsum(0.032, 0.000));
-//
-//
-//	pg_c2s_sys.SetPointError(0, 0.0, 0.0, quadsum(0.000, 0.136), quadsum(0.000, 0.154));
-//	pg_c2s_sys.SetPointError(1, 0.0, 0.0, quadsum(0.000, 0.128), quadsum(0.000, 0.131));
-//	pg_c2s_sys.SetPointError(2, 0.0, 0.0, quadsum(0.000, 0.037), quadsum(0.000, 0.038));
-//	pg_c2s_sys.SetPointError(3, 0.0, 0.0, quadsum(0.000, 0.023), quadsum(0.000, 0.023));
-//	pg_c2s_sys.SetPointError(4, 0.0, 0.0, quadsum(0.000, 0.019), quadsum(0.000, 0.019));
-//	pg_c2s_sys.SetPointError(5, 0.0, 0.0, quadsum(0.000, 0.032), quadsum(0.000, 0.032));
-//	pg_c2s_sys.SetPointError(6, 0.0, 0.0, quadsum(0.000, 0.031), quadsum(0.000, 0.031));
-//	pg_c2s_sys.SetPointError(7, 0.0, 0.0, quadsum(0.000, 0.009), quadsum(0.000, 0.009));
-//
-//	pg_i2s_sys.SetPointError(0 ,0, 0,  quadsum(0.000, 0.019), quadsum(0.000, 0.019) );
-//
-//	pg_p2s_sys.SetPoint(0, 2,	 0.085);
-//	pg_p2s_sys.SetPoint(1, 6.5,	 0.129);
-//	pg_p2s_sys.SetPoint(2, 19.5, 0.126);
-//
-//	pg_p2s_sys.SetPointError(0, 2.0, 2.0, quadsum(0.000, 0.095), quadsum(0.000, 0.095));
-//	pg_p2s_sys.SetPointError(1, 2.5, 2.5, quadsum(0.000, 0.031), quadsum(0.000, 0.031));
-//	pg_p2s_sys.SetPointError(2, 10.5, 10.5, quadsum(0.000, 0.016), quadsum(0.000, 0.016));
-//};
-

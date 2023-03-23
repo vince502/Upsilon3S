@@ -17,7 +17,7 @@ std::pair<string, string> get_histnames(ana_bins x){
 void TNPUnc(){
 	long ts = _TS;
 	 
-	TFile* output = new TFile(Form("./data/effTNP_unc_%ld.root",ts),"recreate");
+	TFile* output = new TFile(Form("./data/effTNP_unc_%ld.root",ts_alias(ts)),"recreate");
 	TH1D *rc2s, *rc3s, *rp2s, *rp3s;
 	rc2s = new TH1D("rc2S","",10,0,9); //include int. bin
 	rc3s = new TH1D("rc3S","",4,0,3);  //include int. bin

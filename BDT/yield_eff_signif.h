@@ -18,6 +18,7 @@ class binplotter
   public:
 	binplotter();
 	binplotter(ana_bins x, int _bdtptMin, int _bdtptMax);
+	binplotter(long _ts, ana_bins _x, string _type, double _bcut);
   	binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _vcut, double _blow, double _bhigh, int _bdtptMin, int _bdtptMax, int _train_state = 3, int _target_state =3, bool find_bdt = false, bool eff_old = false);
 //  	binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _bdtptMin, int _bdtptMax, int _train_state = 3,  int _target_state = 3, bool find_bdt = false, bool eff_old = false);
   	binplotter(std::string _type, long _ts, double _ylim, int _pl, int _ph, int _cl, int _ch, double _blow, double _bhigh, int _bdtptMin, int _bdtptMax, int _train_state = 3, int _target_state =3, bool find_bdt = false, bool eff_old = false);

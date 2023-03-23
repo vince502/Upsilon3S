@@ -106,7 +106,7 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
 //    loader->AddVariable("QQMassErr", "Dimu Mass error", "F");
   {
 
-    if(_ts - 100009000000 == 1 || true) loader->AddVariable("QQVtxProb", "Vtx prob", "F");
+//    if(_ts - 100009000000 == 1 || true) loader->AddVariable("QQVtxProb", "Vtx prob", "F");
     if(_ts - 100009000000 == 1 || true) loader->AddVariable("QQdca", "QQdca", "F");
     if(_ts - 100009000000 == 1 || true) loader->AddVariable("ctau", "2 dim ctau of the dimuon","F");
     if(_ts - 100009000000 == 1 || true) loader->AddVariable("ctau3D", "3 dim ctau of the dimuon","F");

@@ -13,8 +13,9 @@ TString cmsText     = "CMS";
 float cmsTextFont   = 61;  // default is helvetic-bold
 
 bool writeExtraText = true;
-//TString extraText   = "Supplementary";
-TString extraText   = "Preliminary";
+TString extraText3  = "Supplementary";
+TString extraText1   = "Preliminary";
+TString extraText2   = "Projection";
 float extraTextFont = 52;  // default is helvetica-italics
 
 // text sizes and text offsets with respect to the top frame
@@ -35,13 +36,17 @@ float extraOverCmsTextSize  = 0.76;
 
 TString lumi_pp502TeV  = "300 pb^{-1}";
 TString lumi_pPb502TeV  = "34.6 nb^{-1}";
-TString lumi_PbPb502TeV  = "1.6 nb^{-1}";
-TString lumi_PbPb502TeV_quarter  = "(1/4) of 1.6 nb^{-1}";
-TString lumi_PbPb502TeV_blind  = "1.6 nb^{-1} projection";
-TString lumi_PbPb502TeV_projected  = "10 nb^{-1} projection";
+TString lumi_PbPb502TeV  = "1.61 nb^{-1}";
+TString lumi_PbPb502TeV_quarter  = "(1/4) of 1.61 nb^{-1}";
+TString lumi_PbPb502TeV_blind  = "1.61 nb^{-1} projection";
+TString lumi_PbPb502TeV_projected_0  = "projection";
+TString lumi_PbPb502TeV_projected_1  = "4.5 nb^{-1} projection";
+TString lumi_PbPb502TeV_projected_2  = "7.2 nb^{-1} projection";
+TString lumi_PbPb502TeV_projected_3  = "8 nb^{-1} projection";
+TString lumi_PbPb502TeV_projected_4  = "10 nb^{-1} projection";
 TString lumi_sqrtS = "";
 
 bool drawLogo      = false;
 
-void CMS_lumi_square( TPad* pad, int iPeriod, int iPosX );
+void CMS_lumi_square( TPad* pad, int iPeriod, int iPosX, int extra, bool writeOneLine );
 

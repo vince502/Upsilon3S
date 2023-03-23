@@ -24,7 +24,7 @@ void BDTClassifierApplication_NOM_NB(long ts= 9999999999, int train_state =2, in
 //  if (whichtree >5) {std::cout << "if BLIND, is tree selection wrong? " << std::endl; return; }
 //  if (whichtree !=0 && whichtree <6) {std::cout <<"Application in BLIND tree"<<whichtree<< std::endl;}
 
-  ROOT::EnableImplicitMT(8);
+//  ROOT::EnableImplicitMT(8);
 
   TMVA::Tools::Instance();
   TMVA::Reader *reader1 = new TMVA::Reader("V:!Silent");
@@ -37,22 +37,23 @@ void BDTClassifierApplication_NOM_NB(long ts= 9999999999, int train_state =2, in
   if(isMC){
     if(target_state==1) {
 		if(mcmode==0) fname =Form("%s/%s", store.Data(), ONIABDTMC1S_LATEST.c_str());
-		if(mcmode==1) fname = Form("%s/BDT/BDTResults/BDTresultY3S_%ld_BLIND.root",workdir.Data(), ref);
+		if(mcmode==1) fname = Form("%s/BDT/BDTResult/BDTresultY3S_%ld_BLIND.root",workdir.Data(), ref);
 	}
     if(target_state==2) {
 		if(mcmode==0) fname =Form("%s/%s", store.Data(), ONIABDTMC2S_LATEST.c_str());
-		if(mcmode==1) fname = Form("%s/BDT/BDTResults/BDTresultY3S_%ld_BLIND.root",workdir.Data(), ref);
+		if(mcmode==1) fname = Form("%s/BDT/BDTResult/BDTresultY3S_%ld_BLIND.root",workdir.Data(), ref);
 	
 	}
     if(target_state==3) {
 		if(mcmode==0) fname =Form("%s/%s", store.Data(), ONIABDTMC_LATEST.c_str());
-		if(mcmode==1) fname = Form("%s/BDT/BDTResults/BDTresultY3S_%ld_BLIND.root",workdir.Data(), ref);
+		if(mcmode==1) fname = Form("%s/BDT/BDTResult/BDTresultY3S_%ld_BLIND.root",workdir.Data(), ref);
 	}
   }
   else if(!isMC){
     if(whichtree !=0){
       fname =Form("%s/%s", store.Data(), ONIABDTDATAB_LATEST.c_str() );
       if(ts == 200019111111) fname =Form("%s/%s", store.Data(), "test220217.root" );
+      if(ts == 400019111111) fname =Form("%s/%s", store.Data(), "test220217.root" );
       if(ts == 200219111111) fname =Form("%s/%s", store.Data(), "test220217.root" );
       if(ts == 200119111111) fname =Form("%s/%s", store.Data(), "test220217.root" );
       if(ts == 20000000000) fname =Form("%s/%s", store.Data(), "test220217.root" );
@@ -68,6 +69,8 @@ void BDTClassifierApplication_NOM_NB(long ts= 9999999999, int train_state =2, in
 
   TFile* input(0);
   input = new TFile(fname.Data(), "open");
+  std::cout << fname.Data() << std::endl;
+  std::cout << input->GetName() << std::endl;
   TTree* tree1;
   TTree* tree2;
   if(!isMC){

@@ -397,24 +397,42 @@ void analysis_plots_combine_func_w1s_theory1(TFile* hf, TFile* hsys, TFile* ppsy
 	lineone->SetLineWidth(1);
 
 	TLatex* tl = new TLatex();
-	tl->SetTextSize(0.037);
+	tl->SetTextSize(0.042);
 	tl->SetTextFont(42);
 
-	TLegend* leg_cent = new TLegend(0.40, 0.55, 0.89, 0.70);
-	leg_cent->AddEntry(pg_c1s, "#Upsilon(1S) (2015 PbPb/pp)", "pl");
-	leg_cent->AddEntry(g_c2s, "#Upsilon(2S)", "pl");
-	leg_cent->AddEntry(g_c3s, "#Upsilon(3S)", "pl");
+	TLegend* leg_cent = new TLegend(0.43, 0.55, 0.72, 0.70);
+	leg_cent->AddEntry(pg_c1s, "#Upsilon(1S) (2015 PbPb/pp)", "pe");
+	leg_cent->AddEntry(g_c2s, "#Upsilon(2S)", "pe");
+	leg_cent->AddEntry(g_c3s, "#Upsilon(3S)", "pe");
 	leg_cent->SetBorderSize(0);
 	leg_cent->SetTextFont(42);
-	leg_cent->SetTextSize(0.027);
+	leg_cent->SetTextSize(0.03);
+	leg_cent->SetFillStyle(0);
+	TLegend* leg_cent_box = new TLegend(0.43, 0.55, 0.72, 0.70);
+	leg_cent_box->AddEntry(pg_c1s_sys, "#Upsilon(1S) (2015 PbPb/pp)", "f");
+	leg_cent_box->AddEntry(g_c2s_sys, "#Upsilon(2S)", "f");
+	leg_cent_box->AddEntry(g_c3s_sys, "#Upsilon(3S)", "f");
+	leg_cent_box->SetBorderSize(0);
+	leg_cent_box->SetTextFont(42);
+	leg_cent_box->SetTextSize(0.03);
+	leg_cent_box->SetFillStyle(0);
 
 	TLegend* leg_pt = new TLegend(0.24, 0.47, 0.56, 0.65);
-	leg_pt->AddEntry(pg_p1s, "#Upsilon(1S) (2015 PbPb/pp)", "pl");
-	leg_pt->AddEntry(g_p2s, "#Upsilon(2S)", "pl");
-	leg_pt->AddEntry(g_p3s, "#Upsilon(3S)", "pl");
+	leg_pt->AddEntry(pg_p1s, "#Upsilon(1S) (2015 PbPb/pp)", "pe");
+	leg_pt->AddEntry(g_p2s, "#Upsilon(2S)", "pe");
+	leg_pt->AddEntry(g_p3s, "#Upsilon(3S)", "pe");
 	leg_pt->SetBorderSize(0);
 	leg_pt->SetTextFont(42);
 	leg_pt->SetTextSize(0.030);
+	leg_pt->SetFillStyle(0);
+	TLegend* leg_pt_box = new TLegend(0.24, 0.47, 0.56, 0.65);
+	leg_pt_box->AddEntry(pg_p1s_sys, "#Upsilon(1S) (2015 PbPb/pp)", "f");
+	leg_pt_box->AddEntry(g_p2s_sys, "#Upsilon(2S)", "f");
+	leg_pt_box->AddEntry(g_p3s_sys, "#Upsilon(3S)", "f");
+	leg_pt_box->SetBorderSize(0);
+	leg_pt_box->SetTextFont(42);
+	leg_pt_box->SetTextSize(0.030);
+	leg_pt_box->SetFillStyle(0);
 
 	TLegend* leg_cent_theory = new TLegend(0.67, 0.46, 0.89, 0.64);
 	leg_cent_theory->SetBorderSize(0);
@@ -441,6 +459,10 @@ void analysis_plots_combine_func_w1s_theory1(TFile* hf, TFile* hsys, TFile* ppsy
 	p2->SetTicks();
 	p1_L->SetRightMargin(0);
 	p1_R->SetLeftMargin(0);
+	p1_L->SetRightMargin(0);
+	p1_L->SetLeftMargin(0.13);
+	p1_R->SetLeftMargin(0);
+	p2->SetLeftMargin(0.12);
 	////////READY PADS/////////
 	c1->cd();
 	p1_L->Draw();
@@ -466,9 +488,10 @@ void analysis_plots_combine_func_w1s_theory1(TFile* hf, TFile* hsys, TFile* ppsy
 //    draw_theory_QTraj(p1_L,  leg_cent, kTCent, 2);
 //    draw_theory_QTraj(p1_L,  leg_cent, kTCent, 3);
 	TLine* p1_L_line1 = lineone->DrawLine(0, 1, 420, 1);
-	TLatex* p1_L_latex1 = tl->DrawLatex( 40, 1.15,"p_{T} < 30 GeV/c");
-	TLatex* p1_L_latex2 = tl->DrawLatex( 40, 1.06, "|y| < 2.4");
-	leg_cent->Draw();
+	TLatex* p1_L_latex1 = tl->DrawLatex( 40, 1.15,"#it{p}_{T} < 30 GeV/c");
+	TLatex* p1_L_latex2 = tl->DrawLatex( 40, 1.06, "|#it{y}| < 2.4");
+	leg_cent_box->Draw();
+	leg_cent->Draw("same");
 	leg_cent_theory->Draw();
 	b_err->  Draw("L");
 	b_2serr->Draw("L");
@@ -498,10 +521,10 @@ void analysis_plots_combine_func_w1s_theory1(TFile* hf, TFile* hsys, TFile* ppsy
 	g_i2s_sys->Draw("5");
 	g_i3s_sys->Draw("5");
 	TLine* p1_R_line1 = lineone->DrawLine(0,1,4,1);
-	tl->SetTextSize(0.037* p2scale);
+	tl->SetTextSize(0.042* p2scale);
 	tl->SetTextAlign(21);
 	TLatex* p1_R_latex1 = tl->DrawLatex( 2.0, 1.02, "Cent.");
-	TLatex* p1_R_latex2 = tl->DrawLatex( 2.0, 0.94, "0-90 %");
+	TLatex* p1_R_latex2 = tl->DrawLatex( 2.0, 0.94, "0-90%");
 	towrite["g_i2s_sys"] = g_i2s_sys;
 	towrite["g_i3s_sys"] = g_i3s_sys;
 	towrite["g_i3s"] = g_i3s;
@@ -530,11 +553,11 @@ void analysis_plots_combine_func_w1s_theory1(TFile* hf, TFile* hsys, TFile* ppsy
 //    draw_theory_QTraj(p2, leg_pt, kTPt, 2);
 //    draw_theory_QTraj(p2, leg_pt, kTPt, 3);
 	TLine* p2_line1 = lineone->DrawLine(0, 1, 30, 1);
-	tl->SetTextSize(0.037);
+	tl->SetTextSize(0.042);
 	tl->SetTextAlign(11);
 //	TLatex* p2_latex1 = tl->DrawLatex( 2.5, 1.15,"p_{T} < 30 GeV/c");
-	TLatex* p2_latex2 = tl->DrawLatex( 2.5, 1.15, "|y| < 2.4");
-	TLatex* p2_latex3 = tl->DrawLatex( 2.5,1.06, "Cent. 0-90 %");
+	TLatex* p2_latex2 = tl->DrawLatex( 2.5, 1.15, "|#it{y}| < 2.4");
+	TLatex* p2_latex3 = tl->DrawLatex( 2.5,1.06, "Cent. 0-90%");
 	towrite["g_p2s"] = g_p2s;
 	towrite["g_p3s"] = g_p3s;
 	towrite["g_p3s_sys"] = g_p3s_sys;
@@ -544,7 +567,8 @@ void analysis_plots_combine_func_w1s_theory1(TFile* hf, TFile* hsys, TFile* ppsy
 	towrite["p2_latex2"] = p2_latex2;
 	towrite["p2_latex3"] = p2_latex3;
 	towrite["leg_pt"] = leg_pt;
-	leg_pt->Draw();
+	leg_pt_box->Draw();
+	leg_pt->Draw("same");
 	leg_pt_theory->Draw();
 	b_pterr->Draw("L");
 	towrite["p2_box1"] = b_pterr;
@@ -554,10 +578,10 @@ void analysis_plots_combine_func_w1s_theory1(TFile* hf, TFile* hsys, TFile* ppsy
 	//LUMIFY PADS AND COMBINE PLOTS//
 	c1->cd();
 	p1_L->cd();
-	CMS_lumi_square(p1_L,103, 33);
+	CMS_lumi_square(p1_L,103, 33, 2);
 	c2->cd();
 	p2->cd();
-	CMS_lumi_square( p2, 103, 33);
+	CMS_lumi_square( p2, 103, 33, 2);
 	c1->Update();
 	c1->Modified();
 	c2->Update();
@@ -575,28 +599,56 @@ void analysis_plots_combine_func_w1s_theory1(TFile* hf, TFile* hsys, TFile* ppsy
 //	for(auto item : towrite){
 //		item.second->Write();
 //	}
+    c2->cd();
+    p2->cd();
+    leg_pt->SetY1NDC(0.57);
+    leg_pt->SetY2NDC(0.79);
+    p2_latex2->Delete();
+    p2_latex3->Delete();
+    p2_latex2 = tl->DrawLatex( 2.5, 6, "|#it{y}| < 2.4");
+    p2_latex3 = tl->DrawLatex( 2.5,12, "Cent. 0-90%");
+    leg_pt->Draw();
+    g_p2s->GetYaxis()->SetRangeUser(1e-2, 5e+2);
+    p2->SetLogy(1);
+    // c2->SetLogy(1);
+    c2->Modified();
+    c2->Draw();
+    // c2->SaveAs(Form("../checkout/tscol/RAA_pt_logy_%ld_v3_w1s_theory1.pdf", _TS) );
+    // c2->SetLogy(0);
 	output->cd();
 	/////////////////////END OF WRITE LOOP 1//////////////////////////////
 	
-	towrite["p1_L"]->Clear();
-	towrite["p1_R"]->Clear();
-	towrite["p2"]->Clear();
-	towrite["leg_cent"]->Delete();
-	towrite["leg_pt"]->Delete();
+	// towrite["p1_L"]->Clear();
+	// towrite["p1_R"]->Clear();
+	// towrite["p2"]->Clear();
+	// towrite["leg_cent"]->Delete();
+	// towrite["leg_pt"]->Delete();
 
-	leg_cent = new TLegend(0.75, 0.4, 0.85, 0.70);
-	leg_cent->AddEntry(g_c2s, "#Upsilon(2S)", "pl");
-	leg_cent->AddEntry(g_c3s, "#Upsilon(3S)", "pl");
-	leg_cent->SetBorderSize(0);
-	leg_cent->SetTextFont(42);
-	leg_cent->SetTextSize(0.04);
+	// leg_cent = new TLegend(0.75, 0.4, 0.85, 0.70);
+	// leg_cent->AddEntry(g_c2s, "#Upsilon(2S)", "pe");
+	// leg_cent->AddEntry(g_c3s, "#Upsilon(3S)", "pe");
+	// leg_cent->SetBorderSize(0);
+	// leg_cent->SetTextFont(42);
+	// leg_cent->SetTextSize(0.04);
+	// leg_cent_box = new TLegend(0.75, 0.4, 0.85, 0.70);
+	// leg_cent_box->AddEntry(g_c2s, "#Upsilon(2S)", "f");
+	// leg_cent_box->AddEntry(g_c3s, "#Upsilon(3S)", "f");
+	// leg_cent_box->SetBorderSize(0);
+	// leg_cent_box->SetTextFont(42);
+	// leg_cent_box->SetTextSize(0.04);
 
-	leg_pt = new TLegend(0.65, 0.3, 0.85, 0.7);
-	leg_pt->AddEntry(g_p2s, "#Upsilon(2S)", "pl");
-	leg_pt->AddEntry(g_p3s, "#Upsilon(3S)", "pl");
-	leg_pt->SetBorderSize(0);
-	leg_pt->SetTextFont(42);
-	leg_pt->SetTextSize(0.04);
+	// leg_pt = new TLegend(0.65, 0.3, 0.85, 0.7);
+	// leg_pt->AddEntry(g_p2s, "#Upsilon(2S)", "pe");
+	// leg_pt->AddEntry(g_p3s, "#Upsilon(3S)", "pe");
+	// leg_pt->SetBorderSize(0);
+	// leg_pt->SetTextFont(42);
+	// leg_pt->SetTextSize(0.04);
+	// leg_pt_box = new TLegend(0.65, 0.3, 0.85, 0.7);
+	// leg_pt_box->AddEntry(g_p2s_sys, "#Upsilon(2S)", "f");
+	// leg_pt_box->AddEntry(g_p3s_sys, "#Upsilon(3S)", "f");
+	// leg_pt_box->SetBorderSize(0);
+	// leg_pt_box->SetTextFont(42);
+	// leg_pt_box->SetTextSize(0.04);
 
 //	towrite["xcx"] = xcx;
 //	towrite["xcx"] = xcx;
@@ -653,10 +705,10 @@ void analysis_plots_combine_func_w1s_theory1(TFile* hf, TFile* hsys, TFile* ppsy
 //	g_i23s->Draw("APE");
 //	g_i23s_sys->Draw("5");
 //	p1_R_line1 = lineone->DrawLine(1,1,4,1);
-//	tl->SetTextSize(0.037* p2scale);
+//	tl->SetTextSize(0.042* p2scale);
 //	tl->SetTextAlign(21);
 //	p1_R_latex1 = tl->DrawLatex( 2.5, 1.02, "Cent.");
-//	p1_R_latex2 = tl->DrawLatex( 2.5, 0.94, "0-90 %");
+//	p1_R_latex2 = tl->DrawLatex( 2.5, 0.94, "0-90%");
 //	p1_R->Update();
 //	p1_R->Draw();
 //	towrite["p1_R"] = p1_R;
@@ -667,11 +719,11 @@ void analysis_plots_combine_func_w1s_theory1(TFile* hf, TFile* hsys, TFile* ppsy
 //	g_p23s->Draw("APE");
 //	g_p23s_sys->Draw("5");
 //	p2_line1 = lineone->DrawLine(0, 1, 30, 1);
-//	tl->SetTextSize(0.037);
+//	tl->SetTextSize(0.042);
 //	tl->SetTextAlign(11);
 //	tl->DrawLatex( 2.5, label_pos_up + 0.05,"p_{T} < 30 GeV/c");
 //	tl->DrawLatex( 12, label_pos_up + 0.05 , "|y| < 2.4");
-//	tl->DrawLatex( 2.5,label_pos_up - 0.15 , "Cent. 0-90 %");
+//	tl->DrawLatex( 2.5,label_pos_up - 0.15 , "Cent. 0-90%");
 ////	leg_pt->Draw();
 //	b_pterr->Draw("L");
 //
@@ -703,7 +755,6 @@ void analysis_plots_combine_func_w1s_theory1(TFile* hf, TFile* hsys, TFile* ppsy
 //	for(auto item : towrite){
 //		item.second->Write();
 //	}
-	output->cd();
 };
 
 

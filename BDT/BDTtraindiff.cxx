@@ -29,7 +29,7 @@ std::pair<double, double> BDTtraindiff(
 		TGraph* cloneHist1 = (TGraph*)  theHist1->Clone();
 		TGraph* cloneHist2 = (TGraph*)  theHist2->Clone();
 		auto findmax  = [&ts](TGraph* g){
-			if(ts_alias(ts) == 100019111111){
+			if(ts_alias(ts) == 100019111111 || ts_alias(ts) == 400019111111 || ts_alias(ts) == 1100019111111){
 				auto res = g->GetFunction("Msignif");
 				return std::make_pair(res->GetMaximumX(-0.1, 0.45), res->GetMaximum(-0.1,0.45));
 			}

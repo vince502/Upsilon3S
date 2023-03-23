@@ -23,7 +23,7 @@ void drawRaa_vs_binding(){
 	double _raa_sys2[] = {0.063, 	0.011, 			0.004, 			0.014, 		0.019, 			0.019};
 	string _id[] 	  = {"#psi(2S)", "#Upsilon(3S)", "#Upsilon(2S)", "J/#psi#kern[1.2]{  }", "#Upsilon(1S)"};
 //	string _id_tag[]  = {"#splitline{1.6 < |y| < 2.4}{3 < p_{T} < 30}", "#splitline{|y| < 2.4}{p_{T} < 30 GeV/c} ", "#splitline{|y| < 2.4}{p_{T} < 30 GeV/c}", "#splitline{|y| < 2.4}{6.5 < p_{T} < 30 GeV/c}", "#splitline{|y| < 2.4}{p_{T} < 30 GeV/c}"};
-	string _id_tag[]  = {"1.6 < |y| < 2.4, 3 < p_{T} < 30 GeV/c", "|y| < 2.4, p_{T} < 30 GeV/c", "|y| < 2.4, p_{T} < 30 GeV/c", "|y| < 2.4, 6.5 < p_{T} < 30 GeV/c", "|y| < 2.4, p_{T} < 30 GeV/c"};
+	string _id_tag[]  = {"1.6 < |#it{y}| < 2.4, 3 < #it{p}_{T} < 30 GeV/c", "|#it{y}| < 2.4, #it{p}_{T} < 30 GeV/c", "|#it{y}| < 2.4, #it{p}_{T} < 30 GeV/c", "|#it{y}| < 2.4, 6.5 < #it{p}_{T} < 30 GeV/c", "|#it{y}| < 2.4, #it{p}_{T} < 30 GeV/c"};
 	string _id_cent[] 	  = {"0-20%", "0-30%", "0-5%", "0-5%", "0-5%"};
 //	gStyle->SetPalette(kCool);
 	gStyle->SetEndErrorSize(0);
@@ -71,7 +71,7 @@ void drawRaa_vs_binding(){
 	nullGraph->GetXaxis()->SetTitle("Binding Energy (GeV)");
 	nullGraph->GetXaxis()->SetTitleOffset(1.2);
 	nullGraph->GetYaxis()->CenterTitle();
-	nullGraph->GetYaxis()->SetTitle("R_{AA}");
+	nullGraph->GetYaxis()->SetTitle("#it{R}_{AA}");
 
 	nullGraph->GetYaxis()->SetLimits(0.,1.3);
 	nullGraph->GetYaxis()->SetRangeUser(0.,1.3);
@@ -107,7 +107,7 @@ void drawRaa_vs_binding(){
 	tl->SetTextSize(0.042);
 	tl->SetTextAlign(12);
 	tl->DrawLatex(0.07, 1.2, "PbPb #sqrt{s_{NN}} = 5.02 TeV");
-	CMS_lumi_square(c1, 0, 33);
+	CMS_lumi_square(c1, 0, 33, 2);
 
 	c1->SaveAs("../checkout/raa_vs_bindingE.pdf");
 }

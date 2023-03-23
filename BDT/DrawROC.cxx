@@ -2,14 +2,14 @@
 #include "bininfo.h"
 //#include "TROOT.h"
 
-void DrawROC()
+void DrawROC( bool _FalsePositive = true)
 {
   std::map<long, std::string> ts_map = {
 //  	{10000000016, "Nominal"}, 
   	{100019111111, "Nominal"}, 
 //  	{100019101111, "No QQdca"}, 
-  	{100019111010, "No 3D Variables"}, 
-  	{100019110101, "No 2D Variables"}, 
+//  	{100019111010, "No 3D Variables"}, 
+//  	{100019110101, "No 2D Variables"}, 
 //  	{100119111111, "500 Trees"}, 
 //  	{100219111111, "700 Trees"}, 
 //  	{100319111111, "2100 Trees"}, 
@@ -51,6 +51,13 @@ void DrawROC()
   {
 //    if(count==2) break;
     TGraph* g1 = getROC(it->first);
+	if(_FalsePositive) {
+		size_t _ysize = g1->GetN();
+		double* arr = g1->GetY();
+		for( auto idx : ROOT::TSeqI(_ysize) ){
+			arr[idx] = 1 - arr[idx];
+		}
+	}
     g1->SetTitle(Form("%s", it->second.c_str()));
     g1->SetLineColor(c_map[count]);
     g1->SetMarkerColor(c_map[count]);
@@ -68,7 +75,8 @@ void DrawROC()
   CMS_lumi_square(c1, 31, 33 );
 
   c1->Update();
-  c1->SaveAs("../Macros/ROC_plot.pdf");
-  c1->SaveAs("../checkout/tmp/ROC_plot.png");
+//  c1->SaveAs("../Macros/ROC_plot.pdf");
+ // c1->SaveAs("../checkout/tmp/ROC_plot.png");
+  c1->SaveAs("../checkout/tmp/FPR_ROC_plot.png");
 
 }

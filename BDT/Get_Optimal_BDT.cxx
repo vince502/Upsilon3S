@@ -35,10 +35,10 @@ std::pair<double,TGraph*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, d
 	std::string name_input = Form("%s/BDT/BDTResult/BDTresultY3S_%ld_%s%s.root", workdir.Data(), ts, name_input_opt.c_str(), tag_BLIND.c_str());
 	TFile* file_bdtres = TFile::Open(name_input.c_str());
 
-	string name_h_effS_1 = Form("data/Y%dSpt%dto%d/dataset1/Method_BDT/BDT/MVA_BDT_effS",train_state, (int) ptMin, (int) ptMax);
-	string name_h_effB_1 = Form("data/Y%dSpt%dto%d/dataset1/Method_BDT/BDT/MVA_BDT_effB",train_state, (int) ptMin, (int) ptMax);
-	string name_h_effS_2 = Form("data/Y%dSpt%dto%d/dataset2/Method_BDT/BDT/MVA_BDT_effS",train_state, (int) ptMin, (int) ptMax);
-	string name_h_effB_2 = Form("data/Y%dSpt%dto%d/dataset2/Method_BDT/BDT/MVA_BDT_effB",train_state, (int) ptMin, (int) ptMax);
+	string name_h_effS_1 = Form("data/Y%dSpt%dto%d/dataset1/Method_BDT/BDT/MVA_BDT_effS",train_state, (int) bdtptMin, (int) bdtptMax);
+	string name_h_effB_1 = Form("data/Y%dSpt%dto%d/dataset1/Method_BDT/BDT/MVA_BDT_effB",train_state, (int) bdtptMin, (int) bdtptMax);
+	string name_h_effS_2 = Form("data/Y%dSpt%dto%d/dataset2/Method_BDT/BDT/MVA_BDT_effS",train_state, (int) bdtptMin, (int) bdtptMax);
+	string name_h_effB_2 = Form("data/Y%dSpt%dto%d/dataset2/Method_BDT/BDT/MVA_BDT_effB",train_state, (int) bdtptMin, (int) bdtptMax);
 
 	TH1D *h_effS, *h_effB;
 	TH1D *h_effS_1, *h_effS_2, *h_effB_1, *h_effB_2;
@@ -102,7 +102,7 @@ std::pair<double,TGraph*> Get_Optimal_BDT(long ts, double ptMin, double ptMax, d
 
 	//Find X value of maximum significance
 	auto findmax = [&ts](TGraph* g){
-		if(ts == 100019111111 || ts == 100119111111|| ts == 100219111111|| ts == 100319111111|| ts == 100019111010){
+		if(ts == 100019111111 || ts == 100119111111|| ts == 100219111111|| ts == 100319111111|| ts == 100019111010 || ts >100019111111 ){
 			ROOT::Math::MinimizerOptions::SetDefaultMinimizer("Minuit2", "Simplex");
 			TF1* f1 = new TF1("Msignif", "pol7", -0.7, 0.65);
 			g->Fit("Msignif","MFR","");

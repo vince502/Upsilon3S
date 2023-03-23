@@ -27,7 +27,7 @@ void systematic_ups_DR_v2()
 //	  					{"efficiency tnp", new TFile("./data/effTNP_unc_DR.root", "open")},
 		  					{"centrality calibration", new TFile(Form("./data/CENT_unc_DR_%ld.root", _TS), "open")},
 		  					{"BDT variation", new TFile(Form("./data/BDT_Diff_unc_DR_%ld.root", _TS), "open")},
-	  						{"Correction ratio", new TFile(Form("./data/Correction_unc_DR_%ld.root", ts_alias(_TS)), "open")},
+	  						{"Correction ratio", new TFile(Form("./data/Correction_unc_DR_%ld.root", _TS), "open")},
 		};
 	}
 	for(auto x : m_sys) { std::cout << x.first.Data() << ", File: " << x.second->GetName()<< std::endl;} //Check File Open

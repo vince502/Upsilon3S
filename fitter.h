@@ -64,6 +64,11 @@ class massfitter
 massfitter::massfitter(){
 };
 massfitter::~massfitter(){
+//	delete dataset;
+//	delete iDS;
+//	delete fDS;
+//	if(fin) fin->Close();
+//	if(fout) fout->Close();
 };
 
 massfitter::massfitter(std::string file_input, std::string file_output){
@@ -133,5 +138,19 @@ std::vector<std::string> parser_symbol(std::string type,std::string delim = ":")
   return result_parse;
 
 };
+
+//parser with output same as parser_symbol, with parsing string in characters between white spaces(use string::first_not_of), and return vector of string
+std::vector<std::string> parser_symbol2(std::string type,std::string delim = ":"){
+  std::vector<std::string> result_parse;
+  while( type.find(" ") != std::string::npos ){
+  size_t endword = type.find_first_of(" ");
+  result_parse.push_back(type.substr(0,endword));
+  type.erase(0, type.find_first_not_of(" ",endword));
+  };
+  result_parse.push_back(type);
+  return result_parse;
+};
+
+
 
 #endif

@@ -1,8 +1,15 @@
 #!/bin/bash
 #	1.QQVtxProb  2.QQdca  3.ctau(2D)  4.ctau(3D)  5.cosalpha(2D)  6.cosalpha(3D)
 function TRAINERCheck {
-#	root -l -b -q "BDTClassifier_BLIND_BDTCOMB_NOM_commentNB.C(20000000011, "$OPT", "$DATPREP", true)" 2>&1| tee BDT"$TS".log
-	root -l -b -q "BDTNominalProcessNB.cxx(200019111111,0, {{0,30}}, 100019111111)"
+#	root -l -b -q "BDTClassifier_BLIND_BDTCOMB_NOM_commentNB.C(400019111111, "$OPT", "$DATPREP", false)" 2>&1| tee BDT"$TS".log
+	root -l -b -q "BDTNominalProcessNB.cxx(400019111111,0, {{0,30}}, 400019111111)"
+	root -l -b -q "BDTNominalProcessNB.cxx(400019111111,0, {{0,4}}, 400019111111)"
+	root -l -b -q "BDTNominalProcessNB.cxx(400019111111,0, {{4,9}}, 400019111111)"
+	root -l -b -q "BDTNominalProcessNB.cxx(400019111111,0, {{9,15}}, 400019111111)"
+	root -l -b -q "BDTNominalProcessNB.cxx(400019111111,0, {{15,30}}, 400019111111)"
+	root -l -b -q "BDTNominalProcessNB.cxx(400019111111,0, {{0,3}}, 400019111111)"
+	root -l -b -q "BDTNominalProcessNB.cxx(400019111111,0, {{3,6}}, 400019111111)"
+	root -l -b -q "BDTNominalProcessNB.cxx(400019111111,0, {{6,9}}, 400019111111)"
 #	root -l -b -q "BDTNominalProcess.cxx(20000000011,0, {{0,30}})"
 #	root -l -b -q "BDTNominalProcessNB.cxx(20000000002,0, {{0,30}})"
 #	root -l -b -q "BDTNominalProcessNB.cxx(20000000004,0, {{0,30}})"

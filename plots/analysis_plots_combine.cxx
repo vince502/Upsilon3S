@@ -1,36 +1,50 @@
 //#define _TS 9999999999
 //#define _TS 10000000016
 //#define _TS 100019111111
-#define _TS 200019111111
-#if _TS == 9999999999 && __has_include("../LLR_CCorder_9999999999.h")
-#   include "../LLR_CCorder_9999999999.h"
+// #define _TS 200019111111
+//#define _TS 400019111111
+#define _TS 2100019111111
+#if _TS == 9999999999 && __has_include("../LLRHeader/LLR_CCorder_9999999999.h")
+#   include "../LLRHeader/LLR_CCorder_9999999999.h"
 #   define getNomBkgO getNomBkgO_9999999999
 #endif
 
-#if _TS == 10000000016 && __has_include("../LLR_CCorder_10000000016.h")
-#   include "../LLR_CCorder_10000000016.h"
+#if _TS == 10000000016 && __has_include("../LLRHeader/LLR_CCorder_10000000016.h")
+#   include "../LLRHeader/LLR_CCorder_10000000016.h"
 #   define getNomBkgO getNomBkgO_10000000016
 #endif
 
-#if _TS == 20000000016 && __has_include("../LLR_CCorder_20000000016.h")
-#   include "../LLR_CCorder_20000000016.h"
+#if _TS == 20000000016 && __has_include("../LLRHeader/LLR_CCorder_20000000016.h")
+#   include "../LLRHeader/LLR_CCorder_20000000016.h"
 #   define getNomBkgO getNomBkgO_20000000016
 #endif
 
-#if _TS == 100019111111 && __has_include("../LLR_CCorder_100019111111.h")
-#   include "../LLR_CCorder_100019111111.h"
+#if _TS == 100019111111 && __has_include("../LLRHeader/LLR_CCorder_100019111111.h")
+#   include "../LLRHeader/LLR_CCorder_100019111111.h"
 #   define getNomBkgO getNomBkgO_100019111111
 #	define ana_bm ana_bm_comb
 #endif
 
-#if _TS == 200019111111 && __has_include("../LLR_CCorder_200019111111.h")
-#   include "../LLR_CCorder_200019111111.h"
+#if _TS == 200019111111 && __has_include("../LLRHeader/LLR_CCorder_200019111111.h")
+#   include "../LLRHeader/LLR_CCorder_200019111111.h"
 #   define getNomBkgO getNomBkgO_200019111111
 #	define ana_bm ana_bm_comb_ub
 #endif
 
-#if _TS == 10000000003 && __has_include("../LLR_CCorder_10000000003.h")
-#   include "../LLR_CCorder_10000000003.h"
+#if _TS == 400019111111 && __has_include("../LLRHeader/LLR_CCorder_400019111111.h")
+#   include "../LLRHeader/LLR_CCorder_400019111111.h"
+#   define getNomBkgO getNomBkgO_400019111111
+#	define ana_bm ana_bm_comb_ub
+#endif
+
+#if _TS == 2100019111111 && __has_include("../LLRHeader/LLR_CCorder_2100019111111.h")
+#   include "../LLRHeader/LLR_CCorder_2100019111111.h"
+#   define getNomBkgO getNomBkgO_2100019111111
+#	define ana_bm ana_bm_comb_ub_ib
+#endif
+
+#if _TS == 10000000003 && __has_include("../LLRHeader/LLR_CCorder_10000000003.h")
+#   include "../LLRHeader/LLR_CCorder_10000000003.h"
 #   define getNomBkgO getNomBkgO_10000000003
 #endif
 
@@ -40,6 +54,9 @@
 #include "../BDT/bininfo.h"
 #include "../BDT/BDTtraindiff.cxx"
 #include "../glauberparams_PbPb5TeV.h"
+#include <iostream>
+#include <fstream>
+
 //////LAMBDA, CONSTANTS ////
 	auto get_taa_err = [](ana_bins x){
 		auto taa = glp::Taa[{x.centl, x.centh}];
@@ -64,25 +81,43 @@ void invokePAgraph(
 
 #include "analysis_plots_combine_w1s.cxx"
 #include "analysis_plots_combine_w1s_theory1.cxx"
+#include "analysis_plots_combine_theory1nojump.cxx"
 #include "analysis_plots_combine_w1s_theory2.cxx"
+#include "analysis_plots_combine_w1s_theory2reg.cxx"
+#include "analysis_plots_combine_w1s_theory2_2.cxx"
+#include "analysis_plots_combine_w1s_theory2_2reg.cxx"
 #include "analysis_plots_combine_w1s_theory3.cxx"
+#include "analysis_plots_combine_w1s_theory5.cxx"
 #include "analysis_plots_combine_theory1.cxx"
 #include "analysis_plots_combine_theory2.cxx"
 #include "analysis_plots_combine_theory3.cxx"
+#include "analysis_plots_combine_theory3_2.cxx"
+#include "analysis_plots_combine_theory3_2reg.cxx"
 #include "analysis_plots_combine_theory4.cxx"
+#include "analysis_plots_combine_theory5.cxx"
+#include "analysis_plots_combine_theory6.cxx"
 
 void analysis_plots_combine_func(TFile* hf, TFile* hsys, TFile* ppsys, TFile* hdff, TFile* hdfsys, TFile* ppdfsys);
 
 void analysis_plots_combine(){
-	analysis_plots_combine_func(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
-	analysis_plots_combine_func_w1s(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
-	analysis_plots_combine_func_w1s_theory1(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
-	analysis_plots_combine_func_w1s_theory2(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
-	analysis_plots_combine_func_w1s_theory3(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
-	analysis_plots_combine_func_theory1(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
-	analysis_plots_combine_func_theory2(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
-	analysis_plots_combine_func_theory3(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
-	analysis_plots_combine_func_theory4(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
+//	analysis_plots_combine_func(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
+//	analysis_plots_combine_func_w1s(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
+//	analysis_plots_combine_func_w1s_theory1(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
+//	analysis_plots_combine_func_w1s_theory2(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
+//	analysis_plots_combine_func_w1s_theory2reg(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
+//	analysis_plots_combine_func_w1s_theory2_2(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
+	analysis_plots_combine_func_w1s_theory2_2reg(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
+//	analysis_plots_combine_func_w1s_theory3(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
+//   analysis_plots_combine_func_w1s_theory5(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
+//	analysis_plots_combine_func_theory1(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
+	analysis_plots_combine_func_theory1nojump(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
+//	analysis_plots_combine_func_theory2(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
+//	analysis_plots_combine_func_theory3(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
+//	analysis_plots_combine_func_theory3_2(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
+//	analysis_plots_combine_func_theory3_2reg(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
+//	analysis_plots_combine_func_theory4(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
+//	analysis_plots_combine_func_theory5(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
+//	 analysis_plots_combine_func_theory6(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
 };
 
 void analysis_plots_combine_func(TFile* hf, TFile* hsys, TFile* ppsys, TFile* hdff, TFile* hdfsys, TFile* ppdfsys)
@@ -228,7 +263,8 @@ void analysis_plots_combine_func(TFile* hf, TFile* hsys, TFile* ppsys, TFile* hd
 			double nom_sys;
 			if(ab.bintype == kCent){
 				point_x = glp::Npart[{ab.centl, ab.centh}];
-				point_x.second=  point_x.second *6;
+				//point_x.second=  point_x.second *6;
+				point_x.second=  7;
 				ref_raa = raahist.GetBinContent( (vab.size()+1) - idx);
 				nom_sys = hist.GetBinContent( (vab.size() +1) - idx);
 				double tot_sys = quadsum(nom_sys, taa_err);
@@ -265,7 +301,8 @@ void analysis_plots_combine_func(TFile* hf, TFile* hsys, TFile* ppsys, TFile* hd
 			double nom_sys;
 			if(ab.bintype == kCent){
 				point_x = glp::Npart[{ab.centl, ab.centh}];
-				point_x.second=  point_x.second *6;
+				//point_x.second=  point_x.second *6;
+				point_x.second= 7;
 				ref_raa = raahist.GetBinContent( (vab.size()+1) - idx);
 				nom_sys = hist.GetBinContent( (vab.size() +1) - idx);
 				point_y = { ref_raa, ref_raa * quadsum(nom_sys,0/* taa_err*/) };
@@ -414,26 +451,26 @@ void analysis_plots_combine_func(TFile* hf, TFile* hsys, TFile* ppsys, TFile* hd
 	lineone->SetLineWidth(1);
 
 	TLatex* tl = new TLatex();
-	tl->SetTextSize(0.037);
+	tl->SetTextSize(0.042);
 	tl->SetTextFont(42);
 
 	TLegend* leg_cent = new TLegend(0.75, 0.4, 0.85, 0.70);
-	leg_cent->AddEntry(g_c2s, "#Upsilon(2S)", "pl");
-	leg_cent->AddEntry(g_c3s, "#Upsilon(3S)", "pl");
+	leg_cent->AddEntry(g_c2s, "#Upsilon(2S)", "pe");
+	leg_cent->AddEntry(g_c3s, "#Upsilon(3S)", "pe");
 	leg_cent->SetBorderSize(0);
 	leg_cent->SetTextFont(42);
 	leg_cent->SetTextSize(0.04);
 
 	TLegend* leg_pt = new TLegend(0.65, 0.3, 0.85, 0.7);
-	leg_pt->AddEntry(g_p2s, "#Upsilon(2S)", "pl");
-	leg_pt->AddEntry(g_p3s, "#Upsilon(3S)", "pl");
+	leg_pt->AddEntry(g_p2s, "#Upsilon(2S)", "pe");
+	leg_pt->AddEntry(g_p3s, "#Upsilon(3S)", "pe");
 	leg_pt->SetBorderSize(0);
 	leg_pt->SetTextFont(42);
 	leg_pt->SetTextSize(0.04);
 //////////////////////////////////INITIALIZE CANVASES/////////////////////////////////
 
 	std::map<string, TObject*> towrite;
-	TCanvas* c1 = new TCanvas("c1","", 1000,900);
+	TCanvas* c1 = new TCanvas("c1","", 1100,900);
 	TCanvas* c2 = new TCanvas("c2","", 1000,900);
 	TPad* p1_L = new TPad("p1L", "", 0.00, 0., 0.83,1.);
 	TPad* p1_R = new TPad("p1R", "", 0.83, 0., 1., 1.);
@@ -462,8 +499,8 @@ void analysis_plots_combine_func(TFile* hf, TFile* hsys, TFile* ppsys, TFile* hd
 	g_c2s_sys->Draw("5");
 	g_c3s_sys->Draw("5");
 	TLine* p1_L_line1 = lineone->DrawLine(0, 1, 420, 1);
-	TLatex* p1_L_latex1 = tl->DrawLatex( 40, 1.15,"p_{T} < 30 GeV/c");
-	TLatex* p1_L_latex2 = tl->DrawLatex( 40, 1.06, "|y| < 2.4");
+	TLatex* p1_L_latex1 = tl->DrawLatex( 40, 1.15,"#it{p}_{T} < 30 GeV/#it{c}");
+	TLatex* p1_L_latex2 = tl->DrawLatex( 40, 1.06, "|#it{y}| < 2.4");
 	leg_cent->Draw();
 	b_err->  Draw("L");
 	b_2serr->Draw("L");
@@ -477,8 +514,8 @@ void analysis_plots_combine_func(TFile* hf, TFile* hsys, TFile* ppsys, TFile* hd
 	towrite["leg_cent"] = leg_cent;
 	towrite["g_c2s"] = g_c2s;
 	towrite["g_c3s"] = g_c3s;
-	towrite["g_c3s_sys"] = g_c3s_sys;
-	towrite["g_c2s_sys"] = g_c2s_sys;
+	towrite["g_c3s_sys"] = g_c3s_sys; g_c3s_sys->SetName("g_c3s_sys");
+	towrite["g_c2s_sys"] = g_c2s_sys; g_c2s_sys->SetName("g_c2s_sys");
 
 
 	p1_L->Update();
@@ -491,10 +528,10 @@ void analysis_plots_combine_func(TFile* hf, TFile* hsys, TFile* ppsys, TFile* hd
 	g_i2s_sys->Draw("5");
 	g_i3s_sys->Draw("5");
 	TLine* p1_R_line1 = lineone->DrawLine(1,1,4,1);
-	tl->SetTextSize(0.037* p2scale);
+	tl->SetTextSize(0.042* p2scale);
 	tl->SetTextAlign(21);
 	TLatex* p1_R_latex1 = tl->DrawLatex( 2.5, 1.02, "Cent.");
-	TLatex* p1_R_latex2 = tl->DrawLatex( 2.5, 0.94, "0-90 %");
+	TLatex* p1_R_latex2 = tl->DrawLatex( 2.5, 0.94, "0-90%");
 	towrite["g_i2s_sys"] = g_i2s_sys;
 	towrite["g_i3s_sys"] = g_i3s_sys;
 	towrite["g_i3s"] = g_i3s;
@@ -514,15 +551,15 @@ void analysis_plots_combine_func(TFile* hf, TFile* hsys, TFile* ppsys, TFile* hd
 	g_p2s_sys->Draw("5");
 	g_p3s_sys->Draw("5");
 	TLine* p2_line1 = lineone->DrawLine(0, 1, 30, 1);
-	tl->SetTextSize(0.037);
+	tl->SetTextSize(0.042);
 	tl->SetTextAlign(11);
-//	TLatex* p2_latex1 = tl->DrawLatex( 2.5, 1.15,"p_{T} < 30 GeV/c");
-	TLatex* p2_latex2 = tl->DrawLatex( 2.5, 1.15, "|y| < 2.4");
-	TLatex* p2_latex3 = tl->DrawLatex( 2.5,1.06, "Cent. 0-90 %");
+//	TLatex* p2_latex1 = tl->DrawLatex( 2.5, 1.15,"#it{p}_{T} < 30 GeV/#it{c}");
+	TLatex* p2_latex2 = tl->DrawLatex( 2.5, 1.15, "|#it{y}| < 2.4");
+	TLatex* p2_latex3 = tl->DrawLatex( 2.5,1.06, "Cent. 0-90%");
 	towrite["g_p2s"] = g_p2s;
 	towrite["g_p3s"] = g_p3s;
-	towrite["g_p3s_sys"] = g_p3s_sys;
-	towrite["g_p2s_sys"] = g_p2s_sys;
+	towrite["g_p3s_sys"] = g_p3s_sys; g_p3s_sys->SetName("g_p3s_sys");
+	towrite["g_p2s_sys"] = g_p2s_sys; g_p2s_sys->SetName("g_p2s_sys");
 	towrite["p2_line1"] = p2_line1;
 //	towrite["p2_latex1"] = p2_latex1;
 	towrite["p2_latex2"] = p2_latex2;
@@ -537,10 +574,10 @@ void analysis_plots_combine_func(TFile* hf, TFile* hsys, TFile* ppsys, TFile* hd
 	//LUMIFY PADS AND COMBINE PLOTS//
 	c1->cd();
 	p1_L->cd();
-	CMS_lumi_square(p1_L,103, 33);
+	CMS_lumi_square(p1_L,103, 33, -1);
 	c2->cd();
 	p2->cd();
-	CMS_lumi_square( p2, 103, 33);
+	CMS_lumi_square( p2, 103, 33, -1);
 	c1->Update();
 	c1->Modified();
 	c2->Update();
@@ -550,16 +587,16 @@ void analysis_plots_combine_func(TFile* hf, TFile* hsys, TFile* ppsys, TFile* hd
 
 	c1->SaveAs(Form("../checkout/tscol/RAA_centrality_int_%ld_v3.pdf", _TS) );
 	c2->SaveAs(Form("../checkout/tscol/RAA_pt_%ld_v3.pdf", _TS) );
-	TFile* output = new TFile(Form("resultRAA_%ld_raw_v3.root", _TS), "recreate");
+	TFile* output = new TFile(Form("./result/resultRAA_%ld_raw_v3.root", _TS), "recreate");
 	TDirectory *Dir_vanila = output->mkdir("vanila");
 	Dir_vanila->cd();
 	c1->Write();
 	c2->Write();
 	g_p2s->Write();
 	g_p3s->Write();
-//	for(auto item : towrite){
-//		item.second->Write();
-//	}
+	for(auto item : towrite){
+		item.second->Write();
+	}
 	output->Close();
 	/////////////////////END OF WRITE LOOP 1//////////////////////////////
 	
@@ -609,7 +646,7 @@ void analysis_plots_combine_func(TFile* hf, TFile* hsys, TFile* ppsys, TFile* hd
     b_3serr->SetLineColor(kGreen+3);
 	dbg();
 
-	p1_L->SetLeftMargin(0.12);
+	p1_L->SetLeftMargin(0.13);
 	p2->SetLeftMargin(0.12);
 
 	leg_cent = new TLegend(0.21,0.17, 0.66, 0.36);
@@ -636,8 +673,8 @@ void analysis_plots_combine_func(TFile* hf, TFile* hsys, TFile* ppsys, TFile* hd
 	g_c23s->Draw("APE");
 	g_c23s_sys->Draw("5");
 	p1_L_line1 = lineone->DrawLine(0, 1, 420, 1);
-	tl->DrawLatex( 40, label_pos_up +0.05,"p_{T} < 30 GeV/c");
-	tl->DrawLatex( 40, label_pos_up -0.15, "|y| < 2.4");
+	tl->DrawLatex( 40, label_pos_up +0.05,"#it{p}_{T} < 30 GeV/#it{c}");
+	tl->DrawLatex( 40, label_pos_up -0.15, "|#it{y}| < 2.4");
 //	leg_cent->Draw();
 	b_3serr->Draw("L");
 
@@ -648,10 +685,10 @@ void analysis_plots_combine_func(TFile* hf, TFile* hsys, TFile* ppsys, TFile* hd
 	g_i23s->Draw("APE");
 	g_i23s_sys->Draw("5");
 	p1_R_line1 = lineone->DrawLine(1,1,4,1);
-	tl->SetTextSize(0.037* p2scale);
+	tl->SetTextSize(0.042* p2scale);
 	tl->SetTextAlign(21);
 	p1_R_latex1 = tl->DrawLatex( 2.5, 1.02, "Cent.");
-	p1_R_latex2 = tl->DrawLatex( 2.5, 0.94, "0-90 %");
+	p1_R_latex2 = tl->DrawLatex( 2.5, 0.94, "0-90%");
 	p1_R->Update();
 	p1_R->Draw();
 	towrite["p1_R"] = p1_R;
@@ -662,11 +699,11 @@ void analysis_plots_combine_func(TFile* hf, TFile* hsys, TFile* ppsys, TFile* hd
 	g_p23s->Draw("APE");
 	g_p23s_sys->Draw("5");
 	p2_line1 = lineone->DrawLine(0, 1, 30, 1);
-	tl->SetTextSize(0.037);
+	tl->SetTextSize(0.042);
 	tl->SetTextAlign(11);
-//	tl->DrawLatex( 2.5, label_pos_up + 0.02,"p_{T} < 30 GeV/c");
-	tl->DrawLatex( 2.5, label_pos_up + 0.02 , "|y| < 2.4");
-	tl->DrawLatex( 2.5,label_pos_up - 0.15 , "Cent. 0-90 %");
+//	tl->DrawLatex( 2.5, label_pos_up + 0.02,"#it{p}_{T} < 30 GeV/#it{c}");
+	tl->DrawLatex( 2.5, label_pos_up + 0.02 , "|#it{y}| < 2.4");
+	tl->DrawLatex( 2.5,label_pos_up - 0.15 , "Cent. 0-90%");
 //	leg_pt->Draw();
 
 	p2->Draw();
@@ -674,10 +711,10 @@ void analysis_plots_combine_func(TFile* hf, TFile* hsys, TFile* ppsys, TFile* hd
 	//LUMIFY PADS AND COMBINE PLOTS//
 	c1->cd();
 	p1_L->cd();
-	CMS_lumi_square(p1_L,103, 33);
+	CMS_lumi_square(p1_L,103, 33, -1);
 	c2->cd();
 	p2->cd();
-	CMS_lumi_square( p2, 103, 33);
+	CMS_lumi_square( p2, 103, 33, -1);
 	c1->Update();
 	c1->Modified();
 	c2->Update();
@@ -687,7 +724,7 @@ void analysis_plots_combine_func(TFile* hf, TFile* hsys, TFile* ppsys, TFile* hd
 
 	c1->SaveAs(Form("../checkout/tscol/DR_centrality_int_%ld_v3.pdf", _TS) );
 	c2->SaveAs(Form("../checkout/tscol/DR_pt_%ld_v3.pdf", _TS) );
-	output = new TFile(Form("resultDR_%ld_raw_v3.root", _TS), "recreate");
+	output = new TFile(Form("./result/resultDR_%ld_raw_v3.root", _TS), "recreate");
 	dbg();
 	Dir_vanila = output->mkdir("vanila");
 	dbg();
@@ -696,8 +733,12 @@ void analysis_plots_combine_func(TFile* hf, TFile* hsys, TFile* ppsys, TFile* hd
 	c2->Write();
 	g_c23s->SetName("g_c23s");
 	g_p23s->SetName("g_p23s");
+	g_c23s_sys->SetName("g_c23s_sys");
+	g_p23s_sys->SetName("g_p23s_sys");
 	g_c23s->Write();
 	g_p23s->Write();
+	g_c23s_sys->Write();
+	g_p23s_sys->Write();
 //	for(auto item : towrite){
 //		item.second->Write();
 //	}
@@ -773,15 +814,25 @@ void invokePAgraph(
 	pg_p1s.SetPointError(5, 0.0, 0.0, quadsum(0.026, 0.000), quadsum(0.026, 0.000));
 
 
-	pg_c1s_sys.SetPointError(0, 0.6, 1.0, 0.097, 0.140);
-	pg_c1s_sys.SetPointError(1, 2.4, 2.6, 0.117, 0.127);
-	pg_c1s_sys.SetPointError(2, 3.1, 3.2, 0.063, 0.065);
-	pg_c1s_sys.SetPointError(3, 3.7, 3.7, 0.045, 0.046);
-	pg_c1s_sys.SetPointError(4, 4.0, 4.0, 0.036, 0.035);
-	pg_c1s_sys.SetPointError(5, 4.1, 4.1, 0.027, 0.026);
-	pg_c1s_sys.SetPointError(6, 3.8, 3.8, 0.021, 0.020);
-	pg_c1s_sys.SetPointError(7, 3.2, 3.2, 0.020, 0.019);
-	pg_c1s_sys.SetPointError(8, 2.0, 2.0, 0.020, 0.019);
+	// pg_c1s_sys.SetPointError(0, 0.6 * 2, 1.0 * 2, 0.097, 0.140);
+	// pg_c1s_sys.SetPointError(1, 2.4 * 2, 2.6 * 2, 0.117, 0.127);
+	// pg_c1s_sys.SetPointError(2, 3.1 * 2, 3.2 * 2, 0.063, 0.065);
+	// pg_c1s_sys.SetPointError(3, 3.7 * 2, 3.7 * 2, 0.045, 0.046);
+	// pg_c1s_sys.SetPointError(4, 4.0 * 2, 4.0 * 2, 0.036, 0.035);
+	// pg_c1s_sys.SetPointError(5, 4.1 * 2, 4.1 * 2, 0.027, 0.026);
+	// pg_c1s_sys.SetPointError(6, 3.8 * 2, 3.8 * 2, 0.021, 0.020);
+	// pg_c1s_sys.SetPointError(7, 3.2 * 2, 3.2 * 2, 0.020, 0.019);
+	// pg_c1s_sys.SetPointError(8, 2.0 * 2, 2.0 * 2, 0.020, 0.019);
+
+	pg_c1s_sys.SetPointError(0, 7, 7, 0.097, 0.140);
+	pg_c1s_sys.SetPointError(1, 7, 7, 0.117, 0.127);
+	pg_c1s_sys.SetPointError(2, 7, 7, 0.063, 0.065);
+	pg_c1s_sys.SetPointError(3, 7, 7, 0.045, 0.046);
+	pg_c1s_sys.SetPointError(4, 7, 7, 0.036, 0.035);
+	pg_c1s_sys.SetPointError(5, 7, 7, 0.027, 0.026);
+	pg_c1s_sys.SetPointError(6, 7, 7, 0.021, 0.020);
+	pg_c1s_sys.SetPointError(7, 7, 7, 0.020, 0.019);
+	pg_c1s_sys.SetPointError(8, 7, 7, 0.020, 0.019);
 
 	pg_i1s_sys.SetPointError(0 ,0.23, 0.23,  quadsum(0.000, 0.035), quadsum(0.000,0.035) );
 

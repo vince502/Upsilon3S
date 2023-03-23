@@ -1,6 +1,9 @@
 #include "../upsilonAna.cxx"
 #include "../.workdir.h"
-#include "../Systematics/GOF_test.cxx"
+#if defined _TS
+	#include "../Systematics/GOF_test.cxx"
+#endif
+
 
 RooRealVar getRAAValue(std::pair <int, int>);
 // Double Ratio Finding Function
@@ -37,7 +40,8 @@ RooRealVar getRAAValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC
 	yAA.setError(_y.getError()/(_yacc.getVal()*_yeff ));
 	std::cout << "\n\n\n YAA ERROR : " << yAA.getError() << "\n\n" << std::endl;
 	if(getPre==1) return yAA;
-	TFile* file_pp =TFile::Open(Form("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/results_%dS.root",ofstate));
+	TFile* file_pp =TFile::Open(Form("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/results_%dS.root",ofstate));
+	std::cout << file_pp->GetName() << std::endl;
 	
 	TH1D *h_cs_pp = (!(pl == 0 && ph == 30)) ? (TH1D*) file_pp->Get("hptData") : (TH1D*) file_pp->Get("hintData");
 	
@@ -64,11 +68,13 @@ RooRealVar getRAAValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC
 	auto taa =glp::Taa[{ab.centl,ab.centh}];
 	double lum_scale = 1 *TMath::Power(10,6);
 	double n_scale = 4;
+	if( ts == 9999999999 ) n_scale = 1;  
 	if( ts == 20000000000 ) n_scale = 1;  
 	if( ts == 20000000001 ) n_scale = 1;  
 	if( ts == 20000000011 ) n_scale = 1;  
 	if( ts == 20000000003 ) n_scale = 1;  
 	if( ts == 20000000004 ) n_scale = 1;  
+	if( ts == 400019111111 ) n_scale = 1;  
 	if( ts_alias(ts) != ts) n_scale = 1;
 
 	std::cout << "\n\n\n[n_scale] : " << n_scale  << "\n\n\n" << std::endl;
@@ -94,6 +100,7 @@ RooRealVar getRAAValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC
 	return val_return;
 };
 
+#if defined _TS
 RooRealVar getRAAValue(ana_bins ab, long ts, bool ppstat, int ofstate = -1, int getPre=0){
 	string fittype = (strcmp(ab.bin_attr.c_str(),"c")==0) ? "FF" : "GC";
 	string bkgtype = AICGOF_test(ab)[0].second;
@@ -146,7 +153,7 @@ RooRealVar getDRValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC2
 
 	// Data - 3. Get PP Single Ratio;
 //	TFile* ppSR = TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/results_3S_SR.root");
-	TFile* ppSR = TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/results_3S_SR_NonCorrected.root");
+	TFile* ppSR = TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/Results/results_3S_SR_NonCorrected.root");
 	bool isptbin = (ab.bintype ==kPt);
 	TH1D* pp_data = ( isptbin ) ? (TH1D*) ppSR->Get("hptData") : (TH1D*) ppSR->Get("hintData");
 	double pp_val = ( isptbin ) ? pp_data->GetBinContent(ab.plot_idx) : pp_data->GetBinContent(1); 
@@ -158,6 +165,7 @@ RooRealVar getDRValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC2
 	if( ts == 20000000011 ) n_scale = 1;  
 	if( ts == 20000000003 ) n_scale = 1;  
 	if( ts == 20000000004 ) n_scale = 1;  
+	if( ts == 400019111111 ) n_scale = 1;  
 	if( ts_alias(ts) != ts) n_scale = 1;
 
 	std::cout << Form("[AASR] n_scale : %.1f pt(%d-%d) cent(%d-%d) val +/- err : ",n_scale, ab.pl, ab.ph, ab.centl, ab.centh) << pp_val << " +/- " << pp_err << std::endl;
@@ -201,4 +209,36 @@ RooRealVar getDRValue(ana_bins ab, long ts, bool ppstat, int getPre = 0){
 	string type = Form("CB3:%s:%s", bkgtype.c_str() ,fittype.c_str());
 	double bl = Get_BDT(ts_alias(ts), ab);
 	return getDRValue(ppstat, ab, type, -2, 1, getPre, ts, false, false);
+};
+
+#endif
+
+RooRealVar getRAWValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC2:GC", double custom_bl  = -2, double custom_bh = 1, int getPre = 0,long ts =9999999999, bool stdvcut = false, bool eff_old = false, int ofstate = -1){
+	if(ofstate == -1) ofstate = ab.state;
+	int cl, ch, pl, ph, state, train_state, bpl, bph;
+	cl = ab.cl; ch = ab.ch;
+	pl = ab.pl; ph = ab.ph;
+	bpl = ab.bpl; bph = ab.bph;
+	state = ab.state; train_state = ab.train_state;
+
+	double val_bdt_nom;
+	double bdt_upper =custom_bh;
+	double ylim = 2.4;
+	double app_cutQVP = (stdvcut) ? 0.01 : 0.0000;
+	if(custom_bl < -1 ) val_bdt_nom= Get_BDT(ts_alias(ts), ab);
+	if(custom_bl >= -1 ) val_bdt_nom = custom_bl;
+	binplotter* bp ;
+	bp = new binplotter(type,ts, ylim, (double) pl, (double) ph, cl, ch, app_cutQVP, val_bdt_nom, bdt_upper, bpl, bph, train_state, state, false, eff_old);
+	RooRealVar _y = bp->get_yield(ofstate);
+	if(getPre==2) return _y;
+	RooRealVar _yacc = upsi::getacceptance(pl,ph, (double) -1*ylim, ylim, 3.5, ofstate);
+	auto _yeff_pair = bp->get_eff(ofstate);
+	double _yeff = _yeff_pair.first;
+	RooRealVar yAA, yPP ;
+	yAA = RooRealVar(Form("corrY%dyield",ofstate), Form("corrected %dS yield",ofstate), _y.getVal()/(_yacc.getVal()*_yeff));
+	std::cout <<"##Yield "<<state<<"S Corrected y/acc eff: "<< yAA.getVal() << ", Efficiency: " << _yeff << ", Acceptance: " << _yacc.getVal() << std::endl;
+	yAA.setError(_y.getError()/(_yacc.getVal()*_yeff ));
+	std::cout << "\n\n\n YAA ERROR : " << yAA.getError() << "\n\n" << std::endl;
+	if(getPre==1) return yAA;
+	else return RooRealVar("nan", "no Raw Value", 0);
 };

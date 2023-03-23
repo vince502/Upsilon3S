@@ -1,6 +1,6 @@
 #include "../CMS_lumi_square.C"
 
-TFile* fin = TFile::Open("resultDR_200019111111_raw_v3.root");
+TFile* fin = TFile::Open("result/resultDR_2100019111111_raw_v3.root");
 THttpServer* serv= new THttpServer("http:8081");
 TCanvas* c1 =new TCanvas() ;
 
@@ -36,5 +36,5 @@ void fit_linear_ptDR(){
 	tl->DrawLatex(2,0.9, Form("#color[2]{y = %.5f, #chi^{2}/ndf = %.1f/%d}",f3s_pol0->GetParameter(0), f3s_pol0->GetChisquare(),f3s_pol0->GetNDF() ));
 
 	CMS_lumi_square(c1, 2, 33);	
-	c1->SaveAs("~/Upsilon3S/checkout/fitDR_pt_pol.pdf");
+	c1->SaveAs("~/Upsilon3S/checkout/fitDR_pt_pol_v2.pdf");
 }

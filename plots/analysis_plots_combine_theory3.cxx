@@ -327,10 +327,10 @@ void analysis_plots_combine_func_theory3(TFile* hf, TFile* hsys, TFile* ppsys, T
 	lineone->SetLineWidth(1);
 
 	TLatex* tl = new TLatex();
-	tl->SetTextSize(0.037);
+	tl->SetTextSize(0.042);
 	tl->SetTextFont(42);
 
-	TLegend* leg_cent = new TLegend(0.42, 0.442, 0.67, 0.60);
+	TLegend* leg_cent = new TLegend(0.40, 0.442, 0.65, 0.60);
 	leg_cent->AddEntry(g_c2s, "#Upsilon(2S)", "pl");
 	leg_cent->AddEntry(g_c3s, "#Upsilon(3S)", "pl");
 	leg_cent->SetBorderSize(0);
@@ -344,7 +344,7 @@ void analysis_plots_combine_func_theory3(TFile* hf, TFile* hsys, TFile* ppsys, T
 	leg_pt->SetTextFont(42);
 	leg_pt->SetTextSize(0.030);
 
-	TLegend* leg_cent_theory = new TLegend(0.65, 0.45, 0.85, 0.67);
+	TLegend* leg_cent_theory = new TLegend(0.68, 0.45, 0.88, 0.67);
 	leg_cent_theory->SetBorderSize(0);
 	leg_cent_theory->SetTextFont(42);
 	leg_cent_theory->SetTextSize(0.032);
@@ -391,8 +391,8 @@ void analysis_plots_combine_func_theory3(TFile* hf, TFile* hsys, TFile* ppsys, T
     draw_theory_CIMnCTEQ15(p1_L,  leg_cent_theory, kTCent, 2);
     draw_theory_CIMnCTEQ15(p1_L,  leg_cent_theory, kTCent, 3);
 	TLine* p1_L_line1 = lineone->DrawLine(0, 1, 420, 1);
-	TLatex* p1_L_latex1 = tl->DrawLatex( 40, 1.15,"p_{T} < 30 GeV/c");
-	TLatex* p1_L_latex2 = tl->DrawLatex( 40, 1.06, "|y| < 2.4");
+	TLatex* p1_L_latex1 = tl->DrawLatex( 40, 1.15,"#it{p}_{T} < 30 GeV/c");
+	TLatex* p1_L_latex2 = tl->DrawLatex( 40, 1.06, "|#it{y}| < 2.4");
 	leg_cent->Draw();
 	leg_cent_theory->Draw();
 	b_err->  Draw("L");
@@ -420,10 +420,10 @@ void analysis_plots_combine_func_theory3(TFile* hf, TFile* hsys, TFile* ppsys, T
 	g_i2s_sys->Draw("5");
 	g_i3s_sys->Draw("5");
 	TLine* p1_R_line1 = lineone->DrawLine(1,1,4,1);
-	tl->SetTextSize(0.037* p2scale);
+	tl->SetTextSize(0.042* p2scale);
 	tl->SetTextAlign(21);
 	TLatex* p1_R_latex1 = tl->DrawLatex( 2.5, 1.02, "Cent.");
-	TLatex* p1_R_latex2 = tl->DrawLatex( 2.5, 0.94, "0-90 %");
+	TLatex* p1_R_latex2 = tl->DrawLatex( 2.5, 0.94, "0-90%");
 	towrite["g_i2s_sys"] = g_i2s_sys;
 	towrite["g_i3s_sys"] = g_i3s_sys;
 	towrite["g_i3s"] = g_i3s;
@@ -449,11 +449,11 @@ void analysis_plots_combine_func_theory3(TFile* hf, TFile* hsys, TFile* ppsys, T
     draw_theory_QTraj(p2, leg_pt, kTPt, 2);
     draw_theory_QTraj(p2, leg_pt, kTPt, 3);
 	TLine* p2_line1 = lineone->DrawLine(0, 1, 30, 1);
-	tl->SetTextSize(0.037);
+	tl->SetTextSize(0.042);
 	tl->SetTextAlign(11);
-//	TLatex* p2_latex1 = tl->DrawLatex( 2.5, 1.15,"p_{T} < 30 GeV/c");
-	TLatex* p2_latex2 = tl->DrawLatex( 2.5, 1.15, "|y| < 2.4");
-	TLatex* p2_latex3 = tl->DrawLatex( 2.5,1.06, "Cent. 0-90 %");
+//	TLatex* p2_latex1 = tl->DrawLatex( 2.5, 1.15,"#it{p}_{T} < 30 GeV/c");
+	TLatex* p2_latex2 = tl->DrawLatex( 2.5, 1.15, "|#it{y}| < 2.4");
+	TLatex* p2_latex3 = tl->DrawLatex( 2.5,1.06, "Cent. 0-90%");
 	towrite["g_p2s"] = g_p2s;
 	towrite["g_p3s"] = g_p3s;
 	towrite["g_p3s_sys"] = g_p3s_sys;
@@ -472,10 +472,10 @@ void analysis_plots_combine_func_theory3(TFile* hf, TFile* hsys, TFile* ppsys, T
 	//LUMIFY PADS AND COMBINE PLOTS//
 	c1->cd();
 	p1_L->cd();
-	CMS_lumi_square(p1_L,103, 33);
+	CMS_lumi_square(p1_L,103, 33, 2);
 	c2->cd();
 	p2->cd();
-	CMS_lumi_square( p2, 103, 33);
+	CMS_lumi_square( p2, 103, 33, 2);
 	c1->Update();
 	c1->Modified();
 	c2->Update();
@@ -574,8 +574,8 @@ void analysis_plots_combine_func_theory3(TFile* hf, TFile* hsys, TFile* ppsys, T
     draw_theory_CIMnCTEQ15(p1_L, leg_cent, kTCent, 32);
 //    draw_theory_EPPS16(p1_L, leg_cent,  kTCent, 4);
 	p1_L_line1 = lineone->DrawLine(0, 1, 420, 1);
-	tl->DrawLatex( 40, label_pos_up +0.05,"p_{T} < 30 GeV/c");
-	tl->DrawLatex( 40, label_pos_up -0.15, "|y| < 2.4");
+	tl->DrawLatex( 40, label_pos_up +0.05,"#it{p}_{T} < 30 GeV/c");
+	tl->DrawLatex( 40, label_pos_up -0.15, "|#it{y}| < 2.4");
 	leg_cent->Draw();
 	b_3serr->Draw("L");
 
@@ -586,10 +586,10 @@ void analysis_plots_combine_func_theory3(TFile* hf, TFile* hsys, TFile* ppsys, T
 	g_i23s->Draw("APE");
 	g_i23s_sys->Draw("5");
 	p1_R_line1 = lineone->DrawLine(1,1,4,1);
-	tl->SetTextSize(0.037* p2scale);
+	tl->SetTextSize(0.042* p2scale);
 	tl->SetTextAlign(21);
 	p1_R_latex1 = tl->DrawLatex( 2.5, 1.02, "Cent.");
-	p1_R_latex2 = tl->DrawLatex( 2.5, 0.94, "0-90 %");
+	p1_R_latex2 = tl->DrawLatex( 2.5, 0.94, "0-90%");
 	p1_R->Update();
 	p1_R->Draw();
 	towrite["p1_R"] = p1_R;
@@ -602,11 +602,11 @@ void analysis_plots_combine_func_theory3(TFile* hf, TFile* hsys, TFile* ppsys, T
 //    draw_theory_CIMnCTEQ15(p2, leg_pt, kTPt, 32); NO!
 //    draw_theory_EPPS16(p2, leg_pt, kTPt, 4);
 	p2_line1 = lineone->DrawLine(0, 1, 30, 1);
-	tl->SetTextSize(0.037);
+	tl->SetTextSize(0.042);
 	tl->SetTextAlign(11);
-//	tl->DrawLatex( 2.5, label_pos_up + 0.02,"p_{T} < 30 GeV/c");
-	tl->DrawLatex( 2.5, label_pos_up + 0.02 , "|y| < 2.4");
-	tl->DrawLatex( 2.5,label_pos_up - 0.15 , "Cent. 0-90 %");
+//	tl->DrawLatex( 2.5, label_pos_up + 0.02,"#it{p}_{T} < 30 GeV/c");
+	tl->DrawLatex( 2.5, label_pos_up + 0.02 , "|#it{y}| < 2.4");
+	tl->DrawLatex( 2.5,label_pos_up - 0.15 , "Cent. 0-90%");
 	leg_pt->Draw();
 
 	p2->Draw();
@@ -614,10 +614,10 @@ void analysis_plots_combine_func_theory3(TFile* hf, TFile* hsys, TFile* ppsys, T
 	//LUMIFY PADS AND COMBINE PLOTS//
 	c1->cd();
 	p1_L->cd();
-	CMS_lumi_square(p1_L,103, 33);
+	CMS_lumi_square(p1_L,103, 33, 2);
 	c2->cd();
 	p2->cd();
-	CMS_lumi_square( p2, 103, 33);
+	CMS_lumi_square( p2, 103, 33, 2);
 	c1->Update();
 	c1->Modified();
 	c2->Update();

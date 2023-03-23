@@ -60,7 +60,7 @@ bool BDTClassifier_BLIND_Function(int state , int idx , double ptLow, double ptH
   else gSystem->mkdir(BDTDir.Data(),kTRUE);
   
   //INPUT & OUTPUT Call
-  TFile* inputDATA = new TFile(Form("%s/%s", store.Data(), "test220217_1.root"),"read");
+  TFile* inputDATA = new TFile(Form("%s/%s", store.Data(), "test220217.root"),"read");
 //  TFile* inputDATA = new TFile(Form("%s/%s", hfdir.Data(), SYS_HFDOWNDATA.c_str()),"read");
   TFile* inputMC2S   ;
   TFile* inputMC3S   ;
@@ -236,7 +236,7 @@ void BDTClassifier_BLIND_BDTCOMB_NOM_commentNB( long _inputts , string _bookOpt,
   std::vector<std::pair<int, int> >bin1spt = {{0,30},{0, 4},{4, 9},{9, 12},{12,30},{12, 50}};//{/*{0,30},{0,1},{1,2},{2,3},{3,4},{4,5},{5,6},{6,8},{8,10},{10,12},{18,30}*/{12,18},{12,15},{15,30}};
   std::vector<std::pair<int, int> >bin2spt = {{0,30},{9, 15},{15,30}};//{/*{0,2},{2,4},{4,6},{6,9},{9,12},{12,15},{15,20},{12,20},{12,24},{20,50},{24,50},{30,50}*/{12,50}, {15, 50}};
 //  std::vector<std::pair<int, int> >bin3spt = {{0,3}};//{/*{0,4},{4,9},{9,12},{12,15},{15,50},{12,24},{24,50},{12,20},{20,50},{12,30},{30,50},{15,30}*/};
-  std::vector<std::pair<int, int> >bin3spt = {/*{0,30},{0,3},*/{3,6},{6,9},{0, 4},{4, 9},{9, 15},{15,30}};//{/*{0,4},{4,9},{9,12},{12,15},{15,50},{12,24},{24,50},{12,20},{20,50},{12,30},{30,50},{15,30}*/};
+  std::vector<std::pair<int, int> >bin3spt = {{0,30},{0, 4},{4, 9},{9, 15},{15,30},{0,3},{3,6},{6,9}};//{/*{0,4},{4,9},{9,12},{12,15},{15,50},{12,24},{24,50},{12,20},{20,50},{12,30},{30,50},{15,30}*/};
   if(!nomonly){
   for( auto pair : bin3spt) 
   {

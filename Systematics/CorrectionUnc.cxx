@@ -4,7 +4,7 @@
 double effratio(ana_bins ab){
 	long ts = _TS;
 	if( ab.state == 2) return 0;
-	TFile* f_pp_corr = TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/CrossCheck/corr.root");
+	TFile* f_pp_corr = TFile::Open("/home/CMS/Analysis/HIN21007/Upsilon3S_pp2017Ref/CrossCheck/corr.root");
 
 	TH1D* h_pp_corr;
 	if(ab.bintype != kPt) h_pp_corr = (TH1D*) f_pp_corr->Get("hratio_int"); 

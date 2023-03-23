@@ -1,6 +1,6 @@
 #include "../CMS_lumi_square.C"
 
-TFile* fin = TFile::Open("resultRAA_200019111111_raw_v3.root");
+TFile* fin = TFile::Open("result/resultRAA_2100019111111_raw_v3.root");
 THttpServer* serv= new THttpServer("http:8081");
 TCanvas* c1 =new TCanvas() ;
 
@@ -53,7 +53,7 @@ void fit_linear_ptRaa(){
 	g2s->Draw("APE");
 	g3s->Draw("PE");
 
-	tl->DrawLatex( 2.5, 0.44 , "|y| < 2.4");
+	tl->DrawLatex( 2.5, 0.44 , "|#it{y}| < 2.4");
 	tl->DrawLatex( 2.5, 0.40 , "Cent. 0-90 %");
 
 	f2s_pol0->Draw("same");
@@ -68,5 +68,5 @@ void fit_linear_ptRaa(){
 
 	
 	CMS_lumi_square(c1, 2, 33);
-	c1->SaveAs("~/Upsilon3S/checkout/fitRAA_pt_pol.pdf");
+	c1->SaveAs("~/Upsilon3S/checkout/fitRAA_pt_pol_v2.pdf");
 }
