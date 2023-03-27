@@ -1,5 +1,74 @@
+////#define _TS 9999999999
+////#define _TS 10000000016
+////#define _TS 100019111111
+//#define _TS 200019111111
+//#if _TS == 9999999999 && __has_include("../LLR_CCorder_9999999999.h")
+//#   include "../LLR_CCorder_9999999999.h"
+//#   define getNomBkgO getNomBkgO_9999999999
+//#endif
+//
+//#if _TS == 10000000016 && __has_include("../LLR_CCorder_10000000016.h")
+//#   include "../LLR_CCorder_10000000016.h"
+//#   define getNomBkgO getNomBkgO_10000000016
+//#endif
+//
+//#if _TS == 20000000016 && __has_include("../LLR_CCorder_20000000016.h")
+//#   include "../LLR_CCorder_20000000016.h"
+//#   define getNomBkgO getNomBkgO_20000000016
+//#endif
+//
+//#if _TS == 100019111111 && __has_include("../LLR_CCorder_100019111111.h")
+//#   include "../LLR_CCorder_100019111111.h"
+//#   define getNomBkgO getNomBkgO_100019111111
+//#	define ana_bm ana_bm_comb
+//#endif
+//
+//#if _TS == 200019111111 && __has_include("../LLR_CCorder_200019111111.h")
+//#   include "../LLR_CCorder_200019111111.h"
+//#   define getNomBkgO getNomBkgO_200019111111
+//#	define ana_bm ana_bm_comb_ub
+//#endif
+//
+//#if _TS == 10000000003 && __has_include("../LLR_CCorder_10000000003.h")
+//#   include "../LLR_CCorder_10000000003.h"
+//#   define getNomBkgO getNomBkgO_10000000003
+//#endif
+//
+////#if _TS != 9999999999
+////#	define ana_bm ana_bm_comb
+////#endif
+//#include "../BDT/bininfo.h"
+//#include "../BDT/BDTtraindiff.cxx"
+//#include "../glauberparams_PbPb5TeV.h"
+//#include "theory/get_theory.cxx"
+//#include "Style_HIN-21-007.C"
+//
+////////LAMBDA, CONSTANTS ////
+//	auto get_taa_err = [](ana_bins x){
+//		auto taa = glp::Taa[{x.centl, x.centh}];
+//		return (double) taa.second/taa.first;
+//	};
+//	auto quadsum = [](double arg1, double arg2){ return TMath::Sqrt(arg1 * arg1 + arg2 * arg2); };
+//	double pp_lum =0;
+//	double pp_sys =0;
+//	double mb_unc =0;
+//////////////////////////////
+//void invokePAgraph(
+//	TGraphAsymmErrors& pg_c1s,TGraphAsymmErrors& pg_c1s_sys,
+//	TGraphAsymmErrors& pg_c2s,TGraphAsymmErrors& pg_c2s_sys,
+//	TGraphAsymmErrors& pg_i1s,TGraphAsymmErrors& pg_i1s_sys,
+//	TGraphAsymmErrors& pg_i2s,TGraphAsymmErrors& pg_i2s_sys,
+//	TGraphAsymmErrors& pg_p1s,TGraphAsymmErrors& pg_p1s_sys,
+//	TGraphAsymmErrors& pg_p2s,TGraphAsymmErrors& pg_p2s_sys
+//);
+//
+//void analysis_plots_combine_func(TFile* hf, TFile* hsys, TFile* ppsys, TFile* hdff, TFile* hdfsys, TFile* ppdfsys);
+//
+//void analysis_plots_combine(){
+//	analysis_plots_combine_func(TFile::Open(Form("./result/RAA_%ld.root", _TS)), TFile::Open(Form("../Systematics/data/total_systematics_RAA_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"), TFile::Open(Form("./result/DR_%ld.root", _TS) ), TFile::Open(Form("../Systematics/data/total_systematics_DR_%ld.root", _TS) ), TFile::Open("/home/CMS/Analysis/Upsilon3S_pp2017Ref/Results/PP_2017EOY_Systematic.root"));
+//};
 
-void analysis_plots_combine_func_w1s(TFile* hf, TFile* hsys, TFile* ppsys, TFile* hdff, TFile* hdfsys, TFile* ppdfsys)
+void analysis_plots_combine_func_w1s_theory2_2(TFile* hf, TFile* hsys, TFile* ppsys, TFile* hdff, TFile* hdfsys, TFile* ppdfsys)
 {
 	std::vector<TH1D*> vhist = {};
 	std::vector<TGraphAsymmErrors*> vgraph= {};
@@ -51,6 +120,7 @@ void analysis_plots_combine_func_w1s(TFile* hf, TFile* hsys, TFile* ppsys, TFile
 		*pg_p1s, *pg_p1s_sys,
 		*pg_p2s, *pg_p2s_sys
 	);
+	std::cout << pg_c1s->GetPointX(1) << std::endl;
 
 	vgraph.push_back(g_p3s); vgraph.push_back(g_p3s_sys);
 	vgraph.push_back(g_p2s); vgraph.push_back(g_p2s_sys);
@@ -142,8 +212,7 @@ void analysis_plots_combine_func_w1s(TFile* hf, TFile* hsys, TFile* ppsys, TFile
 			double nom_sys;
 			if(ab.bintype == kCent){
 				point_x = glp::Npart[{ab.centl, ab.centh}];
-				//point_x.second=  point_x.second *6;
-				point_x.second=  7;
+				point_x.second=  point_x.second *6;
 				ref_raa = raahist.GetBinContent( (vab.size()+1) - idx);
 				nom_sys = hist.GetBinContent( (vab.size() +1) - idx);
 				double tot_sys = quadsum(nom_sys, taa_err);
@@ -180,8 +249,7 @@ void analysis_plots_combine_func_w1s(TFile* hf, TFile* hsys, TFile* ppsys, TFile
 			double nom_sys;
 			if(ab.bintype == kCent){
 				point_x = glp::Npart[{ab.centl, ab.centh}];
-				//point_x.second=  point_x.second *6;
-				point_x.second= 7;
+				point_x.second=  point_x.second *6;
 				ref_raa = raahist.GetBinContent( (vab.size()+1) - idx);
 				nom_sys = hist.GetBinContent( (vab.size() +1) - idx);
 				point_y = { ref_raa, ref_raa * quadsum(nom_sys,0/* taa_err*/) };
@@ -243,7 +311,7 @@ void analysis_plots_combine_func_w1s(TFile* hf, TFile* hsys, TFile* ppsys, TFile
 
 	fillsysgraphdr(*hc23s_sys, *hc23s, *g_c23s_sys, "3c");
 	fillsysgraphdr(*hp23s_sys, *hp23s, *g_p23s_sys, "3p");
-	
+
 	double p2scale = ( (0.83 -0.12)/ (1. - 0.83) ) ;
 	kGLBp2scale = p2scale;
 
@@ -277,7 +345,6 @@ void analysis_plots_combine_func_w1s(TFile* hf, TFile* hsys, TFile* ppsys, TFile
 	TBox* b_pterr = new TBox();
 	double glb_2serr = hpp_i2s_unc->GetBinContent(1);
 	double glb_3serr = hpp_i3s_unc->GetBinContent(1);
-	double glb_23serr = hpp_i23s_unc->GetBinContent(1);
 	double glb_errMB_PP = 0;
 	glb_errMB_PP =quadsum(0.019, 0.01261);
 //	glb_errMB_PP =quadsum(pp_lum, mb_unc);
@@ -286,7 +353,6 @@ void analysis_plots_combine_func_w1s(TFile* hf, TFile* hsys, TFile* ppsys, TFile
 	double taaint_err = glp::Taa[{0, 90}].second/ glp::Taa[{0, 90}].first;
 	glb_errpt = quadsum( 0.01261, quadsum(taaint_err, 0.019));
 
-	dbg();
     b_err->SetX1(360);
     b_err->SetX2(380);
     b_err->SetY1(1 - fabs(glb_errMB_PP));
@@ -316,240 +382,8 @@ void analysis_plots_combine_func_w1s(TFile* hf, TFile* hsys, TFile* ppsys, TFile
 	b_pterr->SetFillColorAlpha(12, 0.8);
 	b_pterr->SetLineWidth(2);
 	b_pterr->SetLineColor(kGray+2);
-	dbg();
 
-////////////////////Data Serialize to text/////////////////////////////////////////////
-	int centup2[] = {90, 70, 60, 50, 40 ,30 ,20, 10, 5};
-	int centdo2[] = {70, 60, 50, 40, 30, 20, 10, 5, 0};
-	int centup3[] = {90, 70, 50, 30};
-	int centdo3[] = {70, 50, 30, 0};
-
-	int ptup2[] = {3, 6, 9, 15, 30};
-	int ptdo2[] = {0, 3, 6, 9, 15};
-	int ptup3[] = {4, 9, 15, 30};
-	int ptdo3[] = {0, 4, 9, 15};
-	auto fillpoints = [&] (ofstream& fs, TGraphAsymmErrors* g, TGraphAsymmErrors* g_sys, string tag, string outputform = "yaml", int mode = 0) {
-		auto xs = g_sys->GetX();
-		auto ys = g->GetY();
-		auto exls = g_sys->GetEXlow();
-		auto exhs = g_sys->GetEXhigh();
-		auto eyls = g->GetEYlow();
-		auto eyhs = g->GetEYhigh();
-		auto exlspart = g->GetEXlow();
-		auto exhspart = g->GetEXhigh();
-
-		auto eyls_sys = g_sys->GetEYlow();
-		auto eyhs_sys = g_sys->GetEYhigh();
-
-
-		unsigned long arrSize = g->GetN();
-		//fs<< tag << std::endl;
-		if( strcmp(outputform.c_str(), "yaml")==0){
-			if(mode == 11){
-				fs << "dependent_variables:" << std::endl;
-				fs << "- header: {name: \'$R_{\\rm AA}$\', units: \'\' }" << std::endl;
-				fs << "  qualifiers:" << std::endl;
-				fs << "  - {name: RE, value: \'Pb Pb --> UPSILON(2,3S) < MU+ MU- > X\'}" << std::endl;
-				fs << "  - {name: SQRT(S_NN), value: 5020 GeV}" << std::endl;
-				fs << "  - {name: \'$|y|$\', value: \'$ < 2.4$\' }" << std::endl;
-				fs << "  - {name: \'$p_{T}$\', value: 0 -- 30, units: GeV }" << std::endl;
-				fs << Form("  - {name: GLOBAL UNC. PP MB, value: \'%.1f %%\'}", 100* fabs(glb_errMB_PP)) << std::endl;
-				fs << Form("  - {name: GLOBAL UNC. PP 2S, value: \'%.1f %%\'}", 100* fabs(glb_2serr) ) << std::endl;
-				fs << Form("  - {name: GLOBAL UNC. PP 3S, value: \'%.1f %%\'}", 100* fabs(glb_3serr) ) << std::endl;
-			}
-			if(mode == 12){
-				fs << "dependent_variables:" << std::endl;
-				fs << "- header: {name: \'$R_{\\rm AA}$\', units: \'\' }" << std::endl;
-				fs << "  qualifiers:" << std::endl;
-				fs << "  - {name: RE, value: \'Pb Pb --> UPSILON(2,3S) < MU+ MU- > X\'}" << std::endl;
-				fs << "  - {name: SQRT(S_NN), value: 5020 GeV}" << std::endl;
-				fs << "  - {name: \'$|y|$\', value: \'$ < 2.4$\' }" << std::endl;
-				fs << "  - {name: \'$p_{T}$\', value: 0 -- 30, units: GeV }" << std::endl;
-				fs << Form("  - {name: GLOBAL UNC. PP MB, value: \'%.1f %%\'}", 100 * fabs(glb_errMB_PP)) << std::endl;
-				fs << Form("  - {name: GLOBAL UNC. PP 2S, value: \'%.1f %%\'}", 100 * fabs(glb_2serr) ) << std::endl;
-				fs << Form("  - {name: GLOBAL UNC. PP 3S, value: \'%.1f %%\'}", 100 * fabs(glb_3serr) ) << std::endl;
-			}
-			if(mode == 13){
-				fs << "dependent_variables:" << std::endl;
-				fs << "- header: {name: \'$R_{\\rm AA}$\', units: \'\'}" << std::endl;
-				fs << "  qualifiers:" << std::endl;
-				fs << "  - {name: RE, value: \'Pb Pb --> UPSILON(2,3S) < MU+ MU- > X\'}" << std::endl;
-				fs << "  - {name: SQRT(S_NN), value: 5020 GeV}" << std::endl;
-				fs << "  - {name: \'$|y|$\', value: \'$ < 2.4$\' }" << std::endl;
-				fs << "  - {name: \'CENTRALITY\', value: 0 -- 90, units: \'%\' }" << std::endl;
-				fs << Form("  - {name: GLOBAL UNC., value: \'%.1f %%\'}",  100 * fabs(glb_errpt)) << std::endl;
-			}
-			if(mode == 21){
-				fs << "dependent_variables:" << std::endl;
-				fs << "- header: {name: \'$DR_{\\rm 23}$\', units: \'\'}" << std::endl;
-				fs << "  qualifiers:" << std::endl;
-				fs << "  - {name: RE, value: \'Pb Pb --> UPSILON(2,3S) < MU+ MU- > X\'}" << std::endl;
-				fs << "  - {name: SQRT(S_NN), value: 5020 GeV}" << std::endl;
-				fs << "  - {name: \'$|y|$\', value: \'$ < 2.4$\' }" << std::endl;
-				fs << "  - {name: \'$p_{T}$\', value: 0 -- 30, units: GeV }" << std::endl;
-				fs << Form("  - {name: GLOBAL UNC., value: \'%.1f %%\'}", 100 * fabs(glb_23serr)) << std::endl;
-			}
-			if(mode == 22){
-				fs << "dependent_variables:" << std::endl;
-				fs << "- header: {name: \'$DR_{\\rm 23}$\', units: \'\'}" << std::endl;
-				fs << "  qualifiers:" << std::endl;
-				fs << "  - {name: RE, value: \'Pb Pb --> UPSILON(2,3S) < MU+ MU- > X\'}" << std::endl;
-				fs << "  - {name: SQRT(S_NN), value: 5020 GeV}" << std::endl;
-				fs << "  - {name: \'$|y|$\', value: \'$ < 1.0$\' }" << std::endl;
-				fs << "  - {name: \'$p_{T}$\', value: 0 -- 30, units: GeV }" << std::endl;
-				fs << Form("  - {name: GLOBAL UNC., value: \'%.1f %%\'}", 100* fabs(glb_23serr)) << std::endl;
-			}
-			if(mode == 23){
-				fs << "dependent_variables:" << std::endl;
-				fs << "- header: {name: \'$DR_{\\rm 23}$\', units: \'\'}" << std::endl;
-				fs << "  qualifiers:" << std::endl;
-				fs << "  - {name: RE, value: \'Pb Pb --> UPSILON(2,3S) < MU+ MU- > X\'}" << std::endl;
-				fs << "  - {name: SQRT(S_NN), value: 5020 GeV}" << std::endl;
-				fs << "  - {name: \'$|y|$\', value: \'$ < 2.4$\' }" << std::endl;
-				fs << "  - {name: \'CENTRALITY\', value: 0 -- 90, units: \'%\' }" << std::endl;
-			}
-			fs << "  values:" << std::endl;
-		}
-		for( int idx = 0; idx < arrSize; idx++ ){
-			if( strcmp(outputform.c_str(), "yaml")== 0){
-				if( mode == 11 || mode == 21 || mode == 13 || mode == 23){
-				fs << 
-					Form("  - value: %.3f\n    errors:\n    - {label: stat, symerror: %.3f}\n    - {label: sys, symerror: %.3f}",ys[idx], eyls[idx], eyls_sys[idx]) <<
-					std::endl;
-				}
-			}
-			if( strcmp(outputform.c_str(), "plain")==0){
-				fs<< 
-					Form("%.3f %.3f %.3f %.3f %.3f %.3f %.3f %.3f", xs[idx], exls[idx], exhs[idx], ys[idx], eyls[idx], eyhs[idx], eyls_sys[idx], eyhs_sys[idx]) <<
-					std::endl;
-			}
-//			fs << Form("X: %.3f, Y: %.3f, eXlow: %.3f, eXhigh: %.3f, eYlow: %.3f, eYhigh: %.3f", xs[idx], ys[idx], exls[idx], exhs[idx], yxls[idx], yxhs[idx]) << std::endl ;
-		}
-				if( mode == 12 || mode == 22){
-				fs << 
-					Form("  - value: %.3f\n    errors:\n    - {label: stat, symerror: %.3f}\n    - {label: sys, symerror: %.3f}",ys[0], eyls[0], eyls_sys[0]) <<
-					std::endl;
-				}
-
-		if( strcmp(outputform.c_str(), "yaml")==0){
-			if(mode == 11 || mode == 12 || mode ==21 || mode == 22){
-				fs << "- header: {name: \'$\\langle N_{\\rm part} \\rangle$\', units: \'\' }" << std::endl;
-				fs << "  values:" << std::endl;
-			}
-		}
-		for( int idx = 0; idx < arrSize; idx++ ){
-			if( strcmp(outputform.c_str(), "yaml")== 0){
-				if( mode == 11 || mode == 21){
-				fs << 
-					Form("  - value: %.3f\n    errors:\n    - symerror: %.3f", xs[idx], exhspart[idx]) <<
-					std::endl;
-				}
-			}
-		}
-		if( mode == 12 || mode == 22){
-		fs << 
-			Form("  - value: %.3f\n    errors:\n    - symerror: %.3f", 126.0, 0.8) <<
-			std::endl;
-		}
-		fs<< std::endl;
-
-		if( strcmp(outputform.c_str(), "yaml")==0){
-			fs << "independent_variables:" << std::endl;
-			if( mode == 11 ){
-			fs << "- header: {name: Centrality, units: \'\' }" << std::endl;
-			}
-			if( mode == 12 ){
-			fs << "- header: {name: Centrality, units: \'\' }" << std::endl;
-			}
-			if( mode == 13 ){
-			fs << "- header: {name: \'p_{\\rm T}\', units: \'GeV\' }" << std::endl;
-			}
-			if( mode == 21 ){
-			fs << "- header: {name: Centrality, units: \'\' }" << std::endl;
-			}
-			if( mode == 22 ){
-			fs << "- header: {name: Centrality, units: \'\' }" << std::endl;
-			}
-			if( mode == 23 ){
-			fs << "- header: {name: \'p_{\\rm T}\', units: \'GeV\' }" << std::endl;
-			}
-			fs << "  values:" << std::endl;
-		}
-		for( int idx = 0; idx < arrSize; idx++ ){
-			if( strcmp(outputform.c_str(), "yaml")==0){
-			if( mode == 11 ){
-				if( tag.find("2S") != std::string::npos){
-				fs <<  Form("  - {high: %d, low: %d}", centup2[idx], centdo2[idx] ) << std::endl;
-				}
-				if( tag.find("3S") != std::string::npos){
-				fs <<  Form("  - {high: %d, low: %d}", centup3[idx], centdo3[idx] ) << std::endl;
-				}
-			}
-			if( mode == 21 ){
-				fs <<  Form("  - {high: %d, low: %d}", centup3[idx], centdo3[idx] ) << std::endl;
-			}
-			if( mode == 13  ){
-				if( tag.find("2S") != std::string::npos){
-					fs <<  Form("  - {high: %d, low: %d}", ptup2[idx], ptdo2[idx] ) << std::endl;
-				}
-				if( tag.find("3S") != std::string::npos){
-					fs <<  Form("  - {high: %d, low: %d}", ptup3[idx], ptdo3[idx] ) << std::endl;
-				}
-			}
-			if( mode == 23 ){
-				fs <<  Form("  - {high: %d, low: %d}", ptup3[idx], ptdo3[idx] ) << std::endl;
-			}
-//					Form("  - value: %.3f\n    errors:\n    - asymerror: {minus: %.3f, plus: %.3f}", xs[idx], exls[idx], exhs[idx]) <<
-			}
-		}
-		if( mode == 12|| mode == 22 ){
-			fs <<  Form("  - {high: %d, low: %d}", 90, 0 ) << std::endl;
-		}
-		fs<< std::endl;
-	};
-	ofstream out;
-	out.open("../hepdata/figure_2,_2S_left.yaml");
-	fillpoints(out, g_c2s, g_c2s_sys, "2S centrality nominal", "yaml", 11);
-	out.close();
-	out.open("../hepdata/figure_2,_3S_left.yaml");
-	fillpoints(out, g_c3s, g_c3s_sys, "3S centrality nominal", "yaml", 11);
-	out.close();
-	out.open("../hepdata/figure_2,_2S_center.yaml");
-	fillpoints(out, g_i2s, g_i2s_sys, "2S integrated nominal", "yaml", 12);
-	out.close();
-	out.open("../hepdata/figure_2,_3S_center.yaml");
-	fillpoints(out, g_i3s, g_i3s_sys, "3S integrated nominal", "yaml", 12);
-	out.close();
-	out.open("../hepdata/figure_2,_2S_right.yaml");
-	fillpoints(out, g_p2s, g_p2s_sys, "2S pt nominal", "yaml", 13);
-	out.close();
-	out.open("../hepdata/figure_2,_3S_right.yaml");
-	fillpoints(out, g_p3s, g_p3s_sys, "3S pt nominal", "yaml", 13);
-	out.close();
-	out.open("../hepdata/figure_3,_left.yaml");
-	fillpoints(out, g_c23s,g_c23s_sys,"3S/2S centrality nominal", "yaml", 21);
-	out.close();
-	out.open("../hepdata/figure_3,_center.yaml");
-	fillpoints(out, g_i23s, g_i23s_sys, "3S/2S integrated nominal", "yaml", 22);
-	out.close();
-	out.open("../hepdata/figure_3,_right.yaml");
-	fillpoints(out, g_p23s,g_p23s_sys,"3S/2S pt nominal", "yaml", 23);
-	out.close();
-
-	out.open("HIN-21-007_points_plain.txt");
-	out << "x, x_low, x_high, y, y_stat_low, y_stat_high, y_syst_low, y_syst_high" << std::endl;
-	fillpoints(out, g_c2s, g_c2s_sys, "2S centrality ", "plain");
-	fillpoints(out, g_c3s, g_c3s_sys, "3S centrality ", "plain");
-	fillpoints(out, g_c23s,g_c23s_sys,"3S/2S centrality ", "plain");
-	fillpoints(out, g_p2s, g_p2s_sys, "2S pt ", "plain");
-	fillpoints(out, g_p3s, g_p3s_sys, "3S pt ", "plain");
-	fillpoints(out, g_p23s,g_p23s_sys,"3S/2S pt ", "plain");
-	fillpoints(out, g_i2s, g_i2s_sys, "2S integrated", "plain");
-	fillpoints(out, g_i3s, g_i3s_sys, "3S integrated", "plain");
-	fillpoints(out, g_i23s, g_i23s_sys, "3S/2S integrated", "plain");
-	out.close();
-
-//////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////Auxiliary Drawings///////////////////////////////
 	gStyle->SetEndErrorSize(0);
@@ -566,52 +400,53 @@ void analysis_plots_combine_func_w1s(TFile* hf, TFile* hsys, TFile* ppsys, TFile
 	tl->SetTextSize(0.042);
 	tl->SetTextFont(42);
 
-	TLegend* leg_cent = new TLegend(0.53, 0.43, 0.70, 0.67);
-	leg_cent->AddEntry(pg_c1s, "#kern[-0.00]{ }#Upsilon(1S) (2015 PbPb/pp)", "pe");
-	leg_cent->AddEntry((TObject*)0, "", "");
-	leg_cent->AddEntry(g_c2s, "#kern[-0.00]{ }#Upsilon(2S)", "pe");
-	leg_cent->AddEntry((TObject*)0, "", "");
-	leg_cent->AddEntry(g_c3s, "#kern[-0.00]{ }#Upsilon(3S)", "pe");
+	TLegend* leg_cent = new TLegend(0.43, 0.55, 0.72, 0.70);
+	leg_cent->AddEntry(pg_c1s, "#Upsilon(1S) (2015 PbPb/pp)", "pe");
+	leg_cent->AddEntry(g_c2s, "#Upsilon(2S)", "pe");
+	leg_cent->AddEntry(g_c3s, "#Upsilon(3S)", "pe");
 	leg_cent->SetBorderSize(0);
 	leg_cent->SetTextFont(42);
-	leg_cent->SetTextSize(0.04);
+	leg_cent->SetTextSize(0.030);
 	leg_cent->SetFillStyle(0);
-	leg_cent->SetColumnSeparation(0.4);
-	TLegend* leg_cent_box = new TLegend(0.53, 0.43, 0.70, 0.67);
-	leg_cent_box->AddEntry(pg_c1s_sys, "#kern[-0.00]{ }#Upsilon(1S) (2015 PbPb/pp)", "f");
-	leg_cent_box->AddEntry((TObject*)0, "", "");
-	leg_cent_box->AddEntry(g_c2s_sys, "#kern[-0.00]{ }#Upsilon(2S)", "f");
-	leg_cent_box->AddEntry((TObject*)0, "", "");
-	leg_cent_box->AddEntry(g_c3s_sys, "#kern[-0.00]{ }#Upsilon(3S)", "f");
+	TLegend* leg_cent_box = new TLegend(0.43, 0.55, 0.72, 0.70);
+	leg_cent_box->AddEntry(pg_c1s_sys, "#Upsilon(1S) (2015 PbPb/pp)", "f");
+	leg_cent_box->AddEntry(g_c2s_sys, "#Upsilon(2S)", "f");
+	leg_cent_box->AddEntry(g_c3s_sys, "#Upsilon(3S)", "f");
 	leg_cent_box->SetBorderSize(0);
 	leg_cent_box->SetTextFont(42);
-	leg_cent_box->SetTextSize(0.04);
-	leg_cent_box->SetColumnSeparation(0.4);
+	leg_cent_box->SetTextSize(0.030);
+	leg_cent_box->SetFillStyle(0);
 
-	TLegend* leg_pt = new TLegend(0.45, 0.44, 0.62, 0.67);
-	leg_pt->AddEntry(pg_p1s, "#kern[-0.00]{ }#Upsilon(1S) (2015 PbPb/pp)", "pe");
-	leg_pt->AddEntry((TObject*)0, "", "");
-	leg_pt->AddEntry(g_p2s, "#kern[-0.00]{ }#Upsilon(2S)", "pe");
-	leg_pt->AddEntry((TObject*)0, "", "");
-	leg_pt->AddEntry(g_p3s, "#kern[-0.00]{ }#Upsilon(3S)", "pe");
+	TLegend* leg_pt = new TLegend(0.24, 0.47, 0.56, 0.65);
+	leg_pt->AddEntry(pg_p1s, "#Upsilon(1S) (2015 PbPb/pp)", "pe");
+	leg_pt->AddEntry(g_p2s, "#Upsilon(2S)", "pe");
+	leg_pt->AddEntry(g_p3s, "#Upsilon(3S)", "pe");
 	leg_pt->SetBorderSize(0);
 	leg_pt->SetTextFont(42);
-	leg_pt->SetTextSize(0.04);
+	leg_pt->SetTextSize(0.030);
 	leg_pt->SetFillStyle(0);
-	TLegend* leg_pt_box = new TLegend(0.45, 0.44, 0.62, 0.67);
-	leg_pt_box->AddEntry(pg_p1s_sys, "#kern[-0.00]{ }#Upsilon(1S) (2015 PbPb/pp)", "f");
-	leg_pt_box->AddEntry((TObject*)0, "", "");
-	leg_pt_box->AddEntry(g_p2s_sys, "#kern[-0.00]{ }#Upsilon(2S)", "f");
-	leg_pt_box->AddEntry((TObject*)0, "", "");
-	leg_pt_box->AddEntry(g_p3s_sys, "#kern[-0.00]{ }#Upsilon(3S)", "f");
+	TLegend* leg_pt_box = new TLegend(0.24, 0.47, 0.56, 0.65);
+	leg_pt_box->AddEntry(pg_p1s_sys, "#Upsilon(1S) (2015 PbPb/pp)", "f");
+	leg_pt_box->AddEntry(g_p2s_sys, "#Upsilon(2S)", "f");
+	leg_pt_box->AddEntry(g_p3s_sys, "#Upsilon(3S)", "f");
 	leg_pt_box->SetBorderSize(0);
 	leg_pt_box->SetTextFont(42);
-	leg_pt_box->SetTextSize(0.04);
+	leg_pt_box->SetTextSize(0.030);
+	leg_pt_box->SetFillStyle(0);
+
+	TLegend* leg_cent_theory = new TLegend(0.67, 0.40, 0.85, 0.60);
+	leg_cent_theory->SetBorderSize(0);
+	leg_cent_theory->SetTextFont(42);
+	leg_cent_theory->SetTextSize(0.030);
+
+	TLegend* leg_pt_theory = new TLegend(0.58, 0.47, 0.89, 0.7);
+	leg_pt_theory->SetBorderSize(0);
+	leg_pt_theory->SetTextFont(42);
+	leg_pt_theory->SetTextSize(0.030);
 //////////////////////////////////INITIALIZE CANVASES/////////////////////////////////
 
-
 	std::map<string, TObject*> towrite;
-	TCanvas* c1 = new TCanvas("c1","", 1100,900);
+	TCanvas* c1 = new TCanvas("c1","", 1000,900);
 	TCanvas* c2 = new TCanvas("c2","", 1000,900);
 	TPad* p1_L = new TPad("p1L", "", 0.00, 0., 0.83,1.);
 	TPad* p1_R = new TPad("p1R", "", 0.83, 0., 1., 1.);
@@ -622,6 +457,8 @@ void analysis_plots_combine_func_w1s(TFile* hf, TFile* hsys, TFile* ppsys, TFile
 	p1_L->SetTicks();
 	p1_R->SetTicks();
 	p2->SetTicks();
+	p1_L->SetRightMargin(0);
+	p1_R->SetLeftMargin(0);
 	p1_L->SetRightMargin(0);
 	p1_L->SetLeftMargin(0.13);
 	p1_R->SetLeftMargin(0);
@@ -638,16 +475,24 @@ void analysis_plots_combine_func_w1s(TFile* hf, TFile* hsys, TFile* ppsys, TFile
 	//RAA CENT LEFT//
 	p1_L->cd();
 	g_c2s->Draw("APE");
+
+//	g_c2s->Draw("PE");
 	pg_c1s->Draw("PE");
 	g_c3s->Draw("PE");
 	pg_c1s_sys->Draw("5");
 	g_c2s_sys->Draw("5");
 	g_c3s_sys->Draw("5");
+//    draw_theory_EPPS16(p1_L, leg_cent, kTCent, 2);
+//    draw_theory_EPPS16(p1_L, leg_cent, kTCent, 3);
+    draw_theory_Transport(p1_L,  leg_cent_theory, kTCent, 1);
+    draw_theory_Transport(p1_L,  leg_cent_theory, kTCent, 2);
+    draw_theory_Transport(p1_L,  leg_cent_theory, kTCent, 3);
 	TLine* p1_L_line1 = lineone->DrawLine(0, 1, 420, 1);
-	TLatex* p1_L_latex1 = tl->DrawLatex( 40, 1.15,"#it{p}_{T} < 30 GeV/#it{c}");
+	TLatex* p1_L_latex1 = tl->DrawLatex( 40, 1.15,"#it{p}_{T} < 30 GeV/c");
 	TLatex* p1_L_latex2 = tl->DrawLatex( 40, 1.06, "|#it{y}| < 2.4");
 	leg_cent_box->Draw();
 	leg_cent->Draw("same");
+	leg_cent_theory->Draw();
 	b_err->  Draw("L");
 	b_2serr->Draw("L");
 	b_3serr->Draw("L");
@@ -695,15 +540,22 @@ void analysis_plots_combine_func_w1s(TFile* hf, TFile* hsys, TFile* ppsys, TFile
 	c2->cd();
 	p2->cd();
 	g_p2s->Draw("APE");
+
+//	g_p2s->Draw("PE");
 	pg_p1s->Draw("PE");
 	g_p3s->Draw("PE");
 	pg_p1s_sys->Draw("5");
 	g_p2s_sys->Draw("5");
 	g_p3s_sys->Draw("5");
+//    draw_theory_EPPS16(p2,leg_pt,  kTPt, 2);
+//    draw_theory_EPPS16(p2,leg_pt,  kTPt, 3);
+    draw_theory_Transport(p2, leg_pt_theory, kTPt, 1);
+    draw_theory_Transport(p2, leg_pt_theory, kTPt, 2);
+    draw_theory_Transport(p2, leg_pt_theory, kTPt, 3);
 	TLine* p2_line1 = lineone->DrawLine(0, 1, 30, 1);
 	tl->SetTextSize(0.042);
 	tl->SetTextAlign(11);
-//	TLatex* p2_latex1 = tl->DrawLatex( 2.5, 1.15,"#it{p}_{T} < 30 GeV/#it{c}");
+//	TLatex* p2_latex1 = tl->DrawLatex( 2.5, 1.15,"p_{T} < 30 GeV/c");
 	TLatex* p2_latex2 = tl->DrawLatex( 2.5, 1.15, "|#it{y}| < 2.4");
 	TLatex* p2_latex3 = tl->DrawLatex( 2.5,1.06, "Cent. 0-90%");
 	towrite["g_p2s"] = g_p2s;
@@ -717,6 +569,7 @@ void analysis_plots_combine_func_w1s(TFile* hf, TFile* hsys, TFile* ppsys, TFile
 	towrite["leg_pt"] = leg_pt;
 	leg_pt_box->Draw();
 	leg_pt->Draw("same");
+	leg_pt_theory->Draw();
 	b_pterr->Draw("L");
 	towrite["p2_box1"] = b_pterr;
 
@@ -725,10 +578,10 @@ void analysis_plots_combine_func_w1s(TFile* hf, TFile* hsys, TFile* ppsys, TFile
 	//LUMIFY PADS AND COMBINE PLOTS//
 	c1->cd();
 	p1_L->cd();
-	CMS_lumi_square(p1_L,103, 33, -1);
+	CMS_lumi_square(p1_L,103, 33, 2);
 	c2->cd();
 	p2->cd();
-	CMS_lumi_square( p2, 103, 33, -1);
+	CMS_lumi_square( p2, 103, 33, 2);
 	c1->Update();
 	c1->Modified();
 	c2->Update();
@@ -736,31 +589,13 @@ void analysis_plots_combine_func_w1s(TFile* hf, TFile* hsys, TFile* ppsys, TFile
 	towrite["c2"] = c2;
 	towrite["c1"] = c1;
 
-	c1->SaveAs(Form("../checkout/tscol/RAA_centrality_int_%ld_v3_w1s.pdf", _TS) );
-	c2->SaveAs(Form("../checkout/tscol/RAA_pt_%ld_v3_w1s.pdf", _TS) );
+	c1->SaveAs(Form("../checkout/tscol/RAA_centrality_int_%ld_v3_w1s_theory2_2.pdf", _TS) );
+	c2->SaveAs(Form("../checkout/tscol/RAA_pt_%ld_v3_w1s_theory2_2.pdf", _TS) );
 	TFile* output = new TFile(Form("resultRAA_%ld_v3.root", _TS), "recreate");
 	TDirectory *Dir_vanila = output->mkdir("vanila_w1s");
 	Dir_vanila->cd();
 	c1->Write();
 	c2->Write();
-	
-	c2->cd();
-	p2->cd();
-	leg_pt->SetY1NDC(0.57);
-	leg_pt->SetY2NDC(0.79);
-	p2_latex2->Delete();
-	p2_latex3->Delete();
-	p2_latex2 = tl->DrawLatex( 2.5, 6, "|#it{y}| < 2.4");
-	p2_latex3 = tl->DrawLatex( 2.5,12, "Cent. 0-90%");
-	leg_pt_box->Draw();
-	leg_pt->Draw();
-	g_p2s->GetYaxis()->SetRangeUser(1e-2, 5e+1);
-	p2->SetLogy(1);
-	// c2->SetLogy(1);
-	c2->Modified();
-	c2->Draw();
-	c2->SaveAs(Form("../checkout/tscol/RAA_pt_logy_%ld_v3_w1s.pdf", _TS) );
-	c2->SetLogy(0);
 //	for(auto item : towrite){
 //		item.second->Write();
 //	}
@@ -830,7 +665,7 @@ void analysis_plots_combine_func_w1s(TFile* hf, TFile* hsys, TFile* ppsys, TFile
 //	g_c23s->Draw("APE");
 //	g_c23s_sys->Draw("5");
 //	p1_L_line1 = lineone->DrawLine(0, 1, 420, 1);
-//	tl->DrawLatex( 40, label_pos_up +0.05,"p_{T} < 30 GeV/#it{c}");
+//	tl->DrawLatex( 40, label_pos_up +0.05,"p_{T} < 30 GeV/c");
 //	tl->DrawLatex( 40, label_pos_up -0.15, "|y| < 2.4");
 ////	leg_cent->Draw();
 //	b_3serr->Draw("L");
@@ -842,7 +677,7 @@ void analysis_plots_combine_func_w1s(TFile* hf, TFile* hsys, TFile* ppsys, TFile
 //	g_i23s->Draw("APE");
 //	g_i23s_sys->Draw("5");
 //	p1_R_line1 = lineone->DrawLine(1,1,4,1);
-//	tl->SetTextSize(0.024* p2scale);
+//	tl->SetTextSize(0.042* p2scale);
 //	tl->SetTextAlign(21);
 //	p1_R_latex1 = tl->DrawLatex( 2.5, 1.02, "Cent.");
 //	p1_R_latex2 = tl->DrawLatex( 2.5, 0.94, "0-90%");
@@ -858,7 +693,7 @@ void analysis_plots_combine_func_w1s(TFile* hf, TFile* hsys, TFile* ppsys, TFile
 //	p2_line1 = lineone->DrawLine(0, 1, 30, 1);
 //	tl->SetTextSize(0.042);
 //	tl->SetTextAlign(11);
-//	tl->DrawLatex( 2.5, label_pos_up + 0.05,"p_{T} < 30 GeV/#it{c}");
+//	tl->DrawLatex( 2.5, label_pos_up + 0.05,"p_{T} < 30 GeV/c");
 //	tl->DrawLatex( 12, label_pos_up + 0.05 , "|y| < 2.4");
 //	tl->DrawLatex( 2.5,label_pos_up - 0.15 , "Cent. 0-90%");
 ////	leg_pt->Draw();
@@ -1028,7 +863,7 @@ void analysis_plots_combine_func_w1s(TFile* hf, TFile* hsys, TFile* ppsys, TFile
 //
 //	pg_c2s_sys.SetPointError(0, 0.0, 0.0, quadsum(0.000, 0.136), quadsum(0.000, 0.154));
 //	pg_c2s_sys.SetPointError(1, 0.0, 0.0, quadsum(0.000, 0.128), quadsum(0.000, 0.131));
-//	pg_c2s_sys.SetPointError(2, 0.0, 0.0, quadsum(0.000, 0.037), quadsum(0.000, 0.038));
+//	pg_c2s_sys.SetPointError(2, 0.0, 0.0, quadsum(0.000, 0.042), quadsum(0.000, 0.038));
 //	pg_c2s_sys.SetPointError(3, 0.0, 0.0, quadsum(0.000, 0.023), quadsum(0.000, 0.023));
 //	pg_c2s_sys.SetPointError(4, 0.0, 0.0, quadsum(0.000, 0.019), quadsum(0.000, 0.019));
 //	pg_c2s_sys.SetPointError(5, 0.0, 0.0, quadsum(0.000, 0.032), quadsum(0.000, 0.032));

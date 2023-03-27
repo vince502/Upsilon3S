@@ -484,9 +484,9 @@ void analysis_plots_combine_func_w1s_theory2(TFile* hf, TFile* hsys, TFile* ppsy
 	g_c3s_sys->Draw("5");
 //    draw_theory_EPPS16(p1_L, leg_cent, kTCent, 2);
 //    draw_theory_EPPS16(p1_L, leg_cent, kTCent, 3);
-    draw_theory_QTraj(p1_L,  leg_cent_theory, kTCent, 1);
-    draw_theory_QTraj(p1_L,  leg_cent_theory, kTCent, 2);
-    draw_theory_QTraj(p1_L,  leg_cent_theory, kTCent, 3);
+    draw_theory_QTraj2023(p1_L,  leg_cent_theory, kTCent, 1, true);
+    draw_theory_QTraj2023(p1_L,  leg_cent_theory, kTCent, 2, true);
+    draw_theory_QTraj2023(p1_L,  leg_cent_theory, kTCent, 3, true);
 	TLine* p1_L_line1 = lineone->DrawLine(0, 1, 420, 1);
 	TLatex* p1_L_latex1 = tl->DrawLatex( 40, 1.15,"#it{p}_{T} < 30 GeV/c");
 	TLatex* p1_L_latex2 = tl->DrawLatex( 40, 1.06, "|#it{y}| < 2.4");
@@ -549,9 +549,9 @@ void analysis_plots_combine_func_w1s_theory2(TFile* hf, TFile* hsys, TFile* ppsy
 	g_p3s_sys->Draw("5");
 //    draw_theory_EPPS16(p2,leg_pt,  kTPt, 2);
 //    draw_theory_EPPS16(p2,leg_pt,  kTPt, 3);
-    draw_theory_QTraj(p2, leg_pt_theory, kTPt, 1);
-    draw_theory_QTraj(p2, leg_pt_theory, kTPt, 2);
-    draw_theory_QTraj(p2, leg_pt_theory, kTPt, 3);
+    draw_theory_QTraj2023(p2, leg_pt_theory, kTPt, 1, true);
+    draw_theory_QTraj2023(p2, leg_pt_theory, kTPt, 2, true);
+    draw_theory_QTraj2023(p2, leg_pt_theory, kTPt, 3, true);
 	TLine* p2_line1 = lineone->DrawLine(0, 1, 30, 1);
 	tl->SetTextSize(0.042);
 	tl->SetTextAlign(11);
