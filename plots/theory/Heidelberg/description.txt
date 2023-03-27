@@ -1,0 +1,23 @@
+These belong to Ref. [1], see  Fig. 3  for the p_T-dependence of R_AA (1S) up to 20 GeV/c. 
+Fig. 13 in [2] (2020) shows the same 2017-calculation up to 30 GeV/c as in the tables,
+to emphasise the rise at larger p_T.
+
+The centrality dependence in the tables is as in [1],  Fig. 6 (centrality dep. of 1S)
+of Ref. [1]; unbinned results for 1S and 2S from the same 2017 calculation
+are shown in Fig. 14 of [2], I had included that figure in my talk. We did not show Y(3S) in a figure
+since there were no data at that time, but is in the attached tables.
+
+The three tables give results for the Y(1S, 2S, 3S)-states, but 1P, 2P, 3P are included
+in the calculations, see additional table fyi. The notions “pre-cascade suppression factors”  
+or “preliminary suppression factors” indicate the
+in-medium suppression through screening, damping and gluodissociation (e.g.,
+dashed curves in Fig. 14 of  [2]), whereas “final suppression factors” include the effect
+of reduced feed-down, solid curves in Fig. 14. As discussed, your data show somewhat more 
+suppression for the 2S in peripheral collisions than our prediction, and it will be interesting to
+see how your new 3S data compare with the old prediction. Although a lot of progress
+has meanwhile been made by other groups, I have not expanded or improved our model since 2017 for
+symmetric systems, but instead used it to account for the hot-medium effects in asymmetric systems 
+(p-Pb, see my talk in Torino, and [2]).
+
+[1] PRC 95, 024905 (2017)
+[2] IJMPA 35, 2030016 (2020)

@@ -1,0 +1,7 @@
+#Final suppression factors:
+# Centrality     <Npart>  pT (GeV/c)    RAA(Y1S)    RAA(Y2S)    RAA(Y3S)
+      0-100%      102.43        <pT>     0.38773     0.18567     0.11209
+
+#Pre-cascade suppression factors:
+# Centrality     <Npart>  pT (GeV/c) RAAQGP(Y1S) RAAQGP(Y2S) RAAQGP(Y3S)
+      0-100%      102.43        <pT>     0.76899     0.22427     0.12712
