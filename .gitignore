@@ -20,3 +20,4 @@ BDT/BDT*.log
 *.swo
 *.swp
 *.log
+Macros/CorrYields/BDTCorYieldplot*.C
