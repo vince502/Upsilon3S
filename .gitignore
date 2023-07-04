@@ -17,3 +17,6 @@ BDT/Validation/*.tar.gz
 BDT/data/*
 
 BDT/BDT*.log
+
+.swo
+.log
