@@ -68,7 +68,7 @@ RooRealVar getRAAValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC
 	auto taa =glp::Taa[{ab.centl,ab.centh}];
 	double lum_scale = 1 *TMath::Power(10,6);
 	double n_scale = 4;
-	if( ts == 9999999999 ) n_scale = 1;  
+	if( ts == 9999999999 ) n_scale = 4;  
 	if( ts == 20000000000 ) n_scale = 1;  
 	if( ts == 20000000001 ) n_scale = 1;  
 	if( ts == 20000000011 ) n_scale = 1;  
@@ -96,6 +96,14 @@ RooRealVar getRAAValue(bool inc_pp_stat, ana_bins ab, std::string type = "CB3:CC
 	
 	RooRealVar val_return = RooRealVar("raa","", val_RAA);
 	val_return.setError(val_RAA_err);
+
+	if(getPre==100){
+		double bval = n_scale* yAA.getVal() * (lum_scale/taa_Nmb);
+		double berr = n_scale* yAA.getError()* (lum_scale/taa_Nmb);
+		RooRealVar val_x = RooRealVar("x","", bval);
+		val_x.setError(berr);
+		return val_x;
+	}
 	
 	return val_return;
 };

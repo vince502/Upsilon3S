@@ -1,0 +1,231 @@
+
+Processing drawRAAplot.cxx...
+
+[1mRooFit v3.60 -- Developed by Wouter Verkerke and David Kirkby[0m 
+                Copyright (C) 2000-2013 NIKHEF, University of California & Stanford University
+                All rights reserved, please read http://roofit.sourceforge.net/license.txt
+
+0.2689, 0.2689
+/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_BDT_2S_train2S_9999999999_bdt_0.2689-1.0000_pt0.0_30.0_y-2.4_2.4_SiMuPt3.5_mass9.3_10.7_cent0_181_vp_0.0000_isTnP1_isPtWeight1_ID_fix
+[DIAGNOSIS] NOM NUMGEN, NUMREO= (67480255.4, 7997305.0)
+Efficiency of BDT 9999999999, Cut 0.268900-1.000000 : 0.118513, 0.000427675
+##Yield 2S Corrected y/acc eff: 3079.47, Efficiency: 0.118513, Acceptance: 0.401841
+
+[BIN] pp attrib. 0-30 GeV/c, 0-181(/2 %) -> yield : 11473.634 $\pm$ 240.655, acc : 0.276, eff : 0.833
+
+
+RAAAAA : 0.0977385
+
+0.1825, 0.1825
+/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_BDT_3S_train3S_9999999999_bdt_0.1825-1.0000_pt0.0_30.0_y-2.4_2.4_SiMuPt3.5_mass9.6_11.0_cent0_181_vp_0.0000_isTnP1_isPtWeight1_ID_fix
+[DIAGNOSIS] NOM NUMGEN, NUMREO= (431826275.4, 103451951.4)
+Efficiency of BDT 9999999999, Cut 0.182500-1.000000 : 0.239568, 0.000853426
+##Yield 3S Corrected y/acc eff: 1619.76, Efficiency: 0.239568, Acceptance: 0.433338
+
+[BIN] pp attrib. 0-30 GeV/c, 0-181(/2 %) -> yield : 6026.045 $\pm$ 184.685, acc : 0.310, eff : 0.837
+
+
+RAAAAA : 0.110447
+
+-0.05, -0.05
+/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_BDT_2S_train2S_9999999999_bdt_-0.0500-1.0000_pt0.0_30.0_y-2.4_2.4_SiMuPt3.5_mass9.3_10.7_cent140_181_vp_0.0000_isTnP1_isPtWeight1_ID_fix
+[DIAGNOSIS] NOM NUMGEN, NUMREO= (485966.1, 310120.5)
+Efficiency of BDT 9999999999, Cut -0.050000-1.000000 : 0.638152, 0.00199152
+##Yield 2S Corrected y/acc eff: 187.84, Efficiency: 0.638152, Acceptance: 0.401841
+
+[BIN] pp attrib. 0-30 GeV/c, 140-181(/2 %) -> yield : 11473.634 $\pm$ 240.655, acc : 0.276, eff : 0.833
+
+
+RAAAAA : 1.00076
+
+0, 0
+/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_BDT_2S_train2S_9999999999_bdt_0.0000-1.0000_pt0.0_30.0_y-2.4_2.4_SiMuPt3.5_mass9.3_10.7_cent120_140_vp_0.0000_isTnP1_isPtWeight1_ID_fix
+[DIAGNOSIS] NOM NUMGEN, NUMREO= (752700.4, 435555.2)
+Efficiency of BDT 9999999999, Cut 0.000000-1.000000 : 0.578657, 0.00258325
+##Yield 2S Corrected y/acc eff: 160.217, Efficiency: 0.578657, Acceptance: 0.401841
+
+[BIN] pp attrib. 0-30 GeV/c, 120-140(/2 %) -> yield : 11473.634 $\pm$ 240.655, acc : 0.276, eff : 0.833
+
+
+RAAAAA : 0.469249
+
+0.1, 0.1
+/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_BDT_2S_train2S_9999999999_bdt_0.1000-1.0000_pt0.0_30.0_y-2.4_2.4_SiMuPt3.5_mass9.3_10.7_cent100_120_vp_0.0000_isTnP1_isPtWeight1_ID_fix
+[DIAGNOSIS] NOM NUMGEN, NUMREO= (1594914.0, 662212.9)
+Efficiency of BDT 9999999999, Cut 0.100000-1.000000 : 0.415203, 0.00206802
+##Yield 2S Corrected y/acc eff: 204.967, Efficiency: 0.415203, Acceptance: 0.401841
+
+[BIN] pp attrib. 0-30 GeV/c, 100-120(/2 %) -> yield : 11473.634 $\pm$ 240.655, acc : 0.276, eff : 0.833
+
+
+RAAAAA : 0.268441
+
+0.2, 0.2
+/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_BDT_2S_train2S_9999999999_bdt_0.2000-1.0000_pt0.0_30.0_y-2.4_2.4_SiMuPt3.5_mass9.3_10.7_cent80_100_vp_0.0000_isTnP1_isPtWeight1_ID_fix
+[DIAGNOSIS] NOM NUMGEN, NUMREO= (3217744.5, 800019.9)
+Efficiency of BDT 9999999999, Cut 0.200000-1.000000 : 0.248628, 0.00142846
+##Yield 2S Corrected y/acc eff: 228.262, Efficiency: 0.248628, Acceptance: 0.401841
+
+[BIN] pp attrib. 0-30 GeV/c, 80-100(/2 %) -> yield : 11473.634 $\pm$ 240.655, acc : 0.276, eff : 0.833
+
+
+RAAAAA : 0.148129
+
+0.224, 0.224
+/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_BDT_2S_train2S_9999999999_bdt_0.2240-1.0000_pt0.0_30.0_y-2.4_2.4_SiMuPt3.5_mass9.3_10.7_cent60_80_vp_0.0000_isTnP1_isPtWeight1_ID_fix
+[DIAGNOSIS] NOM NUMGEN, NUMREO= (5966481.4, 1218109.9)
+Efficiency of BDT 9999999999, Cut 0.224000-1.000000 : 0.204159, 0.00124529
+##Yield 2S Corrected y/acc eff: 486.463, Efficiency: 0.204159, Acceptance: 0.401841
+
+[BIN] pp attrib. 0-30 GeV/c, 60-80(/2 %) -> yield : 11473.634 $\pm$ 240.655, acc : 0.276, eff : 0.833
+
+
+RAAAAA : 0.171089
+
+0.2625, 0.2625
+/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_BDT_2S_train2S_9999999999_bdt_0.2625-1.0000_pt0.0_30.0_y-2.4_2.4_SiMuPt3.5_mass9.3_10.7_cent40_60_vp_0.0000_isTnP1_isPtWeight1_ID_fix
+[DIAGNOSIS] NOM NUMGEN, NUMREO= (10346641.0, 1483898.2)
+Efficiency of BDT 9999999999, Cut 0.262500-1.000000 : 0.143418, 0.00097992
+##Yield 2S Corrected y/acc eff: 619.105, Efficiency: 0.143418, Acceptance: 0.401841
+
+[BIN] pp attrib. 0-30 GeV/c, 40-60(/2 %) -> yield : 11473.634 $\pm$ 240.655, acc : 0.276, eff : 0.833
+
+
+RAAAAA : 0.126813
+
+0.2798, 0.2798
+/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_BDT_2S_train2S_9999999999_bdt_0.2798-1.0000_pt0.0_30.0_y-2.4_2.4_SiMuPt3.5_mass9.3_10.7_cent20_40_vp_0.0000_isTnP1_isPtWeight1_ID_fix
+[DIAGNOSIS] NOM NUMGEN, NUMREO= (17082970.8, 1866271.3)
+Efficiency of BDT 9999999999, Cut 0.279800-1.000000 : 0.109247, 0.000818818
+##Yield 2S Corrected y/acc eff: 604.585, Efficiency: 0.109247, Acceptance: 0.401841
+
+[BIN] pp attrib. 0-30 GeV/c, 20-40(/2 %) -> yield : 11473.634 $\pm$ 240.655, acc : 0.276, eff : 0.833
+
+
+RAAAAA : 0.0757144
+
+0.2474, 0.2474
+/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_BDT_2S_train2S_9999999999_bdt_0.2474-1.0000_pt0.0_30.0_y-2.4_2.4_SiMuPt3.5_mass9.3_10.7_cent10_20_vp_0.0000_isTnP1_isPtWeight1_ID_fix
+[DIAGNOSIS] NOM NUMGEN, NUMREO= (12137123.1, 1471911.5)
+Efficiency of BDT 9999999999, Cut 0.247400-1.000000 : 0.121274, 0.00125479
+##Yield 2S Corrected y/acc eff: 385.693, Efficiency: 0.121274, Acceptance: 0.401841
+
+[BIN] pp attrib. 0-30 GeV/c, 10-20(/2 %) -> yield : 11473.634 $\pm$ 240.655, acc : 0.276, eff : 0.833
+
+
+RAAAAA : 0.0681433
+
+0.2689, 0.2689
+/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_BDT_2S_train2S_9999999999_bdt_0.2689-1.0000_pt0.0_30.0_y-2.4_2.4_SiMuPt3.5_mass9.3_10.7_cent0_10_vp_0.0000_isTnP1_isPtWeight1_ID_fix
+[DIAGNOSIS] NOM NUMGEN, NUMREO= (15895714.2, 1390409.2)
+Efficiency of BDT 9999999999, Cut 0.268900-1.000000 : 0.0874707, 0.00100103
+##Yield 2S Corrected y/acc eff: 338.193, Efficiency: 0.0874707, Acceptance: 0.401841
+
+[BIN] pp attrib. 0-30 GeV/c, 0-10(/2 %) -> yield : 11473.634 $\pm$ 240.655, acc : 0.276, eff : 0.833
+
+
+RAAAAA : 0.0474289
+
+0.1664, 0.1664
+/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_BDT_3S_train3S_9999999999_bdt_0.1664-1.0000_pt0.0_30.0_y-2.4_2.4_SiMuPt3.5_mass9.6_11.0_cent100_181_vp_0.0000_isTnP1_isPtWeight1_ID_fix
+[DIAGNOSIS] NOM NUMGEN, NUMREO= (18236097.2, 6624437.9)
+Efficiency of BDT 9999999999, Cut 0.166400-1.000000 : 0.36326, 0.00137619
+##Yield 3S Corrected y/acc eff: 311.685, Efficiency: 0.36326, Acceptance: 0.433338
+
+[BIN] pp attrib. 0-30 GeV/c, 100-181(/2 %) -> yield : 6026.045 $\pm$ 184.685, acc : 0.310, eff : 0.837
+
+
+RAAAAA : 0.51346
+
+0.155, 0.155
+/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_BDT_3S_train3S_9999999999_bdt_0.1550-1.0000_pt0.0_30.0_y-2.4_2.4_SiMuPt3.5_mass9.6_11.0_cent40_100_vp_0.0000_isTnP1_isPtWeight1_ID_fix
+[DIAGNOSIS] NOM NUMGEN, NUMREO= (125364745.6, 41705113.3)
+Efficiency of BDT 9999999999, Cut 0.155000-1.000000 : 0.33267, 0.00131004
+##Yield 3S Corrected y/acc eff: 557.221, Efficiency: 0.33267, Acceptance: 0.433338
+
+[BIN] pp attrib. 0-30 GeV/c, 40-100(/2 %) -> yield : 6026.045 $\pm$ 184.685, acc : 0.310, eff : 0.837
+
+
+RAAAAA : 0.129269
+
+0.1596, 0.1596
+/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_BDT_3S_train3S_9999999999_bdt_0.1596-1.0000_pt0.0_30.0_y-2.4_2.4_SiMuPt3.5_mass9.6_11.0_cent0_40_vp_0.0000_isTnP1_isPtWeight1_ID_fix
+[DIAGNOSIS] NOM NUMGEN, NUMREO= (288225432.6, 67758369.6)
+Efficiency of BDT 9999999999, Cut 0.159600-1.000000 : 0.235088, 0.00121679
+##Yield 3S Corrected y/acc eff: 1232.44, Efficiency: 0.235088, Acceptance: 0.433338
+
+[BIN] pp attrib. 0-30 GeV/c, 0-40(/2 %) -> yield : 6026.045 $\pm$ 184.685, acc : 0.310, eff : 0.837
+
+
+RAAAAA : 0.127446
+
+PbPb 1.6 nb^{-1} (5.02 TeV)
+PbPb 1.6 nb^{-1} (5.02 TeV)
+
+Processing drawRAAptplot.cxx...
+
+[1mRooFit v3.60 -- Developed by Wouter Verkerke and David Kirkby[0m 
+                Copyright (C) 2000-2013 NIKHEF, University of California & Stanford University
+                All rights reserved, please read http://roofit.sourceforge.net/license.txt
+
+take from value: 0
+0.1415, 0.1415
+/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_BDT_3S_train3S_9999999999_bdt_0.1415-1.0000_pt0.0_6.0_y-2.4_2.4_SiMuPt3.5_mass9.6_11.0_cent0_181_vp_0.0000_isTnP1_isPtWeight1_ID_fix
+[DIAGNOSIS] NOM NUMGEN, NUMREO= (278665450.2, 70092170.1)
+Efficiency of BDT 9999999999, Cut 0.141500-1.000000 : 0.251528, 0.0010285
+##Yield 3S Corrected y/acc eff: 538.554, Efficiency: 0.251528, Acceptance: 0.448275
+
+[BIN] pp attrib. 0-6 GeV/c, 0-181(/2 %) -> yield : 2883.726 $\pm$ 144.338, acc : 0.310, eff : 0.837
+
+
+RAAAAA : 0.07593
+
+take from value: 0
+0.2265, 0.2265
+/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_BDT_3S_train3S_9999999999_bdt_0.2265-1.0000_pt6.0_30.0_y-2.4_2.4_SiMuPt3.5_mass9.6_11.0_cent0_181_vp_0.0000_isTnP1_isPtWeight1_ID_fix
+[DIAGNOSIS] NOM NUMGEN, NUMREO= (153160825.2, 31444310.2)
+Efficiency of BDT 9999999999, Cut 0.226500-1.000000 : 0.205303, 0.00139572
+##Yield 3S Corrected y/acc eff: 536.684, Efficiency: 0.205303, Acceptance: 0.399694
+
+[BIN] pp attrib. 6-30 GeV/c, 0-181(/2 %) -> yield : 3036.857 $\pm$ 124.900, acc : 0.310, eff : 0.837
+
+
+RAAAAA : 0.0738822
+
+take from value: 0
+0.1308, 0.1308
+/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_BDT_2S_train2S_9999999999_bdt_0.1308-1.0000_pt0.0_4.0_y-2.4_2.4_SiMuPt3.5_mass9.3_10.7_cent0_181_vp_0.0000_isTnP1_isPtWeight1_ID_fix
+[DIAGNOSIS] NOM NUMGEN, NUMREO= (29850157.2, 7575920.9)
+Efficiency of BDT 9999999999, Cut 0.130800-1.000000 : 0.253798, 0.00141452
+##Yield 2S Corrected y/acc eff: 764.799, Efficiency: 0.253798, Acceptance: 0.461123
+
+[BIN] pp attrib. 0-4 GeV/c, 0-181(/2 %) -> yield : 3981.924 $\pm$ 147.942, acc : 0.276, eff : 0.833
+
+
+RAAAAA : 0.0685792
+
+take from value: 0
+0.1933, 0.1933
+/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_BDT_2S_train2S_9999999999_bdt_0.1933-1.0000_pt4.0_9.0_y-2.4_2.4_SiMuPt3.5_mass9.3_10.7_cent0_181_vp_0.0000_isTnP1_isPtWeight1_ID_fix
+[DIAGNOSIS] NOM NUMGEN, NUMREO= (24163834.6, 4911788.1)
+Efficiency of BDT 9999999999, Cut 0.193300-1.000000 : 0.20327, 0.00105678
+##Yield 2S Corrected y/acc eff: 1521.45, Efficiency: 0.20327, Acceptance: 0.320039
+
+[BIN] pp attrib. 4-9 GeV/c, 0-181(/2 %) -> yield : 3948.583 $\pm$ 106.958, acc : 0.276, eff : 0.833
+
+
+RAAAAA : 0.141168
+
+take from value: 0
+0.2255, 0.2255
+/home/vince402/Upsilon3S/BDT/EffCalc/mc_eff_BDT_2S_train2S_9999999999_bdt_0.2255-1.0000_pt9.0_30.0_y-2.4_2.4_SiMuPt3.5_mass9.3_10.7_cent0_181_vp_0.0000_isTnP1_isPtWeight1_ID_fix
+[DIAGNOSIS] NOM NUMGEN, NUMREO= (13466263.6, 2655865.8)
+Efficiency of BDT 9999999999, Cut 0.225500-1.000000 : 0.197224, 0.000857861
+##Yield 2S Corrected y/acc eff: 711.469, Efficiency: 0.197224, Acceptance: 0.461135
+
+[BIN] pp attrib. 9-30 GeV/c, 0-181(/2 %) -> yield : 3096.333 $\pm$ 80.199, acc : 0.276, eff : 0.833
+
+
+RAAAAA : 0.0858986
+
+PbPb 1.6 nb^{-1} (5.02 TeV)

@@ -1,0 +1,74 @@
+#include "../../fitreslib.h"
+#include "../../BDT/bininfo.h"
+
+void likelihoodProfile3(){
+//	long ts = 10000000016;
+//	long ts = 20000000000;
+//	long ts = 200019111111;
+	long ts = 100019111111;
+	auto ab = ana_bm_comb["3c"][0];
+//	double bl = Get_BDT(ts, ab);
+	double bl = 0.2620;
+	auto name_f_res = GetFit(__FITRESLATEST, false, "CB3:EE:GC", ts, ab.train_state, ab.state, ab.pl, ab.ph, ab.cl, ab.ch, bl, 1., ab.bpl, ab.bph, 0.0, "");
+	auto f_res = TFile::Open(name_f_res.c_str() );
+	RooWorkspace* wss = (RooWorkspace*) f_res->Get("workspace");
+	RooAbsPdf* thepdf = (RooAbsPdf*) wss->pdf("model");
+	RooAbsPdf *con_alpha, *con_n, *con_frac, *con_frac2, *con_xNS, *con_xNS_2, *con_sigmaNS_1;
+	con_alpha = (RooAbsPdf*) wss->pdf("alpha_constraint");
+	con_n = (RooAbsPdf*) wss->pdf("n_constraint");
+	con_frac = (RooAbsPdf*) wss->pdf("frac_constraint");
+	con_frac2 = (RooAbsPdf*) wss->pdf("frac2_constraint");
+	con_xNS = (RooAbsPdf*) wss->pdf("xNS_constraint");
+	con_xNS_2 = (RooAbsPdf*) wss->pdf("xNS_2_constraint");
+	con_sigmaNS_1 = (RooAbsPdf*) wss->pdf("sigmaNS_1_constraint");
+	RooArgSet* thearg = new RooArgSet();
+	thearg->add(*con_alpha);
+	thearg->add(*con_n);
+	thearg->add(*con_frac);
+	thearg->add(*con_frac2);
+	thearg->add(*con_xNS);
+	thearg->add(*con_xNS_2);
+	thearg->add(*con_sigmaNS_1);
+	RooRealVar* thevar = (RooRealVar*) wss->var("nSig3S");
+	thevar->setRange(-5,400);
+	RooPlot* theframe = thevar->frame(14);
+	RooStats::ProfileLikelihoodCalculator* thecalc= new RooStats::ProfileLikelihoodCalculator(*((RooDataSet*) wss->data("reducedDS") ), *thepdf, *thevar);
+	thecalc->SetConfidenceLevel(0.90);
+	RooStats::LikelihoodInterval* interval = thecalc->GetInterval();
+	RooStats::LikelihoodIntervalPlot *plot = new RooStats::LikelihoodIntervalPlot(interval);
+	plot->SetNPoints(50);   // Use this to reduce sampling granularity (trades speed for precision)
+	TCanvas* c1 = new TCanvas("c1", "", 700, 600);
+	c1->cd();
+	plot->Draw("TF1"); gPad->Draw();
+	RooAbsReal* thenll = thepdf->createNLL( *((RooDataSet*) wss->data("reducedDS") ), RooFit::NumCPU(40, 0), RooFit::Constrain(*thearg), RooFit::BatchMode(kTRUE), RooFit::Range(8,14) );
+//	RooAbsReal* thenll = thepdf->createNLL( *((RooDataSet*) wss->data("reducedDS") ), RooFit::NumCPU(40, 0), RooFit::Constrain(*thearg), RooFit::Strategy(0), RooFit::BatchMode(kTRUE), RooFit::RecoverFromUndefinedRegions(3), RooFit::EvalErrorWall(kTRUE), RooFit::Range(8,14), RooFit::Hesse(kTRUE) );
+//	RooMinimizer(*thenll).minimize("Minuit", "minimize");
+//	RooArgSet* theargs = new RooArgSet(*thevar);
+//	RooStats::LikelihoodInterval *x = new RooStats::LikelihoodInterval("hi",thenll, theargs);
+//	RooStats::LikelihoodIntervalPlot *plot = new RooStats::LikelihoodIntervalPlot(x);
+//	plot->SetNPoints(10);
+//	plot->Draw("TF1");
+//	RooMinimizer(*thenll).migrad();
+//	RooMinimizer(*thenll).hesse();
+////	RooMinimizer(*thenll).minos();
+
+//	thenll->plotOn(theframe,RooFit::ShiftToZero()) ;
+//
+//	RooAbsReal* thepll = thenll->createProfile(*thevar);
+//
+//	thepll->plotOn(theframe,RooFit::LineColor(kRed));
+	theframe->Draw();
+	theframe->GetXaxis()->SetRangeUser(0,800);
+	theframe->GetYaxis()->SetRangeUser(-5, 20);
+	c1->SaveAs(Form("LikelihoodPrifoleUB%ld_minimize_v4.pdf", ts) );
+	TFile* output = new TFile(Form("LikelihoodProfileUB%ld_minimize_v4.root",ts),"recreate");
+	output->cd();
+//	thenll->Write();
+//	thepll->Write();
+	theframe->Write();
+//	plot->Write();
+	c1->Write();
+	output->Close();
+	f_res->Close();
+
+}

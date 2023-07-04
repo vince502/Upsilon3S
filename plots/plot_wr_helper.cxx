@@ -312,3 +312,200 @@ void plot_wr_helper_aux2(string fout, RooRealVar (*x)(ana_bins, long, bool, int,
     rp3s->Write();
     output->Close();
 };
+
+//1S RESULT
+//void plot_wr_helper_aux3(string fout, RooRealVar (*x)(ana_bins, long, bool, int, int), long ts){
+void plot_wr_helper_aux3(string fout, RooRealVar (*x)(bool, ana_bins, std::string, double, double, int, long, bool, bool, int), long ts){
+//void plot_wr_helper(string fout, RooRealVar (*x)(ana_bins, long, bool, int), long ts, int sc){
+	
+	TFile* output = new TFile( (plt_save_dir + fout).c_str(), "recreate");
+	std::vector<ana_bins> vc2, vc3, vp2, vp3;
+	vc2 = ana_bm["2c"];
+    vc3 = ana_bm["3c"];
+    vp2 = ana_bm["2p"];
+    vp3 = ana_bm["3p"];
+
+    TH1D *rc2s, *rc3s, *rp2s, *rp3s;
+    rc2s = new TH1D("rc2S","",vc2.size(),0,vc2.size()-1); //include int. bin
+    rc3s = new TH1D("rc3S","",vc3.size(),0,vc3.size()-1);  //include int. bin
+    rp2s = new TH1D("rp2S","",vp2.size(),1,vp2.size());
+    rp3s = new TH1D("rp3S","",vp3.size(),1,vp3.size());
+
+	bool incl_ppstat_forthisbin;
+	std::cout << "DBG" << std::endl;
+
+    int counter =1;
+    for( auto item : vc2){
+		incl_ppstat_forthisbin = ( item.bintype != kCent) ? true : false;
+		//auto res = (*x)(item, ts, incl_ppstat_forthisbin, 1, 0);
+		auto res = (*x)(true, item, "CB3:CC4:FF", -1, 1, 100, 9999999999, true, false, 1);
+		
+        rc2s->SetBinContent(counter	,res.getVal());
+        rc2s->SetBinError(counter	,res.getError());
+        counter++;
+    }
+//    counter =1;
+//    for( auto item : vc3){
+//		incl_ppstat_forthisbin = ( item.bintype != kCent) ? true : false;
+//		auto res = (*x)(item, ts, incl_ppstat_forthisbin, 1, 0);
+//        rc3s->SetBinContent(counter	,res.getVal());
+//        rc3s->SetBinError(counter	,res.getError());
+//        counter++;
+//    }
+    counter =1;
+
+    for( auto item : vp2){
+		incl_ppstat_forthisbin = ( item.bintype != kCent) ? true : false;
+		//auto res = (*x)(item, ts, incl_ppstat_forthisbin, 1, 0);
+		auto res = (*x)(true, item, "CB3:CC4:FF", -1, 1, 100, 9999999999, true, false, 1);
+		//auto res = (*x)(item, ts, incl_ppstat_forthisbin, 1, 0);
+        rp2s->SetBinContent(counter	,res.getVal());
+        rp2s->SetBinError(counter	,res.getError());
+        counter++;
+    }
+    counter =1;
+
+//    for( auto item : vp3){
+//		incl_ppstat_forthisbin = ( item.bintype != kCent) ? true : false;
+//		auto res = (*x)(item, ts, incl_ppstat_forthisbin, 1, 0);
+//        rp3s->SetBinContent(counter	,res.getVal());
+//        rp3s->SetBinError(counter	,res.getError());
+//        counter++;
+//    }
+    output->cd();
+    rc2s->Write();
+    rc3s->Write();
+    rp2s->Write();
+    rp3s->Write();
+    output->Close();
+};
+
+//1S RESULT
+void plot_wr_helper_aux3_2(string fout, RooRealVar (*x)(ana_bins, long, bool, int, int), long ts){
+//void plot_wr_helper_aux3_2(string fout, RooRealVar (*x)(bool, ana_bins, std::string, double, double, int, long, bool, bool, int), long ts){
+//void plot_wr_helper(string fout, RooRealVar (*x)(ana_bins, long, bool, int), long ts, int sc){
+	
+	TFile* output = new TFile( (plt_save_dir + fout).c_str(), "recreate");
+	std::vector<ana_bins> vc2, vc3, vp2, vp3;
+	vc2 = ana_bm["2c"];
+    vc3 = ana_bm["3c"];
+    vp2 = ana_bm["2p"];
+    vp3 = ana_bm["3p"];
+
+    TH1D *rc2s, *rc3s, *rp2s, *rp3s;
+    rc2s = new TH1D("rc2S","",vc2.size(),0,vc2.size()-1); //include int. bin
+    rc3s = new TH1D("rc3S","",vc3.size(),0,vc3.size()-1);  //include int. bin
+    rp2s = new TH1D("rp2S","",vp2.size(),1,vp2.size());
+    rp3s = new TH1D("rp3S","",vp3.size(),1,vp3.size());
+
+	bool incl_ppstat_forthisbin;
+	std::cout << "DBG" << std::endl;
+
+    int counter =1;
+    for( auto item : vc2){
+		incl_ppstat_forthisbin = ( item.bintype != kCent) ? true : false;
+		auto res = (*x)(item, ts, incl_ppstat_forthisbin, 1, 100);
+		
+        rc2s->SetBinContent(counter	,res.getVal());
+        rc2s->SetBinError(counter	,res.getError());
+        counter++;
+    }
+//    counter =1;
+//    for( auto item : vc3){
+//		incl_ppstat_forthisbin = ( item.bintype != kCent) ? true : false;
+//		auto res = (*x)(item, ts, incl_ppstat_forthisbin, 1, 0);
+//        rc3s->SetBinContent(counter	,res.getVal());
+//        rc3s->SetBinError(counter	,res.getError());
+//        counter++;
+//    }
+    counter =1;
+
+    for( auto item : vp2){
+		incl_ppstat_forthisbin = ( item.bintype != kCent) ? true : false;
+		//auto res = (*x)(item, ts, incl_ppstat_forthisbin, 1, 0);
+		auto res = (*x)(item, ts, incl_ppstat_forthisbin, 1, 100);
+        rp2s->SetBinContent(counter	,res.getVal());
+        rp2s->SetBinError(counter	,res.getError());
+        counter++;
+    }
+    counter =1;
+
+//    for( auto item : vp3){
+//		incl_ppstat_forthisbin = ( item.bintype != kCent) ? true : false;
+//		auto res = (*x)(item, ts, incl_ppstat_forthisbin, 1, 0);
+//        rp3s->SetBinContent(counter	,res.getVal());
+//        rp3s->SetBinError(counter	,res.getError());
+//        counter++;
+//    }
+    output->cd();
+    rc2s->Write();
+    rc3s->Write();
+    rp2s->Write();
+    rp3s->Write();
+    output->Close();
+};
+
+//nS RESULT
+void plot_wr_helper_aux3_3(string fout, RooRealVar (*x)(ana_bins, long, bool, int, int), long ts){
+//void plot_wr_helper_aux3_2(string fout, RooRealVar (*x)(bool, ana_bins, std::string, double, double, int, long, bool, bool, int), long ts){
+//void plot_wr_helper(string fout, RooRealVar (*x)(ana_bins, long, bool, int), long ts, int sc){
+	
+	TFile* output = new TFile( (plt_save_dir + fout).c_str(), "recreate");
+	std::vector<ana_bins> vc2, vc3, vp2, vp3;
+	vc2 = ana_bm["2c"];
+    vc3 = ana_bm["3c"];
+    vp2 = ana_bm["2p"];
+    vp3 = ana_bm["3p"];
+
+    TH1D *rc2s, *rc3s, *rp2s, *rp3s;
+    rc2s = new TH1D("rc2S","",vc2.size(),0,vc2.size()-1); //include int. bin
+    rc3s = new TH1D("rc3S","",vc3.size(),0,vc3.size()-1);  //include int. bin
+    rp2s = new TH1D("rp2S","",vp2.size(),1,vp2.size());
+    rp3s = new TH1D("rp3S","",vp3.size(),1,vp3.size());
+
+	bool incl_ppstat_forthisbin;
+	std::cout << "DBG" << std::endl;
+
+    int counter =1;
+    for( auto item : vc2){
+		incl_ppstat_forthisbin = ( item.bintype != kCent) ? true : false;
+		auto res = (*x)(item, ts, incl_ppstat_forthisbin, 2, 100);
+		
+        rc2s->SetBinContent(counter	,res.getVal());
+        rc2s->SetBinError(counter	,res.getError());
+        counter++;
+    }
+    counter =1;
+    for( auto item : vc3){
+		incl_ppstat_forthisbin = ( item.bintype != kCent) ? true : false;
+		auto res = (*x)(item, ts, incl_ppstat_forthisbin, 3, 100);
+        rc3s->SetBinContent(counter	,res.getVal());
+        rc3s->SetBinError(counter	,res.getError());
+        counter++;
+    }
+    counter =1;
+
+    for( auto item : vp2){
+		incl_ppstat_forthisbin = ( item.bintype != kCent) ? true : false;
+		//auto res = (*x)(item, ts, incl_ppstat_forthisbin, 1, 0);
+		auto res = (*x)(item, ts, incl_ppstat_forthisbin, 2, 100);
+        rp2s->SetBinContent(counter	,res.getVal());
+        rp2s->SetBinError(counter	,res.getError());
+        counter++;
+    }
+    counter =1;
+
+    for( auto item : vp3){
+		incl_ppstat_forthisbin = ( item.bintype != kCent) ? true : false;
+		auto res = (*x)(item, ts, incl_ppstat_forthisbin, 3, 100);
+        rp3s->SetBinContent(counter	,res.getVal());
+        rp3s->SetBinError(counter	,res.getError());
+        counter++;
+    }
+    output->cd();
+    rc2s->Write();
+    rc3s->Write();
+    rp2s->Write();
+    rp3s->Write();
+    output->Close();
+};
